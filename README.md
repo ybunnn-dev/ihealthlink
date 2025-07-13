@@ -1,7 +1,7 @@
 # 🎓 
 
 <h1 align="center">
-  <img src="public/images/ihealthlink.png" alt="iHealthLink Logo" width="200"/>
+  <img src="public/images/ihealthlink.png" alt="iHealthLink Logo" width="400"/>
 </h1>
 
 <p align="center">
