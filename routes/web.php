@@ -17,12 +17,12 @@ Route::middleware([
     })->name('dashboard');
 
     // MHO-specific dashboard
-    Route::get('/mho-dashboard', function () {
+    Route::get('/mho/dashboard', function () {
         return view('mho.dashboard');
     })->name('mho.dashboard');
 
     // Midwife-specific dashboard
-    Route::get('/midwife-dashboard', function () {
+    Route::get('/midwife/dashboard', function () {
         return view('midwife.dashboard');
     })->name('midwife.dashboard');
 });

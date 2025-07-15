@@ -24,7 +24,7 @@
             </div>
             <div class="hidden sm:flex sm:items-center sm:ms-6">
                 <!-- Notification Button -->
-                <div class="ms-3 relative">
+                <div class="ms-3 pr-4 relative">
                     <x-dropdown align="right" width="48">
                         <x-slot name="trigger">
                             <button class="relative inline-flex items-center p-2 text-gray-400 bg-white hover:text-gray-500 focus:outline-none focus:text-gray-500 transition duration-150 ease-in-out">

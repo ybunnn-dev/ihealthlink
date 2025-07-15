@@ -23,6 +23,7 @@ export default {
                 sans: ['Poppins', ...defaultTheme.fontFamily.sans],
             },
             colors: {
+                nav_active: '#DFEEFF',
                 mainblue: '#279EFF',
                 main_font: '#566A7F',
                 normal_font: "#697A8D",
@@ -31,6 +32,9 @@ export default {
                 darkblue: '#1a202c', // New color for background below 1000px if needed, based on screenshot 665095.png
                 bg_col: "#ECF0F4",
                 sub_blue: "#252F6C",
+                col_orange: "#F0BB78",
+                col_pink: "#D50B8B",
+                col_brown: "#854836",
             },
             fontSize: {
                 // More aggressive clamping for better scaling on smaller PC screens
