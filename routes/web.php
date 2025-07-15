@@ -25,4 +25,10 @@ Route::middleware([
     Route::get('/midwife/dashboard', function () {
         return view('midwife.dashboard');
     })->name('midwife.dashboard');
+    
+        // Midwife-specific dashboard
+    Route::get('/midwife/households', function () {
+        return view('midwife.household-list');
+    })->name('midwife.households');
+    
 });

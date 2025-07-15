@@ -79,11 +79,12 @@
             </li>
             <!-- Residents -->
             <li class="flex items-center group">
-                <a href="#"
+                <a href="{{ route('midwife.households') }}"
                 class="flex items-center w-full py-3 pl-6 hover:bg-white/10 transition-colors"
+                
                 :class="{
-                    'bg-[#148079] text-f7 font-bold': activeItem === 'residents',
-                    'text-white': activeItem !== 'residents'
+                    'bg-nav_active text-f7 font-bold': activeItem === 'residents',
+                    'text-mainblue': activeItem !== 'residents'
                 }"
                 @click="setActive('residents')"
                 >  <svg class="flex-shrink-0
