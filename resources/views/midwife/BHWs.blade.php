@@ -87,7 +87,7 @@
                     </div>
                     <div class="relative overflow-x-auto">
                         <table class="w-full text-sm text-left text-main_font bg-col_tab_h">
-                            <thead class="text-xs text-main_font uppercase">
+                            <thead class="text-xs text-main_font uppercase text-center">
                                 <tr>
                                     <th scope="col" class="px-6 py-3">
                                         BHW No.
@@ -107,7 +107,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr class="bg-white border-b bg-f7 text-normal_font">
+                                <tr class="bg-white border-b bg-f7 text-normal_font text-center">
                                     <th scope="row" class="px-6 py-4 font-medium text-normal_font whitespace-nowrap">
                                         121
                                     </th>
@@ -124,7 +124,7 @@
                                         Feb 10, 2025
                                     </td>
                                 </tr>
-                                <tr class="bg-white border-b bg-f7 text-normal_font">
+                                <tr class="bg-white border-b bg-f7 text-normal_font text-center">
                                     <th scope="row" class="px-6 py-4 font-medium text-normal_font whitespace-nowrap">
                                         122
                                     </th>
@@ -141,7 +141,7 @@
                                         Feb 14, 2025
                                     </td>
                                 </tr>
-                                <tr class="bg-white border-b bg-f7 text-normal_font">
+                                <tr class="bg-white border-b bg-f7 text-normal_font text-center">
                                     <th scope="row" class="px-6 py-4 font-medium text-normal_font whitespace-nowrap">
                                         123
                                     </th>       
