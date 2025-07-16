@@ -1,9 +1,9 @@
 <?php
-
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
 // Shared middleware group for authenticated and verified users
@@ -12,8 +12,13 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
+
     Route::get('/dashboard', function () {
-        return view('dashboard');
+        $user = Auth::user();
+        return match ($user->role_id) {
+            1 => redirect()->intended('/mho/dashboard'),
+            2 => redirect()->intended('/midwife/dashboard'),
+        };
     })->name('dashboard');
 
     // MHO-specific dashboard
