@@ -51,5 +51,10 @@ Route::middleware([
     Route::get('/midwife/logs', function () {
         return view('midwife.log-list');
     })->name('midwife.logs');
+
+    // Midwife-specific dashboard
+    Route::get('/midwife/faqs', function () {
+        return view('midwife.faqs');
+    })->name('midwife.faqs');
     
 });
