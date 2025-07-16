@@ -1,7 +1,7 @@
 <x-app-layout>
     <div class="py-12 px-5">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <h1 class="text-3xl font-semibold text-sub_blue mb-3">Households and Residents</h1>
+            <h1 class="text-3xl font-semibold text-sub_blue mb-3">Top Pornstars</h1>
 
             <div class="mb-3">
                 <x-resident-module-nav></x-resident-module-nav>
@@ -15,7 +15,7 @@
                             <div class="flex flex-col slg2:flex-row slg2:items-end gap-4">
                                 <!-- Search bar -->
                                 <div class="w-full slg2:w-64 slg2:flex-grow slg2:max-w-md">
-                                <label for="default-search" class="mb-2 text-sm font-medium text-main_font">Search</label> 
+                                <label for="default-search" class="mb-2 text-sm font-medium text-main_font">Search for Residents?</label> 
                                 <div class="relative">
                                     <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                                     <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
@@ -30,7 +30,7 @@
                                 <div class="flex flex-col xs:flex-row gap-4 slg2:items-end flex-none">
                                     <!-- Purok Filter -->
                                     <div class="w-full xs:w-48">
-                                        <label for="purokDropdown" class="mb-2 text-sm font-medium text-main_font">Filter by Purok</label> 
+                                        <label for="purokDropdown" class="mb-2 text-sm font-medium text-main_font">Adjust Mo nalang digdi</label> 
                                         <button id="purokDropdown" data-dropdown-toggle="purokDropdownMenu" class="w-full text-main_font bg-f7 focus:outline-none font-medium border border-navboard rounded-lg text-sm px-4 py-2 text-center inline-flex items-center justify-between h-[2.375rem]" type="button">
                                         All Purok
                                         <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">

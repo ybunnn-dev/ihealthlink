@@ -1,9 +1,10 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
 // Shared middleware group for authenticated and verified users
@@ -12,8 +13,13 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
+
     Route::get('/dashboard', function () {
-        return view('dashboard');
+        $user = Auth::user();
+        return match ($user->role_id) {
+            1 => redirect()->intended('/mho/dashboard'),
+            2 => redirect()->intended('/midwife/dashboard'),
+        };
     })->name('dashboard');
 
     // MHO-specific dashboard
@@ -30,5 +36,13 @@ Route::middleware([
     Route::get('/midwife/households', function () {
         return view('midwife.household-list');
     })->name('midwife.households');
+
+    Route::get('/midwife/households/num', function(){
+        return view('midwife.spec-household');
+    })->name('midwife.spechouse');
+
+     Route::get('/midwife/residents', function(){
+        return view('midwife.resident-list');
+    })->name('midwife.residents');
     
 });
