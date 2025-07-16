@@ -30,5 +30,15 @@ Route::middleware([
     Route::get('/midwife/households', function () {
         return view('midwife.household-list');
     })->name('midwife.households');
+
+    // Midwife-specific dashboard
+    Route::get('/midwife/medicines', function () {
+        return view('midwife.medicine-list');
+    })->name('midwife.medicines');
+
+    // Midwife-specific dashboard
+    Route::get('/midwife/medicines-view', function () {
+        return view('midwife.spec-medicine');
+    })->name('midwife.medicines-view');
     
 });

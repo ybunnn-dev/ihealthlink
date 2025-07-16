@@ -150,11 +150,11 @@
 
             <!-- Medicines -->
             <li class="flex items-center group">
-                <a href="#"
+                <a href="{{ route('midwife.medicines') }}"
                 class="flex items-center w-full py-3 pl-6 hover:bg-white/10 transition-colors"
                 :class="{
-                    'bg-[#148079] text-f7 font-bold': activeItem === 'medicines',
-                    'text-white': activeItem !== 'medicines'
+                    'bg-nav_active text-f7 font-bold': activeItem === 'medicines',
+                    'text-mainblue': activeItem !== 'medicines'
                 }"
                 @click="setActive('medicines')"
                 >
@@ -169,7 +169,7 @@
                             <path d="M371.188,162.453c-20.766-10.391-27.703-34.641-27.703-55.422c0-1.344,0-3.328,0-5.875 c0-0.938,0-1.813,0-2.938H168.516c0,1.125,0,2,0,2.938c0,0.313,0,1.969,0,5.875c0,20.781-6.938,45.031-27.703,55.422 c-24.813,12.391-35.219,30.859-35.219,74.969c0,15.734,0,162.766,0,187.969c0,42.516,29.922,86.609,89.781,86.609h121.25 c59.859,0,89.781-44.094,89.781-86.609c0-25.203,0-172.234,0-187.969C406.406,193.313,396,174.844,371.188,162.453z M357.156,406.719H154.844V241.547h202.313V406.719z"></path>
                             <polygon points="238.688,386.922 273.297,386.922 273.297,345.828 314.375,345.828 314.375,311.25 273.297,311.25 273.297,270.156 238.688,270.156 238.688,311.25 197.625,311.25 197.625,345.828 238.688,345.828 "></polygon>
                         </g>
-                        </svg>  
+                    </svg>  
                     <span class="ml-3 whitespace-nowrap transition-all duration-200 text-main_font text-medium"
                         :class="{ 
                             'opacity-0 invisible': !open, 
