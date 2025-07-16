@@ -289,11 +289,11 @@
 
             <!-- Logs -->
             <li class="flex items-center group">
-                <a href="#"
+                <a href="{{ route('midwife.logs') }}"
                 class="flex items-center w-full py-3 pl-6 hover:bg-white/10 transition-colors"
                 :class="{
-                    'bg-[#148079] text-f7 font-bold': activeItem === 'logs',
-                    'text-white': activeItem !== 'logs'
+                    'bg-nav_active text-f7 font-bold': activeItem === 'logs',
+                    'text-mainblue': activeItem !== 'logs'
                 }"
                 @click="setActive('logs')"
                 >
