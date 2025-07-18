@@ -44,5 +44,9 @@ Route::middleware([
      Route::get('/midwife/residents', function(){
         return view('midwife.resident-list');
     })->name('midwife.residents');
+
+    Route::get('/midwife/residents/spec-res', function(){
+        return view('midwife.spec-resident');
+    })->name('midwife.spec-resident');
     
 });

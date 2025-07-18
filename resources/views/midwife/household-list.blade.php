@@ -58,17 +58,24 @@
                             </div>
                         </div>
                         <!-- Dropdown menus -->
-                        <div id="purokDropdownMenu" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700">
-                        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200">
-                            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Option 1</a></li>
-                            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Option 2</a></li>
+                        <div id="purokDropdownMenu" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
+                        <ul class="py-2 text-sm text-normal_font">
+                            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Purok 1</a></li>
+                            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Purok 2</a></li>
+                            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Purok 3</a></li>
+                            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Purok 4</a></li>
+                            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Purok 5</a></li>
+                            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Purok 6</a></li>
+                            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Purok 7</a></li>
                         </ul>
                         </div>
 
-                        <div id="dateDropdownMenu" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700">
-                        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200">
+                        <div id="dateDropdownMenu" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
+                        <ul class="py-2 text-sm text-normal_font">
                             <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Last Week</a></li>
+                            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Month</a></li>
                             <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Last Year</a></li>
+                            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Custom</a></li>
                         </ul>
                     </div>
                     <div class="relative overflow-x-auto">
