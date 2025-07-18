@@ -1,7 +1,7 @@
 <x-app-layout>
     <div class="py-12 px-5">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <h1 class="text-3xl font-semibold text-sub_blue mb-3">Top Pornstars</h1>
+            <h1 class="text-3xl font-semibold text-sub_blue mb-3">Households and Residents</h1>
 
             <div class="mb-3">
                 <x-resident-module-nav></x-resident-module-nav>
