@@ -72,68 +72,63 @@
                         </ul>
                     </div>
                     <div class="relative overflow-x-auto">
-                        <table class="w-full text-sm text-left text-main_font bg-col_tab_h">
-                            <thead class="text-xs text-main_font uppercase">
-                                <tr>
-                                    <th scope="col" class="px-6 py-3">
-                                        Product name
-                                    </th>
-                                    <th scope="col" class="px-6 py-3">
-                                        Color
-                                    </th>
-                                    <th scope="col" class="px-6 py-3">
-                                        Category
-                                    </th>
-                                    <th scope="col" class="px-6 py-3">
-                                        Price
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr class="bg-white border-b bg-f7 text-normal_font" onclick="window.location='{{ route('midwife.spechouse') }}'">
-                                    <th scope="row" class="px-6 py-4 font-medium text-normal_font whitespace-nowrap">
-                                        Apple MacBook Pro 17"
-                                    </th>
-                                    <td class="px-6 py-4">
-                                        Silver
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        Laptop
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        $2999
-                                    </td>
-                                </tr>
-                                <tr class="bg-white border-b bg-f7 text-normal_font">
-                                    <th scope="row" class="px-6 py-4 font-medium text-normal_font whitespace-nowrap">
-                                        Apple MacBook Pro 17"
-                                    </th>
-                                    <td class="px-6 py-4">
-                                        Silver
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        Laptop
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        $2999
-                                    </td>
-                                </tr>
-                                <tr class="bg-white border-b bg-f7 text-normal_font">
-                                    <th scope="row" class="px-6 py-4 font-medium text-normal_font whitespace-nowrap">
-                                        Apple MacBook Pro 17"
-                                    </th>
-                                    <td class="px-6 py-4">
-                                        Silver
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        Laptop
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        $2999
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+<table class="w-full text-sm text-left text-main_font bg-col_tab_h">
+    <thead class="text-xs text-main_font uppercase">
+        <tr>
+            <th scope="col" class="px-6 py-3">
+                Household #
+            </th>
+            <th scope="col" class="px-6 py-3">
+                Family Head
+            </th>
+            <th scope="col" class="px-6 py-3">
+                Purok
+            </th>
+            <th scope="col" class="px-6 py-3">
+                Date Added
+            </th>
+            <th scope="col" class="px-6 py-3">
+                Date Updated
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr class="bg-white border-b bg-f7 text-normal_font" onclick="window.location='{{ route('midwife.spechouse') }}'">
+            <th scope="row" class="px-6 py-4 font-medium text-normal_font whitespace-nowrap">
+                001
+            </th>
+            <td class="px-6 py-4">
+                Juan Dela Cruz
+            </td>
+            <td class="px-6 py-4">
+                Purok 1
+            </td>
+            <td class="px-6 py-4">
+                2023-01-15
+            </td>
+            <td class="px-6 py-4">
+                2023-01-15
+            </td>
+        </tr>
+        <tr class="bg-white border-b bg-f7 text-normal_font">
+            <th scope="row" class="px-6 py-4 font-medium text-normal_font whitespace-nowrap">
+                002
+            </th>
+            <td class="px-6 py-4">
+                Maria Clara
+            </td>
+            <td class="px-6 py-4">
+                Purok 2
+            </td>
+            <td class="px-6 py-4">
+                2023-02-01
+            </td>
+            <td class="px-6 py-4">
+                2023-02-05
+            </td>
+        </tr>
+    </tbody>
+</table>
                     </div>
                 </div>
                 </div>
