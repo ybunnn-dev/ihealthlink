@@ -458,11 +458,122 @@
 
                         </div>
                     </div>
+                    <h1 class="text-sub_blue text-xl font-semibold mt-4 mb-2">Risk Assessment</h1>
+                   <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
+                        <div class="bg-white rounded-xl py-8 px-6 sm:px-10 xl:px-12">
+                            <h2 class="text-xl font-semibold text-main_font mb-4">Blood Sugar</h2>
+                            <div class="grid grid-cols-1 slg2:grid-cols-2 gap-x-12 gap-y-6 text-xs">
+                                <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                    <p class="font-semibold text-main_font">FBS RESULT:</p>
+                                    <p class="text-normal_font">Yes</p>
+                                </div>
 
-                    <div class="bg-white rounded-xl p-6">
-                        <h2 class="text-xl font-semibold text-main_font mb-4">Risk Assessment</h2>
-                        <p class="text-gray-700">Here you would display the PhilPen data, perhaps in a different table or a set of data cards.</p>
-                        <p class="text-gray-700 mt-2">Add your specific PhilPen data structure here.</p>
+                                 <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                    <p class="font-semibold text-main_font">POLYDIPSIA:</p>
+                                    <p class="text-normal_font">Yes</p>
+                                </div>
+
+                                <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                    <p class="font-semibold text-main_font">RBS RESULT:</p>
+                                    <p class="text-normal_font">No</p>
+                                </div>
+
+                                <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                    <p class="font-semibold text-main_font">POLYURIA:</p>
+                                    <p class="text-normal_font">No</p>
+                                </div>
+
+                                <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                    <p class="font-semibold text-main_font">POLYPHAGIA:</p>
+                                    <p class="text-normal_font">No</p>
+                                </div>
+                                
+                                <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                    <p class="font-semibold text-main_font">DATE TAKEN:</p>
+                                    <p class="text-normal_font">No</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-xl py-8 px-6 sm:px-10 xl:px-12">
+                            <h2 class="text-xl font-semibold text-main_font mb-4">Lipid Profile</h2>
+                            <div class="grid grid-cols-1 slg2:grid-cols-2 gap-x-12 gap-y-6 text-xs">
+
+                                <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                    <p class="font-semibold text-main_font">CHOLESTEROL:</p>
+                                    <p class="text-normal_font">Yes</p>
+                                </div>
+
+                                 <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                    <p class="font-semibold text-main_font">TRIGLYCERIDE:</p>
+                                    <p class="text-normal_font">Yes</p>
+                                </div>
+
+                                <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                    <p class="font-semibold text-main_font">HDL:</p>
+                                    <p class="text-normal_font">No</p>
+                                </div>
+
+                                <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                    <p class="font-semibold text-main_font">POLYURIA:</p>
+                                    <p class="text-normal_font">No</p>
+                                </div>
+
+                                <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                    <p class="font-semibold text-main_font">LDL:</p>
+                                    <p class="text-normal_font">No</p>
+                                </div>
+                                
+                                <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                    <p class="font-semibold text-main_font">DATE TAKEN:</p>
+                                    <p class="text-normal_font">No</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
+                        <div class="bg-white rounded-xl py-8 px-6 sm:px-10 xl:px-12">
+                            <h2 class="text-xl font-semibold text-main_font mb-4">Urinalysis</h2>
+                            <div class="grid grid-cols-1 gap-y-4 text-xs">
+                                <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                    <p class="font-semibold text-main_font">PROTEIN:</p>
+                                    <p class="text-normal_font">--</p>
+                                </div>
+
+                                <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                    <p class="font-semibold text-main_font">KETONES:</p>
+                                    <p class="text-normal_font">--</p>
+                                </div>
+
+                                <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                    <p class="font-semibold text-main_font">DATE TAKEN:</p>
+                                    <p class="text-normal_font">--</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-xl py-8 px-6 sm:px-10 xl:px-12">
+                            <h2 class="text-xl font-semibold text-main_font mb-4">Chronic Obstuctive Polmunary Disease</h2>
+                            <div class="grid grid-cols-1 gap-y-4 text-xs">
+                                <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                    <p class="font-semibold text-main_font">BREATHLESSNESS:</p>
+                                    <p class="text-normal_font">Yes</p>
+                                </div>
+
+                                <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                    <p class="font-semibold text-main_font">CHRONIC COUGH:</p>
+                                    <p class="text-normal_font">Yes</p>
+                                </div>
+
+                                <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                    <p class="font-semibold text-main_font">SPUTUM (MUCOUS) PRODUCTION:</p>
+                                    <p class="text-normal_font">Yes</p>
+                                </div>
+
+                                 <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                    <p class="font-semibold text-main_font">WHEEZING:</p>
+                                    <p class="text-normal_font">Yes</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div id="healthProgramsCard" class="bg-f7 rounded-xl overflow-hidden">
