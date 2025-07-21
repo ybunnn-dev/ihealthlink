@@ -1,17 +1,32 @@
 <x-app-layout>
     <div class="py-12 px-5">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 gap-3">
-                <a href="{{ route('midwife.residents') }}">
-                    <div class="flex items-center space-x-2"> <svg class="w-5 h-5" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M5 1H4L0 5L4 9H5V6H11C12.6569 6 14 7.34315 14 9C14 10.6569 12.6569 12 11 12H4V14H11C13.7614 14 16 11.7614 16 9C16 6.23858 13.7614 4 11 4H5V1Z" fill="#323643"></path> </g></svg>
-                        <span class="font-semibold">Return</span>
+            <div class="grid grid-cols gap-3">
+                <div class="grid grid-cols-2 items-center gap-3">
+                    <!-- Left side: Return button -->
+                    <a href="{{ route('midwife.residents') }}">
+                        <div class="flex items-center space-x-2">
+                            <svg class="w-5 h-5" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M5 1H4L0 5L4 9H5V6H11C12.6569 6 14 7.34315 14 9C14 10.6569 12.6569 12 11 12H4V14H11C13.7614 14 16 11.7614 16 9C16 6.23858 13.7614 4 11 4H5V1Z" fill="#323643" />
+                            </svg>
+                            <span class="font-semibold">Return</span>
+                        </div>
+                    </a>
+
+                    <!-- Right side: Buttons aligned right -->
+                    <div class="flex justify-end gap-3">
+                        <button class="w-40 h-9 bg-mainblue rounded-md text-xs font-semibold text-f7 px-6">Generate Card</button>
+                        <button class="w-40 h-9 bg-mainblue rounded-md text-xs font-semibold text-f7 px-6">Create Referral</button>
                     </div>
-                </a>
-                <div class="flex space-x-3">
-                    <div class="flex flex-col w-1/3 gap-2">
-                        <div class=" h-80 bg-f7 rounded-lg flex flex-col items-center justify-center p-4"> 
-                            <svg  class="flex-shrink-0 w-32 h-32 lg:w-40 lg:h-40 xl2:w-44 xl2:h-44 text-main_font" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                </div>
+                <div class="grid grid-cols-1 xl:grid-cols-3 gap-3">
+                    <!-- Left Column (Profile + Scheduled Activity) -->
+                    <div class="flex flex-col gap-2 col-span-1">
+                        <!-- Profile Card -->
+                        <div class="h-80 bg-f7 rounded-lg flex flex-col items-center justify-center p-4"> 
+                            <svg class="flex-shrink-0 w-32 h-32 lg:w-40 lg:h-40 xl2:w-44 xl2:h-44 text-main_font" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
                                 <g id="SVGRepo_iconCarrier"> 
                                     <path opacity="0.4" d="M12.1207 12.78C12.0507 12.77 11.9607 12.77 11.8807 12.78C10.1207 12.72 8.7207 11.28 8.7207 9.50998C8.7207 7.69998 10.1807 6.22998 12.0007 6.22998C13.8107 6.22998 15.2807 7.69998 15.2807 9.50998C15.2707 11.28 13.8807 12.72 12.1207 12.78Z" stroke="#566A7F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> 
                                     <path opacity="0.34" d="M18.7398 19.3801C16.9598 21.0101 14.5998 22.0001 11.9998 22.0001C9.39977 22.0001 7.03977 21.0101 5.25977 19.3801C5.35977 18.4401 5.95977 17.5201 7.02977 16.8001C9.76977 14.9801 14.2498 14.9801 16.9698 16.8001C18.0398 17.5201 18.6398 18.4401 18.7398 19.3801Z" stroke="#566A7F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> 
@@ -21,233 +36,429 @@
                             <p class="text-main_font font-bold mt-4 text-xl">Ron Peter Mortega</p> 
                             <p class="text-main_font font-semibold">Household #144</p> 
                         </div>
-                        <button class="h-16 rounded-lg bg-mainblue text-f7 text-xl font-semibold flex gap-2 items-center justify-center space-x-2">
-                            <svg class="h-6 w-6" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="currentColor">
-                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                                <g id="SVGRepo_iconCarrier"> 
-                                    <title>profile_image_round [#566A7F]</title> 
-                                    <desc>Created with Sketch.</desc> 
-                                    <defs> </defs> 
-                                    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> 
-                                        <g id="Dribbble-Light-Preview" transform="translate(-380.000000, -2199.000000)" fill="currentColor"> 
-                                            <g id="icons" transform="translate(56.000000, 160.000000)"> 
-                                                <path d="M342,2055.615 C342,2055.722 341.97,2055.821 341.939,2055.918 C341.723,2052.974 339.918,2050.482 337.375,2049.283 C338.368,2048.369 339,2047.071 339,2045.615 C339,2043.534 337.728,2041.753 335.92,2041 L341,2041 C341.552,2041 342,2041.063 342,2041.615 L342,2055.615 Z M339.963,2057 L327.975,2057 C327.974,2057 327.969,2056.741 327.969,2056.701 C327.969,2053.605 330.326,2050.96 333.339,2050.645 C334,2050.733 334.255,2050.622 334.623,2050.576 C337.625,2050.902 339.969,2053.623 339.969,2056.71 C339.969,2056.75 339.964,2057 339.963,2057 L339.963,2057 Z M326,2055.615 L326,2041.615 C326,2041.063 326.448,2041 327,2041 L332.08,2041 C330.272,2041.753 329,2043.534 329,2045.615 C329,2047.06 329.622,2048.351 330.602,2049.264 C328.107,2050.422 326.307,2052.82 326.012,2055.675 C326.011,2055.654 326,2055.636 326,2055.615 L326,2055.615 Z M337,2045.615 C337,2047.055 335.979,2048.26 334.623,2048.548 C334.033,2048.5 333.868,2048.508 333.368,2048.545 C332.017,2048.254 331,2047.052 331,2045.615 C331,2043.961 332.346,2042.615 334,2042.615 C335.654,2042.615 337,2043.961 337,2045.615 L337,2045.615 Z M342,2039 L326,2039 C324.895,2039 324,2039.895 324,2041 L324,2057 C324,2058.104 324.895,2059 326,2059 L342,2059 C343.105,2059 344,2058.104 344,2057 L344,2041 C344,2039.895 343.105,2039 342,2039 L342,2039 Z" id="profile_image_round-[#566A7F]"> </path> 
-                                        </g> 
-                                    </g> 
-                                </g>
-                            </svg>
-                            <span>Generate Card</span>
-                        </button>                    
+
+                        <!-- Scheduled Activity Card -->
+                        <div class="h-56 bg-f7 rounded-lg flex items-center justify-center px-10 py-6">
+                            <div class="flex flex-col items-center justify-center text-main_font">
+                                <h1 class="mb-2">Scheduled Activity</h1>
+                                <h2 class="font-semibold text-2xl text-center">3rd Dose Immunization</h2>
+                                <p class="text-sm">March 17, 2025</p>
+                            </div>
+                        </div>    
                     </div>
-                    <div class="flex-grow h-98 bg-f7 rounded-lg px-12 py-8">
-                        <div class="flex flex-rows gap-2">
-                            <svg class="text-main_font w-6 h-6" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                                <g id="SVGRepo_iconCarrier"> 
-                                    <g id="style=fill"> 
-                                        <g id="profile"> 
-                                            <path id="vector (Stroke)" fill-rule="evenodd" clip-rule="evenodd" d="M6.75 6.5C6.75 3.6005 9.1005 1.25 12 1.25C14.8995 1.25 17.25 3.6005 17.25 6.5C17.25 9.3995 14.8995 11.75 12 11.75C9.1005 11.75 6.75 9.3995 6.75 6.5Z" fill="currentColor"></path> 
-                                            <path id="rec (Stroke)" fill-rule="evenodd" clip-rule="evenodd" d="M4.25 18.5714C4.25 15.6325 6.63249 13.25 9.57143 13.25H14.4286C17.3675 13.25 19.75 15.6325 19.75 18.5714C19.75 20.8792 17.8792 22.75 15.5714 22.75H8.42857C6.12081 22.75 4.25 20.8792 4.25 18.5714Z" fill="currentColor"></path> 
-                                        </g> 
-                                    </g> 
-                                </g>
-                            </svg>
-                            <h2 class="text-xl font-semibold text-main_font mb-6">Household Info</h2>
+
+                    <!-- Right Column (Resident Info) -->
+                    <div class="col-span-1 xl:col-span-2 h-98 bg-f7 rounded-lg px-6 sm:px-10 lg:px-12 py-8">
+                        <!-- Header -->
+                        <div class="flex items-center gap-2 mb-6">
+                            <h2 class="text-xl font-semibold text-main_font">Resident Info</h2>
                         </div>
-                        <div class="grid grid-cols-[auto_1fr] gap-x-24 gap-y-4 text-xs">
-                            <p class="font-semibold text-main_font">FIRST NAME: </p>
-                            <p class="text-normal_font">Ron Peter</p>
 
-                            <p class="font-semibold text-main_font">LAST NAME: </p>
-                            <p class="text-normal_font">Mortega</p>
+                        <!-- Info Grid -->
+                        <div class="grid grid-cols-1 gap-y-4 text-xs">
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">FIRST NAME:</p>
+                                <p class="text-normal_font">Ron Peter</p>
+                            </div>
 
-                            <p class="font-semibold text-main_font">MIDDLE NAME: </p>
-                            <p class="text-normal_font">Jazareno</p>
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">LAST NAME:</p>
+                                <p class="text-normal_font">Mortega</p>
+                            </div>
 
-                            <p class="font-semibold text-main_font">SUFFIX: </p>
-                            <p class="text-normal_font">III</p>
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">MIDDLE NAME:</p>
+                                <p class="text-normal_font">Jazareno</p>
+                            </div>
 
-                            <p class="font-semibold text-main_font">BIRTHDATE:</p>
-                            <p class="text-normal_font">December 10, 2002 (22 Years old)</p>
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">SUFFIX:</p>
+                                <p class="text-normal_font">III</p>
+                            </div>
 
-                            <p class="font-semibold text-main_font">AGE GROUP: </p>
-                            <p class="text-normal_font">Adult</p>
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">BIRTHDATE:</p>
+                                <p class="text-normal_font">December 10, 2002 (22 Years old)</p>
+                            </div>
 
-                            <p class="font-semibold text-main_font">MOBILE NUMBER: </p>
-                            <p class="text-normal_font">09134579</p>
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">AGE GROUP:</p>
+                                <p class="text-normal_font">Adult</p>
+                            </div>
 
-                            <p class="font-semibold text-main_font">CIVIL STATUS: </p>
-                            <p class="text-normal_font">Divorced</p>
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">SEX:</p>
+                                <p class="text-normal_font">Male</p>
+                            </div>
 
-                            <p class="font-semibold text-main_font">RELIGION: </p>
-                            <p class="text-normal_font">Roman Catholic</p>
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">MOBILE NUMBER:</p>
+                                <p class="text-normal_font">09134579</p>
+                            </div>
 
-                            <p class="font-semibold text-main_font">EMPLOYMENT STATUS: </p>
-                            <p class="text-normal_font">Unemployed</p>
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">CIVIL STATUS:</p>
+                                <p class="text-normal_font">Divorced</p>
+                            </div>
 
-                            <p class="font-semibold text-main_font">PWD ID: </p>
-                            <p class="text-normal_font">Non-PWD</p>
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">RELIGION:</p>
+                                <p class="text-normal_font">Roman Catholic</p>
+                            </div>
 
-                            <p class="font-semibold text-main_font">INDEGENOUS PEOPLE: </p>
-                            <p class="text-normal_font">No</p>
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">EMPLOYMENT STATUS:</p>
+                                <p class="text-normal_font">Unemployed</p>
+                            </div>
 
-                            <p class="font-semibold text-main_font">ETHNICITY: </p>
-                            <p class="text-normal_font">South African</p>
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">PWD ID:</p>
+                                <p class="text-normal_font">Non-PWD</p>
+                            </div>
+
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">INDIGENOUS PEOPLE:</p>
+                                <p class="text-normal_font">No</p>
+                            </div>
+
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">ETHNICITY:</p>
+                                <p class="text-normal_font">South African</p>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="bg-white rounded-xl p-3 px-6">
-                    <div class="flex space-x-6 pt-2">
-                        <div class="flex flex-col items-center cursor-pointer" id="medRecTab">
+
+               <div class="bg-white rounded-xl p-3 px-4 sm:px-6">
+                    <div class="flex flex-wrap justify-between sm:justify-start gap-2 sm:gap-6 pt-2">
+                        <!-- Health Record Tab -->
+                        <div class="flex flex-col items-center flex-grow sm:flex-grow-0 cursor-pointer" id="medRecTab">
                             <span class="font-semibold text-gray-500 text-sm">Health Record</span>
                             <div class="h-1 w-full bg-transparent mt-1"></div>
                         </div>
-                        <div class="flex flex-col items-center cursor-pointer" id="healthProgramsTab">
+
+                        <!-- Health Programs Tab (Active) -->
+                        <div class="flex flex-col items-center flex-grow sm:flex-grow-0 cursor-pointer" id="healthProgramsTab">
                             <span class="font-semibold text-sub_blue text-sm">Health Programs</span>
                             <div class="h-1 w-full bg-sub_blue mt-1"></div>
                         </div>
-                        <div class="flex flex-col items-center cursor-pointer" id="consultHistoryTab">
+
+                        <!-- Consultation History Tab -->
+                        <div class="flex flex-col items-center flex-grow sm:flex-grow-0 cursor-pointer" id="consultHistoryTab">
                             <span class="font-semibold text-gray-500 text-sm">Consultation History</span>
                             <div class="h-1 w-full bg-transparent mt-1"></div>
                         </div>
                     </div>
                 </div>
+
                 <div id="medRecContent" class="grid grid-col gap-3">
-                    <div class="bg-white rounded-xl p-6 px-10">
-                        <div class="grid grid-cols-2 items-center">
-                            <div class="grid grid-rows text-main_font">
+                    <div class="bg-white rounded-xl p-6 px-6 sm:px-10">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 items-center gap-y-4">
+                            <!-- Left Side: Last Updated -->
+                            <div class="text-main_font">
                                 <p class="text-xs">Last Updated:</p>
                                 <h1 class="text-xl font-semibold">March 17, 2024</h1>
                             </div>
-                            <div class="flex flex-cols gap-3 justify-end">
-                                <button class="w-32 h-9 bg-mainblue rounded-md text-xs font-semibold text-f7 px-6">Update Data</button>
-                                <button class="w-40 h-9 bg-mainblue rounded-md text-xs font-semibold text-f7 px-6">Print PhilPen Data</button>
+
+                            <!-- Right Side: Action Buttons -->
+                            <div class="flex flex-wrap justify-start sm:justify-end gap-3">
+                                <button class="w-full sm:w-32 h-9 bg-mainblue rounded-md text-xs font-semibold text-f7 px-6">Update Data</button>
+                                <button class="w-full sm:w-40 h-9 bg-mainblue rounded-md text-xs font-semibold text-f7 px-6">Print PhilPen Data</button>
                             </div>
                         </div>
                     </div>
-                    <div class="flex flex-row gap-3">
-                        <div class="bg-white rounded-xl py-8 px-12 flex-1">
-                            <h2 class="text-xl font-semibold text-main_font mb-4">Basic Health Information</h2>
-                            <div class="grid grid-cols-[auto_1fr] gap-x-24 gap-y-4 text-xs">
-                                <p class="font-semibold text-main_font">FIRST NAME: </p>
-                                <p class="text-normal_font">1</p>
 
-                                <p class="font-semibold text-main_font">LAST NAME: </p>
-                                <p class="text-normal_font">6</p>
+                    <!-- Basic Health Information Card -->
+                    <div class="bg-white rounded-xl py-8 px-6 sm:px-10 xl:px-12">
+                        <h2 class="text-xl font-semibold text-main_font mb-4">Basic Health Information</h2>
+                        <div class="grid grid-cols-1 slg2:grid-cols-2 gap-x-12 gap-y-4 text-xs">
+                            <!-- MINI BLOCK -->
 
-                                <p class="font-semibold text-main_font">MIDDLE NAME: </p>
-                                <p class="text-normal_font">Ron Peter Mortega</p>
-
-                                <p class="font-semibold text-main_font">SUFFIX: </p>
-                                <p class="text-normal_font">Deep Well</p>
-
-                                <p class="font-semibold text-main_font">BIRTHDATE:</p>
-                                <p class="text-normal_font">No</p>
-
-                                <p class="font-semibold text-main_font">AGE GROUP: </p>
-                                <p class="text-normal_font">March 17, 2024</p>
-
-                                <p class="font-semibold text-main_font">MOBILE NUMBER: </p>
-                                <p class="text-normal_font">March 17, 2025</p>
-
-                                <p class="font-semibold text-main_font">HOUSEHOLD NO.: </p>
-                                <p class="text-normal_font">March 17, 2025</p>
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">STATUS:</p>
+                                <p class="text-normal_font">Alive</p>
                             </div>
-                        </div>
-                        <div class="bg-white rounded-xl py-8 px-12 flex-1">
-                            <h2 class="text-xl font-semibold text-main_font mb-4">Medical History</h2>
-                            <div class="grid grid-cols-[auto_1fr] gap-x-24 gap-y-4 text-xs">
-                                <p class="font-semibold text-main_font">FIRST NAME: </p>
+
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">WAIST CIRCUMFERENCE:</p>
                                 <p class="text-normal_font">1</p>
+                            </div>
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">HEIGHT:</p>
+                                <p class="text-normal_font">1</p>
+                            </div>
 
-                                <p class="font-semibold text-main_font">LAST NAME: </p>
-                                <p class="text-normal_font">6</p>
-
-                                <p class="font-semibold text-main_font">MIDDLE NAME: </p>
-                                <p class="text-normal_font">Ron Peter Mortega</p>
-
-                                <p class="font-semibold text-main_font">SUFFIX: </p>
-                                <p class="text-normal_font">Deep Well</p>
-
-                                <p class="font-semibold text-main_font">BIRTHDATE:</p>
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">HEART RATE:</p>
                                 <p class="text-normal_font">No</p>
+                            </div>
 
-                                <p class="font-semibold text-main_font">AGE GROUP: </p>
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">WEIGHT:</p>
+                                <p class="text-normal_font">6</p>
+                            </div>
+
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">RESPIRATORY RATE:</p>
                                 <p class="text-normal_font">March 17, 2024</p>
+                            </div>
 
-                                <p class="font-semibold text-main_font">MOBILE NUMBER: </p>
-                                <p class="text-normal_font">March 17, 2025</p>
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">BMI:</p>
+                                <p class="text-normal_font">Ron Peter Mortega</p>
+                            </div>
 
-                                <p class="font-semibold text-main_font">HOUSEHOLD NO.: </p>
-                                <p class="text-normal_font">March 17, 2025</p>
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">BLOOD PRESSURE:</p>
+                                <p class="text-normal_font">Deep Well</p>
                             </div>
                         </div>
                     </div>
-                    <div class="flex flex-row gap-3">
-                        <div class="bg-white rounded-xl py-8 px-12 flex-1">
-                            <h2 class="text-xl font-semibold text-main_font mb-4">Basic Health Information</h2>
-                            <div class="grid grid-cols-[auto_1fr] gap-x-24 gap-y-4 text-xs">
-                                <p class="font-semibold text-main_font">FIRST NAME: </p>
-                                <p class="text-normal_font">1</p>
-
-                                <p class="font-semibold text-main_font">LAST NAME: </p>
-                                <p class="text-normal_font">6</p>
-
-                                <p class="font-semibold text-main_font">MIDDLE NAME: </p>
-                                <p class="text-normal_font">Ron Peter Mortega</p>
-
-                                <p class="font-semibold text-main_font">SUFFIX: </p>
-                                <p class="text-normal_font">Deep Well</p>
-
-                                <p class="font-semibold text-main_font">BIRTHDATE:</p>
+                    <div class="bg-white rounded-xl py-8 px-6 sm:px-10 xl:px-12">
+                        <h2 class="text-xl font-semibold text-main_font mb-4">Medical History</h2>
+                        <div class="grid grid-cols-1 slg2:grid-cols-2 gap-x-12 gap-y-4 text-xs">
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">HYPERTENSION:</p>
                                 <p class="text-normal_font">No</p>
-
-                                <p class="font-semibold text-main_font">AGE GROUP: </p>
-                                <p class="text-normal_font">March 17, 2024</p>
-
-                                <p class="font-semibold text-main_font">MOBILE NUMBER: </p>
-                                <p class="text-normal_font">March 17, 2025</p>
-
-                                <p class="font-semibold text-main_font">HOUSEHOLD NO.: </p>
-                                <p class="text-normal_font">March 17, 2025</p>
                             </div>
-                        </div>
-                        <div class="bg-white rounded-xl py-8 px-12 flex-1">
-                            <h2 class="text-xl font-semibold text-main_font mb-4">Medical History</h2>
-                            <div class="grid grid-cols-[auto_1fr] gap-x-24 gap-y-4 text-xs">
-                                <p class="font-semibold text-main_font">FIRST NAME: </p>
-                                <p class="text-normal_font">1</p>
 
-                                <p class="font-semibold text-main_font">LAST NAME: </p>
-                                <p class="text-normal_font">6</p>
-
-                                <p class="font-semibold text-main_font">MIDDLE NAME: </p>
-                                <p class="text-normal_font">Ron Peter Mortega</p>
-
-                                <p class="font-semibold text-main_font">SUFFIX: </p>
-                                <p class="text-normal_font">Deep Well</p>
-
-                                <p class="font-semibold text-main_font">BIRTHDATE:</p>
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">HEART DISEASE:</p>
                                 <p class="text-normal_font">No</p>
+                            </div>
 
-                                <p class="font-semibold text-main_font">AGE GROUP: </p>
-                                <p class="text-normal_font">March 17, 2024</p>
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">COPD:</p>
+                                <p class="text-normal_font">No</p>
+                            </div>
 
-                                <p class="font-semibold text-main_font">MOBILE NUMBER: </p>
-                                <p class="text-normal_font">March 17, 2025</p>
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">KIDNEY DISORDERS:</p>
+                                <p class="text-normal_font">No</p>
+                            </div>
 
-                                <p class="font-semibold text-main_font">HOUSEHOLD NO.: </p>
-                                <p class="text-normal_font">March 17, 2025</p>
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">VISION PROBLEMS:</p>
+                                <p class="text-normal_font">Yes</p>
+                            </div>
+
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">DIABETES:</p>
+                                <p class="text-normal_font">No</p>
+                            </div>
+
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">CANCER:</p>
+                                <p class="text-normal_font">Yes</p>
+                            </div>
+
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">ASTHMA:</p>
+                                <p class="text-normal_font">No</p>
+                            </div>
+
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">ALLERGIES:</p>
+                                <p class="text-normal_font">No</p>
+                            </div>
+
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">SURGICAL HISTORY:</p>
+                                <p class="text-normal_font">Yes</p>
+                            </div>
+
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">THYROID DISORDERS:</p>
+                                <p class="text-normal_font">No</p>
+                            </div>
+
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">
+                                    MENTAL, NEUROLOGICAL,<br class="hidden sm:inline"> AND SUBSTANCE ABUSE DISORDERS:
+                                </p>
+                                <p class="text-normal_font">No</p>
                             </div>
                         </div>
                     </div>
-                    <div class="bg-white rounded-xl p-6">
+
+                    <div class="bg-white rounded-xl py-8 px-6 sm:px-10 xl:px-12">
+                        <h2 class="text-xl font-semibold text-main_font mb-4">Emergency Indicators</h2>
+                        <div class="grid grid-cols-1 slg2:grid-cols-2 gap-x-12 gap-y-4 text-xs">
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">CHEST PAIN:</p>
+                                <p class="text-normal_font">No</p>
+                            </div>
+
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">BREATHING DIFFICULTY:</p>
+                                <p class="text-normal_font">No</p>
+                            </div>
+
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">LOSS OF CONSCIOUSNESS:</p>
+                                <p class="text-normal_font">Yes</p>
+                            </div>
+
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">NUMBNESS OF ARM:</p>
+                                <p class="text-normal_font">No</p>
+                            </div>
+
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">ACT OF SELF-HARM<br>OR SUICIDE:</p>
+                                <p class="text-normal_font">No</p>
+                            </div>
+
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">AGITATED OR AGGRESSIVE<br>BEHAVIOR:</p>
+                                <p class="text-normal_font">No</p>
+                            </div>
+
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">SEVERE INJURIES:</p>
+                                <p class="text-normal_font">No</p>
+                            </div>
+
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">SLURRED SPEECH:</p>
+                                <p class="text-normal_font">No</p>
+                            </div>
+
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">FACIAL ASSYMETRY:</p>
+                                <p class="text-normal_font">Yes</p>
+                            </div>
+
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">CHEST RETRACTIONS:</p>
+                                <p class="text-normal_font">No</p>
+                            </div>
+
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">SEIZURE OR CONVULSION:</p>
+                                <p class="text-normal_font">Yes</p>
+                            </div>
+
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">EYE INJURY:</p>
+                                <p class="text-normal_font">No</p>
+                            </div>
+
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">DISORIENTED AS TO TIME,<br>PLACE, OR PERSON:</p>
+                                <p class="text-normal_font">No</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl py-8 px-6 sm:px-10 xl:px-12">
+                        <h2 class="text-xl font-semibold text-main_font mb-4">Family History</h2>
+                        <div class="grid grid-cols-1 slg2:grid-cols-2 gap-x-12 gap-y-4 text-xs">
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">HYPERTENSION:</p>
+                                <p class="text-normal_font">No</p>
+                            </div>
+
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">HEART DISEASE:</p>
+                                <p class="text-normal_font">No</p>
+                            </div>
+
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">COPD:</p>
+                                <p class="text-normal_font">No</p>
+                            </div>
+
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">KIDNEY DISORDERS:</p>
+                                <p class="text-normal_font">No</p>
+                            </div>
+
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">VISION PROBLEMS:</p>
+                                <p class="text-normal_font">Yes</p>
+                            </div>
+
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">DIABETES:</p>
+                                <p class="text-normal_font">No</p>
+                            </div>
+
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">CANCER:</p>
+                                <p class="text-normal_font">Yes</p>
+                            </div>
+
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">ASTHMA:</p>
+                                <p class="text-normal_font">No</p>
+                            </div>
+
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">ALLERGIES:</p>
+                                <p class="text-normal_font">No</p>
+                            </div>
+
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">SURGICAL HISTORY:</p>
+                                <p class="text-normal_font">Yes</p>
+                            </div>
+
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">THYROID DISORDERS:</p>
+                                <p class="text-normal_font">No</p>
+                            </div>
+
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">
+                                    MENTAL, NEUROLOGICAL,<br class="hidden sm:inline"> AND SUBSTANCE ABUSE DISORDERS:
+                                </p>
+                                <p class="text-normal_font">No</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl py-8 px-6 sm:px-10 xl:px-12">
                         <h2 class="text-xl font-semibold text-main_font mb-4">NCD Risk Factors</h2>
-                        <p class="text-gray-700">Here you would display the PhilPen data, perhaps in a different table or a set of data cards.</p>
-                        <p class="text-gray-700 mt-2">Add your specific PhilPen data structure here.</p>
+                        <div class="grid grid-cols-1 slg2:grid-cols-2 gap-x-12 gap-y-6 text-xs">
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">TOBACCO USE:</p>
+                                <p class="text-normal_font">Never Used</p>
+                            </div>
+
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">STREET FOODS (E.G ISAW, BARBECUE, CHICKEN SKIN) WEEKLY:</p>
+                                <p class="text-normal_font">Yes</p>
+                            </div>
+
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">ALCOHOL INTAKE:</p>
+                                <p class="text-normal_font">No</p>
+                            </div>
+
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">HIGH FAT AND HIGH SALT FOOD INTAKE WEEKLY:</p>
+                                <p class="text-normal_font">No</p>
+                            </div>
+
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">NUMBER OF DRINKS LAST YEAR:</p>
+                                <p class="text-normal_font">No</p>
+                            </div>
+
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">HRS OF PHYSICAL ACTIVITY WEEKLY:</p>
+                                <p class="text-normal_font">Yes</p>
+                            </div>
+
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">CAFFIENE INTAKE:</p>
+                                <p class="text-normal_font">No</p>
+                            </div>
+
+                        </div>
                     </div>
+
                     <div class="bg-white rounded-xl p-6">
                         <h2 class="text-xl font-semibold text-main_font mb-4">Risk Assessment</h2>
                         <p class="text-gray-700">Here you would display the PhilPen data, perhaps in a different table or a set of data cards.</p>
