@@ -44,4 +44,12 @@ Route::middleware([
         return view('midwife.BHWs-profile');
     })->name('midwife.BHWs-profile');
 
+    Route::get('/midwife/health-program', function () {
+        return view('midwife.health-program');
+    })->name('midwife.health-program');
+
+    Route::get('/midwife/health-program-profile', function () {
+        return view('midwife.health-program-profile');
+    })->name('midwife.health-program-profile');
+
 });
