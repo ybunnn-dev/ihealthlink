@@ -689,61 +689,19 @@
                             <table class="w-full text-sm text-left text-main_font bg-col_tab_h">
                                 <thead class="text-xs text-main_font uppercase">
                                     <tr>
-                                        <th scope="col" class="px-6 py-3">PROGRAM ID</th>
-                                        <th scope="col" class="px-6 py-3">PROGRAM NAME</th>
-                                        <th scope="col" class="px-6 py-3">DATE ENROLLED</th>
-                                        <th scope="col" class="px-6 py-3">LAST UPDATED</th>
-                                        <th scope="col" class="px-6 py-3">STATUS</th>
+                                        <th scope="col" class="px-6 py-3">CONSULTATION TYPE</th>
+                                        <th scope="col" class="px-6 py-3">DATE</th>
+                                        <th scope="col" class="px-6 py-3">MEDICINE GIVEN</th>
+                                        <th scope="col" class="px-6 py-3">FOLLOW UP</th>
                                         <th scope="col" class="px-6 py-3">ACTION</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr class="bg-white border-b bg-f7 text-normal_font">
-                                        <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">H001</th>
-                                        <td class="px-6 py-4">Child Immunization Program</td>
+                                        <td class="px-6 py-4">General Consulation</td>
                                         <td class="px-6 py-4">June 1, 2024</td>
-                                        <td class="px-6 py-4">July 15, 2025</td>
-                                        <td class="px-6 py-4">Active</td>
-                                        <td class="px-6 py-4">
-                                            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded text-xs">View</button>
-                                        </td>
-                                    </tr>
-                                    <tr class="bg-white border-b bg-f7 text-normal_font">
-                                        <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">H002</th>
-                                        <td class="px-6 py-4">Maternal & Prenatal Care</td>
-                                        <td class="px-6 py-4">July 10, 2024</td>
-                                        <td class="px-6 py-4">July 18, 2025</td>
-                                        <td class="px-6 py-4">Active</td>
-                                        <td class="px-6 py-4">
-                                            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded text-xs">View</button>
-                                        </td>
-                                    </tr>
-                                    <tr class="bg-white border-b bg-f7 text-normal_font">
-                                        <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">H003</th>
-                                        <td class="px-6 py-4">Diabetes Management Program</td>
-                                        <td class="px-6 py-4">August 22, 2024</td>
-                                        <td class="px-6 py-4">July 17, 2025</td>
-                                        <td class="px-6 py-4">Active</td>
-                                        <td class="px-6 py-4">
-                                            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded text-xs">View</button>
-                                        </td>
-                                    </tr>
-                                    <tr class="bg-white border-b bg-f7 text-normal_font">
-                                        <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">H004</th>
-                                        <td class="px-6 py-4">Hypertension Awareness Campaign</td>
-                                        <td class="px-6 py-4">September 5, 2024</td>
-                                        <td class="px-6 py-4">July 16, 2025</td>
-                                        <td class="px-6 py-4">Active</td>
-                                        <td class="px-6 py-4">
-                                            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded text-xs">View</button>
-                                        </td>
-                                    </tr>
-                                    <tr class="bg-white border-b bg-f7 text-normal_font">
-                                        <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">H005</th>
-                                        <td class="px-6 py-4">Nutrition and Healthy Lifestyle</td>
-                                        <td class="px-6 py-4">October 1, 2024</td>
-                                        <td class="px-6 py-4">July 19, 2025</td>
-                                        <td class="px-6 py-4">Active</td>
+                                        <td class="px-6 py-4">N/A</td>
+                                        <td class="px-6 py-4">N/A</td>
                                         <td class="px-6 py-4">
                                             <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded text-xs">View</button>
                                         </td>
