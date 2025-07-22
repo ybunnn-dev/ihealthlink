@@ -48,5 +48,9 @@ Route::middleware([
     Route::get('/midwife/residents/spec-res', function(){
         return view('midwife.spec-resident');
     })->name('midwife.spec-resident');
+
+    Route::get('/midwife/schedules', function(){
+        return view('midwife.schedules');
+    })->name('midwife.sched');
     
 });
