@@ -682,9 +682,6 @@
                                             <input type="search" id="default-search" class="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500" placeholder="Search..."/>
                                         </div>
                                     </div>
-                                    <div class="w-full xs:w-40 pt-5 xs:pt-0">
-                                        <button type="button" class="w-full h-[2.375rem] text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3">Add Households</button>
-                                    </div>
                                 </div>
                             </div>
                         </div>
