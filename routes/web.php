@@ -1,5 +1,5 @@
 <?php
-
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -37,19 +37,12 @@ Route::middleware([
         return view('midwife.household-list');
     })->name('midwife.households');
 
-    // Midwife-specific dashboard
-    Route::get('/midwife/medicines', function () {
-        return view('midwife.medicine-list');
-    })->name('midwife.medicines');
-
-    // Midwife-specific dashboard
-    Route::get('/midwife/medicines-view', function () {
-        return view('midwife.spec-medicine');
-    })->name('midwife.medicines-view');
-
-    // Midwife-specific dashboard
-    Route::get('/midwife/logs', function () {
-        return view('midwife.log-list');
-    })->name('midwife.logs');
+    Route::get('/midwife/BHWs', function () {
+        return view('midwife.bhws');
+    })->name('midwife.BHWs');
     
+    Route::get('/midwife/BHWs-profile', function () {
+        return view('midwife.BHWs-profile');
+    })->name('midwife.BHWs-profile');
+
 });

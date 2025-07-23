@@ -252,13 +252,13 @@
 
             <!-- BHWs -->
             <li class="flex items-center group">
-                <a href="#"
+                <a href="{{ route('midwife.BHWs') }}"
                 class="flex items-center w-full py-3 pl-6 hover:bg-white/10 transition-colors"
                 :class="{
                     'bg-[#148079] text-f7 font-bold': activeItem === 'bhws',
                     'text-white': activeItem !== 'bhws'
                 }"
-                @click="setActive('bhws')"
+                @click="setActive('BHWs')"
                 >
                     <svg class="flex-shrink-0
                             w-4 h-4 lg:w-4 lg:h-4 xl2:w-5 xl2:h-5"
