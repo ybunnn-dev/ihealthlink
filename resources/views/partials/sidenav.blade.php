@@ -6,47 +6,68 @@
     >
         {{-- Logo --}}
         <div class="flex flex-col px-6">
-            <div class="flex items-center px-1 h-14 gap-2"> <svg class="w-7 xs:w-8 sm:w-8 text-mainblue" viewBox="0 0 90 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <div class="flex items-center px-1 h-14 gap-2"> 
+                <svg class="w-7 xs:w-8 sm:w-8 lg:w-6 text-mainblue flex-shrink-0" viewBox="0 0 90 70" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M51.9356 40.3515L53.3692 43.9599L55.1231 40.496L58.2998 34.2206L60.3291 39.4364L60.7637 40.5517H81.9961L63.7647 57.5917C60.6229 60.528 56.8727 62.5495 52.8945 63.6601C44.0894 66.5725 33.8877 64.7375 26.8428 58.1532L8.01173 40.5517H39.8457L40.3545 39.6923L47.126 28.2489L51.9356 40.3515ZM7.32619 6.84755C17.0951 -2.28239 32.9335 -2.28265 42.7022 6.84755L45.0029 8.99892L47.2969 6.85537C57.0658 -2.27458 72.9042 -2.27483 82.6729 6.85537C91.4744 15.0821 92.3439 27.9135 85.2842 37.0517H63.1572L60.1406 29.2987L58.7197 25.6454L56.9492 29.1425L53.7539 35.4511L49.0635 23.6435L47.7471 20.33L45.9307 23.3983L37.8496 37.0517H4.71974C-2.34671 27.9128 -1.47841 15.0767 7.32619 6.84755ZM74.001 4.60244C72.8714 3.94228 71.4536 3.98197 70.3828 4.704C68.3681 6.06262 68.5602 9.01338 70.7383 10.1659L71.6865 10.6679C71.895 10.7782 72.0928 10.9067 72.2783 11.0507L72.9492 11.5712C75.03 13.1867 76.5836 15.3508 77.4180 17.7958L77.9024 19.2138C77.9673 19.4041 78.0145 19.5998 78.0449 19.7977L78.1113 20.2284C78.4751 22.6001 81.2939 23.7962 83.3125 22.4354C84.3704 21.7221 84.8944 20.4725 84.6533 19.2372L84.1406 16.6142C84.0465 16.1322 83.9036 15.6595 83.7129 15.204L83.2529 14.1044C82.2107 11.6147 80.5883 9.38565 78.5137 7.59267L77.8135 6.98818C77.4382 6.66391 77.0330 6.37349 76.6026 6.12197L74.0010 4.60244Z" fill="currentColor"/>
                 </svg>
                 <div class="flex items-center">
-                    <span class="text-maingreen font-semibold whitespace-nowrap text-2xl xl3:text-2xl transition-transform duration-300"
+                    <span class="text-maingreen font-semibold whitespace-nowrap text-2xl xl3:text-2xl lg:text-xl  transition-transform duration-300"
                         :class="{ 'scale-x-0 opacity-0': !open }">
                         iHealth
                     </span>
-                    <span class="text-mainblue font-semibold whitespace-nowrap text-2xl xl3:text-2xl transition-transform duration-300"
+                    <span class="text-mainblue font-semibold whitespace-nowrap text-2xl xl3:text-2xl lg:text-xl transition-transform duration-300"
                         :class="{ 'scale-x-0 opacity-0': !open }">
                         Link
                     </span>
                 </div>
             </div>
-            <p class="text-sub_blue font-medium text-fluid-xxs -mt-3">Barangay Healthcare Management System</p> {{-- Changed to -mt-2 as discussed --}}
+            <p class="whitespace-nowrap overflow-hidden transition-all duration-200 lg:opacity-0 2xl:opacity-100 opacity-100"
+            :class="{
+                'text-sub_blue font-medium text-fluid-xxs -mt-3 opacity-0 invisible': !open,
+                'text-sub_blue font-medium text-fluid-xxs -mt-3 opacity-100 visible delay-300': open
+            }">
+            Barangay Healthcare Management System
+            </p>
         </div>
 
         {{-- Navigation --}}
-        <ul class="flex-1 mt-10">
+        <ul class="flex-1 mt-10 2xl:mt-10 lg:mt-2">
             <li class="flex items-center group">
-                <a href="#"
-                   class="flex items-center w-full py-3 pl-6 hover:bg-white/10 transition-colors"
-                   :class="{
-                       'bg-[#148079] text-f7 font-bold': activeItem === 'home',
-                       'text-white': activeItem !== 'home'
-                   }"
-                   @click="setActive('home')"
+                <a href="{{ route('mho.dashboard') }}"
+                class="flex items-center w-full py-3 pl-6 hover:bg-white/10 transition-colors"
+                :class="{
+                    'bg-nav_active text-f7 font-bold': activeItem === 'dashboard',
+                    'text-mainblue': activeItem !== 'dashboard'
+                }"
+                @click="setActive('dashboard')"
                 >
-                        <svg class="w-5 h-5 text-main_font" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                            <g id="SVGRepo_iconCarrier">
-                                <path d="M13 12C13 11.4477 13.4477 11 14 11H19C19.5523 11 20 11.4477 20 12V19C20 19.5523 19.5523 20 19 20H14C13.4477 20 13 19.5523 13 19V12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
-                                <path d="M4 5C4 4.44772 4.44772 4 5 4H9C9.55228 4 10 4.44772 10 5V12C10 12.5523 9.55228 13 9 13H5C4.44772 13 4 12.5523 4 12V5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
-                                <path d="M4 17C4 16.4477 4.44772 16 5 16H9C9.55228 16 10 16.4477 10 17V19C10 19.5523 9.55228 20 9 20H5C4.44772 20 4 19.5523 4 19V17Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
-                                <path d="M13 5C13 4.44772 13.4477 4 14 4H19C19.5523 4 20 4.44772 20 5V7C20 7.55228 19.5523 8 19 8H14C13.4477 8 13 7.55228 13 7V5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
-                            </g>
-                        </svg>
-                        <span                        
-                        class="ml-3 whitespace-nowrap transition-all duration-200 text-main_font text-medium"
-                        :class="{ 'opacity-0 invisible': !open, 'opacity-100 visible': open, 'font-bold': activeItem === 'home' }"
+                    <svg
+                        class="flex-shrink-0
+                            w-4 h-4 lg:w-4 lg:h-4 xl2:w-5 xl2:h-5"
+                        :class="{
+                            'text-mainblue': activeItem === 'dashboard',
+                            'text-main_font': activeItem !== 'dashboard'
+                        }"
+                        viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <path d="M13 12C13 11.4477 13.4477 11 14 11H19C19.5523 11 20 11.4477 20 12V19C20 19.5523 19.5523 20 19 20H14C13.4477 20 13 19.5523 13 19V12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M4 5C4 4.44772 4.44772 4 5 4H9C9.55228 4 10 4.44772 10 5V12C10 12.5523 9.55228 13 9 13H5C4.44772 13 4 12.5523 4 12V5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M4 17C4 16.4477 4.44772 16 5 16H9C9.55228 16 10 16.4477 10 17V19C10 19.5523 9.55228 20 9 20H5C4.44772 20 4 19.5523 4 19V17Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M13 5C13 4.44772 13.4477 4 14 4H19C19.5523 4 20 4.44772 20 5V7C20 7.55228 19.5523 8 19 8H14C13.4477 8 13 7.55228 13 7V5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+
+                    <span class="ml-3 whitespace-nowrap transition-all duration-200"
+                        :class="{ 
+                            'opacity-0 invisible': !open, 
+                            'opacity-100 visible': open,
+                            'font-bold text-mainblue': activeItem === 'dashboard',
+                            'text-main_font': activeItem !== 'dashboard'
+                        }"
+                        class="
+                            text-sm 
+                            lg:text-xs
+                            2xl:text-sm
+                        "
                     >
                         Dashboard
                     </span>
