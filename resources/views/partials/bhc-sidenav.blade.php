@@ -220,10 +220,10 @@
 
             <!-- Schedules -->
             <li class="flex items-center group">
-                <a href="#"
+                <a href="{{ route('midwife.sched') }}"
                 class="flex items-center w-full py-3 pl-6 hover:bg-white/10 transition-colors"
                 :class="{
-                    'bg-[#148079] text-f7 font-bold': activeItem === 'schedules',
+                    'bg-nav_active text-f7 font-bold': activeItem === 'schedules',
                     'text-white': activeItem !== 'schedules'
                 }"
                 @click="setActive('schedules')"
@@ -231,8 +231,8 @@
                     <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" class="flex-shrink-0
                             w-4 h-4 lg:w-4 lg:h-4 xl2:w-5 xl2:h-5"
                         :class="{
-                            'text-mainblue': activeItem === 'health-programs',
-                            'text-main_font': activeItem !== 'health-programs'
+                            'text-mainblue': activeItem === 'schedules',
+                            'text-main_font': activeItem !== 'schedules'
                         }" fill="currentColor">
                         <g>
                             <path d="M2 2h16v4H2V2zm0 10V8h4v4H2zm6-2V8h4v2H8zm6 3V8h4v5h-4zm-6 5v-6h4v6H8zm-6 0v-4h4v4H2zm12 0v-3h4v3h-4z"></path>
@@ -242,7 +242,8 @@
                         :class="{ 
                             'opacity-0 invisible': !open, 
                             'opacity-100 visible': open, 
-                            'font-bold': activeItem === 'schedules' 
+                            'font-bold': activeItem === 'schedules',
+                            'text-mainblue': activeItem === 'schedules' 
                         }"
                     >
                         Schedules
