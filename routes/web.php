@@ -53,4 +53,7 @@ Route::middleware([
         return view('midwife.schedules');
     })->name('midwife.sched');
     
+    Route::get('/midwife/reports', function(){
+        return view('midwife.reports');
+    })->name('midwife.reports');
 });

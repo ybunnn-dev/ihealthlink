@@ -184,10 +184,10 @@
 
             <!-- Reports -->
             <li class="flex items-center group">
-                <a href="#"
+                <a href="{{ route('midwife.reports') }}"
                 class="flex items-center w-full py-3 pl-6 hover:bg-white/10 transition-colors"
                 :class="{
-                    'bg-[#148079] text-f7 font-bold': activeItem === 'reports',
+                    'bg-nav_active text-f7 font-bold': activeItem === 'reports',
                     'text-white': activeItem !== 'reports'
                 }"
                 @click="setActive('reports')"
@@ -195,8 +195,8 @@
                     <svg class="flex-shrink-0
                             w-4 h-4 lg:w-4 lg:h-4 xl2:w-5 xl2:h-5"
                         :class="{
-                            'text-mainblue': activeItem === 'health-programs',
-                            'text-main_font': activeItem !== 'health-programs'
+                            'text-mainblue': activeItem === 'reports',
+                            'text-main_font': activeItem !== 'reports'
                         }" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 36 36">
                             <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                             <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
@@ -210,7 +210,8 @@
                         :class="{ 
                             'opacity-0 invisible': !open, 
                             'opacity-100 visible': open, 
-                            'font-bold': activeItem === 'reports' 
+                            'font-bold': activeItem === 'reports' ,
+                            'text-mainblue': activeItem === 'reports'
                         }"
                     >
                         Reports
