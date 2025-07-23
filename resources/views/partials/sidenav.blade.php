@@ -221,15 +221,22 @@
                 </a>
             </li>
 
+            <!-- Logs -->
             <li class="flex items-center group">
-                <a href="#"
-                   class="flex items-center w-full py-3 pl-6 hover:bg-white/10 transition-colors"
-                   :class="{
-                       'bg-[#148079] text-f7 font-bold': activeItem === 'home',
-                       'text-white': activeItem !== 'home'
-                   }"
-                   @click="setActive('home')"
-                >       <svg class="w-5 h-5 text-main_font" fill="currentColor" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                <a href="{{ route('mho.logs') }}"
+                class="flex items-center w-full py-3 pl-6 hover:bg-white/10 transition-colors"
+                :class="{
+                    'bg-nav_active text-f7 font-bold': activeItem === 'logs',
+                    'text-white': activeItem !== 'logs'
+                }"
+                @click="setActive('logs')"
+                >
+                     <svg class="flex-shrink-0
+                            w-4 h-4 lg:w-4 lg:h-4 xl2:w-5 xl2:h-5"
+                        :class="{
+                            'text-mainblue': activeItem === 'logs',
+                            'text-main_font': activeItem !== 'logs'
+                        }" fill="currentColor" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
                             <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                             <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
                             <g id="SVGRepo_iconCarrier">
@@ -237,33 +244,48 @@
                                 <path d="M0 24q0 0.832 0.576 1.44t1.44 0.576h1.984q0 2.496 1.76 4.224t4.256 1.76h6.688q-2.144-1.504-3.456-4h-3.232q-0.832 0-1.44-0.576t-0.576-1.408v-20q0-0.832 0.576-1.408t1.44-0.608h16q0.8 0 1.408 0.608t0.576 1.408v7.232q2.496 1.312 4 3.456v-10.688q0-2.496-1.76-4.256t-4.224-1.76h-16q-2.496 0-4.256 1.76t-1.76 4.256h-1.984q-0.832 0-1.44 0.576t-0.576 1.408 0.576 1.44 1.44 0.576h1.984v4h-1.984q-0.832 0-1.44 0.576t-0.576 1.408 0.576 1.44 1.44 0.576h1.984v4h-1.984q-0.832 0-1.44 0.576t-0.576 1.408zM10.016 24h2.080q0-0.064-0.032-0.416t-0.064-0.576 0.064-0.544 0.032-0.448h-2.080v1.984zM10.016 20h2.464q0.288-1.088 0.768-1.984h-3.232v1.984zM10.016 16h4.576q0.992-1.216 2.112-1.984h-6.688v1.984zM10.016 12h16v-1.984h-16v1.984zM10.016 8h16v-1.984h-16v1.984zM14.016 23.008q0 1.824 0.704 3.488t1.92 2.88 2.88 1.92 3.488 0.704 3.488-0.704 2.88-1.92 1.92-2.88 0.704-3.488-0.704-3.488-1.92-2.88-2.88-1.92-3.488-0.704-3.488 0.704-2.88 1.92-1.92 2.88-0.704 3.488zM18.016 23.008q0-2.080 1.44-3.52t3.552-1.472 3.52 1.472 1.472 3.52q0 2.080-1.472 3.52t-3.52 1.472-3.552-1.472-1.44-3.52zM22.016 23.008q0 0.416 0.288 0.704t0.704 0.288h1.984q0.416 0 0.704-0.288t0.32-0.704-0.32-0.704-0.704-0.288h-0.992v-0.992q0-0.416-0.288-0.704t-0.704-0.32-0.704 0.32-0.288 0.704v1.984z"></path>
                             </g>
                         </svg>
-                        <span                        
-                        class="ml-3 whitespace-nowrap transition-all duration-200 text-main_font text-medium"
-                        :class="{ 'opacity-0 invisible': !open, 'opacity-100 visible': open, 'font-bold': activeItem === 'home' }"
+                    <span class="ml-3 whitespace-nowrap transition-all duration-200 text-main_font text-medium"
+                        :class="{ 
+                            'opacity-0 invisible': !open, 
+                            'opacity-100 visible': open, 
+                            'font-bold': activeItem === 'logs',
+                            'text-mainblue': activeItem === 'logs'
+                        }"
                     >
                         Logs
                     </span>
                 </a>
             </li>
-                        <li class="flex items-center group">
-                <a href="#"
-                   class="flex items-center w-full py-3 pl-6 hover:bg-white/10 transition-colors"
-                   :class="{
-                       'bg-[#148079] text-f7 font-bold': activeItem === 'home',
-                       'text-white': activeItem !== 'home'
-                   }"
-                   @click="setActive('home')"
+
+            <!-- FAQs -->
+            <li class="flex items-center group">
+                <a href="{{ route('mho.faq') }}"
+                class="flex items-center w-full py-3 pl-6 hover:bg-white/10 transition-colors"
+                :class="{
+                    'bg-nav_active text-f7 font-bold': activeItem === 'faqs',
+                    'text-white': activeItem !== 'faqs'
+                }"
+                @click="setActive('faqs')"
                 >
-                        <svg class="w-5 h-5 text-main_font" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <svg class="flex-shrink-0
+                            w-4 h-4 lg:w-4 lg:h-4 xl2:w-5 xl2:h-5"
+                        :class="{
+                            'text-mainblue': activeItem === 'faqs',
+                            'text-main_font': activeItem !== 'faqs'
+                        }" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                             <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
                             <g id="SVGRepo_iconCarrier">
                                 <path d="M5,22H19a1,1,0,0,0,1-1V6.414a1,1,0,0,0-.293-.707L16.293,2.293A1,1,0,0,0,15.586,2H5A1,1,0,0,0,4,3V21A1,1,0,0,0,5,22Zm8-5a1,1,0,0,1-2,0V16a1,1,0,0,1,2,0ZM10.127,5.682a2.927,2.927,0,0,1,2.418-.631,3.084,3.084,0,0,1,2.409,2.52,3.142,3.142,0,0,1-1.79,3.421.407.407,0,0,0-.164.359V12a1,1,0,0,1-2,0v-.649A2.359,2.359,0,0,1,12.363,9.16,1.144,1.144,0,0,0,12.981,7.9a1.067,1.067,0,0,0-.8-.879.913.913,0,0,0-.775.2,1.155,1.155,0,0,0-.4.9,1,1,0,1,1-2,0A3.151,3.151,0,0,1,10.127,5.682Z"></path>
                             </g>
-                        </svg>
-                        <span                        
-                        class="ml-3 whitespace-nowrap transition-all duration-200 text-main_font text-medium"
-                        :class="{ 'opacity-0 invisible': !open, 'opacity-100 visible': open, 'font-bold': activeItem === 'home' }"
+                    </svg>
+                    <span class="ml-3 whitespace-nowrap transition-all duration-200 text-main_font text-medium"
+                        :class="{ 
+                            'opacity-0 invisible': !open, 
+                            'opacity-100 visible': open, 
+                            'font-bold': activeItem === 'faqs',
+                            'text-mainblue': activeItem === 'faqs'
+                        }"
                     >
                         FAQs
                     </span>

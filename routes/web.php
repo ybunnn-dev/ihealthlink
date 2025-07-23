@@ -13,7 +13,7 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-
+    
     Route::get('/dashboard', function () {
         $user = Auth::user();
         return match ($user->role_id) {
@@ -21,6 +21,8 @@ Route::middleware([
             2 => redirect()->intended('/midwife/dashboard'),
         };
     })->name('dashboard');
+
+    /** Municipal Health Office Module **/
 
     // MHO-specific dashboard
     Route::get('/mho/dashboard', function () {
@@ -52,17 +54,27 @@ Route::middleware([
         return view('mho.spec-midwife');
     })->name('mho.midwife-spec');
 
-    // Midwife-specific dashboard
-    Route::get('/midwife/dashboard', function () {
-        return view('midwife.dashboard');
-    })->name('midwife.dashboard');
-    
-    //route for mho reports
+     //route for mho reports
     Route::get('/mho/reports', function(){
         return view('mho.reports');
     })->name('mho.reports');
 
-        // Midwife-specific dashboard
+    Route::get('/mho/logs', function(){
+        return view('mho.logs');
+    })->name('mho.logs');
+
+    Route::get('/mho/faq', function(){
+        return view('mho.faq');
+    })->name('mho.faq');
+
+    /** Barangay Health Center Modules **/
+
+    // Midwife-specific dashboard
+    Route::get('/midwife/dashboard', function () {
+        return view('midwife.dashboard');
+    })->name('midwife.dashboard');
+
+    // Midwife-specific dashboard
     Route::get('/midwife/households', function () {
         return view('midwife.household-list');
     })->name('midwife.households');

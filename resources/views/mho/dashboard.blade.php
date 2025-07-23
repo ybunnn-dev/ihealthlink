@@ -1,9 +1,11 @@
 <x-app-layout>
-    <div class="py-12 bg-bg_col">
+    <div class="py-12 px-5">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                <x-welcome />
-            </div>
+            <!-- Title -->
+            <h1 class="text-3xl font-semibold text-sub_blue mb-3">Dashboard</h1>
+
+            click your preferred module to develop. the route is up.
+        
         </div>
     </div>
 </x-app-layout>
