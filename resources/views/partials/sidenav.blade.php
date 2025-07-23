@@ -146,16 +146,22 @@
                 </a>
             </li>
 
+            <!-- Midwives-->
             <li class="flex items-center group">
-                <a href="#"
-                   class="flex items-center w-full py-3 pl-6 hover:bg-white/10 transition-colors"
-                   :class="{
-                       'bg-[#148079] text-f7 font-bold': activeItem === 'home',
-                       'text-white': activeItem !== 'home'
-                   }"
-                   @click="setActive('home')"
+                <a href="{{ route('mho.midwives') }}"
+                class="flex items-center w-full py-3 pl-6 hover:bg-white/10 transition-colors"
+                :class="{
+                    'bg-nav_active text-f7 font-bold': activeItem === 'midwives',
+                    'text-white': activeItem !== 'midwives'
+                }"
+                @click="setActive('midwives')"
                 >
-                        <svg class="w-5 h-5 text-main_font" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--medical-icon" preserveAspectRatio="xMidYMid meet" fill="#000000">
+                    <svg class="flex-shrink-0
+                            w-4 h-4 lg:w-4 lg:h-4 xl2:w-5 xl2:h-5"
+                        :class="{
+                            'text-mainblue': activeItem === 'midwives',
+                            'text-main_font': activeItem !== 'midwives'
+                        }" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--medical-icon" preserveAspectRatio="xMidYMid meet" fill="#000000">
                             <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                             <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
                             <g id="SVGRepo_iconCarrier">
@@ -164,26 +170,36 @@
                                 <path d="M20.966 43.651h2.113l-3.018 10.344h23.581l-3.004-10.344h2.115l3.023 10.344h6.939l-4.736-15.672c-.74-2.587-3.984-7.142-9.582-7.28l-12.87-.011c-5.725.028-9.037 4.672-9.786 7.29l-4.828 15.672h7.037l3.016-10.343z" fill="currentColor"></path>
                                 <path d="M.947 57.293h61.73v5.873H.947v-5.873z" fill="currentColor"></path>
                             </g>
-                        </svg>
-                        <span                        
-                        class="ml-3 whitespace-nowrap transition-all duration-200 text-main_font text-medium"
-                        :class="{ 'opacity-0 invisible': !open, 'opacity-100 visible': open, 'font-bold': activeItem === 'home' }"
+                    </svg>
+                    <span class="ml-3 whitespace-nowrap transition-all duration-200 text-main_font text-medium"
+                        :class="{ 
+                            'opacity-0 invisible': !open, 
+                            'opacity-100 visible': open, 
+                            'font-bold': activeItem === 'midwives',
+                            'text-mainblue': activeItem === 'midwives'
+                        }"
                     >
                         Midwives
                     </span>
                 </a>
             </li>
 
+             <!-- Reports -->
             <li class="flex items-center group">
-                <a href="#"
-                   class="flex items-center w-full py-3 pl-6 hover:bg-white/10 transition-colors"
-                   :class="{
-                       'bg-[#148079] text-f7 font-bold': activeItem === 'home',
-                       'text-white': activeItem !== 'home'
-                   }"
-                   @click="setActive('home')"
-                >       
-                        <svg class="w-5 h-5 text-main_font" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 36 36">
+                <a href="{{ route('mho.reports') }}"
+                class="flex items-center w-full py-3 pl-6 hover:bg-white/10 transition-colors"
+                :class="{
+                    'bg-nav_active text-f7 font-bold': activeItem === 'reports',
+                    'text-white': activeItem !== 'reports'
+                }"
+                @click="setActive('reports')"
+                >
+                    <svg class="flex-shrink-0
+                            w-4 h-4 lg:w-4 lg:h-4 xl2:w-5 xl2:h-5"
+                        :class="{
+                            'text-mainblue': activeItem === 'reports',
+                            'text-main_font': activeItem !== 'reports'
+                        }" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 36 36">
                             <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                             <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
                             <g id="SVGRepo_iconCarrier">
@@ -191,10 +207,14 @@
                                 <rect x="15.12" y="6.48" width="5.76" height="23.04" rx="1" ry="1"></rect>
                                 <rect x="23.76" y="14.16" width="5.76" height="15.36" rx="1" ry="1"></rect>
                             </g>
-                        </svg>
-                        <span                        
-                        class="ml-3 whitespace-nowrap transition-all duration-200 text-main_font text-medium"
-                        :class="{ 'opacity-0 invisible': !open, 'opacity-100 visible': open, 'font-bold': activeItem === 'home' }"
+                    </svg>
+                    <span class="ml-3 whitespace-nowrap transition-all duration-200 text-main_font text-medium"
+                        :class="{ 
+                            'opacity-0 invisible': !open, 
+                            'opacity-100 visible': open, 
+                            'font-bold': activeItem === 'reports' ,
+                            'text-mainblue': activeItem === 'reports'
+                        }"
                     >
                         Reports
                     </span>

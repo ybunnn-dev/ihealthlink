@@ -27,23 +27,41 @@ Route::middleware([
         return view('mho.dashboard');
     })->name('mho.dashboard');
 
+    //Route for health programs
     Route::get('/mho/health-programs', function(){
         return view('mho.health-program-list');
     })->name('mho.health-programs');
 
+    //Route for specific health programs
     Route::get('/mho/health-programs/spec', function(){
         return view('mho.spec-health-program');
     })->name('mho.spec-hprog');
 
+    //Route for barangays
     Route::get('/mho/barangays', function(){
         return view('mho.barangay-list');
     })->name('mho.barangays');
+
+    //Route for midwives list
+    Route::get('/mho/midwives', function(){
+        return view('mho.midwives');
+    })->name('mho.midwives');
+
+    //Route for specific midwife
+    Route::get('/mho/midwives/spec', function(){
+        return view('mho.spec-midwife');
+    })->name('mho.midwife-spec');
 
     // Midwife-specific dashboard
     Route::get('/midwife/dashboard', function () {
         return view('midwife.dashboard');
     })->name('midwife.dashboard');
     
+    //route for mho reports
+    Route::get('/mho/reports', function(){
+        return view('mho.reports');
+    })->name('mho.reports');
+
         // Midwife-specific dashboard
     Route::get('/midwife/households', function () {
         return view('midwife.household-list');
