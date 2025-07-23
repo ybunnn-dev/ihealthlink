@@ -26,13 +26,12 @@
 
         <div class="min-h-screen bg-bg-col flex">
             @auth
-                @if(Auth::user()->role == 1)
+                @if(Auth::user()->role_id == 1)
                     @include('partials.sidenav') <!-- Admin sidebar -->
                 @else
                     @include('partials.bhc-sidenav') <!-- Non-admin sidebar -->
                 @endif
             @endauth
-
             <!-- Main Content - Fixed to screen height -->
             <div class="flex-1 flex flex-col h-screen overflow-hidden">
                 <!-- Scrollable Page Content -->

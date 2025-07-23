@@ -35,6 +35,8 @@ export default () => ({
         else if (path.includes('/bhws')) this.activeItem = 'bhws';
         else if (path.includes('/logs')) this.activeItem = 'logs';
         else if (path.includes('/faqs')) this.activeItem = 'faqs';
+        else if (path.includes('/barangays')) this.activeItem = 'barangays';
+        else if (path.includes('/midwife')) this.activeItem = 'midwife';
         else this.activeItem = 'dashboard';
         
         localStorage.setItem('activeSidebarItem', this.activeItem);
