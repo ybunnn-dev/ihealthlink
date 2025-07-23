@@ -117,7 +117,7 @@
                 <a href="{{ route('midwife.health-program') }}"
                 class="flex items-center w-full py-3 pl-6 hover:bg-white/10 transition-colors"
                 :class="{
-                    'bg-[#148079] text-f7 font-bold': activeItem === 'health-program', {{-- Changed to 'health-program' (singular) --}}
+                    'bg-nav_active text-f7 font-bold': activeItem === 'health-program', {{-- Changed to 'health-program' (singular) --}}
                     'text-white': activeItem !== 'health-program' {{-- Changed to 'health-program' (singular) --}}
                 }"
                 @click="setActive('health-program')" 
@@ -140,7 +140,8 @@
                         :class="{
                             'opacity-0 invisible': !open,
                             'opacity-100 visible': open,
-                            'font-bold': activeItem === 'health-program' {{-- Changed to 'health-program' (singular) --}}
+                            'font-bold': activeItem === 'health-program',
+                            'text-mainblue': activeItem === 'health-program'
                         }"
                     >
                         Health Programs
@@ -161,8 +162,8 @@
                     <svg class="flex-shrink-0
                             w-4 h-4 lg:w-4 lg:h-4 xl2:w-5 xl2:h-5"
                         :class="{
-                            'text-mainblue': activeItem === 'health-programs',
-                            'text-main_font': activeItem !== 'health-programs'
+                            'text-mainblue': activeItem === 'medicines',
+                            'text-main_font': activeItem !== 'medicines'
                         }" version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor">
                         <g>
                             <path d="M358.359,23.406C358.359,10.484,347.875,0,334.953,0H177.047c-12.922,0-23.406,10.484-23.406,23.406v50.234 h204.719V23.406z"></path>
@@ -174,7 +175,8 @@
                         :class="{ 
                             'opacity-0 invisible': !open, 
                             'opacity-100 visible': open, 
-                            'font-bold': activeItem === 'medicines' 
+                            'font-bold': activeItem === 'medicines',
+                            'text-mainblue': activeItem === 'medicines'
                         }"
                     >
                         Medicines
@@ -257,16 +259,16 @@
                 <a href="{{ route('midwife.BHWs') }}"
                 class="flex items-center w-full py-3 pl-6 hover:bg-white/10 transition-colors"
                 :class="{
-                    'bg-[#148079] text-f7 font-bold': activeItem === 'bhws',
+                    'bg-nav_active text-f7 font-bold': activeItem === 'bhws',
                     'text-white': activeItem !== 'bhws'
                 }"
-                @click="setActive('BHWs')"
+                @click="setActive('bhws')"
                 >
                     <svg class="flex-shrink-0
                             w-4 h-4 lg:w-4 lg:h-4 xl2:w-5 xl2:h-5"
                         :class="{
-                            'text-mainblue': activeItem === 'health-programs',
-                            'text-main_font': activeItem !== 'health-programs'
+                            'text-mainblue': activeItem === 'bhws',
+                            'text-main_font': activeItem !== 'bhws'
                         }" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--medical-icon" preserveAspectRatio="xMidYMid meet" fill="#000000">
                             <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                             <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
@@ -281,7 +283,8 @@
                         :class="{ 
                             'opacity-0 invisible': !open, 
                             'opacity-100 visible': open, 
-                            'font-bold': activeItem === 'bhws' 
+                            'font-bold': activeItem === 'bhws',
+                            'text-mainblue': activeItem === 'bhws'
                         }"
                     >
                         BHWs
@@ -302,8 +305,8 @@
                      <svg class="flex-shrink-0
                             w-4 h-4 lg:w-4 lg:h-4 xl2:w-5 xl2:h-5"
                         :class="{
-                            'text-mainblue': activeItem === 'health-programs',
-                            'text-main_font': activeItem !== 'health-programs'
+                            'text-mainblue': activeItem === 'logs',
+                            'text-main_font': activeItem !== 'logs'
                         }" fill="currentColor" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
                             <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                             <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
@@ -316,7 +319,8 @@
                         :class="{ 
                             'opacity-0 invisible': !open, 
                             'opacity-100 visible': open, 
-                            'font-bold': activeItem === 'logs' 
+                            'font-bold': activeItem === 'logs',
+                            'text-mainblue': activeItem === 'logs' 
                         }"
                     >
                         Logs
@@ -337,8 +341,8 @@
                     <svg class="flex-shrink-0
                             w-4 h-4 lg:w-4 lg:h-4 xl2:w-5 xl2:h-5"
                         :class="{
-                            'text-mainblue': activeItem === 'health-programs',
-                            'text-main_font': activeItem !== 'health-programs'
+                            'text-mainblue': activeItem === 'faqs',
+                            'text-main_font': activeItem !== 'faqs'
                         }" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                             <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
@@ -350,7 +354,8 @@
                         :class="{ 
                             'opacity-0 invisible': !open, 
                             'opacity-100 visible': open, 
-                            'font-bold': activeItem === 'faqs' 
+                            'font-bold': activeItem === 'faqs',
+                            'text-mainblue': activeItem === 'faqs'
                         }"
                     >
                         FAQs
