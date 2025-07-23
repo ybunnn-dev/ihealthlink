@@ -36,24 +36,20 @@ Route::middleware([
         return view('midwife.household-list');
     })->name('midwife.households');
 
-    // Midwife-specific dashboard
-    Route::get('/midwife/medicines', function () {
-        return view('midwife.medicine-list');
-    })->name('midwife.medicines');
-
-    // Midwife-specific dashboard
-    Route::get('/midwife/medicines-view', function () {
-        return view('midwife.spec-medicine');
-    })->name('midwife.medicines-view');
-
-    // Midwife-specific dashboard
-    Route::get('/midwife/logs', function () {
-        return view('midwife.log-list');
-    })->name('midwife.logs');
-
-    // Midwife-specific dashboard
-    Route::get('/midwife/faqs', function () {
-        return view('midwife.faqs');
-    })->name('midwife.faqs');
+    Route::get('/midwife/BHWs', function () {
+        return view('midwife.bhws');
+    })->name('midwife.BHWs');
     
+    Route::get('/midwife/BHWs-profile', function () {
+        return view('midwife.BHWs-profile');
+    })->name('midwife.BHWs-profile');
+
+    Route::get('/midwife/health-program', function () {
+        return view('midwife.health-program');
+    })->name('midwife.health-program');
+
+    Route::get('/midwife/health-program-profile', function () {
+        return view('midwife.health-program-profile');
+    })->name('midwife.health-program-profile');
+
 });
