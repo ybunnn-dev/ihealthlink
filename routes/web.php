@@ -27,6 +27,18 @@ Route::middleware([
         return view('mho.dashboard');
     })->name('mho.dashboard');
 
+    Route::get('/mho/health-programs', function(){
+        return view('mho.health-program-list');
+    })->name('mho.health-programs');
+
+    Route::get('/mho/health-programs/spec', function(){
+        return view('mho.spec-health-program');
+    })->name('mho.spec-hprog');
+
+    Route::get('/mho/barangays', function(){
+        return view('mho.barangay-list');
+    })->name('mho.barangays');
+
     // Midwife-specific dashboard
     Route::get('/midwife/dashboard', function () {
         return view('midwife.dashboard');
