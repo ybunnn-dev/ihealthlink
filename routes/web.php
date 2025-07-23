@@ -14,7 +14,7 @@ Route::middleware([
     'verified',
 ])->group(function () {
 
-   Route::get('/dashboard', function () {
+    Route::get('/dashboard', function () {
         $user = Auth::user();
         return match ($user->role_id) {
             1 => redirect()->intended('/mho/dashboard'),
