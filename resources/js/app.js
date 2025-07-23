@@ -2,6 +2,7 @@ import './bootstrap';
 import Alpine from 'alpinejs';
 import sideMenu from './components/side-menu-bhc.js';
 import './charts/dash-health-programs.js';
+import './resident.js';
 
 document.addEventListener('alpine:init', () => {
     // Register your Alpine data components

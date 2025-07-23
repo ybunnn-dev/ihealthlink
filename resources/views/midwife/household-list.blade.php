@@ -58,78 +58,80 @@
                             </div>
                         </div>
                         <!-- Dropdown menus -->
-                        <div id="purokDropdownMenu" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700">
-                        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200">
-                            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Option 1</a></li>
-                            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Option 2</a></li>
+                        <div id="purokDropdownMenu" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
+                        <ul class="py-2 text-sm text-normal_font">
+                            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Purok 1</a></li>
+                            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Purok 2</a></li>
+                            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Purok 3</a></li>
+                            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Purok 4</a></li>
+                            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Purok 5</a></li>
+                            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Purok 6</a></li>
+                            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Purok 7</a></li>
                         </ul>
                         </div>
 
-                        <div id="dateDropdownMenu" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700">
-                        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200">
+                        <div id="dateDropdownMenu" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
+                        <ul class="py-2 text-sm text-normal_font">
                             <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Last Week</a></li>
+                            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Month</a></li>
                             <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Last Year</a></li>
+                            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Custom</a></li>
                         </ul>
                     </div>
                     <div class="relative overflow-x-auto">
                         <table class="w-full text-sm text-left text-main_font bg-col_tab_h">
                             <thead class="text-xs text-main_font uppercase">
                                 <tr>
-                                    <th scope="col" class="px-6 py-3">
-                                        Product name
+                                    <th scope="col" class="pl-6 py-3">
+                                        Household #
                                     </th>
                                     <th scope="col" class="px-6 py-3">
-                                        Color
+                                        Family Head
                                     </th>
                                     <th scope="col" class="px-6 py-3">
-                                        Category
+                                        Purok
                                     </th>
                                     <th scope="col" class="px-6 py-3">
-                                        Price
+                                        Date Added
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        Date Updated
                                     </th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr class="bg-white border-b bg-f7 text-normal_font">
-                                    <th scope="row" class="px-6 py-4 font-medium text-normal_font whitespace-nowrap">
-                                        Apple MacBook Pro 17"
+                                <tr class="bg-white border-b bg-f7 text-normal_font" onclick="window.location='{{ route('midwife.spechouse') }}'">
+                                    <th scope="row" class="pl-6 py-4 font-medium text-normal_font whitespace-nowrap">
+                                        001
                                     </th>
                                     <td class="px-6 py-4">
-                                        Silver
+                                        Juan Dela Cruz
                                     </td>
                                     <td class="px-6 py-4">
-                                        Laptop
+                                        Purok 1
                                     </td>
                                     <td class="px-6 py-4">
-                                        $2999
+                                        2023-01-15
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        2023-01-15
                                     </td>
                                 </tr>
                                 <tr class="bg-white border-b bg-f7 text-normal_font">
-                                    <th scope="row" class="px-6 py-4 font-medium text-normal_font whitespace-nowrap">
-                                        Apple MacBook Pro 17"
+                                    <th scope="row" class="pl-6 py-4 font-medium text-normal_font whitespace-nowrap">
+                                        002
                                     </th>
                                     <td class="px-6 py-4">
-                                        Silver
+                                        Maria Clara
                                     </td>
                                     <td class="px-6 py-4">
-                                        Laptop
+                                        Purok 2
                                     </td>
                                     <td class="px-6 py-4">
-                                        $2999
-                                    </td>
-                                </tr>
-                                <tr class="bg-white border-b bg-f7 text-normal_font">
-                                    <th scope="row" class="px-6 py-4 font-medium text-normal_font whitespace-nowrap">
-                                        Apple MacBook Pro 17"
-                                    </th>
-                                    <td class="px-6 py-4">
-                                        Silver
+                                        2023-02-01
                                     </td>
                                     <td class="px-6 py-4">
-                                        Laptop
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        $2999
+                                        2023-02-05
                                     </td>
                                 </tr>
                             </tbody>

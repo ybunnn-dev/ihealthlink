@@ -62,7 +62,6 @@ class FortifyServiceProvider extends ServiceProvider
             return match ($user->role_id) {
                 1 => redirect()->intended('/mho/dashboard'),
                 2 => redirect()->intended('/midwife/dashboard'),
-                default => redirect()->intended('/dashboard'),
             };
         }
     };
