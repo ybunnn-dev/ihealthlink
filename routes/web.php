@@ -44,6 +44,11 @@ Route::middleware([
         return view('mho.barangay-list');
     })->name('mho.barangays');
 
+    //Route for specific info for barangays
+    Route::get('/mho/barangays/spec', function(){
+        return view('mho.spec-barangay');
+    })->name('mho.spec-barangay');
+
     //Route for midwives list
     Route::get('/mho/midwives', function(){
         return view('mho.midwives');
