@@ -15,12 +15,12 @@
     <div id="reportsScroll" class="flex space-x-6 overflow-x-auto scrollbar-hide scroll-smooth">
         @php
             $reports = [
-                'All Programs',
+                'Demographic Data',
                 'Prenatal',
                 'Polio Vaccine',
                 'Anti Measles',
                 'Family Planning',
-                'Senior Citizen',
+                'National Immunization Program',
                 'Tuberculosis',
                 'Deworming',
                 'Nutrition Program',
@@ -30,7 +30,7 @@
                 'Immunization',
                 'Hypertension'
             ];
-            $activeReport = 'Polio Vaccine'; // Example active
+            $activeReport = 'Demographic Data'; // Example active
         @endphp
 
         @foreach($reports as $report)

@@ -79,7 +79,7 @@ export default {
                 'lg': '1024px',   // Large screens (desktops, default for multi-column)
                 'lg2': '1100px',  // Large screens 2
                 'lg3': '1200px',  // Large screens 3
-                'xl': '1280px',   // Extra large screens
+                'xl': '1240px',   // Extra large screens
                 'xl2': '1300px',  // Extra large screens 2
                 'xl3': '1400px',  // Extra large screens 3
                 'xl4': '1500px',  // Extra large screens 4
