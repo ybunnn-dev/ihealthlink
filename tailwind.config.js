@@ -13,7 +13,6 @@ export default {
         './resources/views/**/*.blade.php',
         './resources/js/**/*.js',
     ],
-
     theme: {
         extend: {
             borderWidth: {
@@ -88,9 +87,9 @@ export default {
             }
         },
     },
-
     plugins: [
         forms,
-        typography
+        typography,
+        require('tailwind-scrollbar-hide'),
     ],
 };
