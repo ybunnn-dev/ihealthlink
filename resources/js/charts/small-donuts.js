@@ -63,4 +63,35 @@ document.addEventListener('DOMContentLoaded', function () {
         data: [60, 40],
         colors: ['#fd6e69ff', '#F0BB78']
     });
+
+    renderDoughnutChart({
+        elementId: 'indigentChart',
+        labels: ['Indigent', 'Non-Idigent'],
+        data: [60, 40],
+        colors: ['#4DFFBE', '#9ECAD6' ]
+    });
+
+    // Pregnant Women (4 groups)
+    renderDoughnutChart({
+        elementId: 'pregnantChart',
+        labels: ['Teenage Pregnancy', 'Primis', 'Multi-Para', 'Others'],
+        data: [25, 30, 20, 10],
+        colors: ['#FFA07A', '#FFB347', '#FFD700', '#90EE90']
+    });
+
+    // Lactating Mothers (2 groups)
+    renderDoughnutChart({
+        elementId: 'lactatingChart',
+        labels: ['Lactating', 'Non-Lactating'],
+        data: [70, 30],
+        colors: ['#FF69B4', '#E0E0E0']
+    });
+
+    // Women of Reproductive Age (2 groups)
+    renderDoughnutChart({
+        elementId: 'reproductiveChart',
+        labels: ['WRA', 'Non-WRA'],
+        data: [80, 20],
+        colors: ['#9370DB', '#D8BFD8']
+    });
 });

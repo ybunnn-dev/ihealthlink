@@ -49,30 +49,17 @@
         </div>
     </div>
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 mb-4">
-        <div class="bg-white rounded-xl p-10 shadow-sm">
-            <h3 class="text-lg font-semibold text-gray-800 mb-4">Residents Per Purok</h3>
-            <div class="flex items-center gap-10 px-6">
-                <div class="flex-shrink-0 h-64">
-                    <canvas id="residentsPerPurokChart"></canvas>
-                </div>
-                <div class="flex-1 space-y-2">
-                    <div id="residentsLegend" class="text-sm"></div>
-                </div>
-            </div>
-        </div>
+        <x-chart-layouts.per-purok-donut
+            title="Residents Per Purok"
+            chartId="residentsPerPurokChart"
+            legendId="residentsLegend"
+        />
 
-        <!-- Households Per Purok -->
-        <div class="bg-white rounded-xl p-10 shadow-sm">
-            <h3 class="text-lg font-semibold text-gray-800 mb-4">Households Per Purok</h3>
-            <div class="flex items-center gap-10 px-6">
-                <div class="flex-shrink-0 w-64 h-64">
-                    <canvas id="householdsPerPurokChart"></canvas>
-                </div>
-                <div class="flex-1 space-y-2">
-                    <div id="householdsLegend" class="text-sm"></div>
-                </div>
-            </div>
-        </div>
+        <x-chart-layouts.per-purok-donut
+            title="Households Per Purok"
+            chartId="householdsPerPurokChart"
+            legendId="householdsLegend"
+        />
     </div>
     <div class="bg-white rounded-xl p-6 px-10 shadow-sm h-64 mb-3">
         <h3 class="text-lg font-semibold text-main_font mb-4">Families Per Purok</h3>
@@ -80,178 +67,165 @@
             <canvas id="familyBar"></canvas>
         </div>
     </div>
-    <div class="bg-white rounded-xl p-6 px-10 shadow-sm mb-3 overflow-x-auto">
-        <h3 class="text-lg font-semibold text-main_font mb-4">Households, Families, and Residents Per Purok</h3>
-        <table class="min-w-full divide-y divide-gray-100 text-sm text-center text-normal_font">
-            <thead class="bg-gray-100 text-main_font">
-                <tr>
-                    <th class="px-6 py-3 text-left font-semibold">Category</th>
-                    <th class="px-6 py-3">Purok 1</th>
-                    <th class="px-6 py-3">Purok 2</th>
-                    <th class="px-6 py-3">Purok 3</th>
-                    <th class="px-6 py-3">Purok 4</th>
-                    <th class="px-6 py-3">Purok 5</th>
-                    <th class="px-6 py-3">Purok 6</th>
-                    <th class="px-6 py-3">Purok 7</th>
-                    <th class="px-6 py-3">Purok 8</th>
-                    <th class="px-6 py-3">Purok 9</th>
-                    <th class="px-6 py-3">Purok 10</th>
-                    <th class="px-6 py-3 font-semibold">Total</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-100">
-                <tr>
-                    <td class="px-6 py-4 text-left font-semibold text-main_font">Residents</td>
-                    <td class="px-6 py-4">102</td>
-                    <td class="px-6 py-4">95</td>
-                    <td class="px-6 py-4">87</td>
-                    <td class="px-6 py-4">76</td>
-                    <td class="px-6 py-4">91</td>
-                    <td class="px-6 py-4">103</td>
-                    <td class="px-6 py-4">88</td>
-                    <td class="px-6 py-4">92</td>
-                    <td class="px-6 py-4">99</td>
-                    <td class="px-6 py-4">107</td>
-                    <td class="px-6 py-4 font-semibold">940</td>
-                </tr>
-                <tr>
-                    <td class="px-6 py-4 text-left font-semibold text-main_font">Households</td>
-                    <td class="px-6 py-4">28</td>
-                    <td class="px-6 py-4">25</td>
-                    <td class="px-6 py-4">22</td>
-                    <td class="px-6 py-4">21</td>
-                    <td class="px-6 py-4">24</td>
-                    <td class="px-6 py-4">27</td>
-                    <td class="px-6 py-4">20</td>
-                    <td class="px-6 py-4">23</td>
-                    <td class="px-6 py-4">26</td>
-                    <td class="px-6 py-4">29</td>
-                    <td class="px-6 py-4 font-semibold">245</td>
-                </tr>
-                <tr>
-                    <td class="px-6 py-4 text-left font-semibold text-main_font">Families</td>
-                    <td class="px-6 py-4">12</td>
-                    <td class="px-6 py-4">15</td>
-                    <td class="px-6 py-4">13</td>
-                    <td class="px-6 py-4">11</td>
-                    <td class="px-6 py-4">14</td>
-                    <td class="px-6 py-4">16</td>
-                    <td class="px-6 py-4">9</td>
-                    <td class="px-6 py-4">10</td>
-                    <td class="px-6 py-4">12</td>
-                    <td class="px-6 py-4">14</td>
-                    <td class="px-6 py-4 font-semibold">136</td>
-                </tr>
-                <tr>
-                    <td class="px-6 py-4 text-left font-semibold text-main_font">4Ps-Members</td>
-                    <td class="px-6 py-4">8</td>
-                    <td class="px-6 py-4">10</td>
-                    <td class="px-6 py-4">9</td>
-                    <td class="px-6 py-4">6</td>
-                    <td class="px-6 py-4">7</td>
-                    <td class="px-6 py-4">10</td>
-                    <td class="px-6 py-4">5</td>
-                    <td class="px-6 py-4">6</td>
-                    <td class="px-6 py-4">8</td>
-                    <td class="px-6 py-4">9</td>
-                    <td class="px-6 py-4 font-semibold">78</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+        <x-chart-layouts.donut-table-combo 
+        chartTitle="Indigent"
+        canvasId="indigentChart"
+        tableTitle="Indigent v Non-Indigent">
 
-    <div class="grid grid-cols-3 gap-3 mb-3">
-        <div class="bg-white rounded-xl p-8 px-10 shadow-sm h-70 col-span-1">
-            <h3 class="text-lg font-semibold text-main_font mb-4">Sex Distribution</h3>
-            <div class="flex items-center justify-center h-[80%]">
-                <canvas id="genderChart" class="w-full h-full"></canvas>
-            </div>
-        </div>
+        <x-slot:thead>
+            <tr>
+                <th class="px-6 py-3 font-medium text-main_font border-b border-r">Sex</th>
+                <th class="px-6 py-3 font-medium text-main_font border-b border-r text-center">Purok 1</th>
+                <th class="px-6 py-3 font-medium text-main_font border-b border-r text-center">Purok 2</th>
+                <th class="px-6 py-3 font-medium text-main_font border-b border-r text-center">Purok 3</th>
+                <th class="px-6 py-3 font-medium text-main_font border-b text-center">Total</th>
+            </tr>
+        </x-slot:thead>
 
-        <div class="bg-white rounded-xl p-6 px-10 shadow-sm h-70 col-span-2 overflow-x-auto">
-            <h3 class="text-lg font-semibold text-main_font mb-4">Sex Distribution Per Purok</h3>
+        <x-slot:tbody>
+            <tr class="border-t">
+                <td class="px-6 py-3 font-medium border-r">Indigent</td>
+                <td class="px-6 py-3 text-center border-r">23</td>
+                <td class="px-6 py-3 text-center border-r">17</td>
+                <td class="px-6 py-3 text-center border-r">20</td>
+                <td class="px-6 py-3 text-center">60</td>
+            </tr>   
+            <tr class="border-t">
+                <td class="px-6 py-3 font-medium border-r">Non-Indigent</td>
+                <td class="px-6 py-3 text-center border-r">19</td>
+                <td class="px-6 py-3 text-center border-r">21</td>
+                <td class="px-6 py-3 text-center border-r">22</td>
+                <td class="px-6 py-3 text-center">62</td>
+            </tr>
+            <tr class="bg-gray-100 font-semibold border-t">
+                <td class="px-6 py-3 border-r">Total</td>
+                <td class="px-6 py-3 text-center border-r">42</td>
+                <td class="px-6 py-3 text-center border-r">38</td>
+                <td class="px-6 py-3 text-center border-r">42</td>
+                <td class="px-6 py-3 text-center">122</td>
+            </tr>
+        </x-slot:tbody>
 
-            <table class="min-w-full text-sm text-gray-700 border border-gray-200 rounded-lg overflow-hidden">
-                <thead class="bg-gray-100">
-                    <tr>
-                        <th class="px-6 py-3 font-medium text-main_font border-b border-r">Sex</th>
-                        <th class="px-6 py-3 font-medium text-main_font border-b border-r text-center">Purok 1</th>
-                        <th class="px-6 py-3 font-medium text-main_font border-b border-r text-center">Purok 2</th>
-                        <th class="px-6 py-3 font-medium text-main_font border-b border-r text-center">Purok 3</th>
-                        <th class="px-6 py-3 font-medium text-main_font border-b text-center">Total</th>
-                    </tr>
-                </thead>
-                <tbody>            
-                    <tr class="border-t">
-                        <td class="px-6 py-3 font-medium border-r">Male</td>
-                        <td class="px-6 py-3 text-center border-r">23</td>
-                        <td class="px-6 py-3 text-center border-r">17</td>
-                        <td class="px-6 py-3 text-center border-r">20</td>
-                        <td class="px-6 py-3 text-center">60</td>
-                    </tr>  
-                    <tr class="border-t">
-                        <td class="px-6 py-3 font-medium border-r">Female</td>
-                        <td class="px-6 py-3 text-center border-r">19</td>
-                        <td class="px-6 py-3 text-center border-r">21</td>
-                        <td class="px-6 py-3 text-center border-r">22</td>
-                        <td class="px-6 py-3 text-center">62</td>
-                    </tr>
+    </x-chart-layouts.donut-table-combo>
 
-                    <tr class="bg-gray-100 font-semibold border-t">
-                        <td class="px-6 py-3 border-r">Total</td>
-                        <td class="px-6 py-3 text-center border-r">42</td>
-                        <td class="px-6 py-3 text-center border-r">38</td>
-                        <td class="px-6 py-3 text-center border-r">42</td>
-                        <td class="px-6 py-3 text-center">122</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="grid grid-cols-3 gap-3">
-        <div class="bg-white rounded-xl p-8 px-10 shadow-sm h-70 col-span-1">
-            <h3 class="text-lg font-semibold text-main_font mb-4">PWDs</h3>
-            <div class="flex items-center justify-center h-[80%]">
-                <canvas id="pwdChart" class="w-full h-full"></canvas>
-            </div>
-        </div>
-        <div class="bg-white rounded-xl p-6 px-10 shadow-sm h-70 col-span-2 overflow-x-auto">
-            <h3 class="text-lg font-semibold text-main_font mb-4">PWDS Per Purok</h3>
+    <x-tables.purok-breakdown
+        title="Households, Families, and Residents Per Purok"
+        :headers="['Purok 1', 'Purok 2', 'Purok 3', 'Purok 4', 'Purok 5', 'Purok 6', 'Purok 7', 'Purok 8', 'Purok 9', 'Purok 10', 'Total']"
+        :rows="[
+            ['label' => 'Residents', 'values' => [102, 95, 87, 76, 91, 103, 88, 92, 99, 107, 940]],
+            ['label' => 'Households', 'values' => [28, 25, 22, 21, 24, 27, 20, 23, 26, 29, 245]],
+            ['label' => 'Families', 'values' => [12, 15, 13, 11, 14, 16, 9, 10, 12, 14, 136]],
+            ['label' => '4Ps-Members', 'values' => [8, 10, 9, 6, 7, 10, 5, 6, 8, 9, 78]],
+        ]"
+    />
 
-            <table class="min-w-full text-sm text-gray-700 border border-gray-200 rounded-lg overflow-hidden">
-                <thead class="bg-gray-100">
-                    <tr>
-                        <th class="px-6 py-3 font-medium text-main_font border-b border-r">Sex</th>
-                        <th class="px-6 py-3 font-medium text-main_font border-b border-r text-center">Purok 1</th>
-                        <th class="px-6 py-3 font-medium text-main_font border-b border-r text-center">Purok 2</th>
-                        <th class="px-6 py-3 font-medium text-main_font border-b border-r text-center">Purok 3</th>
-                        <th class="px-6 py-3 font-medium text-main_font border-b text-center">Total</th>
-                    </tr>
-                </thead>
-                <tbody>             
-                    <tr class="border-t">
-                        <td class="px-6 py-3 font-medium border-r">Male</td>
-                        <td class="px-6 py-3 text-center border-r">23</td>
-                        <td class="px-6 py-3 text-center border-r">17</td>
-                        <td class="px-6 py-3 text-center border-r">20</td>
-                        <td class="px-6 py-3 text-center">60</td>
-                    </tr>   
-                    <tr class="border-t">
-                        <td class="px-6 py-3 font-medium border-r">Female</td>
-                        <td class="px-6 py-3 text-center border-r">19</td>
-                        <td class="px-6 py-3 text-center border-r">21</td>
-                        <td class="px-6 py-3 text-center border-r">22</td>
-                        <td class="px-6 py-3 text-center">62</td>
-                    </tr>
-                    <tr class="bg-gray-100 font-semibold border-t">
-                        <td class="px-6 py-3 border-r">Total</td>
-                        <td class="px-6 py-3 text-center border-r">42</td>
-                        <td class="px-6 py-3 text-center border-r">38</td>
-                        <td class="px-6 py-3 text-center border-r">42</td>
-                        <td class="px-6 py-3 text-center">122</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
+    <x-chart-layouts.donut-table-combo 
+        chartTitle="Sex Distribution"
+        canvasId="genderChart"
+        tableTitle="Sex Distribution Per Purok">
+
+        <x-slot:thead>
+            <tr>
+                <th class="px-6 py-3 font-medium text-main_font border-b border-r">Sex</th>
+                <th class="px-6 py-3 font-medium text-main_font border-b border-r text-center">Purok 1</th>
+                <th class="px-6 py-3 font-medium text-main_font border-b border-r text-center">Purok 2</th>
+                <th class="px-6 py-3 font-medium text-main_font border-b border-r text-center">Purok 3</th>
+                <th class="px-6 py-3 font-medium text-main_font border-b text-center">Total</th>
+            </tr>
+        </x-slot:thead>
+
+        <x-slot:tbody>
+            <tr class="border-t">
+                <td class="px-6 py-3 font-medium border-r">Male</td>
+                <td class="px-6 py-3 text-center border-r">23</td>
+                <td class="px-6 py-3 text-center border-r">17</td>
+                <td class="px-6 py-3 text-center border-r">20</td>
+                <td class="px-6 py-3 text-center">60</td>
+            </tr>  
+            <tr class="border-t">
+                <td class="px-6 py-3 font-medium border-r">Female</td>
+                <td class="px-6 py-3 text-center border-r">19</td>
+                <td class="px-6 py-3 text-center border-r">21</td>
+                <td class="px-6 py-3 text-center border-r">22</td>
+                <td class="px-6 py-3 text-center">62</td>
+            </tr>
+            <tr class="bg-gray-100 font-semibold border-t">
+                <td class="px-6 py-3 border-r">Total</td>
+                <td class="px-6 py-3 text-center border-r">42</td>
+                <td class="px-6 py-3 text-center border-r">38</td>
+                <td class="px-6 py-3 text-center border-r">42</td>
+                <td class="px-6 py-3 text-center">122</td>
+            </tr>
+        </x-slot:tbody>
+
+    </x-chart-layouts.donut-table-combo>
+    <x-chart-layouts.donut-table-combo 
+        chartTitle="PWDs"
+        canvasId="pwdChart"
+        tableTitle="PWDs Per Purok">
+
+        <x-slot:thead>
+            <tr>
+                <th class="px-6 py-3 font-medium text-main_font border-b border-r">Sex</th>
+                <th class="px-6 py-3 font-medium text-main_font border-b border-r text-center">Purok 1</th>
+                <th class="px-6 py-3 font-medium text-main_font border-b border-r text-center">Purok 2</th>
+                <th class="px-6 py-3 font-medium text-main_font border-b border-r text-center">Purok 3</th>
+                <th class="px-6 py-3 font-medium text-main_font border-b text-center">Total</th>
+            </tr>
+        </x-slot:thead>
+
+        <x-slot:tbody>
+            <tr class="border-t">
+                <td class="px-6 py-3 font-medium border-r">Male</td>
+                <td class="px-6 py-3 text-center border-r">23</td>
+                <td class="px-6 py-3 text-center border-r">17</td>
+                <td class="px-6 py-3 text-center border-r">20</td>
+                <td class="px-6 py-3 text-center">60</td>
+            </tr>   
+            <tr class="border-t">
+                <td class="px-6 py-3 font-medium border-r">Female</td>
+                <td class="px-6 py-3 text-center border-r">19</td>
+                <td class="px-6 py-3 text-center border-r">21</td>
+                <td class="px-6 py-3 text-center border-r">22</td>
+                <td class="px-6 py-3 text-center">62</td>
+            </tr>
+            <tr class="bg-gray-100 font-semibold border-t">
+                <td class="px-6 py-3 border-r">Total</td>
+                <td class="px-6 py-3 text-center border-r">42</td>
+                <td class="px-6 py-3 text-center border-r">38</td>
+                <td class="px-6 py-3 text-center border-r">42</td>
+                <td class="px-6 py-3 text-center">122</td>
+            </tr>
+        </x-slot:tbody>
+
+    </x-chart-layouts.donut-table-combo>
+    <x-chart-layouts.three-chart-donut 
+        title1="Pregnant Women" id1="pregnantChart"
+        title2="Lactating Mothers" id2="lactatingChart"
+        title3="Women of Reproductive Age" id3="reproductiveChart"
+    />
+    <x-tables.purok-breakdown
+        title="Reproductive Health Coverage"
+        :headers="[
+            'Purok 1', 'Purok 2', 'Purok 3', 'Purok 4', 'Purok 5',
+            'Purok 6', 'Purok 7', 'Purok 8', 'Purok 9', 'Purok 10', 'Total'
+        ]"
+        :rows="[
+            ['label' => 'Pregnant Women', 'values' => [2, 3, 1, 2, 1, 2, 1, 3, 2, 2, 19]],
+            ['label' => 'Lactating Mothers', 'values' => [1, 2, 1, 1, 1, 2, 1, 1, 2, 1, 13]],
+            ['label' => 'WRA', 'values' => [5, 6, 5, 4, 5, 6, 5, 4, 6, 5, 51]],
+        ]"
+    />
+    <x-tables.purok-breakdown
+        title="Types of Pregnancy"
+        :headers="[
+            'Purok 1', 'Purok 2', 'Purok 3', 'Purok 4', 'Purok 5',
+            'Purok 6', 'Purok 7', 'Purok 8', 'Purok 9', 'Purok 10', 'Total'
+        ]"
+        :rows="[
+            ['label' => 'Planned', 'values' => [1, 2, 2, 1, 2, 2, 1, 1, 1, 2, 15]],
+            ['label' => 'Unplanned', 'values' => [2, 1, 1, 2, 1, 1, 2, 2, 2, 1, 15]],
+            ['label' => 'Teenage', 'values' => [0, 1, 0, 1, 0, 1, 1, 0, 1, 1, 6]],
+        ]"
+    />
 </div>
