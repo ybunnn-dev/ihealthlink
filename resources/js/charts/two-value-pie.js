@@ -58,8 +58,8 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     renderDoughnutChart({
-        elementId: 'dewormingChart',
-        labels: ['Dewormed', 'Not Dewormed'],
+        elementId: 'pwdChart',
+        labels: ['PWDs', 'Non-PWD'],
         data: [60, 40],
         colors: ['#fd6e69ff', '#F0BB78']
     });
