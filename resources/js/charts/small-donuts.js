@@ -101,4 +101,11 @@ document.addEventListener('DOMContentLoaded', function () {
         data: [80, 20],
         colors: ['#9370DB', '#D8BFD8']
     });
+
+    renderDoughnutChart({
+        elementId: 'sanitaryHousehold',
+        labels: ["With Sanitary Toilets", "With Unsanitary Toilets", "Without Toilets"],
+        data: [12, 8, 15],
+        colors: ['#9370DB', '#D8BFD8', '#93b1dcff']
+    });
 });

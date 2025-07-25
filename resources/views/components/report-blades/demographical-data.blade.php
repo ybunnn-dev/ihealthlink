@@ -230,4 +230,36 @@
         ]"
     />
     <x-chart-layouts.family-planning></x-chart-layouts-family-planning>
+    <x-chart-layouts.inverse-donut-table 
+        chartTitle="Household Sanitary"
+        canvasId="sanitaryHousehold"
+        tableTitle="Household Sanitary">
+
+        <x-slot:thead>
+            <tr>
+                <th class="px-6 py-3 font-medium text-main_font border-b border-r text-center">With Sanitary Toilet</th>
+                <th class="px-6 py-3 font-medium text-main_font border-b border-r text-center">With Unsanitary Toilet</th>
+                <th class="px-6 py-3 font-medium text-main_font border-b border-r text-center">Without Toilet</th>
+            </tr>
+        </x-slot:thead>
+
+        <x-slot:tbody>
+            <tr class="border-t">
+                <td class="px-6 py-3 text-center border-r">23</td>
+                <td class="px-6 py-3 text-center border-r">17</td>
+                <td class="px-6 py-3 text-center border-r">20</td>
+            </tr>   
+            <tr class="border-t">
+                <td class="px-6 py-3 text-center border-r">19</td>
+                <td class="px-6 py-3 text-center border-r">21</td>
+                <td class="px-6 py-3 text-center border-r">22</td>
+            </tr>
+            <tr class="bg-gray-100 font-semibold border-t">
+                <td class="px-6 py-3 text-center border-r">42</td>
+                <td class="px-6 py-3 text-center border-r">38</td>
+                <td class="px-6 py-3 text-center border-r">42</td>
+            </tr>
+        </x-slot:tbody>
+
+    </x-chart-layouts.inverse-donut-table>
 </div>
