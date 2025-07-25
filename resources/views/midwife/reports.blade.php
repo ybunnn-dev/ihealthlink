@@ -155,244 +155,68 @@
                     </div>
                 </div>
             </div>
-            <div class="bg-white rounded-xl p-6 px-10 shadow-sm h-64">
+            <div class="bg-white rounded-xl p-6 px-10 shadow-sm h-64 mb-3">
                 <h3 class="text-lg font-semibold text-main_font mb-4">Families Per Purok</h3>
                 <div class="flex items-center justify-center h-[80%]">
                     <canvas id="familyBar"></canvas>
                 </div>
             </div>
+            <div class="grid grid-cols-3 gap-3">
+                <div class="bg-white rounded-xl p-8 px-10 shadow-sm h-70 col-span-1">
+                    <h3 class="text-lg font-semibold text-main_font mb-4">Sex Distribution</h3>
+                    <div class="flex items-center justify-center h-[80%]">
+                        <canvas id="genderChart" class="w-full h-full"></canvas>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl p-6 px-10 shadow-sm h-70 col-span-2 overflow-x-auto">
+                    <h3 class="text-lg font-semibold text-main_font mb-4">Sex Distribution Per Purok</h3>
+
+                    <table class="min-w-full text-sm text-gray-700 border border-gray-200 rounded-lg overflow-hidden">
+                        <thead class="bg-gray-100">
+                            <tr>
+                                <th class="px-6 py-3 font-medium text-main_font border-b border-r">Sex</th>
+                                <th class="px-6 py-3 font-medium text-main_font border-b border-r text-center">Purok 1</th>
+                                <th class="px-6 py-3 font-medium text-main_font border-b border-r text-center">Purok 2</th>
+                                <th class="px-6 py-3 font-medium text-main_font border-b border-r text-center">Purok 3</th>
+                                <th class="px-6 py-3 font-medium text-main_font border-b text-center">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Male row -->
+                            <tr class="border-t">
+                                <td class="px-6 py-3 font-medium border-r">Male</td>
+                                <td class="px-6 py-3 text-center border-r">23</td>
+                                <td class="px-6 py-3 text-center border-r">17</td>
+                                <td class="px-6 py-3 text-center border-r">20</td>
+                                <td class="px-6 py-3 text-center">60</td>
+                            </tr>
+
+                            <!-- Female row -->
+                            <tr class="border-t">
+                                <td class="px-6 py-3 font-medium border-r">Female</td>
+                                <td class="px-6 py-3 text-center border-r">19</td>
+                                <td class="px-6 py-3 text-center border-r">21</td>
+                                <td class="px-6 py-3 text-center border-r">22</td>
+                                <td class="px-6 py-3 text-center">62</td>
+                            </tr>
+
+                            <!-- Total row -->
+                            <tr class="bg-gray-100 font-semibold border-t">
+                                <td class="px-6 py-3 border-r">Total</td>
+                                <td class="px-6 py-3 text-center border-r">42</td>
+                                <td class="px-6 py-3 text-center border-r">38</td>
+                                <td class="px-6 py-3 text-center border-r">42</td>
+                                <td class="px-6 py-3 text-center">122</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
         </div>
     </div>
 </x-app-layout>
-<script>
-    const puroks = Array.from({ length: 10 }, (_, i) => `Purok ${i + 1}`);
-    const generateData = () => Array.from({ length: 10 }, () => Math.floor(Math.random() * 100 + 10));
-
-        const createDonutChart = (ctxId, label, legendId) => {
-            const ctx = document.getElementById(ctxId).getContext('2d');
-            const data = generateData();
-            
-            const chart = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: puroks,
-                    datasets: [{
-                        label,
-                        data: data,
-                        backgroundColor: [
-                            '#fa849dff', '#67b7edff', '#fce19cff', '#b2e27cff', '#a88cefff',
-                            '#9f5fabff', '#79a9f0ff', '#e46d95ff', '#6ecf71ff', '#e67ff8ff'
-                        ],
-                        borderWidth: 2,
-                        borderColor: '#ffffff',
-                        hoverBorderWidth: 3,
-                        hoverOffset: 4,
-                        borderRadius: 8 
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    plugins: {
-                        legend: {
-                            display: false
-                        },
-                        tooltip: {
-                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                            titleColor: '#fff',
-                            bodyColor: '#fff',
-                            borderColor: '#fff',
-                            borderWidth: 1,
-                            callbacks: {
-                                label: function(context) {
-                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                    const percentage = ((context.parsed / total) * 100).toFixed(1);
-                                    return `${context.label}: ${context.parsed} (${percentage}%)`;
-                                }
-                            }
-                        },
-                        datalabels: {
-                            display: false
-                        }
-                    },
-                    cutout: '45%'
-                }
-            });
-
-    // Create custom legend
-    const legendContainer = document.getElementById(legendId);
-        const legendHTML = puroks.map((purok, index) => {
-            const color = chart.data.datasets[0].backgroundColor[index];
-            const value = data[index];
-            return `
-                <div class="flex items-center gap-3 py-1">
-                    <div class="w-10 h-3 rounded-full" style="background-color: ${color}"></div>
-                    <div class="gap-6 flex items-center">
-                        <span class="text-gray-700 ">${purok}: </span>
-                        <span class="font-semibold">${value}</span>
-                    </div>
-                </div>
-            `;
-        }).join('');
-            
-        legendContainer.innerHTML = legendHTML;
-            
-        return chart;
-    };
-
-    // Initialize charts after DOM is loaded
-    document.addEventListener('DOMContentLoaded', function() {
-        createDonutChart('residentsPerPurokChart', 'Residents', 'residentsLegend');
-        createDonutChart('householdsPerPurokChart', 'Households', 'householdsLegend');
-        createDonutChart('familiesPerPurokChart', 'Families');
-    });
-    
-    const ctx = document.getElementById('ageGroupChart').getContext('2d');
-    // Generate 18 example age groups
-    const ageGroups = [
-        '0-4', '5-9', '10-14', '15-19', '20-24', '25-29', '30-34', '35-39',
-        '40-44', '45-49', '50-54', '55-59', '60-64', '65-69', '70-74', '75-79',
-        '80-84', '85+'
-    ];
-
-    // Sample data for male and female counts for 18 age groups
-    // **Replace this with your actual data**
-    const maleData = [
-        50, 55, 60, 65, 70, 75, 80, 78, 72, 68, 62, 58, 52, 45, 38, 30, 25, 20
-    ];
-    const femaleData = [
-        48, 58, 63, 68, 72, 78, 82, 80, 75, 70, 65, 60, 55, 48, 40, 32, 28, 22
-    ];
-
-    const stackedBarChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-        labels: ageGroups,
-        datasets: [
-            {
-            label: 'Male',
-            data: maleData,
-            backgroundColor: 'lightcoral', // You can customize colors
-            borderColor: 'lightcoral',
-            borderWidth: 1
-            },
-            {
-            label: 'Female',
-            data: femaleData,
-            backgroundColor: 'deepskyblue', // You can customize colors
-            borderColor: 'deepskyblue',
-            borderWidth: 1
-            },
-        ],
-        },
-        options: {
-        responsive: true,
-        maintainAspectRatio: false, // Allows height to be set by CSS/attribute
-        scales: {
-            x: {
-            stacked: true,
-            },
-            y: {
-            stacked: true,
-            beginAtZero: true,
-            title: {
-                display: true,
-                text: 'Number of Residents'
-            }
-            }
-        },
-        plugins: {
-            title: {
-            display: false, // Title is handled by the <h3> tag above the canvas
-            text: 'Age Group Demographics'
-            },
-            tooltip: {
-                mode: 'index',
-                intersect: false,
-                callbacks: {
-                    footer: (tooltipItems) => {
-                        let sum = 0;
-                        tooltipItems.forEach(function(tooltipItem) {
-                            sum += tooltipItem.parsed.y;
-                        });
-                        return 'Total: ' + sum;
-                    }
-                }
-            }
-        }
-        }
-    });
-
-    const ctx2 = document.getElementById('familyBar').getContext('2d');
-
-// Purok Labels
-const purokLabels = [
-  'Purok 1', 'Purok 2', 'Purok 3', 'Purok 4', 'Purok 5',
-  'Purok 6', 'Purok 7', 'Purok 8', 'Purok 9', 'Purok 10'
-];
-
-// Sample total family data per purok
-const totalFamilies = [100, 80, 120, 90, 70, 110, 85, 95, 105, 75];
-
-// Sample 4Ps member families per purok
-const fourPsFamilies = [40, 30, 50, 20, 25, 45, 35, 30, 60, 20];
-
-// Calculate non-4Ps families (total - 4Ps)
-const nonFourPsFamilies = totalFamilies.map((total, i) => total - fourPsFamilies[i]);
-
-const chart = new Chart(ctx2, {
-    type: 'bar',
-    data: {
-        labels: purokLabels,
-        datasets: [
-            {
-                label: 'Non-4Ps Families',
-                data: nonFourPsFamilies,
-                backgroundColor: '#fcd34d' // Amber
-            },
-            {
-                label: '4Ps Families',
-                data: fourPsFamilies,
-                backgroundColor: '#4ade80' // Green
-            }
-        ]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-            x: {
-                stacked: true
-            },
-            y: {
-                stacked: true,
-                beginAtZero: true,
-                title: {
-                    display: true,
-                    text: 'Number of Families'
-                }
-            }
-        },
-        plugins: {
-            tooltip: {
-                mode: 'index',
-                intersect: false,
-                callbacks: {
-                    footer: (items) => {
-                        const sum = items.reduce((acc, item) => acc + item.parsed.y, 0);
-                        return `Total: ${sum}`;
-                    }
-                }
-            },
-            legend: {
-                position: 'top'
-            }
-        }
-    }
-});
-
-    
-</script>
 
 
 

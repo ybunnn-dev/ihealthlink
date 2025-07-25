@@ -2,6 +2,10 @@ import './bootstrap';
 import Alpine from 'alpinejs';
 import sideMenu from './components/side-menu-bhc.js';
 import './charts/dash-health-programs.js';
+import './charts/per-purok-pie.js';
+import './charts/age-group-bar.js';
+import './charts/families-4ps.js';
+import './charts/gender-chart.js';
 import './resident.js';
 
 document.addEventListener('alpine:init', () => {
