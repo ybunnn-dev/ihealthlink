@@ -94,4 +94,11 @@ document.addEventListener('DOMContentLoaded', function () {
         data: [80, 20],
         colors: ['#9370DB', '#D8BFD8']
     });
+
+    renderDoughnutChart({
+        elementId: 'famPlan',
+        labels: ['Enrolled', 'Non-Enrolled'],
+        data: [80, 20],
+        colors: ['#9370DB', '#D8BFD8']
+    });
 });

@@ -6,6 +6,7 @@ import './charts/per-purok-pie.js';
 import './charts/age-group-bar.js';
 import './charts/families-4ps.js';
 import './charts/small-donuts.js';
+import './charts/radar.js';
 import './resident.js';
 
 document.addEventListener('alpine:init', () => {

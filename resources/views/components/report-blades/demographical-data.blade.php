@@ -223,9 +223,11 @@
             'Purok 6', 'Purok 7', 'Purok 8', 'Purok 9', 'Purok 10', 'Total'
         ]"
         :rows="[
-            ['label' => 'Planned', 'values' => [1, 2, 2, 1, 2, 2, 1, 1, 1, 2, 15]],
-            ['label' => 'Unplanned', 'values' => [2, 1, 1, 2, 1, 1, 2, 2, 2, 1, 15]],
-            ['label' => 'Teenage', 'values' => [0, 1, 0, 1, 0, 1, 1, 0, 1, 1, 6]],
+            ['label' => 'Teenage Pregnancy', 'values' => [1, 0, 2, 1, 0, 1, 2, 0, 1, 1, 9]],
+            ['label' => 'Primis', 'values' => [2, 1, 1, 2, 2, 2, 1, 2, 1, 1, 15]],
+            ['label' => 'Multi-Para', 'values' => [1, 2, 1, 1, 2, 1, 1, 1, 2, 2, 14]],
+            ['label' => 'Others', 'values' => [0, 1, 0, 1, 1, 0, 0, 1, 0, 1, 5]],
         ]"
     />
+    <x-chart-layouts.family-planning></x-chart-layouts-family-planning>
 </div>

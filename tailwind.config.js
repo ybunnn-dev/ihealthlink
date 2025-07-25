@@ -35,6 +35,7 @@ export default {
                 col_pink: "#D50B8B",
                 col_brown: "#854836",
                 col_tab_h: "#DCEBFC",
+                wood_or: "#FFA673",
             },
             fontSize: {
                 // More aggressive clamping for better scaling on smaller PC screens
