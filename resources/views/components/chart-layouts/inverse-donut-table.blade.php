@@ -12,7 +12,7 @@
     </div>
     <div class="bg-white rounded-xl p-8 px-10 shadow-sm h-80 col-span-1 slg:col-span-3">
         <h3 class="text-lg font-semibold text-main_font mb-4">{{ $chartTitle }}</h3>
-        <div class="flex items-center justify-center h-[80%]">
+        <div class="flex items-center justify-center h-[100%] pb-10">
             <canvas id="{{ $canvasId }}" class="w-full h-full"></canvas>
         </div>
     </div>
