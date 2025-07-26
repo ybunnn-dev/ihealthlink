@@ -109,7 +109,12 @@ document.addEventListener('DOMContentLoaded', function () {
         colors: ['#328E6E', '#B9DBCD']  // Green + light
     });
 
-
+    renderDoughnutChart({
+        elementId: 'childImmunizationChart',
+        labels: ['FIC', 'MIC'],
+        data: [55, 18],
+        colors: ['#187756ff', '#72bb9dff']  // green and soft green
+    });
     renderDoughnutChart({
         elementId: 'sanitaryHousehold',
         labels: ["With Sanitary Toilets", "With Unsanitary Toilets", "Without Toilets"],

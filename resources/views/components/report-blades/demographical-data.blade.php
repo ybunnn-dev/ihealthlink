@@ -298,4 +298,53 @@
         </x-slot:tbody>
     </x-chart-layouts.inverse-donut-table>
     <x-chart-layouts.malnutrition-layout></x-chart-layouts.malnutrition-layout>
+
+   <x-chart-layouts.donut-table-combo 
+        chartTitle="Child Immunization Coverage"
+        canvasId="childImmunizationChart"
+        tableTitle="Coverage Per Purok">
+
+        <x-slot:thead>
+            <tr>
+                <th class="px-6 py-3 font-medium text-main_font border-b border-r">Status</th>
+                <th class="px-6 py-3 font-medium text-main_font border-b border-r text-center">Purok 1</th>
+                <th class="px-6 py-3 font-medium text-main_font border-b border-r text-center">Purok 2</th>
+                <th class="px-6 py-3 font-medium text-main_font border-b border-r text-center">Purok 3</th>
+                <th class="px-6 py-3 font-medium text-main_font border-b text-center">Total</th>
+            </tr>
+        </x-slot:thead>
+
+        <x-slot:tbody>
+            <tr class="border-t">
+                <td class="px-6 py-3 font-medium border-r">Fully Immuned Child</td>
+                <td class="px-6 py-3 text-center border-r">30</td>
+                <td class="px-6 py-3 text-center border-r">25</td>
+                <td class="px-6 py-3 text-center border-r">28</td>
+                <td class="px-6 py-3 text-center">83</td>
+            </tr>   
+            <tr class="border-t">
+                <td class="px-6 py-3 font-medium border-r">Completely Immuned Child</td>
+                <td class="px-6 py-3 text-center border-r">12</td>
+                <td class="px-6 py-3 text-center border-r">10</td>
+                <td class="px-6 py-3 text-center border-r">15</td>
+                <td class="px-6 py-3 text-center">37</td>
+            </tr>
+            <tr class="border-t">
+                <td class="px-6 py-3 font-medium border-r">Not Completed</td>
+                <td class="px-6 py-3 text-center border-r">5</td>
+                <td class="px-6 py-3 text-center border-r">8</td>
+                <td class="px-6 py-3 text-center border-r">6</td>
+                <td class="px-6 py-3 text-center">19</td>
+            </tr>
+            <tr class="bg-gray-100 font-semibold border-t">
+                <td class="px-6 py-3 border-r">Total Children</td>
+                <td class="px-6 py-3 text-center border-r">47</td>
+                <td class="px-6 py-3 text-center border-r">43</td>
+                <td class="px-6 py-3 text-center border-r">49</td>
+                <td class="px-6 py-3 text-center">139</td>
+            </tr>
+        </x-slot:tbody>
+
+    </x-chart-layouts.donut-table-combo>
+
 </div>
