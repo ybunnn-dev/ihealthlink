@@ -262,4 +262,39 @@
         </x-slot:tbody>
 
     </x-chart-layouts.inverse-donut-table>
+
+    <x-chart-layouts.inverse-donut-table 
+        chartTitle="Water Source"
+        canvasId="water-source"
+        tableTitle="Water Source">
+        <x-slot:thead>
+            <tr>
+                <th class="px-6 py-3 font-medium text-main_font border-b border-r text-center">Water Source</th>
+                <th class="px-6 py-3 font-medium text-main_font border-b border-r text-center">Total</th>
+                <th class="px-6 py-3 font-medium text-main_font border-b border-r text-center">%</th>
+            </tr>
+        </x-slot:thead>
+        <x-slot:tbody>
+            <tr class="border-t">
+                <td class="px-6 py-3 text-center border-r">Pumpwell</td>
+                <td class="px-6 py-3 text-center border-r">17</td>
+                <td class="px-6 py-3 text-center border-r">13.6%</td>
+            </tr>   
+            <tr class="border-t">
+                <td class="px-6 py-3 text-center border-r">Open Well</td>
+                <td class="px-6 py-3 text-center border-r">21</td>
+                <td class="px-6 py-3 text-center border-r">18.4%</td>
+            </tr>
+            <tr class="border-t">
+                <td class="px-6 py-3 text-center border-r">Purified Water</td>
+                <td class="px-6 py-3 text-center border-r">38</td>
+                <td class="px-6 py-3 text-center border-r">33.3%</td>
+            </tr>
+            <tr class="border-t">
+                <td class="px-6 py-3 text-center border-r">Tap Water</td>
+                <td class="px-6 py-3 text-center border-r">38</td>
+                <td class="px-6 py-3 text-center border-r">33.3%</td>
+            </tr>
+        </x-slot:tbody>
+    </x-chart-layouts.inverse-donut-table>
 </div>

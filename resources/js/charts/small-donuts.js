@@ -108,4 +108,11 @@ document.addEventListener('DOMContentLoaded', function () {
         data: [12, 8, 15],
         colors: ['#9370DB', '#D8BFD8', '#93b1dcff']
     });
+
+    renderDoughnutChart({
+        elementId: 'water-source',
+        labels: ["Pumpwell", "Open Well", "Purified Water", "Tap Water"],
+        data: [17, 21, 38, 38],
+        colors: ['#9370DB', '#3CB371', '#F4A460', '#4682B4']
+    });
 });
