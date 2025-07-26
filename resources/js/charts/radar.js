@@ -78,11 +78,12 @@ document.addEventListener('DOMContentLoaded', function () {
         "wood_or"
     );
 
-    // Chart 2 – Child Nutrition (soft green tone)
+   // Chart 2 – Child Nutrition (soft green tone)
     createRadarChart("childNutrition",
-        ["Pills", "IUD", "Condom", "Implant", "Injection", "Natural"],
-        [12, 8, 15, 5, 10, 6],
-        "Number of Users",
+        ["Normal", "Underweight", "Severely Underweight", "Overweight", "Obese"],
+        [10, 7, 3, 5, 4], // ← sample values; replace with real data
+        "Child Weight Classification",
         "green"
     );
+
 });

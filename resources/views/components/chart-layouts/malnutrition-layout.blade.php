@@ -33,36 +33,40 @@
             <h3 class="text-lg font-semibold text-main_font mb-4">Method Breakdown</h3>
 
             <table class="min-w-full text-sm text-left text-gray-700 rounded">
-                <thead class="text-xs text-gray-500 uppercase border-b bg-gray-100">
+               <thead class="text-xs text-gray-500 uppercase border-b bg-gray-100">
                     <tr>
-                        <th class="py-2 px-4">Method</th>
+                        <th class="py-2 px-4">Weight Classification</th>
                         <th class="py-2 px-4">Count</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr class="border-b">
-                        <td class="py-2 px-4">Pills</td>
+                        <td class="py-2 px-4">Normal</td>
                         <td class="py-2 px-4">12</td>
                     </tr>
                     <tr class="border-b">
-                        <td class="py-2 px-4">IUD</td>
+                        <td class="py-2 px-4">Underweight</td>
                         <td class="py-2 px-4">8</td>
                     </tr>
                     <tr class="border-b">
-                        <td class="py-2 px-4">Condom</td>
-                        <td class="py-2 px-4">15</td>
-                    </tr>
-                    <tr class="border-b">
-                        <td class="py-2 px-4">Implant</td>
+                        <td class="py-2 px-4">Severely Underweight</td>
                         <td class="py-2 px-4">5</td>
                     </tr>
                     <tr class="border-b">
-                        <td class="py-2 px-4">Injection</td>
+                        <td class="py-2 px-4">Overweight</td>
                         <td class="py-2 px-4">10</td>
                     </tr>
-                    <tr>
-                        <td class="py-2 px-4">Natural</td>
+                    <tr class="border-b">
+                        <td class="py-2 px-4">Obese</td>
                         <td class="py-2 px-4">6</td>
+                    </tr>
+                    <tr class="border-b">
+                        <td class="py-2 px-4">Not Weighted</td>
+                        <td class="py-2 px-4">20</td>
+                    </tr>
+                    <tr class="font-semibold text-main_font">
+                        <td class="py-2 px-4">Total</td>
+                        <td class="py-2 px-4">61</td>
                     </tr>
                 </tbody>
             </table>
@@ -70,7 +74,7 @@
     </div>
 
     <div class="bg-white rounded-xl shadow-sm p-6 col-span-1 xl:col-span-4">
-        <h3 class="text-lg font-semibold text-main_font mb-4">Child Weight</h3>
+        <h3 class="text-lg font-semibold text-main_font mb-4">Nutrional Status</h3>
         <canvas id="childNutrition" class="w-full h-full"></canvas>
     </div>
 </div>
