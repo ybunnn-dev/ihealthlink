@@ -1,5 +1,5 @@
 <div class="grid grid-cols-span-1 xl:grid-cols-6 gap-3 mb-3">
-    <div class="flex flex-col gap-3 gap-3 col-span-2 ">
+    <div class="flex flex-col gap-3 gap-3 col-span-2">
         <div class="bg-white rounded-xl shadow-sm px-6 py-8">
             <div class="flex items-center justify-center xl:justify-start gap-8 xl:gap-8 pl-4">
                 <svg class="text-wood_or w-12 h-12" fill="currentColor" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 98.666 98.666" xml:space="preserve">

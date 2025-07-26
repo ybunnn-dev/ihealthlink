@@ -297,4 +297,5 @@
             </tr>
         </x-slot:tbody>
     </x-chart-layouts.inverse-donut-table>
+    <x-chart-layouts.malnutrition-layout></x-chart-layouts.malnutrition-layout>
 </div>
