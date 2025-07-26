@@ -1,7 +1,9 @@
-<div class="grid grid-cols-1 xl:grid-cols-4 gap-3">
-    <div class="flex flex-col-1 gap-3 gap-3 col-span-1">   
-        <div class="bg-white rounded-xl shadow-sm px-6 py-8 col-span-1">
-            <div class="flex items-center justify-center xl:justify-start gap-8 xl:gap-8 pl-4">
+<div class="grid grid-cols-1 xl:grid-cols-6 gap-3 h-full">
+    <!-- LEFT COLUMN as grid with 3 rows -->
+    <div class="grid grid-rows-5 gap-3 col-span-2 h-full">
+        <!-- Top stat card -->
+        <div class="bg-white rounded-xl shadow-sm px-6 py-8 row-span-1">
+             <div class="flex items-center justify-center xl:justify-start gap-8 xl:gap-8 pl-4">
                 <svg class="text-wood_or w-12 h-12" fill="currentColor" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 98.666 98.666" xml:space="preserve">
                     <g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
                     <g id="SVGRepo_iconCarrier"> 
@@ -23,8 +25,10 @@
                 </div>
             </div>
         </div>
-        <div class="bg-white rounded-xl shadow-sm px-6 py-8 col-span-1">
-            <div class="flex items-center justify-center xl:justify-start gap-8 xl:gap-8 pl-4">
+
+        <!-- Middle stat card -->
+        <div class="bg-white rounded-xl shadow-sm px-6 py-8 row-span-1">
+             <div class="flex items-center justify-center xl:justify-start gap-8 xl:gap-8 pl-4">
                 <svg class="text-wood_or w-12 h-12" fill="currentColor" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 98.666 98.666" xml:space="preserve">
                     <g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
                     <g id="SVGRepo_iconCarrier"> 
@@ -46,14 +50,18 @@
                 </div>
             </div>
         </div>
-        <div class="bg-white rounded-xl shadow-sm p-6 px-10 col-span-2">
-            <h3 class="text-lg font-semibold text-main_font">Enrolled v Non-Enrolled</h3>
+
+        <!-- Bottom chart card -->
+        <div class="bg-white rounded-xl shadow-sm p-6 px-10 row-span-3">
+            <h3 class="text-lg font-semibold text-main_font">Weighted</h3>
             <div class="flex items-center justify-center h-full">
                 <canvas id="famPlan" class="w-full h-full"></canvas>
             </div>
         </div>
     </div>
-    <div class="bg-white rounded-xl shadow-sm p-6 col-span-1 xl:col-span-3">
+
+    <!-- RIGHT COLUMN -->
+    <div class="bg-white rounded-xl shadow-sm p-6 col-span-1 xl:col-span-4 h-full">
         <h3 class="text-lg font-semibold text-main_font mb-4">Child Weight Classes</h3>
         <canvas id="childNutrition" class="w-full h-full"></canvas>
     </div>
