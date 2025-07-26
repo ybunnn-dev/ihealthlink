@@ -21,7 +21,7 @@
                 </svg>
                 <div class="flex flex-col">
                     <h1 class="text-wood_or text-lg slg3:text-xl xl3:text-3xl font-bold mt-2">5,201</h1>
-                    <p class="text-wood_or text-xs -mt-1 slg3:text-fluid-xxs xl:text-xs 2xl:text-xs">Family Planning</p>
+                    <p class="text-wood_or text-xs -mt-1 slg3:text-fluid-xxs xl:text-xs 2xl:text-xs">Total Children</p>
                 </div>
             </div>
         </div>
@@ -46,16 +46,16 @@
                 </svg>
                 <div class="flex flex-col">
                     <h1 class="text-wood_or text-lg slg3:text-xl xl3:text-3xl font-bold mt-2">5,201</h1>
-                    <p class="text-wood_or text-xs -mt-1 slg3:text-fluid-xxs xl:text-xs 2xl:text-xs">Family Planning</p>
+                    <p class="text-wood_or text-xs -mt-1 slg3:text-fluid-xxs xl:text-xs 2xl:text-xs">Total Weighted</p>
                 </div>
             </div>
         </div>
 
         <!-- Bottom chart card -->
-        <div class="bg-white rounded-xl shadow-sm p-6 px-10 row-span-3">
-            <h3 class="text-lg font-semibold text-main_font">Weighted</h3>
+        <div class="bg-white rounded-xl shadow-sm p-6 px-10 row-span-3 h-96">
+            <h3 class="text-lg font-semibold text-main_font">Weighted Children</h3>
             <div class="flex items-center justify-center h-full">
-                <canvas id="famPlan" class="w-full h-full"></canvas>
+                <canvas id="childWeight" class="w-full h-full"></canvas>
             </div>
         </div>
     </div>

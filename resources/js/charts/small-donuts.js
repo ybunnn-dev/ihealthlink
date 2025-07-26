@@ -103,6 +103,13 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     renderDoughnutChart({
+        elementId: 'childWeight',
+        labels: ['Weighted', 'Not Weighted'],
+        data: [80, 20],
+        colors: ['#9370DB', '#D8BFD8']
+    });
+
+    renderDoughnutChart({
         elementId: 'sanitaryHousehold',
         labels: ["With Sanitary Toilets", "With Unsanitary Toilets", "Without Toilets"],
         data: [12, 8, 15],
