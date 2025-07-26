@@ -95,19 +95,20 @@ document.addEventListener('DOMContentLoaded', function () {
         colors: ['#9370DB', '#D8BFD8']
     });
 
-    renderDoughnutChart({
+   renderDoughnutChart({
         elementId: 'famPlan',
         labels: ['Enrolled', 'Non-Enrolled'],
         data: [80, 20],
-        colors: ['#9370DB', '#D8BFD8']
+        colors: ['#FFA673', '#FFE0CC']  // Wood Orange + light
     });
 
     renderDoughnutChart({
         elementId: 'childWeight',
         labels: ['Weighted', 'Not Weighted'],
         data: [80, 20],
-        colors: ['#9370DB', '#D8BFD8']
+        colors: ['#328E6E', '#B9DBCD']  // Green + light
     });
+
 
     renderDoughnutChart({
         elementId: 'sanitaryHousehold',
