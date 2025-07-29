@@ -3,7 +3,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <h1 class="text-3xl font-semibold text-sub_blue mb-3">Health Programs</h1>
             <div class="grid grid-cols-1 xl:grid-cols-5 gap-3">
-                <div class="bg-white rounded-xl p-6 px-10 mb-3 col-span-2">
+                <div class="bg-white rounded-xl p-6 px-10 mb-3 col-span-1 slg2:col-span-2">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center gap-x-3">
                             <svg class="w-10 h-10 text-maingreen"
@@ -23,22 +23,30 @@
                                 <p class="text-xs text-normal_font">Current Health Program</p>
                             </div>
                         </div>
-                        <div class="relative flex flex-col items-center group">
-                            <svg class="h-5 w-5 text-main_font" fill="currentColor" xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 52 52" enable-background="new 0 0 52 52" xml:space="preserve">
-                                <g id="SVGRepo_iconCarrier">
-                                    <path d="M20,37.5c0-0.8-0.7-1.5-1.5-1.5h-15C2.7,36,2,36.7,2,37.5v11C2,49.3,2.7,50,3.5,50h15c0.8,0,1.5-0.7,1.5-1.5V37.5z"></path>
-                                    <path d="M8.1,22H3.2c-1,0-1.5,0.9-0.9,1.4l8,8.3c0.4,0.3,1,0.3,1.4,0l8-8.3c0.6-0.6,0.1-1.4-0.9-1.4h-4.7c0-5,4.9-10,9.9-10V6C15,6,8.1,13,8.1,22z"></path>
-                                    <path d="M41.8,20.3c-0.4-0.3-1-0.3-1.4,0l-8,8.3c-0.6,0.6-0.1,1.4,0.9,1.4h4.8c0,6-4.1,10-10.1,10v6c9,0,16.1-7,16.1-16H49c1,0,1.5-0.9,0.9-1.4L41.8,20.3z"></path>
-                                    <path d="M50,3.5C50,2.7,49.3,2,48.5,2h-15C32.7,2,32,2.7,32,3.5v11c0,0.8,0.7,1.5,1.5,1.5h15c0.8,0,1.5-0.7,1.5-1.5V3.5z"></path>
-                                </g>
-                            </svg>
+                        <!-- Shared Alpine scope: wraps everything -->
+                        <div x-data="{ showModal: false }" class="relative flex flex-col items-center group">
+
+                            <!-- SVG Trigger -->
+                            <button @click="showModal = true" class="focus:outline-none">
+                                <svg class="h-5 w-5 text-main_font" fill="currentColor" xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 52 52" enable-background="new 0 0 52 52" xml:space="preserve">
+                                    <g id="SVGRepo_iconCarrier">
+                                        <path d="M20,37.5c0-0.8-0.7-1.5-1.5-1.5h-15C2.7,36,2,36.7,2,37.5v11C2,49.3,2.7,50,3.5,50h15c0.8,0,1.5-0.7,1.5-1.5V37.5z"></path>
+                                        <path d="M8.1,22H3.2c-1,0-1.5,0.9-0.9,1.4l8,8.3c0.4,0.3,1,0.3,1.4,0l8-8.3c0.6-0.6,0.1-1.4-0.9-1.4h-4.7c0-5,4.9-10,9.9-10V6C15,6,8.1,13,8.1,22z"></path>
+                                        <path d="M41.8,20.3c-0.4-0.3-1-0.3-1.4,0l-8,8.3c-0.6,0.6-0.1,1.4,0.9,1.4h4.8c0,6-4.1,10-10.1,10v6c9,0,16.1-7,16.1-16H49c1,0,1.5-0.9,0.9-1.4L41.8,20.3z"></path>
+                                        <path d="M50,3.5C50,2.7,49.3,2,48.5,2h-15C32.7,2,32,2.7,32,3.5v11c0,0.8,0.7,1.5,1.5,1.5h15c0.8,0,1.5-0.7,1.5-1.5V3.5z"></path>
+                                    </g>
+                                </svg>
+                            </button>
 
                             <!-- Tooltip bubble -->
                             <div class="absolute top-full mt-2 px-3 py-1 text-center text-xs text-white bg-gray-700 rounded-md shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10">
                                 <div class="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 rotate-45 bg-gray-700"></div>
                                 Switch Program
                             </div>
+
+                            <!-- Modal -->
+                            @include('components.modals.programs-modal')
                         </div>
                     </div>
                 </div>
@@ -226,3 +234,4 @@
         </div>
     </div>
 </x-app-layout>
+
