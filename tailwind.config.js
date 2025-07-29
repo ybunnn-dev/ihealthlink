@@ -39,6 +39,7 @@ export default {
                 blue2: "#58A0C8",
                 indigo1: "#799EFF",
                 red1: "#EA5B6F",
+                yellow1: "#FFCC00",
             },
             fontSize: {
                 // More aggressive clamping for better scaling on smaller PC screens
