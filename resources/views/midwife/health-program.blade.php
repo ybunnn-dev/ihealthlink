@@ -101,11 +101,11 @@
                         <table class="w-full text-sm text-left text-main_font">
                             <thead class="text-xs text-main_font uppercase bg-col_tab_h">
                                 <tr>
-                                    <th scope="col" class="px-6 py-3">PROGRAM ID</th>
-                                    <th scope="col" class="px-6 py-3">PROGRAM NAME</th>
-                                    <th scope="col" class="px-6 py-3">ENROLLED</th>
-                                    <th scope="col" class="px-6 py-3">CATEGORY</th>
-                                    <th scope="col" class="px-6 py-3">TARGET POPULATION</th>
+                                    <th scope="col" class="px-6 py-3">RESIDENT ID</th>
+                                    <th scope="col" class="px-6 py-3">NAME</th>
+                                    <th scope="col" class="px-6 py-3">STATUS</th>
+                                    <th scope="col" class="px-6 py-3">DATE ENROLLED</th>
+                                    <th scope="col" class="px-6 py-3">NEXT SCHEDULE</th>
                                 </tr>
                             </thead>
                             <tbody>
