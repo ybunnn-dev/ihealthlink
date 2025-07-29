@@ -36,6 +36,9 @@ export default {
                 col_brown: "#854836",
                 col_tab_h: "#DCEBFC",
                 wood_or: "#FFA673",
+                blue2: "#58A0C8",
+                indigo1: "#799EFF",
+                red1: "#EA5B6F",
             },
             fontSize: {
                 // More aggressive clamping for better scaling on smaller PC screens
