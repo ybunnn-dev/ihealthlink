@@ -115,7 +115,7 @@
         </button>
         <button
           class="bg-mainblue font-semibold text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition col-span-1 slg:col-span-3 w-full">
-          Change
+          Change Program
         </button>
       </div>
     </div>
