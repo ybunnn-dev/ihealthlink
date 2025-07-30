@@ -118,8 +118,8 @@ Route::middleware([
     })->name('midwife.medicines-view');
 
     Route::get('/midwife/bhws', function () {
-        return view('midwife.bhws');
-    })->name('midwife.BHWs');
+        return view('midwife.BHWs');
+    })->name('midwife.bhws');
     
     Route::get('/midwife/bhw-profile', function () {
         return view('midwife.BHWs-profile');

@@ -43,11 +43,6 @@
                                         </svg>
                                         </button>
                                     </div>
-                                    
-                                    <!-- Add Medicine Button -->
-                                    <div class="w-full sm:w-40 pt-5 sm:pt-0">
-                                        <button type="button" class="w-full h-[2.375rem] text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3">Add Medicines</button>
-                                    </div>
                                 </div>
                             </div>
                         </div>
