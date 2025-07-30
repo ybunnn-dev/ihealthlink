@@ -253,10 +253,9 @@
                     </span>
                 </a>
             </li>
-
             <!-- BHWs -->
             <li class="flex items-center group">
-                <a href="{{ route('midwife.BHWs') }}"
+                <a href="{{ route('midwife.bhws') }}"
                 class="flex items-center w-full py-3 pl-6 hover:bg-white/10 transition-colors"
                 :class="{
                     'bg-nav_active text-f7 font-bold': activeItem === 'bhws',
