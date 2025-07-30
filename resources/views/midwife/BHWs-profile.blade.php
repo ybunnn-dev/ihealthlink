@@ -25,7 +25,7 @@
                         <div class="flex space-x-3 w-full px-0 pb-0"> {{-- Removed px and pb as they are no longer needed on this container --}}
                             {{-- Increased py- for taller buttons --}}
                             <button type="button" class="flex-1 px-5 py-3 text-sm font-medium text-white bg-mainblue rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300">Edit</button>
-                            <button type="button" class="flex-1 px-5 py-3 text-sm font-medium text-mainblue bg-white border border-mainblue rounded-lg hover:bg-blue-50 focus:outline-none focus:ring-4 focus:ring-blue-300">Remove</button>
+                            <button type="button" class="flex-1 px-5 py-3 text-sm font-medium text-mainblue bg-white border border-mainblue rounded-lg hover:bg-blue-50 focus:outline-none focus:ring-4 focus:ring-300">Remove</button>
                         </div>
                     </div>
 
@@ -91,57 +91,76 @@
 
                     <div class="relative overflow-x-auto shadow-md rounded-lg">
                         <table class="w-full text-sm text-left text-main_font">
-                            <thead class="text-xs text-main_font uppercase bg-col_tab_h">
+                            <thead class="text-xs text-main_font uppercase bg-col_tab_h text-center">
                                 <tr>
                                     <th scope="col" class="px-6 py-3">LOG ID</th>
                                     <th scope="col" class="px-6 py-3">NAME</th>
                                     <th scope="col" class="px-6 py-3">ROLE</th>
                                     <th scope="col" class="px-6 py-3">ACTIVITY</th>
                                     <th scope="col" class="px-6 py-3">DATE & TIME UPDATED</th>
+                                    <th scope="col" class="px-6 py-3">ACTION</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody> {{-- Removed text-center from tbody --}}
                                 <tr class="bg-white border-b text-normal_font hover:bg-gray-50">
-                                    <th scope="row" class="px-6 py-4 font-medium text-normal_font whitespace-nowrap">121</th>
-                                    <td class="px-6 py-4">Ron Peter Mortega</td>
-                                    <td class="px-6 py-4">BHW</td>
-                                    <td class="px-6 py-4">Add Medicine</td>
-                                    <td class="px-6 py-4">Feb 10, 2025 - 10:00 AM</td>
-                                </tr>
-                                <tr class="bg-white border-b text-normal_font hover:bg-gray-50">
-                                    <th scope="row" class="px-6 py-4 font-medium text-normal_font whitespace-nowrap">122</th>
-                                    <td class="px-6 py-4">Ron Peter Mortega</td>
-                                    <td class="px-6 py-4">BHW</td>
-                                    <td class="px-6 py-4">Add Medicine</td>
-                                    <td class="px-6 py-4">Feb 10, 2025 - 10:00 AM</td>
+                                    <th scope="row" class="px-6 py-4 font-medium text-normal_font whitespace-nowrap text-center">121</th>
+                                    <td class="px-6 py-4 text-center">Ron Peter Mortega</td>
+                                    <td class="px-6 py-4 text-center">BHW</td>
+                                    <td class="px-6 py-4 text-center">Add Medicine</td>
+                                    <td class="px-6 py-4 text-center">Feb 10, 2025 - 10:00 AM</td>
+                                    <td class="px-6 py-4 text-center">
+                                        <button class="text-white bg-mainblue hover:bg-blue-700 font-medium rounded-lg text-sm px-4 py-2">View</button>
+                                    </td>
                                 </tr>
                                 <tr class="bg-white border-b text-normal_font hover:bg-gray-50">
-                                    <th scope="row" class="px-6 py-4 font-medium text-normal_font whitespace-nowrap">123</th>
-                                    <td class="px-6 py-4">Ron Peter Mortega</td>
-                                    <td class="px-6 py-4">BHW</td>
-                                    <td class="px-6 py-4">Update Resident</td>
-                                    <td class="px-6 py-4">Feb 10, 2025 - 10:00 AM</td>
+                                    <th scope="row" class="px-6 py-4 font-medium text-normal_font whitespace-nowrap text-center">122</th>
+                                    <td class="px-6 py-4 text-center">Ron Peter Mortega</td>
+                                    <td class="px-6 py-4 text-center">BHW</td>
+                                    <td class="px-6 py-4 text-center">Add Medicine</td>
+                                    <td class="px-6 py-4 text-center">Feb 10, 2025 - 10:00 AM</td>
+                                    <td class="px-6 py-4 text-center">
+                                        <button class="text-white bg-mainblue hover:bg-blue-700 font-medium rounded-lg text-sm px-4 py-2">View</button>
+                                    </td>
+                                </tr>
+                                <tr class="bg-white border-b text-normal_font hover:bg-gray-50">
+                                    <th scope="row" class="px-6 py-4 font-medium text-normal_font whitespace-nowrap text-center">123</th>
+                                    <td class="px-6 py-4 text-center">Ron Peter Mortega</td>
+                                    <td class="px-6 py-4 text-center">BHW</td>
+                                    <td class="px-6 py-4 text-center">Update Resident</td>
+                                    <td class="px-6 py-4 text-center">Feb 10, 2025 - 10:00 AM</td>
+                                    <td class="px-6 py-4 text-center">
+                                        <button class="text-white bg-mainblue hover:bg-blue-700 font-medium rounded-lg text-sm px-4 py-2">View</button>
+                                    </td>
                                 </tr>
                                 <tr class="bg-white text-normal_font hover:bg-gray-50">
-                                    <th scope="row" class="px-6 py-4 font-medium text-normal_font whitespace-nowrap">124</th>
-                                    <td class="px-6 py-4">Ron Peter Mortega</td>
-                                    <td class="px-6 py-4">BHW</td>
-                                    <td class="px-6 py-4">Add Resident</td>
-                                    <td class="px-6 py-4">Feb 10, 2025 - 10:00 AM</td>
+                                    <th scope="row" class="px-6 py-4 font-medium text-normal_font whitespace-nowrap text-center">124</th>
+                                    <td class="px-6 py-4 text-center">Ron Peter Mortega</td>
+                                    <td class="px-6 py-4 text-center">BHW</td>
+                                    <td class="px-6 py-4 text-center">Add Resident</td>
+                                    <td class="px-6 py-4 text-center">Feb 10, 2025 - 10:00 AM</td>
+                                    <td class="px-6 py-4 text-center">
+                                        <button class="text-white bg-mainblue hover:bg-blue-700 font-medium rounded-lg text-sm px-4 py-2">View</button>
+                                    </td>
                                 </tr>
                                 <tr class="bg-white text-normal_font hover:bg-gray-50">
-                                    <th scope="row" class="px-6 py-4 font-medium text-normal_font whitespace-nowrap">125</th>
-                                    <td class="px-6 py-4">Ron Peter Mortega</td>
-                                    <td class="px-6 py-4">BHW</td>
-                                    <td class="px-6 py-4">Add Resident</td>
-                                    <td class="px-6 py-4">Feb 10, 2025 - 10:00 AM</td>
+                                    <th scope="row" class="px-6 py-4 font-medium text-normal_font whitespace-nowrap text-center">125</th>
+                                    <td class="px-6 py-4 text-center">Ron Peter Mortega</td>
+                                    <td class="px-6 py-4 text-center">BHW</td>
+                                    <td class="px-6 py-4 text-center">Add Resident</td>
+                                    <td class="px-6 py-4 text-center">Feb 10, 2025 - 10:00 AM</td>
+                                    <td class="px-6 py-4 text-center">
+                                        <button class="text-white bg-mainblue hover:bg-blue-700 font-medium rounded-lg text-sm px-4 py-2">View</button>
+                                    </td>
                                 </tr>
                                 <tr class="bg-white text-normal_font hover:bg-gray-50">
-                                    <th scope="row" class="px-6 py-4 font-medium text-normal_font whitespace-nowrap">126</th>
-                                    <td class="px-6 py-4">Ron Peter Mortega</td>
-                                    <td class="px-6 py-4">BHW</td>
-                                    <td class="px-6 py-4">Add Medicine</td>
-                                    <td class="px-6 py-4">Feb 10, 2025 - 10:00 AM</td>
+                                    <th scope="row" class="px-6 py-4 font-medium text-normal_font whitespace-nowrap text-center">126</th>
+                                    <td class="px-6 py-4 text-center">Ron Peter Mortega</td>
+                                    <td class="px-6 py-4 text-center">BHW</td>
+                                    <td class="px-6 py-4 text-center">Add Medicine</td>
+                                    <td class="px-6 py-4 text-center">Feb 10, 2025 - 10:00 AM</td>
+                                    <td class="px-6 py-4 text-center">
+                                        <button class="text-white bg-mainblue hover:bg-blue-700 font-medium rounded-lg text-sm px-4 py-2">View</button>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
