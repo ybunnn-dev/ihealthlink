@@ -5,18 +5,18 @@
     @click.self="showBHW = false"
 >
   <!-- Modal Box -->
-  <div class="bg-white rounded-xl shadow-lg mx-auto px-6 lg:px-10 py-10 flex flex-col">
+  <div class="bg-white rounded-xl shadow-lg mx-auto px-6 lg:px-12 py-10 flex flex-col">
     
     <!-- Grid container: head + filter/search + scrollable table + footer -->
-    <div class="grid grid-rows-[auto_auto_1fr_auto] gap-3 h-full px-3">
+    <div class="grid grid-rows-[auto_auto_1fr_auto] gap-3 h-full">
       
       <!-- Header -->
       <div>
         <h3 class="text-2xl font-semibold text-main_font text-center">Add BHW</h3>
         <p class="text-xs text-normal_font text-center mb-3">Please enter BHW details.</p>
       </div>
-      <div class="grid grid-cols-1 gap-3 p-3 w-full max-w-lg justify-center">
-          <div class="grid grid-cols-1 slg:grid-cols-2 col-span-1 gap-3">
+      <div class="grid grid-cols-1 gap-3 w-full max-w-lg justify-center">
+          <div class="grid grid-cols-1 slg:grid-cols-2 col-span-1 gap-4">
               <div class="flex flex-col col-span-1">
                 <label class="text-sm text-main_font font-medium">FIRST NAME</label>
                 <input type="text" id="fName" class="border border-gray-300 text-gray-700 rounded-lg p-2">
@@ -26,7 +26,7 @@
                 <input type="text" id="fName" class="border border-gray-300 text-gray-700 rounded-lg p-2">
               </div>
           </div>
-          <div class="grid grid-cols-1 slg:grid-cols-2 col-span-1 gap-3">
+          <div class="grid grid-cols-1 slg:grid-cols-2 col-span-1 gap-4">
             <!-- Middle Name Input -->
             <div class="flex flex-col col-span-1">
               <label class="text-sm text-main_font font-medium">MIDDLE NAME</label>
@@ -59,7 +59,7 @@
               </div>
             </div>
           </div>
-          <div class="grid grid-cols-1 slg:grid-cols-2 col-span-1 gap-3">
+          <div class="grid grid-cols-1 slg:grid-cols-2 col-span-1 gap-4">
             <!-- Middle Name Input -->
             <div class="flex flex-col col-span-1">
               <label class="text-sm text-main_font font-medium">BIRTHDATE</label> 
@@ -72,7 +72,7 @@
                 <input datepicker id="bhwBdate" data-date-picker-theme="light" type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5" placeholder="Select date">
               </div>
             </div>
-            <div class="grid grid-cols-1 slg:grid-cols-3 gap-3">
+            <div class="grid grid-cols-1 slg:grid-cols-3 gap-4">
               <!-- Sex Dropdown -->
               <div class="flex flex-col col-span-1">
                 <label class="text-sm text-main_font font-medium">AGE</label>
@@ -102,6 +102,73 @@
               </div>
             </div>
           </div>
+          <div class="grid grid-cols-1 slg:grid-cols-2 col-span-1 gap-4">
+            <!-- Civil Status Dropdown -->
+            <div class="flex flex-col col-span-1 relative">
+              <label for="civilStatusDropdown" class="text-sm font-medium text-main_font">CIVIL STATUS</label>
+              <button id="civilStatusDropdown" data-dropdown-toggle="civilStatusMenu"
+                class="w-full text-main_font bg-white focus:outline-none font-medium border border-gray-300 rounded-lg text-md p-2 text-center inline-flex items-center justify-between"
+                type="button">
+                Select
+                <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                  viewBox="0 0 10 6">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="m1 1 4 4 4-4" />
+                </svg>
+              </button>
+              <div id="civilStatusMenu"
+                class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-full absolute top-full mt-1">
+                <ul class="py-2 text-sm text-gray-700" aria-labelledby="civilStatusDropdown">
+                  <li><button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100">Single</button></li>
+                  <li><button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100">Married</button></li>
+                  <li><button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100">Widowed</button></li>
+                  <li><button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100">Separated</button></li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Religion Dropdown -->
+            <div class="flex flex-col col-span-1 relative">
+              <label for="religionDropdown" class="text-sm font-medium text-main_font">RELIGION</label>
+              <button id="religionDropdown" data-dropdown-toggle="religionMenu"
+                class="w-full text-main_font bg-white focus:outline-none font-medium border border-gray-300 rounded-lg text-md p-2 text-center inline-flex items-center justify-between"
+                type="button">
+                Select
+                <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                  viewBox="0 0 10 6">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="m1 1 4 4 4-4" />
+                </svg>
+              </button>
+
+              <div id="religionMenu"
+                class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-full absolute top-full mt-1">
+                <ul class="py-2 text-sm text-gray-700" aria-labelledby="religionDropdown">
+                  <li><button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100">Roman Catholic</button></li>
+                  <li><button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100">Iglesia ni Cristo</button></li>
+                  <li><button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100">Christian</button></li>
+                  <li><button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100">Muslim</button></li>
+                  <li><button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100">Others</button></li>
+                </ul>
+              </div>
+            </div>
+            
+          </div>
+          <div class="grid grid-cols-1 slg:grid-cols-3 col-span-1 gap-4">
+            <div class="flex flex-col col-span-1">
+              <label class="text-sm text-main_font font-medium">HOUSEHOLD NO.</label>
+              <input type="text" id="houseNo" class="border border-gray-300 text-gray-700 rounded-lg p-2">
+            </div>
+            <div class="flex flex-col col-span-1">
+              <label class="text-sm text-main_font font-medium">PUROK NO.</label>
+              <input type="text" id="purokNo" class="border border-gray-300 text-gray-700 rounded-lg p-2">
+            </div>
+            <div class="flex flex-col col-span-1">
+              <label class="text-sm text-main_font font-medium">CONTACT NO.</label>
+              <input type="text" id="contactNo" class="border border-gray-300 text-gray-700 rounded-lg p-2">
+            </div>
+          </div>
+        </div>
       </div>
       <!-- Buttons (footer) -->
       <div class="flex justify-end items-end pt-4">
