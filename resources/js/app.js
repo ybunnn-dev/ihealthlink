@@ -8,6 +8,22 @@ import './charts/families-4ps.js';
 import './charts/small-donuts.js';
 import './charts/radar.js';
 import './resident.js';
+import 'flowbite';
+import 'flowbite-datepicker';
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener('show.datepicker', () => {
+    setTimeout(() => {
+      document.querySelectorAll('.datepicker').forEach(picker => {
+        picker.classList.remove('dark');
+        // Optional: force white background just in case
+        picker.style.backgroundColor = 'white';
+        picker.style.color = 'black';
+      });
+    }, 10); // Wait briefly for Flowbite to finish rendering
+  });
+});
+
 
 document.addEventListener('alpine:init', () => {
     // Register your Alpine data components
@@ -15,3 +31,4 @@ document.addEventListener('alpine:init', () => {
 });
 //window.Alpine = Alpine
 Alpine.start()
+

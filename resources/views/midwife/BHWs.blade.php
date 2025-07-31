@@ -50,9 +50,7 @@
                                             </ul>
                                         </div>
                                     </div>
-                                </div>
-
-                                    
+                                </div>  
                                     <!-- Date Filter -->
                                     <div class="w-full xs:w-48">
                                         <label for="dateDropdown" class="mb-2 text-sm font-medium text-main_font">Sort By Date</label> 
@@ -64,9 +62,10 @@
                                         </button>
                                     </div>
                                     
-                                    <!-- Add Household Button -->
-                                    <div class="w-full xs:w-40 pt-5 xs:pt-0">
-                                        <button type="button" class="w-full h-[2.375rem] text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3">Add BHW</button>
+                                    <!-- Add BHW Button -->
+                                    <div x-data="{ showBHW: false }" class="w-full xs:w-40 pt-5 xs:pt-0">
+                                        <button @click="showBHW = true" type="button" class="w-full h-[2rem] text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3 focus:outline-none">Add BHW</button>
+                                        @include('components.modals.add-bhw-modal')
                                     </div>
                                 </div>
                             </div>
