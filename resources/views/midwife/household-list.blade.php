@@ -51,9 +51,12 @@
                                     </div>
                                     
                                     <!-- Add Household Button -->
-                                    <div class="w-full xs:w-40 pt-5 xs:pt-0">
+                                    <div class="w-full xs:w-40 pt-5 xs:pt-0" data-modal-target="add-household-modal" data-modal-toggle="add-household-modal">
                                         <button type="button" class="w-full h-[2.375rem] text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3">Add Households</button>
+                                        
                                     </div>
+                                    @include('components.modals.add-household-modal')
+
                                 </div>
                             </div>
                         </div>
