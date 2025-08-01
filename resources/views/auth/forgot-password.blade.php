@@ -1,4 +1,5 @@
 <x-guest-layout>
+    @section('title', 'Password Recovery')
     <x-authentication-card>
         <x-slot name="logo">
             <x-authentication-card-logo />

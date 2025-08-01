@@ -57,7 +57,10 @@
                                         
                                     </div>
                                     @include('components.modals.add-household-modal')
-
+                                    @include('components.modals.existing-member-modal')
+                                    @include('components.modals.existing-family-head-modal')
+                                    @include('components.modals.existing-household-head-modal')
+                                    @include('components.modals.new-resident-modal')
                                 </div>
                             </div>
                         </div>
@@ -146,4 +149,50 @@
             </div>
         </div>
     </div>
+    <script>
+        // Get modal DOM elements
+        const modalMember = document.getElementById('existing-member-modal');
+        const modalFamilyHead = document.getElementById('existing-family-head-modal');
+        const modalHouseholdHead = document.getElementById('head-of-household-modal');
+        const modalNew = document.getElementById('new-resident-modal');
+
+        // Function to show a modal (adds Tailwind classes)
+        function openModal(id) {
+            const modal = document.getElementById(id);
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        // Function to hide a modal (used by "Close" buttons)
+        function closeModal(id) {
+            const modal = document.getElementById(id);
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        // Proceed button logic
+        document.getElementById('proceed-add-household').addEventListener('click', function () {
+            const enteredName = document.getElementById('enterHouseholdHead').value.trim();
+
+            if (!enteredName) {
+                alert("Please enter the household head's name.");
+                return;
+            }
+
+            switch (enteredName.toLowerCase()) {
+                case 'juan dela cruz':
+                    openModal('existing-member-modal');
+                    break;
+                case 'maria clara':
+                    openModal('existing-family-head-modal');
+                    break;
+                case 'pedro penduko':
+                    openModal('head-of-household-modal');
+                    break;
+                default:
+                    openModal('new-resident-modal');
+            }
+        });
+    </script>
+
 </x-app-layout>

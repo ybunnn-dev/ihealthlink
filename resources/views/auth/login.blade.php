@@ -1,4 +1,5 @@
 <x-guest-layout>
+    @section('title', 'iHealthLink | Login')
     <!-- Fluid Background Egg Shape (45% of screen height) -->
     <div class="hidden lg:block fixed top-0 left-1/2 transform -translate-x-1/2 w-full h-[48vh] bg-mainblue rounded-b-[100%] scale-x-125 -z-10"></div>
 
