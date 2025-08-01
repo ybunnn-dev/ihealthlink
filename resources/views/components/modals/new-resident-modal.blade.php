@@ -3,7 +3,7 @@
     <h2 class="text-lg font-semibold text-gray-800 mb-4">New Household Creation</h2>
     <p class="text-gray-600">This resident is eligible to become a new household head. Proceed with creating the new household.</p>
     <div class="flex justify-end mt-4">
-      <button onclick="proceedToForm()" class="bg-green-600 text-white px-4 py-2 rounded">Continue</button>
+      <button onclick="closeModal('new-resident-modal')" class="bg-green-600 text-white px-4 py-2 rounded">Continue</button>
     </div>
   </div>
 </div>

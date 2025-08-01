@@ -153,26 +153,41 @@
         // Get modal DOM elements
         const modalMember = document.getElementById('existing-member-modal');
         const modalFamilyHead = document.getElementById('existing-family-head-modal');
-        const modalHouseholdHead = document.getElementById('head-of-household-modal');
+        const modalHouseholdHead = document.getElementById('existing-household-head-modal');
         const modalNew = document.getElementById('new-resident-modal');
+        const addHouseholdModal = document.getElementById('add-household-modal'); // Get the parent modal element
 
         // Function to show a modal (adds Tailwind classes)
         function openModal(id) {
             const modal = document.getElementById(id);
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
+            if (modal) { // Add a safety check
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
         }
 
         // Function to hide a modal (used by "Close" buttons)
+        // The id parameter should be the string ID of the modal to close.
         function closeModal(id) {
+            // If the modal being closed is NOT the main 'add-household-modal',
+            // reopen the main one. This ensures the parent modal returns after a child closes.
+            if (id !== 'add-household-modal') {
+                openModal('add-household-modal');
+            }
+            
             const modal = document.getElementById(id);
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
+            if (modal) { // Add a check to prevent the error if the ID is invalid
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
         }
 
         // Proceed button logic
         document.getElementById('proceed-add-household').addEventListener('click', function () {
             const enteredName = document.getElementById('enterHouseholdHead').value.trim();
+
+            // Pass the string ID to closeModal, NOT the DOM element
+            closeModal('add-household-modal');
 
             if (!enteredName) {
                 alert("Please enter the household head's name.");
@@ -187,12 +202,20 @@
                     openModal('existing-family-head-modal');
                     break;
                 case 'pedro penduko':
-                    openModal('head-of-household-modal');
+                    openModal('existing-household-head-modal');
                     break;
                 default:
                     openModal('new-resident-modal');
             }
         });
-    </script>
 
+        // Add event listeners for the "Close" buttons in your child modals
+        // This is crucial for the `closeModal` function to work as intended
+        // with your child modals. Without this, they will never be closed
+        // and the parent modal will not return.
+        document.getElementById('close-existing-member').addEventListener('click', function() {
+            closeModal('existing-member-modal');
+        });
+        // Repeat for other modals as needed...
+    </script>
 </x-app-layout>
