@@ -15,7 +15,7 @@
                 <div class="grid grid-cols-1">
                     <div class="grid grid-cols-1 slg:grid-cols-2 gap-3">
                         <div class="grid grid-cols-1 gap-1 relative col-span-1">
-                            <label for="choosePurok" class="text-sm font-medium text-main_font">CHOOSE PUROK</label>
+                            <label for="choosePurok" class="text-sm font-medium text-main_font">PUROK/SITIO</label>
                             <button id="choosePurok" data-dropdown-toggle="choosePurokMenu"
                                 class="w-full text-main_font bg-white focus:outline-none font-medium border border-gray-300 rounded-lg text-md p-2 text-center inline-flex items-center justify-between"
                                 type="button">
@@ -41,7 +41,7 @@
                         </div>
                         <div class="grid grid-cols-1 gap-1 relative col-span-1">
                             <label for="enterHouseholdHead" class="text-sm font-medium text-main_font">HOUSEHOLD HEAD</label>
-                            <input type="text" id="enterHouseholdHead">
+                            <input type="text" id="enterHouseholdHead" class="border border-gray-300 text-gray-700 rounded-lg p-2">
                         </div>     
                     </div>
                 </div>
