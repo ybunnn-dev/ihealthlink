@@ -50,6 +50,7 @@ Follow these steps to set up the project:
 #### 3. Install JavaScript Dependencies: Install the required frontend packages  
 
     npm install
+    npm install flowbite flowbite-datepicker
 
 #### 4. Set Up Environment Variables: Create a .env file by copying the example  
 
