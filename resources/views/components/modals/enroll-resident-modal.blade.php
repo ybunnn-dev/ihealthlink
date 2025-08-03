@@ -14,8 +14,8 @@
             <div class="p-4 md:p-5 space-y-4">
                 <div class="grid grid-cols-1 gap-3">
                     <div class="grid grid-cols-1 gap-1 relative col-span-1 mb-3">
-                        <label for="enterHouseholdHead" class="text-sm font-medium text-main_font">Resident Name</label>
-                        <input type="text" id="enterHouseholdHead" class="border border-gray-300 text-gray-700 rounded-lg p-2">
+                        <label for="enterResidentName" class="text-sm font-medium text-main_font">Resident Name</label>
+                        <input type="text" id="enterResidentName" class="border border-gray-300 text-gray-700 rounded-lg p-2">
                     </div>
                     <div class="flex items-center gap-3 mb-3">
                         <hr class="flex-grow border-t border-gray-200">

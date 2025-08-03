@@ -2,29 +2,53 @@
 document.addEventListener("DOMContentLoaded", function () {
     const enrollResidentModal = document.getElementById('enroll-resident-modal');
     const qrScannerModal = document.getElementById('qr-scanner-modal');
+    const addHouseholdModal = document.getElementById('add-household-modal');
+    const addFamilyModal = document.getElementById('add-family-modal');
 
-    // Correct variable name
     let currentModal = 'non-modal'; 
 
     const findEnrolledQrButton = document.getElementById('find-enrolled-qr');
     const enrollScanQrButton = document.getElementById('enroll-scan-qr');
+    const addHouseholdQr = document.getElementById('add-household-qr');
+    const addFamilyQr = document.getElementById('add-family-qr');
 
     const cancelScanButton = document.getElementById('cancel-qr-scan');
     const closeScannerButton = qrScannerModal?.querySelector('[data-modal-hide="qr-scanner-modal"]');
     const qrStatus = document.getElementById('qr-status');
+
+    const residentToEnrollInput = document.getElementById('enterResidentName');
     const householdHeadInput = document.getElementById('enterHouseholdHead');
 
     let html5QrcodeScanner;
-    let isScanning = false; // Add a state flag
+    let isScanning = false; 
 
     function openQrScannerModal(moduleName) {
-        if (moduleName === 'enrollment') {
-            enrollResidentModal?.classList.add('hidden');
-            // Correct variable name
-            currentModal = 'enrollment';
+        // Correctly manage the state of the other modals
+        switch(moduleName){
+            case 'enrollment':
+                currentModal = 'enrollment';
+                enrollResidentModal?.classList.add('hidden');
+                enrollResidentModal?.setAttribute('aria-hidden', 'true');
+                enrollResidentModal?.setAttribute('inert', ''); // This prevents focus from leaving the current modal
+                break;
+            case 'find-household-head':
+                currentModal = 'add-household-head';
+                addHouseholdModal?.classList.add('hidden');
+                addHouseholdModal?.setAttribute('aria-hidden', 'true');
+                addHouseholdModal?.setAttribute('inert', ''); // This prevents focus from leaving the current modal
+                break;
+            case 'find-family-head':
+                currentModal = 'add-family-head';
+                addFamilyModal?.classList.add('hidden');
+                addFamilyModal?.setAttribute('aria-hidden', 'true');
+                addFamilyModal?.setAttribute('inert', '');
+
         }
 
         qrScannerModal?.classList.remove('hidden');
+        qrScannerModal?.removeAttribute('aria-hidden'); // The active modal must not be aria-hidden
+        qrScannerModal?.removeAttribute('inert');
+
         qrStatus.textContent = `Scanning for: ${moduleName}`;
 
         if (html5QrcodeScanner && isScanning) {
@@ -32,7 +56,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         html5QrcodeScanner = new Html5Qrcode('reader');
-        isScanning = true; // Set flag to true when starting
+        isScanning = true; 
 
         html5QrcodeScanner.start(
             { facingMode: "environment" },
@@ -49,8 +73,13 @@ document.addEventListener("DOMContentLoaded", function () {
                         console.log(`Found enrolled resident with ID: ${decodedText}`);
                         break;
                     case 'enrollment':
+                        residentToEnrollInput.value = decodedText;
+                        break;
+                    case 'find-household-head':
                         householdHeadInput.value = decodedText;
-                        enrollResidentModal?.classList.remove('hidden');
+                        break;
+                    case 'find-family-head':
+                        familyHeadInput.value = decodedText;
                         break;
                 }
 
@@ -60,23 +89,51 @@ document.addEventListener("DOMContentLoaded", function () {
         ).catch(err => {
             console.error("Failed to start scanner: ", err);
             qrStatus.textContent = 'Failed to start camera. Please ensure camera access is granted.';
-            isScanning = false; // Reset flag on failure to start
+            isScanning = false; 
             qrScannerModal?.classList.add('hidden');
-            // This line may be problematic if the calling context is not a modal. 
-            // Consider removing or making conditional if it breaks other modules.
-            enrollResidentModal?.classList.remove('hidden'); 
+            qrScannerModal?.setAttribute('aria-hidden', 'true');
+            qrScannerModal?.setAttribute('inert', '');
+
+            // Un-hide the original modal on error so the user isn't stuck
+            switch(currentModal){
+                case 'enrollment':
+                    enrollResidentModal?.classList.remove('hidden');
+                    enrollResidentModal?.removeAttribute('aria-hidden');
+                    enrollResidentModal?.removeAttribute('inert');
+                    break;
+                case 'add-household-head':
+                    addHouseholdModal?.classList.remove('hidden');
+                    addHouseholdModal?.removeAttribute('aria-hidden');
+                    addHouseholdModal?.removeAttribute('inert');
+                    break;
+            }
         });
     }
 
     function stopQrScanner() {
-        if (html5QrcodeScanner && isScanning) { // Check the flag before attempting to stop
+        if (html5QrcodeScanner && isScanning) {
             html5QrcodeScanner.stop().then(() => {
                 qrScannerModal?.classList.add('hidden');
+                qrScannerModal?.setAttribute('aria-hidden', 'true');
+                qrScannerModal?.setAttribute('inert', '');
                 
-                // Correct variable name
                 switch(currentModal){ 
                     case 'enrollment':
                         enrollResidentModal?.classList.remove('hidden');
+                        enrollResidentModal?.removeAttribute('aria-hidden');
+                        enrollResidentModal?.removeAttribute('inert');
+                        currentModal = 'non-modal';
+                        break;
+                    case 'add-household-head':
+                        addHouseholdModal?.classList.remove('hidden');
+                        addHouseholdModal?.removeAttribute('aria-hidden');
+                        addHouseholdModal?.removeAttribute('inert');
+                        currentModal = 'non-modal';
+                        break;
+                    case 'add-family-head':
+                        addFamilyModal?.classList.remove('hidden');
+                        addFamilyModal?.removeAttribute('aria-hidden');
+                        addFamilyModal?.removeAttribute('inert');
                         currentModal = 'non-modal';
                         break;
                     default:
@@ -84,14 +141,14 @@ document.addEventListener("DOMContentLoaded", function () {
                         currentModal = 'non-modal';
                         break;
                 }
-                isScanning = false; // Reset the flag after successful stop
+                isScanning = false;
             }).catch(err => {
                 console.error("Error stopping scanner: ", err);
-                isScanning = false; // Also reset on error
+                isScanning = false;
             });
         } else {
-            // If scanner is not running, just hide the modal and reset state
             qrScannerModal?.classList.add('hidden');
+            qrScannerModal?.setAttribute('aria-hidden', 'true');
             isScanning = false;
         }
     }
@@ -103,9 +160,18 @@ document.addEventListener("DOMContentLoaded", function () {
     function enrolledScan() {
         openQrScannerModal('find-enrolled');
     }
+    
+    function addHouseholdHeadQr(){
+        openQrScannerModal('find-household-head');
+    }
+    function addFamilyHeadQr(){
+        openQrScannerModal('find-family-head');
+    }
 
     findEnrolledQrButton?.addEventListener('click', enrolledScan);
     enrollScanQrButton?.addEventListener('click', enrollScan);
     cancelScanButton?.addEventListener('click', stopQrScanner);
     closeScannerButton?.addEventListener('click', stopQrScanner);
+    addHouseholdQr?.addEventListener('click', addHouseholdHeadQr);
+    addFamilyQr?.addEventListener('click', addFamilyHeadQr);
 });
