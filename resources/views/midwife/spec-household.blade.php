@@ -7,8 +7,8 @@
                         <span>Return</span>
                     </div>
                 </a>
-                <div class="flex space-x-4">
-                    <div class="w-1/3 h-80 bg-f7 rounded-lg flex flex-col items-center justify-center p-4"> 
+                <div class="grid grid-cols-1 slg:grid-cols-3 gap-4">
+                    <div class="col-span-1 h-80 bg-f7 rounded-lg flex flex-col items-center justify-center p-4"> 
                         <svg class="flex-shrink-0
                                     w-32 h-32 lg:w-40 lg:h-40 xl2:w-44 xl2:h-44 text-main_font"
 
@@ -21,199 +21,208 @@
                         </svg>
                         <p class="text-main_font font-bold mt-2">Household #144</p> 
                     </div>
-                 <div class="flex-grow h-80 bg-f7 rounded-lg px-12 py-8">
-                    <h2 class="text-xl font-semibold text-main_font mb-6">Household Info</h2>
-                    <div class="grid grid-cols-[auto_1fr] gap-x-24 gap-y-3 text-xs">
-                        <p class="font-semibold text-main_font">PUROK NO.</p>
-                        <p class="text-normal_font">1</p>
+                    <div class="flex-grow h-80 bg-f7 rounded-lg px-12 py-8 col-span-2">
+                        <h2 class="text-xl font-semibold text-main_font mb-6">Household Info</h2>
+                        <div class="grid grid-cols-[auto_1fr] gap-x-24 gap-y-3 text-xs">
+                            <p class="font-semibold text-main_font">PUROK NO.</p>
+                            <p class="text-normal_font">1</p>
 
-                        <p class="font-semibold text-main_font">NUMBER OF HOUSEHOLDS:</p>
-                        <p class="text-normal_font">6</p>
+                            <p class="font-semibold text-main_font">NUMBER OF FAMILIES:</p>
+                            <p class="text-normal_font">6</p>
 
-                        <p class="font-semibold text-main_font">HOUSEHOLD HEAD:</p>
-                        <p class="text-normal_font">Ron Peter Mortega</p>
+                            <p class="font-semibold text-main_font">HOUSEHOLD HEAD:</p>
+                            <p class="text-normal_font">Ron Peter Mortega</p>
 
-                        <p class="font-semibold text-main_font">SOURCE OF WATER:</p>
-                        <p class="text-normal_font">Deep Well</p>
+                            <p class="font-semibold text-main_font">SOURCE OF WATER:</p>
+                            <p class="text-normal_font">Deep Well</p>
 
-                        <p class="font-semibold text-main_font">HAVE A TOILET:</p>
-                        <p class="text-normal_font">No</p>
+                            <p class="font-semibold text-main_font">HAVE A TOILET:</p>
+                            <p class="text-normal_font">No</p>
 
-                        <p class="font-semibold text-main_font">DATE ADDED:</p>
-                        <p class="text-normal_font">March 17, 2024</p>
+                            <p class="font-semibold text-main_font">DATE ADDED:</p>
+                            <p class="text-normal_font">March 17, 2024</p>
 
-                        <p class="font-semibold text-main_font">DATE UPDATED:</p>
-                        <p class="text-normal_font">March 17, 2025</p>
+                            <p class="font-semibold text-main_font">DATE UPDATED:</p>
+                            <p class="text-normal_font">March 17, 2025</p>
+                        </div>
                     </div>
                 </div>
-                </div>
+                <div class="grid grid-cols-1 slg:grid-cols-3 gap-4">
+                    <div class="col-span-1 bg-f7 rounded-xl overflow-hidden py-8 px-10"> 
+                    <h1 class="text-2xl font-semibold text-sub_blue mb-4">Families</h1>  
 
-                <div class="bg-f7 rounded-xl overflow-hidden">
-                    <div class="p-8 pt-10">
-                        <div class="grid grid-rows-1 gap-1">
-                            <h1 class="text-2xl font-semibold text-sub_blue mb-3">Household Members</h1>
-                            <div class="pb-6">
+                        <!-- Add Family Button -->
+                        <div class="mb-4">
+                            <button class="w-full h-[2.2rem] text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3" data-modal-target="add-family-modal" data-modal-toggle="add-family-modal">
+                                + Add Family
+                            </button>
+                        </div>
+
+                        <!-- Static List of Families with Member Count -->
+                        <div class="space-y-3">
+                            <!-- Family Button 1 -->
+                            <button class="w-full flex justify-between items-center px-4 py-2 bg-white hover:bg-nav_active text-main_font border border-gray-300 rounded-lg text-sm font-medium">
+                                <span>R. Mortega Family</span>
+                                <span class="text-xs text-gray-500">5 Members</span>
+                            </button>
+
+                            <!-- Family Button 2 -->
+                            <button class="w-full flex justify-between items-center px-4 py-2 bg-white hover:bg-nav_active text-main_font border border-gray-300 rounded-lg text-sm font-medium">
+                                <span>S. Bautista Family</span>
+                                <span class="text-xs text-gray-500">3 Members</span>
+                            </button>
+
+                            <!-- Family Button 3 -->
+                            <button class="w-full flex justify-between items-center px-4 py-2 bg-white hover:bg-nav_active text-main_font border border-gray-300 rounded-lg text-sm font-medium">
+                                <span>T. Reyes Family</span>
+                                <span class="text-xs text-gray-500">3 Members</span>
+                            </button>
+
+                            <!-- Family Button 4 -->
+                            <button class="w-full flex justify-between items-center px-4 py-2 bg-white hover:bg-nav_active text-main_font border border-gray-300 rounded-lg text-sm font-medium">
+                                <span>J. Dela Cruz Family</span>
+                                <span class="text-xs text-gray-500">2 Members</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+
+                    <div class="bg-f7 rounded-xl overflow-hidden col-span-2">
+                        <div class="p-8 pt-10">
+                            <div class="grid grid-cols-2 gap-1 mb-6 items-center">
+                                <h1 class="text-2xl font-semibold text-sub_blue">R. Mortega Family</h1>
                                 <!-- Flex container -->
-                                <div class="flex flex-col slg2:flex-row slg2:items-end gap-4">
-                                    <!-- Search bar -->
-                                    <div class="w-full slg2:w-64 slg2:flex-grow slg2:max-w-md">
-                                    <label for="default-search" class="mb-2 text-sm font-medium text-main_font">Search</label> 
-                                    <div class="relative">
-                                        <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                                        <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-                                        </svg>
-                                        </div>
-                                        <input type="search" id="default-search" class="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500" placeholder="Search..."/>
-                                    </div>
-                                    </div>  
+                                <div class="flex flex-col slg2:flex-row slg2:items-end gap-4 justify-end">  
                                     <!-- Add Household Button -->
                                     <div class="w-full xs:w-40 pt-5 xs:pt-0">
-                                        <button type="button" class="w-full h-[2.375rem] text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3">Add Households</button>
+                                        <button type="button" class="w-full h-[2rem] text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3">Add Member</button>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="relative overflow-x-auto">
-                           <table class="w-full text-sm text-left text-main_font bg-col_tab_h">
-                                <thead class="text-xs text-main_font uppercase">
-                                    <tr>
-                                        <th scope="col" class="px-6 py-3">
-                                            RESIDENT #
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            NAME
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            RELATIONSHIP WITH HEAD
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            DATE ADDED
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            STATUS
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            ACTION
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr class="bg-white border-b bg-f7 text-normal_font">
-                                        <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
-                                            001
-                                        </th>
-                                        <td class="px-6 py-4">
-                                            Ron Peter Mortega
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            Household Head
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            July 18, 2025
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            Active
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded text-xs">
-                                                View
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr class="bg-white border-b bg-f7 text-normal_font">
-                                        <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
-                                            002
-                                        </th>
-                                        <td class="px-6 py-4">
-                                            Leonard Mortega
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            Wife
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            July 18, 2025
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            Active
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded text-xs">
-                                                View
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr class="bg-white border-b bg-f7 text-normal_font">
-                                        <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
-                                            003
-                                        </th>
-                                        <td class="px-6 py-4">
-                                            Fellix Mortega
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            Brother
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            July 18, 2025
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            Active
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded text-xs">
-                                                View
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr class="bg-white border-b bg-f7 text-normal_font">
-                                        <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
-                                            004
-                                        </th>
-                                        <td class="px-6 py-4">
-                                            Noli Mortega
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            Daughter
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            July 18, 2025
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            Active
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded text-xs">
-                                                View
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr class="bg-white border-b bg-f7 text-normal_font">
-                                        <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
-                                            005
-                                        </th>
-                                        <td class="px-6 py-4">
-                                            Belerick Mortega
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            Son
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            July 18, 2025
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            Active
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded text-xs">
-                                                View
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <div class="relative overflow-x-auto">
+                            <table class="w-full text-sm text-left text-main_font bg-col_tab_h">
+                                    <thead class="text-xs text-main_font uppercase">
+                                        <tr>
+                                            <th scope="col" class="px-6 py-3">
+                                                RESIDENT #
+                                            </th>
+                                            <th scope="col" class="px-6 py-3">
+                                                NAME
+                                            </th>
+                                            <th scope="col" class="px-6 py-3">
+                                                RELATIONSHIP WITH HEAD
+                                            </th>
+                                            <th scope="col" class="px-6 py-3">
+                                                STATUS
+                                            </th>
+                                            <th scope="col" class="px-6 py-3">
+                                                ACTION
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="bg-white border-b bg-f7 text-normal_font">
+                                            <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
+                                                001
+                                            </th>
+                                            <td class="px-6 py-4">
+                                                Ron Peter Mortega
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                Family Head
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                Active
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded text-xs">
+                                                    View
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr class="bg-white border-b bg-f7 text-normal_font">
+                                            <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
+                                                002
+                                            </th>
+                                            <td class="px-6 py-4">
+                                                Leonard Mortega
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                Wife
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                Active
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded text-xs">
+                                                    View
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr class="bg-white border-b bg-f7 text-normal_font">
+                                            <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
+                                                003
+                                            </th>
+                                            <td class="px-6 py-4">
+                                                Fellix Mortega
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                Brother
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                Active
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded text-xs">
+                                                    View
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr class="bg-white border-b bg-f7 text-normal_font">
+                                            <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
+                                                004
+                                            </th>
+                                            <td class="px-6 py-4">
+                                                Noli Mortega
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                Daughter
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                Active
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded text-xs">
+                                                    View
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr class="bg-white border-b bg-f7 text-normal_font">
+                                            <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
+                                                005
+                                            </th>
+                                            <td class="px-6 py-4">
+                                                Belerick Mortega
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                Son
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                Active
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded text-xs">
+                                                    View
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        @include('components.modals.add-family-modal')
 </x-app-layout>
