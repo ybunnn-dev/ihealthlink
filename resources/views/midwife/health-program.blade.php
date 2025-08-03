@@ -106,7 +106,7 @@
                                     </button>
                                 </div>
                                 <div class="w-full xs:w-40 pt-5 xs:pt-0">
-                                    <button type="button" class="w-full h-[2.375rem] text-white bg-mainblue hover:bg-blue-700 font-medium rounded-lg text-sm px-3 flex items-center justify-center gap-2">
+                                    <button type="button" id="openEnrollModalBtn" data-modal-target="enroll-resident-modal" data-modal-toggle="enroll-resident-modal" class="w-full h-[2.375rem] text-white bg-mainblue hover:bg-blue-700 font-medium rounded-lg text-sm px-3 flex items-center justify-center gap-2">
                                         <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                             <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                                             <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
@@ -233,6 +233,7 @@
             </div>
         </div>
     </div>
+    @include('components.modals.enroll-resident-modal')
     @include('components.modals.qr-scanner')
     <script>
         // Get modal elements
@@ -312,6 +313,29 @@
         scanQrButton.addEventListener('click', openQrScannerModal);
         cancelScanButton.addEventListener('click', stopQrScanner);
         closeScannerButton.addEventListener('click', stopQrScanner);
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const openBtn = document.getElementById("openEnrollModalBtn");
+            const modal = document.getElementById("enrollResidentModal");
+            const closeButtons = modal.querySelectorAll("[data-modal-hide]");
+
+            openBtn?.addEventListener("click", () => {
+                modal.classList.remove("hidden");
+            });
+
+            closeButtons.forEach(btn => {
+                btn.addEventListener("click", () => {
+                    modal.classList.add("hidden");
+                });
+            });
+
+            // Optional: click outside modal to close
+            modal.addEventListener("click", function (e) {
+                if (e.target === modal) {
+                    modal.classList.add("hidden");
+                }
+            });
+        });
     </script>
 </x-app-layout>
 
