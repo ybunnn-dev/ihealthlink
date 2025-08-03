@@ -1,4 +1,5 @@
 <x-app-layout>
+    @section('title', 'Schedules')
     <div class="py-12 px-5">
         <div class="max-w-[90rem] mx-auto sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
