@@ -75,8 +75,8 @@
     };
 
     // Initialize charts after DOM is loaded
-    document.addEventListener('DOMContentLoaded', function() {
+    
         createDonutChart('residentsPerPurokChart', 'Residents', 'residentsLegend');
         createDonutChart('householdsPerPurokChart', 'Households', 'householdsLegend');
         createDonutChart('familiesPerPurokChart', 'Families');
-    });
+    

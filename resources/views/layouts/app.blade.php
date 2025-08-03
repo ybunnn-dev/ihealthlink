@@ -19,7 +19,7 @@
         <!-- Styles -->
         @livewireStyles
     </head>
-    <body class="font-sans antialiased bg-bg_col" data-theme="light">
+    <body class="font-sans antialiased bg-bg_col @yield('page-id', 'default-page')" data-theme="light">
         <x-banner />
 
         <div class="min-h-screen bg-bg-col flex">

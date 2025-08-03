@@ -1,7 +1,16 @@
-    
-document.addEventListener("DOMContentLoaded",function(){
+// charts/age-group-bar.js - FIXED VERSION
+console.log('🔄 age-group-bar.js executing...');
 
-    const ctx = document.getElementById('ageGroupChart').getContext('2d');
+// Execute immediately - no DOMContentLoaded wrapper needed
+const ctx = document.getElementById('ageGroupChart');
+
+if (!ctx) {
+    console.error('❌ Canvas #ageGroupChart not found');
+} else {
+    console.log('✅ Canvas found, creating age group chart...');
+    
+    const ctx2d = ctx.getContext('2d');
+    
     // Generate 18 example age groups
     const ageGroups = [
         '0-4', '5-9', '10-14', '15-19', '20-24', '25-29', '30-34', '35-39',
@@ -18,62 +27,64 @@ document.addEventListener("DOMContentLoaded",function(){
         48, 58, 63, 68, 72, 78, 82, 80, 75, 70, 65, 60, 55, 48, 40, 32, 28, 22
     ];
 
-    const stackedBarChart = new Chart(ctx, {
+    const stackedBarChart = new Chart(ctx2d, {
         type: 'bar',
         data: {
-        labels: ageGroups,
-        datasets: [
-            {
-            label: 'Male',
-            data: maleData,
-            backgroundColor: 'lightcoral', // You can customize colors
-            borderColor: 'lightcoral',
-            borderWidth: 1
-            },
-            {
-            label: 'Female',
-            data: femaleData,
-            backgroundColor: 'deepskyblue', // You can customize colors
-            borderColor: 'deepskyblue',
-            borderWidth: 1
-            },
-        ],
+            labels: ageGroups,
+            datasets: [
+                {
+                    label: 'Male',
+                    data: maleData,
+                    backgroundColor: 'lightcoral',
+                    borderColor: 'lightcoral',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Female',
+                    data: femaleData,
+                    backgroundColor: 'deepskyblue',
+                    borderColor: 'deepskyblue',
+                    borderWidth: 1
+                },
+            ],
         },
         options: {
-        responsive: true,
-        maintainAspectRatio: false, // Allows height to be set by CSS/attribute
-        scales: {
-            x: {
-            stacked: true,
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    stacked: true,
+                },
+                y: {
+                    stacked: true,
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Number of Residents'
+                    }
+                }
             },
-            y: {
-            stacked: true,
-            beginAtZero: true,
-            title: {
-                display: true,
-                text: 'Number of Residents'
-            }
-            }
-        },
-        plugins: {
-            title: {
-            display: false, // Title is handled by the <h3> tag above the canvas
-            text: 'Age Group Demographics'
-            },
-            tooltip: {
-                mode: 'index',
-                intersect: false,
-                callbacks: {
-                    footer: (tooltipItems) => {
-                        let sum = 0;
-                        tooltipItems.forEach(function(tooltipItem) {
-                            sum += tooltipItem.parsed.y;
-                        });
-                        return 'Total: ' + sum;
+            plugins: {
+                title: {
+                    display: false,
+                    text: 'Age Group Demographics'
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false,
+                    callbacks: {
+                        footer: (tooltipItems) => {
+                            let sum = 0;
+                            tooltipItems.forEach(function(tooltipItem) {
+                                sum += tooltipItem.parsed.y;
+                            });
+                            return 'Total: ' + sum;
+                        }
                     }
                 }
             }
         }
-        }
     });
-});
+    
+    console.log('✅ Age group chart created successfully');
+}

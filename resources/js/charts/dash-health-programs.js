@@ -1,10 +1,16 @@
-document.addEventListener("DOMContentLoaded", function () {
-    Chart.defaults.font.family = 'Poppins, sans-serif';
-    Chart.defaults.font.size = 14; 
-    Chart.defaults.color = '#566A7F';
-    const ctx = document.getElementById('residentsLineChart');
-    if (!ctx) return; // Ensure the canvas exists before proceeding
+console.log('🔄 dash-health-programs.js executing...');
 
+Chart.defaults.font.family = 'Poppins, sans-serif';
+Chart.defaults.font.size = 14; 
+Chart.defaults.color = '#566A7F';
+
+// Chart 1: Residents Line Chart
+const ctx = document.getElementById('residentsLineChart');
+if (!ctx) {
+    console.error('❌ Canvas #residentsLineChart not found');
+} else {
+    console.log('✅ Creating residents line chart...');
+    
     new Chart(ctx, {
         type: 'line',
         data: {
@@ -58,33 +64,41 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
     });
+    
+    console.log('✅ Residents line chart created');
+}
 
-     // Data for Residents Per Purok Chart
+// Chart 2: Residents Per Purok Chart
+const residentsPerPurokChartCtx = document.getElementById('residentsPerPurokChart');
+if (!residentsPerPurokChartCtx) {
+    console.error('❌ Canvas #residentsPerPurokChart not found');
+} else {
+    console.log('✅ Creating residents per purok chart...');
+    
     const residentsPerPurokData = {
         labels: ['Purok 1', 'Purok 2', 'Purok 3', 'Purok 4'],
         datasets: [{
-            data: [50, 40, 5, 5], // Percentages from the image
+            data: [50, 40, 5, 5],
             backgroundColor: [
-                '#fd6e69ff', // Light Red/Coral for 50% (Purok 1)
-                '#F0BB78', // Light Orange/Yellow for 40% (Purok 2)
-                '#4DA1A9', // Light Green/Teal for 5% (Purok 3)
-                '#B7B1F2'  // Light Purple for 5% (Purok 4)
+                '#fd6e69ff',
+                '#F0BB78',
+                '#4DA1A9',
+                '#B7B1F2'
             ],
             hoverOffset: 4,
             borderRadius: 8 
         }]
     };
 
-    // Configuration for Residents Per Purok Chart
     const residentsPerPurokConfig = {
-        type: 'doughnut', // Donut chart as it has a hole in the middle
+        type: 'doughnut',
         data: residentsPerPurokData,
         options: {
             responsive: true,
-            maintainAspectRatio: false, // Allows you to control height with CSS
+            maintainAspectRatio: false,
             plugins: {
                 legend: {
-                    position: 'right', // Place legend on the right as in the image
+                    position: 'right',
                 },
                 tooltip: {
                     callbacks: {
@@ -104,15 +118,21 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     };
 
-    // Render Residents Per Purok Chart
-    var residentsPerPurokChartCtx = document.getElementById('residentsPerPurokChart').getContext('2d');
-    new Chart(residentsPerPurokChartCtx, residentsPerPurokConfig);
+    new Chart(residentsPerPurokChartCtx.getContext('2d'), residentsPerPurokConfig);
+    console.log('✅ Residents per purok chart created');
+}
 
-    // Data for Deworming Chart
+// Chart 3: Deworming Chart
+const dewormingChartCtx = document.getElementById('dewormingChart');
+if (!dewormingChartCtx) {
+    console.error('❌ Canvas #dewormingChart not found');
+} else {
+    console.log('✅ Creating deworming chart...');
+    
     const dewormingData = {
         labels: ['Dewormed', 'Not Dewormed'],
         datasets: [{
-            data: [60, 40], // Percentages from the image
+            data: [60, 40],
             backgroundColor: [
                 '#fd6e69ff',
                 '#F0BB78',
@@ -122,7 +142,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }]
     };
 
-    // Configuration for Deworming Chart
     const dewormingConfig = {
         type: 'doughnut',
         data: dewormingData,
@@ -131,7 +150,7 @@ document.addEventListener("DOMContentLoaded", function () {
             maintainAspectRatio: false,
             plugins: {
                 legend: {
-                    position: 'right', // Place legend on the right as in the image
+                    position: 'right',
                 },
                 tooltip: {
                     callbacks: {
@@ -151,25 +170,30 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     };
 
-    // Render Deworming Chart
-    var dewormingChartCtx = document.getElementById('dewormingChart').getContext('2d');
-    new Chart(dewormingChartCtx, dewormingConfig);
+    new Chart(dewormingChartCtx.getContext('2d'), dewormingConfig);
+    console.log('✅ Deworming chart created');
+}
 
-    // Data for PhilPEN Metrics Chart
+// Chart 4: PhilPEN Metrics Chart
+const philpenMetricsChartCtx = document.getElementById('philpenMetricsChart');
+if (!philpenMetricsChartCtx) {
+    console.error('❌ Canvas #philpenMetricsChart not found');
+} else {
+    console.log('✅ Creating PhilPEN metrics chart...');
+    
     const philpenMetricsData = {
         labels: ['Completed', 'Missing'],
         datasets: [{
-            data: [90, 10], // Percentages from the image
+            data: [90, 10],
             backgroundColor: [
-                '#279EFF', // Sky Blue for 90% (With completed record)
-                '#697A8D'  // Gray for 10% (With missing record)
+                '#279EFF',
+                '#697A8D'
             ],
             hoverOffset: 4,
             borderRadius: 8 
         }]
     };
 
-    // Configuration for PhilPEN Metrics Chart
     const philpenMetricsConfig = {
         type: 'doughnut',
         data: philpenMetricsData,
@@ -198,63 +222,60 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     };
 
-    // Render PhilPEN Metrics Chart
-    var philpenMetricsChartCtx = document.getElementById('philpenMetricsChart').getContext('2d');
-    new Chart(philpenMetricsChartCtx, philpenMetricsConfig);
+    new Chart(philpenMetricsChartCtx.getContext('2d'), philpenMetricsConfig);
+    console.log('✅ PhilPEN metrics chart created');
+}
 
-        // Your Medicine Stocks Data
+// Medicine Stocks Chart (Custom HTML-based chart)
+const container = document.getElementById('medicineStocksChartContainer');
+if (!container) {
+    console.error('❌ Container #medicineStocksChartContainer not found');
+} else {
+    console.log('✅ Creating medicine stocks chart...');
+    
     const medicineStocks = [
         { name: 'Medicine 1', stock: 21 },
         { name: 'Medicine 2', stock: 50 },
         { name: 'Medicine 3', stock: 101 },
         { name: 'Medicine 4', stock: 201 },
-        { name: 'A Very Long Medicine Name That Needs Truncating', stock: 201 }, // Example long name
+        { name: 'A Very Long Medicine Name That Needs Truncating', stock: 201 },
         { name: 'Medicine 6', stock: 201 },
         { name: 'Medicine 7', stock: 201 },
     ];
 
-    const container = document.getElementById('medicineStocksChartContainer');
-
-    // Find the maximum stock value to calculate percentages
     const maxStock = Math.max(...medicineStocks.map(item => item.stock));
-
-    const barColorClass = 'bg-mainblue'; // Or 'bg-blue-500'
+    const barColorClass = 'bg-mainblue';
 
     medicineStocks.forEach(medicine => {
         const widthPercentage = maxStock > 0 ? (medicine.stock / maxStock) * 100 : 0;
 
         const medicineItemDiv = document.createElement('div');
-        medicineItemDiv.className = 'flex items-center'; // Aligns name and bar horizontally
+        medicineItemDiv.className = 'flex items-center';
 
-        // Create the div for Medicine Name (left side)
         const nameDiv = document.createElement('div');
-        // --- CHANGES HERE: Reduced width and added truncate/overflow-hidden ---
-        nameDiv.className = 'w-1/4 text-sm pr-2 overflow-hidden text-ellipsis whitespace-nowrap'; // w-1/4 for less space, pr-2 for padding, ellipsis for long names
-        // Note: Tailwind's 'truncate' utility is equivalent to 'overflow-hidden text-ellipsis whitespace-nowrap'
-        // So you could just use: nameDiv.className = 'w-1/4 text-sm pr-2 truncate';
+        nameDiv.className = 'w-1/4 text-sm pr-2 overflow-hidden text-ellipsis whitespace-nowrap';
         nameDiv.textContent = medicine.name;
         medicineItemDiv.appendChild(nameDiv);
 
-        // Create the container for the bar and the number
         const barWrapperDiv = document.createElement('div');
         barWrapperDiv.className = 'relative flex-grow h-7 rounded';
 
-        // Create the actual bar div
         const barDiv = document.createElement('div');
         barDiv.className = `${barColorClass} h-full rounded`;
         barDiv.style.width = `${widthPercentage}%`;
 
-        // Create the span for the number inside the bar
         const stockNumberSpan = document.createElement('span');
         stockNumberSpan.textContent = medicine.stock;
         stockNumberSpan.className = 'absolute inset-y-0 left-2 flex items-center text-white text-sm font-medium';
 
-        // Append elements
         barWrapperDiv.appendChild(barDiv);
         barWrapperDiv.appendChild(stockNumberSpan);
 
         medicineItemDiv.appendChild(barWrapperDiv);
         container.appendChild(medicineItemDiv);
     });
-});
+    
+    console.log('✅ Medicine stocks chart created');
+}
 
+console.log('🎉 dash-health-programs.js execution completed!');

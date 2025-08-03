@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function () {
+
     function createRadarChart(canvasId, labels, data, label = "Data", color = 'blue') {
         const ctx = document.getElementById(canvasId).getContext('2d');
 
@@ -86,4 +86,4 @@ document.addEventListener('DOMContentLoaded', function () {
         "green"
     );
 
-});
+

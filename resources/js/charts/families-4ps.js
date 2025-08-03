@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function () {
+
     const ctx2 = document.getElementById('familyBar').getContext('2d');
 
     // Purok Labels
@@ -66,4 +66,3 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
     }); 
-}); 

@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function () {
+
     function renderDoughnutChart({ elementId, labels, data, colors }) {
         const canvas = document.getElementById(elementId);
         if (!canvas) {
@@ -128,4 +128,4 @@ document.addEventListener('DOMContentLoaded', function () {
         data: [17, 21, 38, 38],
         colors: ['#9370DB', '#3CB371', '#F4A460', '#4682B4']
     });
-});
+

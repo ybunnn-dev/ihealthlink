@@ -1,3 +1,4 @@
+@section('page-id', 'dashboard')
 <x-app-layout>
     @section('title', 'Dashboard')
     <div class="py-12 px-5">
