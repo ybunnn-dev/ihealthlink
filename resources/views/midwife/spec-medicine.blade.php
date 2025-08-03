@@ -1,6 +1,6 @@
 <x-app-layout>
     <div class="py-12 px-5">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-[90rem] mx-auto sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 gap-4">
                 <a href="{{ route('midwife.medicines') }}">
                     <div class="flex items-center space-x-2"> <svg class="w-5 h-5" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M5 1H4L0 5L4 9H5V6H11C12.6569 6 14 7.34315 14 9C14 10.6569 12.6569 12 11 12H4V14H11C13.7614 14 16 11.7614 16 9C16 6.23858 13.7614 4 11 4H5V1Z" fill="#323643"></path> </g></svg>
@@ -23,13 +23,13 @@
                     <div class="flex-grow h-full bg-f7 rounded-lg p-12 col-span-1 slg:col-span-2">
                         <h2 class="text-xl font-semibold text-main_font mb-6">Medicine Info</h2>
                         <div class="grid grid-cols-[auto_1fr] gap-x-12 gap-y-3 text-normal_font text-sm">
-                            <p class="font-medium">Medicine Name:</p>
+                            <p class="font-medium">MEDICINE NAME:</p>
                             <p>Alaxan FR</p>
 
-                            <p class="font-medium">Generic Name:</p>
+                            <p class="font-medium">GENERIC NAME:</p>
                             <p>Ibuprofen + Paracetamol</p>
 
-                            <p class="font-medium">Category:</p>
+                            <p class="font-medium">CATEGORY:</p>
                             <p>Pain Killer</p>
 
                             <p class="font-medium">FORM:</p>
@@ -44,7 +44,7 @@
                 <div class="bg-f7 rounded-xl overflow-hidden">
                     <div class="p-8 pt-10">
                         <div class="grid grid-rows-1 gap-1">
-                            <h1 class="text-2xl font-semibold text-sub_blue mb-3">Inventory</h1>
+                            <h1 class="text-2xl font-semibold text-sub_blue mb-3">Medicine Inventory</h1>
                             <div class="pb-6">
                                 <!-- Flex container -->
                                 <div class="flex flex-col slg2:flex-row slg2:items-end gap-4">
@@ -72,17 +72,28 @@
                                         </button>
                                     </div>
 
+                                     <div class="w-full sm:w-48">
+                                        <label for="statusDropdown" class="mb-2 text-sm font-medium text-main_font">Filter Status</label> 
+                                        <button id="statusDropdown" data-dropdown-toggle="statusDropdownMenu" class="w-full text-main_font bg-f7 focus:outline-none font-medium border border-navboard rounded-lg text-sm px-4 py-2 text-center inline-flex items-center justify-between h-[2.375rem]" type="button">
+                                        Select Status
+                                        <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                                        </svg>
+                                        </button>
+                                    </div>
+
                                     <!-- Add Medicine Button -->
                                     <div class="w-full xs:w-40 pt-5 xs:pt-0">
-                                        <button type="button" class="w-full h-[2rem] text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3">Add Batch</button>
+                                        <button type="button" class="w-full h-[2.375rem] text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3" data-modal-target="add-batch-modal" data-modal-toggle="add-batch-modal">+   Add Batch</button>
                                     </div>
                                 </div>
                             </div>
                             <!-- Dropdown menus -->
-                            <div id="purokDropdownMenu" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700">
+                            <div id="statusDropdownMenu" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700">
                             <ul class="py-2 text-sm text-gray-700 dark:text-gray-200">
-                                <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Option 1</a></li>
-                                <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Option 2</a></li>
+                                <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Expired</a></li>
+                                <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Near Expiration</a></li>
+                                <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Good</a></li>
                             </ul>
                             </div>
 
@@ -94,87 +105,93 @@
                         </div>
                         <div class="relative overflow-x-auto">
                             <table class="w-full text-sm text-left text-main_font bg-col_tab_h">
-                                <thead class="text-xs text-main_font uppercase text-center" >
+                                <thead class="text-xs text-main_font uppercase text-center">
                                     <tr>
                                         <th scope="col" class="px-6 py-3">
-                                            MEDICINE #
+                                            BATCH ID
                                         </th>
                                         <th scope="col" class="px-6 py-3">
-                                            MEDICINE NAME
+                                            TOTAL STOCK
                                         </th>
                                         <th scope="col" class="px-6 py-3">
-                                            TOTAL QUANTITY
+                                            DATE ADDED
                                         </th>
                                         <th scope="col" class="px-6 py-3">
-                                            CATEGORY
+                                            EXPIRY DATE
                                         </th>
                                         <th scope="col" class="px-6 py-3">
-                                            FORM
+                                            ADDED BY
                                         </th>
                                         <th scope="col" class="px-6 py-3">
-                                            DATE UPDATED
+                                            STATUS
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr class="bg-white border-b bg-f7 text-normal_font text-center" onclick="window.location='{{ route('midwife.medicines-view') }}'">
-                                        <th scope="row" class="px-6 py-4 font-medium text-normal_font whitespace-nowrap">
+                                    <tr class="bg-white border-b bg-f7 text-normal_font text-center">
+                                        <td class="px-6 py-4 font-medium text-normal_font whitespace-nowrap">
                                             121
-                                        </th>
-                                        <td class="px-6 py-4">
-                                            Alaxan
                                         </td>
                                         <td class="px-6 py-4">
-                                            1
+                                            150
                                         </td>
                                         <td class="px-6 py-4">
-                                            Pain Killer
+                                            2025-01-01
                                         </td>
                                         <td class="px-6 py-4">
-                                            Capsule
+                                            2025-05-15
                                         </td>
                                         <td class="px-6 py-4">
-                                            Feb 10, 2025
+                                            Jane Doe
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <span class="bg-red-100 border-1 border-red-500 text-red-800 text-xs font-medium px-2 py-1 rounded-full w-32 text-center inline-block">
+                                                Expired
+                                            </span>
                                         </td>
                                     </tr>
                                     <tr class="bg-white border-b bg-f7 text-normal_font text-center">
-                                        <th scope="row" class="px-6 py-4 font-medium text-normal_font whitespace-nowrap">
+                                        <td class="px-6 py-4 font-medium text-normal_font whitespace-nowrap">
                                             122
-                                        </th>
-                                        <td class="px-6 py-4">
-                                            Biogesic
                                         </td>
                                         <td class="px-6 py-4">
-                                            1
+                                            75
                                         </td>
                                         <td class="px-6 py-4">
-                                            Pain Killer
+                                            2025-02-10
                                         </td>
                                         <td class="px-6 py-4">
-                                            Capsule
+                                            2025-11-20
                                         </td>
                                         <td class="px-6 py-4">
-                                            Feb 10, 2025
+                                            John Smith
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <span class="bg-yellow-100 border-1 border-yellow-500 text-yellow-800 text-xs font-medium px-2 py-1 rounded-full w-32 text-center inline-block">
+                                                Near Expiration
+                                            </span>
                                         </td>
                                     </tr>
                                     <tr class="bg-white border-b bg-f7 text-normal_font text-center">
-                                        <th scope="row" class="px-6 py-4 font-medium text-normal_font whitespace-nowrap">
+                                        <td class="px-6 py-4 font-medium text-normal_font whitespace-nowrap">
                                             123
-                                        </th>
-                                        <td class="px-6 py-4">
-                                            Amoxicillin
                                         </td>
                                         <td class="px-6 py-4">
-                                            1
+                                            200
                                         </td>
                                         <td class="px-6 py-4">
-                                            Pain Killer
+                                            2025-02-11
                                         </td>
                                         <td class="px-6 py-4">
-                                            Capsule
+                                            2027-01-15
                                         </td>
                                         <td class="px-6 py-4">
-                                            Feb 10, 2025
+                                            Sarah Lee
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <span class="bg-green-100 border-1 border-green-500 text-green-800 text-xs font-medium px-2 py-1 rounded-full w-32 text-center inline-block">
+                                                Good
+                                            </span>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -184,4 +201,5 @@
                 </div>
             </div>
         </div>
+        @include('components.modals.add-medicine-batch')
 </x-app-layout>
