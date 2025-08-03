@@ -4,16 +4,15 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                 <h1 class="text-3xl font-semibold text-sub_blue mb-3 col-span-full">Schedules</h1>
 
-                <!-- Calendar Card -->
                 <div class="bg-white rounded-xl shadow-sm p-6 md:col-span-1">
                     <div class="flex items-center justify-between mb-4">
-                        <button class="text-gray-500 hover:text-gray-700">
+                        <button id="prevMonthBtn" class="text-gray-500 hover:text-gray-700">
                             <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                             </svg>
                         </button>
-                        <div class="text-lg font-semibold text-gray-900">May 2025</div>
-                        <button class="text-gray-500 hover:text-gray-700">
+                        <div id="currentMonth" class="text-lg font-semibold text-gray-900">May 2025</div>
+                        <button id="nextMonthBtn" class="text-gray-500 hover:text-gray-700">
                             <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                             </svg>
@@ -27,39 +26,7 @@
                         <div class="text-gray-500 font-medium">Thu</div>
                         <div class="text-gray-500 font-medium">Fri</div>
                         <div class="text-gray-500 font-medium">Sat</div>
-
-                        <div class="p-2"></div>
-                        <div class="p-2"></div>
-                        <div class="p-2"></div>
-                        <div class="p-2">1</div>
-                        <div class="p-2">2</div>
-                        <div class="p-2">3</div>
-                        <div class="p-2">4</div>
-
-                        <div class="p-2">5</div>
-                        <div class="p-2">6</div>
-                        <div class="p-2">7</div>
-                        <div class="p-2">8</div>
-                        <div class="p-2">9</div>
-                        <div class="p-2">10</div>
-                        <div class="p-2">11</div>
-
-                        <div class="p-2">12</div>
-                        <div class="p-2">13</div>
-                        <div class="p-2">14</div>
-                        <div class="p-2 bg-blue-500 text-white rounded-full">15</div> <div class="p-2 bg-blue-200 text-blue-800 rounded-full">16</div> <div class="p-2 bg-blue-100 text-blue-800 rounded-full">17</div> <div class="p-2 bg-blue-100 text-blue-800 rounded-full">18</div> <div class="p-2">19</div>
-                        <div class="p-2">20</div>
-                        <div class="p-2">21</div>
-                        <div class="p-2">22</div>
-                        <div class="p-2">23</div>
-                        <div class="p-2">24</div>
-                        <div class="p-2">25</div>
-
-                        <div class="p-2">26</div>
-                        <div class="p-2 bg-blue-100 text-blue-800 rounded-full">27</div> <div class="p-2">28</div>
-                        <div class="p-2">29</div>
-                        <div class="p-2">30</div>
-                        <div class="p-2">31</div>
+                        <div id="calendarDates" class="contents"></div>
                     </div>
                 </div>
 
@@ -73,7 +40,7 @@
                             </svg>
                             May 16, 2025
                         </h2>
-                        <button class="w-32 h-6 bg-mainblue rounded-md text-xs font-semibold text-f7 px-6">Add Activity</button>
+                        <button class="w-32 h-[2rem] bg-mainblue rounded-md text-xs font-semibold text-f7 px-6" data-modal-target="add-activity-modal" data-modal-toggle="add-activity-modal">Add Activity</button>
                     </div>
 
                     <!-- Table -->
@@ -196,8 +163,9 @@
             </div>
         </div>
     </div>
-
+    @include('components.modals.add-activity-modal')
     @push('scripts')
         @vite('resources/js/app.js')
+        @vite('resources/js/calendar.js')
     @endpush
 </x-app-layout>
