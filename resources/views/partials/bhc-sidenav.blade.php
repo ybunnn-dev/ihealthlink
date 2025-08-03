@@ -104,7 +104,8 @@
                         :class="{ 
                             'opacity-0 invisible': !open, 
                             'opacity-100 visible': open, 
-                            'font-bold': activeItem === 'residents' 
+                            'font-bold': activeItem === 'residents',
+                            'text-mainblue': activeItem === 'residents' 
                         }"
                     >
                         Residents

@@ -1,6 +1,6 @@
 <x-app-layout>
     <div class="py-12 px-5"> 
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-[90rem] mx-auto sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 gap-4">
                 {{-- iHealthLink e-Tanong Section --}}
                 <div class="p-12 text-center">

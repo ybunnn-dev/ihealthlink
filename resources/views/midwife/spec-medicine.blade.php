@@ -7,9 +7,9 @@
                         <span>Return</span>
                     </div>
                 </a>
-                <div class="flex space-x-4">
-                    <div class="w-1/3 h-80 bg-f7 rounded-lg flex flex-col items-center justify-center p-4"> 
-                        <svg class="flex-shrink-0 w-32 h-32 lg:w-40 lg:h-40 xl2:w-44 xl2:h-44 text-main_font"
+                <div class="grid grid-cols-1 slg:grid-cols-3 gap-3">
+                    <div class="w-full h-full bg-f7 rounded-lg flex flex-col items-center justify-center p-4 col-span-1"> 
+                        <svg class="flex-shrink-0 w-32 h-32 lg:w-40 lg:h-40 xl2:w-44 xl2:h-44 text-main_font mb-3"
                             version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor">
                             <g>
                                 <path d="M358.359,23.406C358.359,10.484,347.875,0,334.953,0H177.047c-12.922,0-23.406,10.484-23.406,23.406v50.234 h204.719V23.406z"></path>
@@ -17,12 +17,12 @@
                                 <polygon points="238.688,386.922 273.297,386.922 273.297,345.828 314.375,345.828 314.375,311.25 273.297,311.25 273.297,270.156 238.688,270.156 238.688,311.25 197.625,311.25 197.625,345.828 238.688,345.828 "></polygon>
                             </g>
                         </svg>
-                        <p class="text-main_font font-bold mt-2">Alaxan FR</p>
-                        <p class="text-main_font font-medium mt-2">Medicine  #13356</p>
+                        <p class="text-main_font font-bold">Alaxan FR</p>
+                        <p class="text-main_font font-medium">Medicine  #13356</p>
                     </div>
-                    <div class="flex-grow h-80 bg-f7 rounded-lg p-12">
-                        <h2 class="text-xl font-semibold text-main_font mb-6">Medicine Info</h2> 
-                        <div class="grid grid-cols-[auto_1fr] gap-x-12 gap-y-3 text-normal_font text-sm"> 
+                    <div class="flex-grow h-full bg-f7 rounded-lg p-12 col-span-1 slg:col-span-2">
+                        <h2 class="text-xl font-semibold text-main_font mb-6">Medicine Info</h2>
+                        <div class="grid grid-cols-[auto_1fr] gap-x-12 gap-y-3 text-normal_font text-sm">
                             <p class="font-medium">Medicine Name:</p>
                             <p>Alaxan FR</p>
 
@@ -36,7 +36,7 @@
                             <p>Tablet</p>
 
                             <p class="font-medium">DESCRIPTION:</p>
-                            <p>Alaxan is a combination of Ibuprofen (200mg) and Paracetamol (325mg) used to relieve mild to moderate pain such as headache, body pain, muscle aches, joint pain, and fever. </p>
+                            <p>Alaxan is a combination of Ibuprofen (200mg) and Paracetamol (325mg) used to relieve mild to moderate pain such as headache, body pain, muscle aches, joint pain, and fever.</p>
                         </div>
                     </div>
                 </div>
@@ -74,7 +74,7 @@
 
                                     <!-- Add Medicine Button -->
                                     <div class="w-full xs:w-40 pt-5 xs:pt-0">
-                                        <button type="button" class="w-full h-[2.375rem] text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3">Add medicines</button>
+                                        <button type="button" class="w-full h-[2rem] text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3">Add Batch</button>
                                     </div>
                                 </div>
                             </div>
@@ -92,7 +92,7 @@
                                 <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Last Year</a></li>
                             </ul>
                         </div>
-                                                <div class="relative overflow-x-auto">
+                        <div class="relative overflow-x-auto">
                             <table class="w-full text-sm text-left text-main_font bg-col_tab_h">
                                 <thead class="text-xs text-main_font uppercase text-center" >
                                     <tr>

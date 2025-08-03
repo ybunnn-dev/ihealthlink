@@ -1,7 +1,7 @@
 <x-app-layout>
     @section('title', 'Households')
-    <div class="py-12 px-5">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+    <div class="py-12 px-6">
+        <div class="max-w-[90rem] mx-auto sm:px-6 lg:px-8">
             <h1 class="text-3xl font-semibold text-sub_blue mb-3">Households and Residents</h1>
 
             <div class="mb-3">

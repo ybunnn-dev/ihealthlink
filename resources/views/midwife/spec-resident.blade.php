@@ -1,6 +1,6 @@
 <x-app-layout>
     <div class="py-12 px-5">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-[90rem] mx-auto sm:px-6 lg:px-8">
             <div class="grid grid-cols gap-3">
                 <div class="grid grid-cols-2 items-center gap-3">
                     <!-- Left side: Return button -->

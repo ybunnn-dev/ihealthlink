@@ -1,11 +1,11 @@
 <x-app-layout>
     <div class="py-12 px-5">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-[90rem] mx-auto sm:px-6 lg:px-8">
             <h1 class="text-3xl font-semibold text-sub_blue mb-3">BHWs</h1>
             <div class="bg-f7 rounded-xl overflow-hidden">
                 <div class="p-6">
-                    <div class="grid grid-rows-1 gap-1">
-                        <div class="pb-6">
+                    <div class="grid grid-rows-1">
+                        <div>
                             <!-- Flex container -->
                             <div class="flex flex-col slg2:flex-row slg2:items-end gap-4">
                                 <!-- Search bar -->
@@ -84,7 +84,7 @@
                             <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Last Year</a></li>
                         </ul>
                     </div>
-                    <div class="relative overflow-x-auto">
+                    <div class="relative overflow-x-auto p-6 -mt-3">
                         <table class="w-full text-sm text-left text-main_font bg-col_tab_h">
                             <thead class="text-xs text-main_font uppercase text-center">
                                 <tr>

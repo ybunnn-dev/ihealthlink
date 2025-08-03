@@ -1,6 +1,6 @@
 <x-app-layout>
     <div class="py-12 px-5">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-[90rem] mx-auto sm:px-6 lg:px-8">
             <h1 class="text-3xl font-semibold text-sub_blue mb-3">Health Programs</h1>
             <div class="grid grid-cols-1 xl:grid-cols-5 gap-3">
                 <div class="bg-white rounded-xl p-6 px-10 mb-3 col-span-1 slg2:col-span-2">
