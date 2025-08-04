@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let currentModal = 'non-modal'; 
 
     const findEnrolledQrButton = document.getElementById('find-enrolled-qr');
+    const findResidentQrButton = document.getElementById('find-resident-qr');
     const enrollScanQrButton = document.getElementById('enroll-scan-qr');
     const addHouseholdQr = document.getElementById('add-household-qr');
     const addFamilyQr = document.getElementById('add-family-qr');
@@ -42,7 +43,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 addFamilyModal?.classList.add('hidden');
                 addFamilyModal?.setAttribute('aria-hidden', 'true');
                 addFamilyModal?.setAttribute('inert', '');
-
+                break;
+            default:
+                console.log('non-modal');     
+                break; 
         }
 
         qrScannerModal?.classList.remove('hidden');
@@ -81,6 +85,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     case 'find-family-head':
                         familyHeadInput.value = decodedText;
                         break;
+                    case 'find-resident':
+                        console.log(decodedText);
                 }
 
                 stopQrScanner();
@@ -167,6 +173,9 @@ document.addEventListener("DOMContentLoaded", function () {
     function addFamilyHeadQr(){
         openQrScannerModal('find-family-head');
     }
+    function findResident(){
+        openQrScannerModal('find-resident');
+    }
 
     findEnrolledQrButton?.addEventListener('click', enrolledScan);
     enrollScanQrButton?.addEventListener('click', enrollScan);
@@ -174,4 +183,5 @@ document.addEventListener("DOMContentLoaded", function () {
     closeScannerButton?.addEventListener('click', stopQrScanner);
     addHouseholdQr?.addEventListener('click', addHouseholdHeadQr);
     addFamilyQr?.addEventListener('click', addFamilyHeadQr);
+    findResidentQrButton?.addEventListener('click', findResident);
 });

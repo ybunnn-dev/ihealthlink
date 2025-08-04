@@ -35,7 +35,7 @@
 
             <!-- Prefix Dropdown -->
             <div class="flex flex-col col-span-1 relative">
-              <label for="prefixDropdown" class="text-sm font-medium text-main_font">PREFIX</label>
+              <label for="prefixDropdown" class="text-sm font-medium text-main_font">SUFFIX</label>
               <button id="prefixDropdown" data-dropdown-toggle="prefixDropdownMenu"
                 class="w-full text-main_font bg-white focus:outline-none font-medium border border-gray-300 rounded-lg text-md p-2 text-center inline-flex items-center justify-between"
                 type="button">
