@@ -48,7 +48,8 @@
                             <span class="hidden">Assess for Emergency Indicators</span>
                         </li>
                     </ol>
-                    <div><x-multi-modal-components.add-resident-1></x-multi-modal-components.add-resident-1></div>
+                    <div class="hidden"><x-multi-modal-components.add-resident-1></x-multi-modal-components.add-resident-1></div>
+                    <div class="block"><x-multi-modal-components.add-resident-2></x-multi-modal-components.add-resident-2></div>
                 </div>
             </div>
             <!-- Modal footer -->
