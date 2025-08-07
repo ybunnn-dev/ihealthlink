@@ -12,9 +12,16 @@
             <label for="addResBMI" class="text-sm font-medium text-main_font col-span-1">RBS Result</label>
             <input type="text" id="addResBMI" class="border border-gray-300 text-gray-700 rounded-lg p-2">
         </div>
-        <div class="grid grid-cols-1 relative mb-3">
-            <label for="addResBMI" class="text-sm font-medium text-main_font col-span-1">Date Taken</label>
-            <input type="text" id="addResBMI" class="border border-gray-300 text-gray-700 rounded-lg p-2">
+        <div class="flex flex-col col-span-1">
+            <label class="text-sm text-main_font font-medium">Date Taken</label> 
+            <div class="relative max-w-sm">
+                <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
+                    <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
+                    </svg>
+                </div>
+                <input datepicker id="bloodSugarDate" data-date-picker-theme="light" type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5" placeholder="Select date">
+            </div>
         </div>
     </div>
     <p class="col-span-1 text-sm text-main_font">Check if DM clinical symptoms are present</p>
@@ -60,9 +67,16 @@
             <label for="addResBMI" class="text-sm font-medium text-main_font col-span-1">Triglyceride</label>
             <input type="text" id="addResBMI" class="border border-gray-300 text-gray-700 rounded-lg p-2">
         </div>
-        <div class="grid grid-cols-1 relative mb-3">
-            <label for="addResBMI" class="text-sm font-medium text-main_font col-span-1">Date Taken</label>
-            <input type="text" id="addResBMI" class="border border-gray-300 text-gray-700 rounded-lg p-2">
+        <div class="flex flex-col col-span-1">
+            <label class="text-sm text-main_font font-medium">Date Taken</label> 
+            <div class="relative max-w-sm">
+                <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
+                    <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
+                    </svg>
+                </div>
+                <input datepicker id="lipidDate" data-date-picker-theme="light" type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5" placeholder="Select date">
+            </div>
         </div>
     </div>
 
@@ -80,9 +94,16 @@
             <label for="addResBMI" class="text-sm font-medium text-main_font col-span-1">Ketones</label>
             <input type="text" id="addResBMI" class="border border-gray-300 text-gray-700 rounded-lg p-2">
         </div>
-        <div class="grid grid-cols-1 relative mb-3">
-            <label for="addResBMI" class="text-sm font-medium text-main_font col-span-1">Date Taken</label>
-            <input type="text" id="addResBMI" class="border border-gray-300 text-gray-700 rounded-lg p-2">
+        <div class="flex flex-col col-span-1">
+            <label class="text-sm text-main_font font-medium">Date Taken</label> 
+            <div class="relative max-w-sm">
+                <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
+                    <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
+                    </svg>
+                </div>
+                <input datepicker id="urinalysisDate" data-date-picker-theme="light" type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5" placeholder="Select date">
+            </div>
         </div>
     </div>
 
