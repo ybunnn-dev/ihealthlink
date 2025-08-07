@@ -110,30 +110,30 @@
             <input type="text" id="addResBMI" class="border border-gray-300 text-gray-700 rounded-lg p-2 bg-gray-100" disabled>
         </div>
         <div class="grid grid-cols-1 relative mb-3">
-            <label for="addResBMI" class="text-sm font-medium text-main_font col-span-1">BMI</label>
-            <input type="text" id="addResBMI" class="border border-gray-300 text-gray-700 rounded-lg p-2 bg-gray-100" disabled>
+            <label for="addResBMI" class="text-sm font-medium text-main_font col-span-1">Weight Circumference</label>
+            <input type="text" id="addResBMI" class="border border-gray-300 text-gray-700 rounded-lg p-2">
         </div>
         <div class="grid grid-cols-1 relative mb-3">
-            <label for="addResBMI" class="text-sm font-medium text-main_font col-span-1">BMI</label>
-            <input type="text" id="addResBMI" class="border border-gray-300 text-gray-700 rounded-lg p-2 bg-gray-100" disabled>
+            <label for="addResBMI" class="text-sm font-medium text-main_font col-span-1">Blood Pressure (mmHg)</label>
+            <input type="text" id="addResBMI" class="border border-gray-300 text-gray-700 rounded-lg p-2">
         </div>
     </div>
-    <div class="grid grid-cols-1 gap-3 col-span-1">
-        <div class="flex items-center mb-3">
+    <div class="grid grid-cols-1 gap-4 col-span-1">
+        <div class="flex items-center mb-3 gap-2">
             <input id="default-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
             <label for="default-checkbox" class="ms-2 text-sm font-medium text-normal_font">High Fat and High Salt Food Intake (e.g. processed/fast food such as instant noodles, burgers, fries) Weekly</label>
         </div>
     </div> 
 
-    <div class="grid grid-cols-1 gap-3 col-span-1">
-        <div class="flex items-center mb-6">
+    <div class="grid grid-cols-1 gap-4 col-span-1">
+        <div class="flex items-center mb-6 gap-2">
             <input id="default-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
             <label for="default-checkbox" class="ms-2 text-sm font-medium text-normal_font">Street Foods (e.g. isaw, barbecue, live, chicken skin) Weekly</label>
         </div>
     </div>
 
-     <div class="grid grid-cols-1 gap-3 col-span-1">
-        <div class="flex items-center mb-6">
+     <div class="grid grid-cols-1 gap-4 col-span-1">
+        <div class="flex items-center mb-6 gap-2">
             <input id="default-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
             <label for="default-checkbox" class="ms-2 text-sm font-medium text-normal_font">High Sugar Foods (e.g. chocolates, cakes, pastries, softdrinks) Weekly</label>
         </div>
