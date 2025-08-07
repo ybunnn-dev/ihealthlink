@@ -1,16 +1,21 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Select all the form steps and progress indicator items
     const formSteps = document.querySelectorAll('.form-step');
     const progressSteps = document.querySelectorAll('ol li');
 
+    // Select the navigation buttons
+    const cancelButton = document.getElementById('cancel-button');
     const prevButton = document.getElementById('prev-button');
     const nextButton = document.getElementById('next-button');
     const addButton = document.getElementById('add-resident-button');
     const skipButton = document.getElementById('skip-button');
-    const cancelButton = document.getElementById('cancel-button');
 
+    // Initialize the current step
     let currentStep = 0;
 
+    // A function to update the UI based on the current step
     function updateUI(direction) {
+        // First, handle the transition out of the current form step
         const previousStepIndex = currentStep;
         const newStepIndex = currentStep + (direction === 'next' ? 1 : -1);
 
@@ -24,9 +29,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // Animate the new step in
         newFormStep.classList.remove('hidden');
         newFormStep.classList.add(direction === 'next' ? 'translate-x-full' : '-translate-x-full');
-        newFormStep.classList.remove('translate-x-0');
-
-        // Allow the transition to happen before showing the next step fully
+        
+        // Wait for the transition to finish
         setTimeout(() => {
             currentStep = newStepIndex;
 
@@ -35,49 +39,65 @@ document.addEventListener('DOMContentLoaded', () => {
             currentFormStep.classList.remove('-translate-x-full', 'translate-x-full');
 
             // Position the new step to its final state
-            newFormStep.classList.add('translate-x-0');
             newFormStep.classList.remove(direction === 'next' ? 'translate-x-full' : '-translate-x-full');
+            
+            // Reapply styling for all elements from scratch to ensure consistency
+            applyStyling();
 
-            // Update all other UI elements as before
-            progressSteps.forEach(step => {
-                step.classList.remove('text-blue-600', 'dark:text-blue-500');
-                step.classList.remove('after:border-blue-600', 'after:dark:border-blue-500');
-                const numSpan = step.querySelector('span:first-child span');
-                if (numSpan) {
-                    numSpan.classList.remove('bg-nav_active', 'text-mainblue');
-                    numSpan.classList.add('bg-gray-100', 'text-main_font');
-                }
-                const labelSpan = step.querySelector('.text-start');
-                if (labelSpan) {
-                    labelSpan.classList.add('hidden');
-                }
-            });
+        }, 500); // The duration of the CSS transition
+    }
 
-            for (let i = 0; i <= currentStep; i++) {
-                const step = progressSteps[i];
+    // A separate function to handle all UI styling updates
+    function applyStyling() {
+        // Hide all form steps and labels
+        formSteps.forEach(step => step.classList.add('hidden'));
+        progressSteps.forEach(step => {
+            const labelSpan = step.querySelector('.text-start');
+            if (labelSpan) {
+                labelSpan.classList.add('hidden');
+            }
+        });
+
+        // Show the current form step
+        formSteps[currentStep].classList.remove('hidden');
+
+        // Update progress bar styles for completed and current steps
+        progressSteps.forEach((step, index) => {
+            // Reset all progress step styles
+            step.classList.remove('text-blue-600', 'dark:text-blue-500', 'after:border-blue-600', 'after:dark:border-blue-500');
+            const numSpan = step.querySelector('span:first-child span');
+            if (numSpan) {
+                numSpan.classList.remove('bg-nav_active', 'text-mainblue');
+                numSpan.classList.add('bg-gray-100', 'text-main_font');
+            }
+
+            if (index <= currentStep) {
+                // Apply active styles to steps up to the current one
                 step.classList.add('text-blue-600', 'dark:text-blue-500');
-                const numSpan = step.querySelector('span:first-child span');
                 if (numSpan) {
-                    numSpan.classList.remove('bg-gray-100', 'text-gray-500');
+                    numSpan.classList.remove('bg-gray-100', 'text-main_font');
                     numSpan.classList.add('bg-nav_active', 'text-mainblue');
                 }
-                if (i < currentStep) {
-                     step.classList.add('after:border-blue-600', 'after:dark:border-blue-500');
+                if (index < currentStep) {
+                    step.classList.add('after:border-blue-600', 'after:dark:border-blue-500');
                 }
             }
-            
-            const currentLabel = progressSteps[currentStep].querySelector('.text-start');
-            if (currentLabel) {
-                currentLabel.classList.remove('hidden');
-            }
+        });
+        
+        // Show ONLY the label for the active step
+        const currentLabel = progressSteps[currentStep].querySelector('.text-start');
+        if (currentLabel) {
+            currentLabel.classList.remove('hidden');
+        }
 
-            prevButton.style.display = currentStep === 0 ? 'none' : 'block';
-            cancelButton.style.display = currentStep > 0 ? 'none' : 'block';
-            nextButton.style.display = currentStep === formSteps.length - 1 ? 'none' : 'block';
-            skipButton.style.display = currentStep === formSteps.length - 1 ? 'none' : 'block';
-            addButton.style.display = currentStep === formSteps.length - 1 ? 'block' : 'none';
-        }, 500); // Wait for the transition to finish (500ms)
+        // Manage button visibility
+        prevButton.style.display = currentStep === 0 ? 'none' : 'block';
+        cancelButton.style.display = currentStep > 0 ? 'none' : 'block';
+        nextButton.style.display = currentStep === formSteps.length - 1 ? 'none' : 'block';
+        skipButton.style.display = currentStep === formSteps.length - 1 ? 'none' : 'block';
+        addButton.style.display = currentStep === formSteps.length - 1 ? 'block' : 'none';
     }
+
 
     // Event listeners
     nextButton.addEventListener('click', () => {
@@ -98,22 +118,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Initial setup
-    function initialSetup() {
-        formSteps.forEach(step => step.classList.add('hidden', 'translate-x-full'));
-        formSteps[currentStep].classList.remove('hidden', 'translate-x-full');
-
-        progressSteps.forEach(step => {
-            const labelSpan = step.querySelector('.text-start');
-            if (labelSpan) {
-                labelSpan.classList.add('hidden');
-            }
-        });
-        
-        const initialLabel = progressSteps[currentStep].querySelector('.text-start');
-        if (initialLabel) {
-            initialLabel.classList.remove('hidden');
-        }
-    }
-    initialSetup();
+    // Initial setup: Call applyStyling() to set the correct state on page load.
+    applyStyling();
 });
