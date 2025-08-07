@@ -23,13 +23,13 @@
                         <li class="flex md:w-full items-center after:content-[''] after:w-full after:h-1 after:border-b after:border-gray-200 after:border-1 after:hidden sm:after:inline-block after:mx-6 xl:after:mx-10 dark:after:border-gray-700">
                             <span class="flex items-center after:content-['/'] sm:after:hidden after:mx-2 after:text-gray-200 dark:after:text-gray-500">
                                 <span class="me-2 bg-gray-100 p-4">2</span>
-                                <span class="block">Assess for Emergency Indicators</span>
+                                <span class="hidden">Assess for Emergency Indicators</span>
                             </span>
                             </li>
                         <li class="flex md:w-full items-center after:content-[''] after:w-full after:h-1 after:border-b after:border-gray-200 after:border-1 after:hidden sm:after:inline-block after:mx-6 xl:after:mx-10 dark:after:border-gray-700">
                             <span class="flex items-center after:content-['/'] sm:after:hidden after:mx-2 after:text-gray-200 dark:after:text-gray-500">
                                 <span class="me-2 bg-gray-100 p-4">3</span>
-                                <span class="hidden">Assess for Emergency Indicators</span>
+                                <span class="block">Medical History</span>
                             </span>
                         </li>
                         <li class="flex md:w-full items-center after:content-[''] after:w-full after:h-1 after:border-b after:border-gray-200 after:border-1 after:hidden sm:after:inline-block after:mx-6 xl:after:mx-10 dark:after:border-gray-700">
@@ -50,7 +50,9 @@
                         </li>
                     </ol>
                     <div class="hidden"><x-multi-modal-components.add-resident-1></x-multi-modal-components.add-resident-1></div>
-                    <div class="block"><x-multi-modal-components.add-resident-2></x-multi-modal-components.add-resident-2></div>
+                    <div class="hidden"><x-multi-modal-components.add-resident-2></x-multi-modal-components.add-resident-2></div>
+                    <div class="hidden"><x-multi-modal-components.add-resident-3></x-multi-modal-components.add-resident-3></div>
+                    <div class="block"><x-multi-modal-components.add-resident-4></x-multi-modal-components.add-resident-4></div>
                 </div>
             </div>
             <!-- Modal footer -->
