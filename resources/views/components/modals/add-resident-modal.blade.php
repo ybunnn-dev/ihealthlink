@@ -7,8 +7,8 @@
                 </h3>
                 <p class="text-sm text-normal_font -mt-1">Enter resident details to continue</p>
             </div>
-            <div class="p-4 md:p-5 space-y-4 max-h-[70vh] overflow-y-auto">
-                <div class="grid grid-cols-1 gap-3">
+            <div class="p-4 md:p-5 space-y-4 max-h-[70vh] overflow-y-auto w-full">
+                <div class="grid grid-cols-1 gap-3 w-full">
                     <ol class="flex items-center w-full text-xs font-medium text-center text-gray-500 dark:text-gray-400 sm:text-xs mb-6 border-b border-gray-200 pb-6">
                         <li id="step-progress-1" class="flex md:w-full items-center after:w-full after:h-1 after:border-b after:border-gray-200 after:border-1 after:hidden sm:after:inline-block after:mx-6 xl:after:mx-10 gap-3">
                             <span class="flex items-center after:content-['/'] sm:after:hidden after:mx-2 after:text-gray-200 dark:after:text-gray-500">
@@ -41,19 +41,33 @@
                             <span class="hidden text-start">NCD Risk Factors</span>
                         </li>
                        <li id="step-progress-6" class="flex md:w-full gap-3 items-center">
-                            <span class="flex items-center">
+                            <span class="flex items-center after:content-['/'] sm:after:hidden after:mx-2 after:text-gray-200 dark:after:text-gray-500">
                                 <span class="me-2 p-4 rounded-md">6</span>
                             </span>
                             <span class="hidden text-start">Risk Assessment</span>
                         </li>
                     </ol>
 
-                    <div id="step-1" class="form-step"><x-multi-modal-components.add-resident-1></x-multi-modal-components.add-resident-1></div>
-                    <div id="step-2" class="form-step hidden"><x-multi-modal-components.add-resident-2></x-multi-modal-components.add-resident-2></div>
-                    <div id="step-3" class="form-step hidden"><x-multi-modal-components.add-resident-3></x-multi-modal-components.add-resident-3></div>
-                    <div id="step-4" class="form-step hidden"><x-multi-modal-components.add-resident-4></x-multi-modal-components.add-resident-4></div>
-                    <div id="step-5" class="form-step hidden"><x-multi-modal-components.add-resident-5></x-multi-modal-components.add-resident-5></div>
-                    <div id="step-6" class="form-step hidden"><x-multi-modal-components.add-resident-6></x-multi-modal-components.add-resident-6></div>
+                    <div class="flex flex-nowrap w-full overflow-hidden">
+                        <div id="step-1" class="form-step transition-transform duration-500 ease-in-out transform translate-x-0 w-full flex-shrink-0">
+                            <x-multi-modal-components.add-resident-1></x-multi-modal-components.add-resident-1>
+                        </div>
+                        <div id="step-2" class="form-step transition-transform duration-500 ease-in-out transform translate-x-0 w-full flex-shrink-0 hidden">
+                            <x-multi-modal-components.add-resident-2></x-multi-modal-components.add-resident-2>
+                        </div>
+                        <div id="step-3" class="form-step transition-transform duration-500 ease-in-out transform translate-x-0 w-full flex-shrink-0 hidden">
+                            <x-multi-modal-components.add-resident-3></x-multi-modal-components.add-resident-3>
+                        </div>
+                        <div id="step-4" class="form-step transition-transform duration-500 ease-in-out transform translate-x-0 w-full flex-shrink-0 hidden">
+                            <x-multi-modal-components.add-resident-4></x-multi-modal-components.add-resident-4>
+                        </div>
+                        <div id="step-5" class="form-step transition-transform duration-500 ease-in-out transform translate-x-0 w-full flex-shrink-0 hidden">
+                            <x-multi-modal-components.add-resident-5></x-multi-modal-components.add-resident-5>
+                        </div>
+                        <div id="step-6" class="form-step transition-transform duration-500 ease-in-out transform translate-x-0 w-full flex-shrink-0 hidden">
+                            <x-multi-modal-components.add-resident-6></x-multi-modal-components.add-resident-6>
+                        </div>
+                    </div>
                 </div>
             </div>
 
