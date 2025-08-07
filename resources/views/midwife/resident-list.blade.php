@@ -65,6 +65,7 @@
                                             Scan QR Code
                                         </button>                                   
                                     </div>
+                                    <x-hide-button />
                                 </div>
                             </div>
                         </div>

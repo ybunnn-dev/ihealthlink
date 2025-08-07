@@ -1,5 +1,5 @@
 <!-- Main modal -->
-<div id="add-resident-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+<div id="add-resident-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
     <div class="relative p-4 w-full max-w-6xl max-h-full">
         <!-- Modal content -->
         <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700 py-10 px-8 max-w-full">
@@ -11,7 +11,7 @@
                 <p class="text-sm text-normal_font -mt-1">Enter resident details to continue</p>
             </div>
             <!-- Modal body -->
-            <div class="p-4 md:p-5 space-y-4 max-h-xl">
+            <div class="p-4 md:p-5 space-y-4 max-h-[60vh] overflow-y-auto">
                 <div class="grid grid-cols-1 gap-3">
                     <ol class="flex items-center w-full text-xs font-medium text-center text-gray-500 dark:text-gray-400 sm:text-xs mb-6 border-b border-gray-200 pb-6">
                         <li class="flex md:w-full items-center text-blue-600 dark:text-blue-500 sm:after:content-[''] after:w-full after:h-1 after:border-b after:border-gray-200 after:border-1 after:hidden sm:after:inline-block after:mx-6 xl:after:mx-10">
