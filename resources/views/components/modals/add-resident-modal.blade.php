@@ -40,8 +40,10 @@
                             </span>
                             <span class="hidden text-start">NCD Risk Factors</span>
                         </li>
-                        <li id="step-progress-6" class="flex items-center gap-3">
-                            <span class="me-2 p-4 rounded-md">6</span>
+                       <li id="step-progress-6" class="flex md:w-full gap-3 items-center">
+                            <span class="flex items-center">
+                                <span class="me-2 p-4 rounded-md">6</span>
+                            </span>
                             <span class="hidden text-start">Risk Assessment</span>
                         </li>
                     </ol>

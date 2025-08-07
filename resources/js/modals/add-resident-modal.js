@@ -15,30 +15,47 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // A function to update the UI based on the current step
     function updateUI() {
-        // Hide all form steps and reset progress bar styles
+        // Hide all form steps and reset progress bar styles for ALL steps
         formSteps.forEach(step => step.classList.add('hidden'));
         progressSteps.forEach(step => {
             step.classList.remove('text-blue-600', 'dark:text-blue-500');
             step.classList.remove('after:border-blue-600', 'after:dark:border-blue-500');
-            const span = step.querySelector('span:first-child');
-            span.classList.remove('bg-nav_active', 'text-white');
-            span.classList.add('bg-gray-100', 'text-gray-500');
+            const numSpan = step.querySelector('span:first-child span');
+            if (numSpan) {
+                console.log(numSpan);
+                numSpan.classList.remove('bg-nav_active', 'text-mainblue');
+                numSpan.classList.add('bg-gray-100', 'text-main_font');
+            }
+
+            // Hide ALL labels at the beginning of the function
+            const labelSpan = step.querySelector('.text-start');
+            if (labelSpan) {
+                labelSpan.classList.add('hidden');
+            }
         });
 
-        // Show the current step
+        // Show the current form step
         formSteps[currentStep].classList.remove('hidden');
 
-        // Update progress bar to reflect the current and completed steps
+        // Update progress bar styles for completed and current steps
         for (let i = 0; i <= currentStep; i++) {
             const step = progressSteps[i];
             step.classList.add('text-blue-600', 'dark:text-blue-500');
-            const span = step.querySelector('span:first-child');
-            span.classList.remove('bg-gray-100', 'text-gray-500');
-            span.classList.add('bg-nav_active', 'text-white');
+            const numSpan = step.querySelector('span:first-child span');
+            if (numSpan) {
+                numSpan.classList.remove('bg-gray-100', 'text-gray-500');
+                numSpan.classList.add('bg-nav_active', 'text-mainblue');
+            }
 
             if (i < currentStep) {
                  step.classList.add('after:border-blue-600', 'after:dark:border-blue-500');
             }
+        }
+        
+        // Show ONLY the label for the active step
+        const currentLabel = progressSteps[currentStep].querySelector('.text-start');
+        if (currentLabel) {
+            currentLabel.classList.remove('hidden');
         }
 
         // Manage button visibility
