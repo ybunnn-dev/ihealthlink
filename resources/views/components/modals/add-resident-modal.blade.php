@@ -53,7 +53,8 @@
                     <div class="hidden"><x-multi-modal-components.add-resident-2></x-multi-modal-components.add-resident-2></div>
                     <div class="hidden"><x-multi-modal-components.add-resident-3></x-multi-modal-components.add-resident-3></div>
                     <div class="hidden"><x-multi-modal-components.add-resident-4></x-multi-modal-components.add-resident-4></div>
-                    <div class="block"><x-multi-modal-components.add-resident-5></x-multi-modal-components.add-resident-5></div>
+                    <div class="hidden"><x-multi-modal-components.add-resident-5></x-multi-modal-components.add-resident-5></div>
+                    <div class="block"><x-multi-modal-components.add-resident-6></x-multi-modal-components.add-resident-6></div>
                 </div>
             </div>
             <!-- Modal footer -->
