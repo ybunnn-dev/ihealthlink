@@ -1,5 +1,3 @@
-# 🎓 
-
 <h1 align="center">
   <img src="public/images/ihealthlink.png" alt="iHealthLink Logo" width="400"/>
 </h1>
