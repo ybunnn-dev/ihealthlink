@@ -1,4 +1,5 @@
 @section('page-id', 'reports')
+@section('title', 'Reports')
 <x-app-layout>
     <div class="py-12 px-5">
         <div class="max-w-[90rem] mx-auto sm:px-6 lg:px-8">

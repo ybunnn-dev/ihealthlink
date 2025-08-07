@@ -1,3 +1,4 @@
+@section('title', 'Health Programs')
 <x-app-layout>
     <div class="py-12 px-5">
         <div class="max-w-[90rem] mx-auto sm:px-6 lg:px-8">
