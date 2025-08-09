@@ -327,41 +327,6 @@
                     </span>
                 </a>
             </li>
-
-            <!-- FAQs -->
-            <li class="flex items-center group">
-                <a href="{{ route('midwife.faqs') }}"
-                class="flex items-center w-full py-3 pl-6 hover:bg-white/10 transition-colors"
-                :class="{
-                    'bg-nav_active text-f7 font-bold': activeItem === 'faqs',
-                    'text-mainblue': activeItem !== 'faqs'
-                }"
-                @click="setActive('faqs')"
-                >
-                    <svg class="flex-shrink-0
-                            w-4 h-4 lg:w-4 lg:h-4 xl2:w-5 xl2:h-5"
-                        :class="{
-                            'text-mainblue': activeItem === 'faqs',
-                            'text-main_font': activeItem !== 'faqs'
-                        }" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                            <g id="SVGRepo_iconCarrier">
-                                <path d="M5,22H19a1,1,0,0,0,1-1V6.414a1,1,0,0,0-.293-.707L16.293,2.293A1,1,0,0,0,15.586,2H5A1,1,0,0,0,4,3V21A1,1,0,0,0,5,22Zm8-5a1,1,0,0,1-2,0V16a1,1,0,0,1,2,0ZM10.127,5.682a2.927,2.927,0,0,1,2.418-.631,3.084,3.084,0,0,1,2.409,2.52,3.142,3.142,0,0,1-1.79,3.421.407.407,0,0,0-.164.359V12a1,1,0,0,1-2,0v-.649A2.359,2.359,0,0,1,12.363,9.16,1.144,1.144,0,0,0,12.981,7.9a1.067,1.067,0,0,0-.8-.879.913.913,0,0,0-.775.2,1.155,1.155,0,0,0-.4.9,1,1,0,1,1-2,0A3.151,3.151,0,0,1,10.127,5.682Z"></path>
-                            </g>
-                    </svg>
-                    <span class="ml-3 whitespace-nowrap transition-all duration-200 text-main_font text-medium"
-                        :class="{ 
-                            'opacity-0 invisible': !open, 
-                            'opacity-100 visible': open, 
-                            'font-bold': activeItem === 'faqs',
-                            'text-mainblue': activeItem === 'faqs'
-                        }"
-                    >
-                        FAQs
-                    </span>
-                </a>
-            </li>
         </ul>
 
         <button
