@@ -39,7 +39,7 @@
                 </main>
             </div>
         </div>
-
+        @include('components.modals.language-modal')
         @stack('modals')
         @livewireScripts
         @stack('scripts')
