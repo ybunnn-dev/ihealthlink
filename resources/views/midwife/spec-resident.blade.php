@@ -206,7 +206,7 @@
 
                             <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
                                 <p class="font-semibold text-main_font">BMI:</p>
-                                <p class="text-normal_font">Ron Peter Mortega</p>
+                                <p class="text-normal_font">25 (Normal)</p>
                             </div>
 
                             <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
