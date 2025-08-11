@@ -50,7 +50,7 @@
                         </div>
 
                         <div class="col-span-1">
-                            <button type="button" class="w-3/4 h-[2rem] text-white bg-mainblue hover:bg-blue-700 font-medium rounded-lg text-sm px-3">Export</button>
+                            <button type="button" data-modal-target="print-report-modal" data-modal-toggle="print-report-modal" class="w-3/4 h-[2rem] text-white bg-mainblue hover:bg-blue-700 font-medium rounded-lg text-sm px-3">Export</button>
                         </div>
                     </div>
                 </div>
@@ -87,6 +87,7 @@
         </div>
     </div>
 </x-app-layout>
+@include(components.modals.print-report-modal)
 
 
 
