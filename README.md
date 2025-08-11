@@ -16,7 +16,7 @@
 
 ## 🚀 Features   
 ✅ Health Service & Patient Management  
-✅ Messaging and Activity Tracking  
+✅ Activity Tracking  
 ✅ Livewire + Alpine.js for Reactive UI  
 ✅ Tailwind CSS for a Beautiful Interface  
 ✅ Modern Frontend Build via Vite  
@@ -33,7 +33,7 @@ Follow these steps to set up the project:
 
 
 ## Gibo nganay database sa phpmyadmin  
-    create database mygrades
+    create database ihealthlink
 
 ## 🛠 Installation Guide  
 
