@@ -87,7 +87,7 @@
         </div>
     </div>
 </x-app-layout>
-@include(components.modals.print-report-modal)
+@include('components.modals.print-report-modal')
 
 
 
