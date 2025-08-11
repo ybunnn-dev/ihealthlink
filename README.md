@@ -5,10 +5,11 @@
 <p align="center">
   A Laravel-based <strong>Barangay Healthcare Management System</strong> that allows barangay health workers and administrators to manage patients, health services, activities, and medical records efficiently.
 </p>
+
 ---
 
 <h1 align="center">
-  <img src="public/images/ss1.png" alt="iHealthLink Logo" width="100%"/>
+  <img src="public/images/ss1.png" alt="sample screenshot" width="100%"/>
 </h1>
 
 ---
