@@ -5,11 +5,15 @@
 <p align="center">
   A Laravel-based <strong>Barangay Healthcare Management System</strong> that allows barangay health workers and administrators to manage patients, health services, activities, and medical records efficiently.
 </p>
+---
+
+<h1 align="center">
+  <img src="public/images/ss1.png" alt="iHealthLink Logo" width="100%"/>
+</h1>
 
 ---
 
-## 🚀 Features  
-✅ User Authentication via Jetstream  
+## 🚀 Features   
 ✅ Health Service & Patient Management  
 ✅ Messaging and Activity Tracking  
 ✅ Livewire + Alpine.js for Reactive UI  
