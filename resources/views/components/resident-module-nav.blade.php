@@ -12,5 +12,11 @@
                 <div class="h-1 w-full @if(Request::routeIs('midwife.residents')) bg-sub_blue @else bg-transparent @endif mt-1"></div>
             </a>
         </div>
+        <div class="flex flex-col items-center cursor-pointer">
+            <a href="{{ route('midwife.families') }}">
+                <span class="font-semibold @if(Request::routeIs('midwife.residents')) text-sub_blue @else text-gray-500 @endif">Families</span>
+                <div class="h-1 w-full @if(Request::routeIs('midwife.residents')) bg-sub_blue @else bg-transparent @endif mt-1"></div>
+            </a>
+        </div>
     </div>
 </div>

@@ -88,9 +88,13 @@ Route::middleware([
         return view('midwife.spec-household');
     })->name('midwife.spechouse');
 
-     Route::get('/midwife/residents', function(){
+    Route::get('/midwife/residents', function(){
         return view('midwife.resident-list');
     })->name('midwife.residents');
+
+    Route::get('/midwife/families', function(){
+        return view('midwife.families');
+    })->name('midwife.families');
 
     Route::get('/midwife/residents/spec-res', function(){
         return view('midwife.spec-resident');
