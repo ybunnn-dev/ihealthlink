@@ -1,44 +1,39 @@
-<div x-data="sideMenu()" class="relative flex flex-col min-h-screen border-navboard boarder-main_font hidden slg2:flex">
+<div x-data="sideMenu()" class="relative flex flex-col min-h-screen hidden slg2:flex">
     {{-- Sidebar --}}
    <div
         :class="{
             'w-52 lg:w-45 xl2:w-60': open,
             'w-16 lg:w-15 xl2:w-20': !open
         }"
-        class="transition-all duration-300 bg-f7 text-white h-full flex flex-col pt-8"
+        class="transition-all duration-300 bg-f7 text-white h-full flex flex-col pt-6"
     >
         {{-- Logo --}}
         <div class="flex flex-col px-6">
-            <div class="flex items-center px-1 h-14 gap-2"> 
-                <svg class="w-7 xs:w-8 sm:w-8 lg:w-6 text-mainblue flex-shrink-0" viewBox="0 0 90 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <div class="flex items-center gap-2"> 
+                <svg class="w-6 text-mainblue flex-shrink-0" viewBox="0 0 90 70" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M51.9356 40.3515L53.3692 43.9599L55.1231 40.496L58.2998 34.2206L60.3291 39.4364L60.7637 40.5517H81.9961L63.7647 57.5917C60.6229 60.528 56.8727 62.5495 52.8945 63.6601C44.0894 66.5725 33.8877 64.7375 26.8428 58.1532L8.01173 40.5517H39.8457L40.3545 39.6923L47.126 28.2489L51.9356 40.3515ZM7.32619 6.84755C17.0951 -2.28239 32.9335 -2.28265 42.7022 6.84755L45.0029 8.99892L47.2969 6.85537C57.0658 -2.27458 72.9042 -2.27483 82.6729 6.85537C91.4744 15.0821 92.3439 27.9135 85.2842 37.0517H63.1572L60.1406 29.2987L58.7197 25.6454L56.9492 29.1425L53.7539 35.4511L49.0635 23.6435L47.7471 20.33L45.9307 23.3983L37.8496 37.0517H4.71974C-2.34671 27.9128 -1.47841 15.0767 7.32619 6.84755ZM74.001 4.60244C72.8714 3.94228 71.4536 3.98197 70.3828 4.704C68.3681 6.06262 68.5602 9.01338 70.7383 10.1659L71.6865 10.6679C71.895 10.7782 72.0928 10.9067 72.2783 11.0507L72.9492 11.5712C75.03 13.1867 76.5836 15.3508 77.4180 17.7958L77.9024 19.2138C77.9673 19.4041 78.0145 19.5998 78.0449 19.7977L78.1113 20.2284C78.4751 22.6001 81.2939 23.7962 83.3125 22.4354C84.3704 21.7221 84.8944 20.4725 84.6533 19.2372L84.1406 16.6142C84.0465 16.1322 83.9036 15.6595 83.7129 15.204L83.2529 14.1044C82.2107 11.6147 80.5883 9.38565 78.5137 7.59267L77.8135 6.98818C77.4382 6.66391 77.0330 6.37349 76.6026 6.12197L74.0010 4.60244Z" fill="currentColor"/>
                 </svg>
                 <div class="flex items-center">
-                    <span class="text-maingreen font-semibold whitespace-nowrap text-2xl xl3:text-2xl lg:text-xl  transition-transform duration-300"
+                    <span class="text-maingreen font-semibold whitespace-nowrap text-xl  transition-transform duration-300"
                         :class="{ 'scale-x-0 opacity-0': !open }">
                         iHealth
                     </span>
-                    <span class="text-mainblue font-semibold whitespace-nowrap text-2xl xl3:text-2xl lg:text-xl transition-transform duration-300"
+                    <span class="text-mainblue font-semibold whitespace-nowrap text-xl transition-transform duration-300"
                         :class="{ 'scale-x-0 opacity-0': !open }">
                         Link
                     </span>
                 </div>
             </div>
-            <p class="whitespace-nowrap overflow-hidden transition-all duration-200 lg:opacity-0 2xl:opacity-100 opacity-100"
-            :class="{
-                'text-sub_blue font-medium text-fluid-xxs -mt-3 opacity-0 invisible': !open,
-                'text-sub_blue font-medium text-fluid-xxs -mt-3 opacity-100 visible delay-300': open
-            }">
-            Barangay Healthcare Management System
-            </p>
         </div>
 
+       <!--<hr class="border-t border-t-[0.4px] border-gray-200 mt-6 mx-4">-->
+
         {{-- Navigation --}}
-        <ul class="flex-1 mt-10 2xl:mt-10 lg:mt-2">
+        <ul class="flex-1 mt-6 text-sm px-3">
             <!-- Dashboard -->
-           <li class="flex items-center group">
+           <li class="flex items-start group">
                 <a href="{{ route('midwife.dashboard') }}"
-                class="flex items-center w-full py-3 pl-6 hover:bg-white/10 transition-colors"
+                class="flex items-center w-full py-3 pl-4 hover:bg-white/10 transition-colors rounded-lg"
                 :class="{
                     'bg-nav_active text-f7 font-bold': activeItem === 'dashboard',
                     'text-mainblue': activeItem !== 'dashboard'
@@ -47,7 +42,7 @@
                 >
                     <svg
                         class="flex-shrink-0
-                            w-4 h-4 lg:w-4 lg:h-4 xl2:w-5 xl2:h-5"
+                            w-4 h-4"
                         :class="{
                             'text-mainblue': activeItem === 'dashboard',
                             'text-main_font': activeItem !== 'dashboard'
@@ -68,9 +63,7 @@
                             'text-main_font': activeItem !== 'dashboard'
                         }"
                         class="
-                            text-sm 
-                            lg:text-xs
-                            2xl:text-sm
+                            text-xs
                         "
                     >
                         Dashboard
@@ -80,7 +73,7 @@
             <!-- Residents -->
             <li class="flex items-center group">
                 <a href="{{ route('midwife.households') }}"
-                class="flex items-center w-full py-3 pl-6 hover:bg-white/10 transition-colors"
+                class="flex items-center w-full py-3 pl-4 hover:bg-white/10 transition-colors rounded-lg"
                 
                 :class="{
                     'bg-nav_active text-f7 font-bold': activeItem === 'residents',
@@ -88,7 +81,7 @@
                 }"
                 @click="setActive('residents')"
                 >  <svg class="flex-shrink-0
-                            w-4 h-4 lg:w-4 lg:h-4 xl2:w-5 xl2:h-5"
+                            w-4 h-4"
                         :class="{
                             'text-mainblue': activeItem === 'residents',
                             'text-main_font': activeItem !== 'residents'
@@ -116,7 +109,7 @@
             <!-- Health Programs -->
             <li class="flex items-center group">
                 <a href="{{ route('midwife.health-program') }}"
-                class="flex items-center w-full py-3 pl-6 hover:bg-white/10 transition-colors"
+                class="flex items-center w-full py-3 pl-4 hover:bg-white/10 transition-colors rounded-lg"
                 :class="{
                     'bg-nav_active text-f7 font-bold': activeItem === 'health-program', {{-- Changed to 'health-program' (singular) --}}
                     'text-white': activeItem !== 'health-program' {{-- Changed to 'health-program' (singular) --}}
@@ -124,7 +117,7 @@
                 @click="setActive('health-program')" 
                 >
                     <svg class="flex-shrink-0
-                                w-4 h-4 lg:w-4 lg:h-4 xl2:w-5 xl2:h-5"
+                                w-4 h-4"
                         :class="{
                             'text-mainblue': activeItem === 'health-program', {{-- Changed to 'health-program' (singular) --}}
                             'text-main_font': activeItem !== 'health-program' {{-- Changed to 'health-program' (singular) --}}
@@ -153,7 +146,7 @@
             <!-- Medicines -->
             <li class="flex items-center group">
                 <a href="{{ route('midwife.medicines') }}"
-                class="flex items-center w-full py-3 pl-6 hover:bg-white/10 transition-colors"
+                class="flex items-center w-full py-3 pl-4 hover:bg-white/10 transition-colors rounded-lg"
                 :class="{
                     'bg-nav_active text-f7 font-bold': activeItem === 'medicines',
                     'text-mainblue': activeItem !== 'medicines'
@@ -161,7 +154,7 @@
                 @click="setActive('medicines')"
                 >
                     <svg class="flex-shrink-0
-                            w-4 h-4 lg:w-4 lg:h-4 xl2:w-5 xl2:h-5"
+                            w-4 h-4 lg:w-4"
                         :class="{
                             'text-mainblue': activeItem === 'medicines',
                             'text-main_font': activeItem !== 'medicines'
@@ -188,7 +181,7 @@
             <!-- Reports -->
             <li class="flex items-center group">
                 <a href="{{ route('midwife.reports') }}"
-                class="flex items-center w-full py-3 pl-6 hover:bg-white/10 transition-colors"
+                class="flex items-center w-full py-3 pl-4 hover:bg-white/10 transition-colors rounded-lg" 
                 :class="{
                     'bg-nav_active text-f7 font-bold': activeItem === 'reports',
                     'text-white': activeItem !== 'reports'
@@ -196,7 +189,7 @@
                 @click="setActive('reports')"
                 >
                     <svg class="flex-shrink-0
-                            w-4 h-4 lg:w-4 lg:h-4 xl2:w-5 xl2:h-5"
+                            w-4 h-4"
                         :class="{
                             'text-mainblue': activeItem === 'reports',
                             'text-main_font': activeItem !== 'reports'
@@ -225,7 +218,7 @@
             <!-- Schedules -->
             <li class="flex items-center group">
                 <a href="{{ route('midwife.sched') }}"
-                class="flex items-center w-full py-3 pl-6 hover:bg-white/10 transition-colors"
+                class="flex items-center w-full py-3 pl-4 hover:bg-white/10 transition-colors rounded-lg"
                 :class="{
                     'bg-nav_active text-f7 font-bold': activeItem === 'schedules',
                     'text-white': activeItem !== 'schedules'
@@ -233,7 +226,7 @@
                 @click="setActive('schedules')"
                 >
                     <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" class="flex-shrink-0
-                            w-4 h-4 lg:w-4 lg:h-4 xl2:w-5 xl2:h-5"
+                            w-4 h-4"
                         :class="{
                             'text-mainblue': activeItem === 'schedules',
                             'text-main_font': activeItem !== 'schedules'
@@ -257,7 +250,7 @@
             <!-- BHWs -->
             <li class="flex items-center group">
                 <a href="{{ route('midwife.bhws') }}"
-                class="flex items-center w-full py-3 pl-6 hover:bg-white/10 transition-colors"
+                class="flex items-center w-full py-3 pl-4 hover:bg-white/10 transition-colors rounded-lg"
                 :class="{
                     'bg-nav_active text-f7 font-bold': activeItem === 'bhws',
                     'text-white': activeItem !== 'bhws'
@@ -265,7 +258,7 @@
                 @click="setActive('bhws')"
                 >
                     <svg class="flex-shrink-0
-                            w-4 h-4 lg:w-4 lg:h-4 xl2:w-5 xl2:h-5"
+                            w-4 h-4 lg:w-4 lg:h-4"
                         :class="{
                             'text-mainblue': activeItem === 'bhws',
                             'text-main_font': activeItem !== 'bhws'
@@ -295,7 +288,7 @@
             <!-- Logs -->
             <li class="flex items-center group">
                 <a href="{{ route('midwife.logs') }}"
-                class="flex items-center w-full py-3 pl-6 hover:bg-white/10 transition-colors"
+                class="flex items-center w-full py-3 pl-4 hover:bg-white/10 transition-colors rounded-lg"
                 :class="{
                     'bg-nav_active text-f7 font-bold': activeItem === 'logs',
                     'text-mainblue': activeItem !== 'logs'
@@ -303,7 +296,7 @@
                 @click="setActive('logs')"
                 >
                      <svg class="flex-shrink-0
-                            w-4 h-4"
+                            w-4 h-4 lg:w-4 lg:h-4"
                         :class="{
                             'text-mainblue': activeItem === 'logs',
                             'text-main_font': activeItem !== 'logs'
@@ -315,7 +308,7 @@
                                 <path d="M0 24q0 0.832 0.576 1.44t1.44 0.576h1.984q0 2.496 1.76 4.224t4.256 1.76h6.688q-2.144-1.504-3.456-4h-3.232q-0.832 0-1.44-0.576t-0.576-1.408v-20q0-0.832 0.576-1.408t1.44-0.608h16q0.8 0 1.408 0.608t0.576 1.408v7.232q2.496 1.312 4 3.456v-10.688q0-2.496-1.76-4.256t-4.224-1.76h-16q-2.496 0-4.256 1.76t-1.76 4.256h-1.984q-0.832 0-1.44 0.576t-0.576 1.408 0.576 1.44 1.44 0.576h1.984v4h-1.984q-0.832 0-1.44 0.576t-0.576 1.408 0.576 1.44 1.44 0.576h1.984v4h-1.984q-0.832 0-1.44 0.576t-0.576 1.408zM10.016 24h2.080q0-0.064-0.032-0.416t-0.064-0.576 0.064-0.544 0.032-0.448h-2.080v1.984zM10.016 20h2.464q0.288-1.088 0.768-1.984h-3.232v1.984zM10.016 16h4.576q0.992-1.216 2.112-1.984h-6.688v1.984zM10.016 12h16v-1.984h-16v1.984zM10.016 8h16v-1.984h-16v1.984zM14.016 23.008q0 1.824 0.704 3.488t1.92 2.88 2.88 1.92 3.488 0.704 3.488-0.704 2.88-1.92 1.92-2.88 0.704-3.488-0.704-3.488-1.92-2.88-2.88-1.92-3.488-0.704-3.488 0.704-2.88 1.92-1.92 2.88-0.704 3.488zM18.016 23.008q0-2.080 1.44-3.52t3.552-1.472 3.52 1.472 1.472 3.52q0 2.080-1.472 3.52t-3.52 1.472-3.552-1.472-1.44-3.52zM22.016 23.008q0 0.416 0.288 0.704t0.704 0.288h1.984q0.416 0 0.704-0.288t0.32-0.704-0.32-0.704-0.704-0.288h-0.992v-0.992q0-0.416-0.288-0.704t-0.704-0.32-0.704 0.32-0.288 0.704v1.984z"></path>
                             </g>
                         </svg>
-                    <span class="ml-3 whitespace-nowrap transition-all duration-200 text-main_font text-medium"
+                    <span class="ml-3 whitespace-nowrap transition-all duration-200 text-main_font text-medium rounded-lg"
                         :class="{ 
                             'opacity-0 invisible': !open, 
                             'opacity-100 visible': open, 
@@ -334,11 +327,7 @@
             class="absolute right-0 bottom-10 -mr-4 transform translate-y-1/2 z-20 bg-f7 text-white p-1 rounded-full transition-all hover:bg-f7/90 shadow-md"
             aria-label="Toggle Sidebar"
         >
-            <div :class="{ 'rotate-180': !open }" class="transition-transform duration-300">
-                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-mainblue">
-                    <path d="M7.82054 20.7313C8.21107 21.1218 8.84423 21.1218 9.23476 20.7313L15.8792 14.0868C17.0505 12.9155 17.0508 11.0167 15.88 9.84497L9.3097 3.26958C8.91918 2.87905 8.28601 2.87905 7.89549 3.26958C7.50497 3.6601 7.50497 4.29327 7.89549 4.68379L14.4675 11.2558C14.8581 11.6464 14.8581 12.2795 14.4675 12.67L7.82054 19.317C7.43002 19.7076 7.43002 20.3407 7.82054 20.7313Z" fill="currentColor"/>
-                </svg>
-            </div>
+           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18" width="16" height="16" aria-hidden="true" class="$w-[1em] $h-[1em] $fill-current $text-lg size-[14px] text-surface-foreground-0"><path d="M14.25 1.5H3.75A3.754 3.754 0 0 0 0 5.25v7.5a3.754 3.754 0 0 0 3.75 3.75h10.5A3.754 3.754 0 0 0 18 12.75v-7.5a3.754 3.754 0 0 0-3.75-3.75M1.5 12.75v-7.5C1.5 4.01 2.51 3 3.75 3h3v12h-3c-1.24 0-2.25-1.01-2.25-2.25m15 0c0 1.24-1.01 2.25-2.25 2.25h-6V3h6c1.24 0 2.25 1.01 2.25 2.25zM5.25 8.25A.75.75 0 0 1 4.5 9h-.75a.75.75 0 1 1 0-1.5h.75a.75.75 0 0 1 .75.75m0 3a.75.75 0 0 1-.75.75h-.75a.75.75 0 1 1 0-1.5h.75a.75.75 0 0 1 .75.75M3 5.25a.75.75 0 0 1 .75-.75h.75a.75.75 0 1 1 0 1.5h-.75A.75.75 0 0 1 3 5.25"></path></svg>
         </button>
     </div>
 </div>
