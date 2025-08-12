@@ -29,7 +29,7 @@ export default {
                 main_font: '#566A7F',
                 normal_font: "#697A8D",
                 maingreen: '#328E6E',
-                f7: '#f7f7f7', // This is white, used for contrast
+                f7: '#FFFFFF', // This is white, used for contrast
                 darkblue: '#1a202c', // New color for background below 1000px if needed, based on screenshot 665095.png
                 bg_col: "#ECF0F4",
                 sub_blue: "#252F6C",

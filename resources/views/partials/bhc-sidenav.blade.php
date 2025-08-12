@@ -303,7 +303,7 @@
                 @click="setActive('logs')"
                 >
                      <svg class="flex-shrink-0
-                            w-4 h-4 lg:w-4 lg:h-4 xl2:w-5 xl2:h-5"
+                            w-4 h-4"
                         :class="{
                             'text-mainblue': activeItem === 'logs',
                             'text-main_font': activeItem !== 'logs'
