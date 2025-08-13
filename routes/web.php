@@ -143,4 +143,8 @@ Route::middleware([
     Route::get('/midwife/faqs', function () {
         return view('midwife.faqs');
     })->name('midwife.faqs');
+
+    Route::get('/midwife/health-programs/spec', function () {
+        return view('midwife.enrolled-resident');
+    })->name('midwife.enrolled-resident');
 });

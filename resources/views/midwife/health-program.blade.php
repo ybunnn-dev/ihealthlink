@@ -157,7 +157,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr class="bg-white border-b text-normal_font hover:bg-gray-50">
+                                <tr class="bg-white border-b text-normal_font hover:bg-gray-50" onclick="window.location='{{ route('midwife.enrolled-resident') }}'">
                                     <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">121</th>
                                     <td class="px-6 py-4">Juan Dela Cruz</td>
                                     <td class="px-6 py-4">Updated</td>
