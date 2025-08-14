@@ -81,7 +81,7 @@
                 
             </div>
             {{-- 3rd Row: Search, Filters, and Table (No change) --}}
-            <div class="bg-white rounded-xl overflow-hidden shadow-md p-6 mb-3">
+            <div class="bg-white rounded-xl overflow-hidden  p-6 mb-3">
                 <div class="grid grid-rows-1 gap-1">
                     <div class="pb-6">
                         <div class="flex flex-col slg2:flex-row slg2:items-end gap-4">
@@ -145,7 +145,7 @@
                             <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Elderly</a></li>
                         </ul>
                     </div>
-                    <div class="relative overflow-x-auto shadow-md rounded-lg">
+                    <div class="relative overflow-x-auto  rounded-lg">
                        <table class="w-full text-sm text-left text-main_font">
                             <thead class="text-xs text-main_font uppercase bg-col_tab_h">
                                 <tr>
