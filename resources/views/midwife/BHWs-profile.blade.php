@@ -3,62 +3,88 @@
     <div class="py-12 px-5">
         <div class="max-w-[90rem] mx-auto sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 gap-4">
-
-                {{-- The main flex container --}}
-                <div class="flex space-x-4 h-96">
-                    {{-- Left div: Profile Image, Name, and Buttons --}}
-                    {{-- This container now holds two sub-divs: one for content with BG, one for buttons without BG --}}
-                    <div class="w-1/3 flex flex-col">
-                        {{-- Div for Profile Image and Name/Resident Number with BG color and rounded corners --}}
-                        <div class="bg-[#F7F7F7] rounded-lg flex flex-col items-center justify-center p-4 flex-grow mb-4"> {{-- Added mb-4 for space below --}}
-                            <svg class="flex-shrink-0 w-32 h-32 lg:w-40 lg:h-40 xl2:w-44 xl2:h-44 text-main_font"
-                                viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                 <div class="grid grid-cols-1 xl:grid-cols-3 gap-3">
+                    <!-- Left Column (Profile + Scheduled Activity) -->
+                    <div class="grid grid-rows-6 gap-2 col-span-1">
+                        <!-- Profile Card -->
+                        <div class="bg-f7 rounded-lg flex flex-col items-center justify-center p-4 row-span-5"> 
+                            <svg class="flex-shrink-0 w-32 h-32 lg:w-40 lg:h-40 xl2:w-44 xl2:h-44 text-main_font" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                                 <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                                <circle cx="12" cy="7" r="3" fill="currentColor"></circle>
-                                <path d="M12 10c-3.69 0-7 2-7 5s3.31 5 7 5 7-2 7-5-3.31-5-7-5z" fill="currentColor"></path>
+                                <g id="SVGRepo_iconCarrier"> 
+                                    <path opacity="0.4" d="M12.1207 12.78C12.0507 12.77 11.9607 12.77 11.8807 12.78C10.1207 12.72 8.7207 11.28 8.7207 9.50998C8.7207 7.69998 10.1807 6.22998 12.0007 6.22998C13.8107 6.22998 15.2807 7.69998 15.2807 9.50998C15.2707 11.28 13.8807 12.72 12.1207 12.78Z" stroke="#566A7F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> 
+                                    <path opacity="0.34" d="M18.7398 19.3801C16.9598 21.0101 14.5998 22.0001 11.9998 22.0001C9.39977 22.0001 7.03977 21.0101 5.25977 19.3801C5.35977 18.4401 5.95977 17.5201 7.02977 16.8001C9.76977 14.9801 14.2498 14.9801 16.9698 16.8001C18.0398 17.5201 18.6398 18.4401 18.7398 19.3801Z" stroke="#566A7F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> 
+                                    <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="#566A7F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> 
+                                </g>
                             </svg>
-                            <p class="text-main_font font-bold mt-2">Ron Peter Mortega</p>
-                            <p class="text-normal_font">Resident # 13356</p>
+                            <p class="text-main_font font-bold mt-4 text-xl">Ron Peter Mortega</p> 
+                            <p class="text-main_font font-semibold">Household #144</p> 
                         </div>
 
-                        {{-- Buttons section: Now a separate div, taking full width and no background --}}
-                        <div class="flex space-x-3 w-full px-0 pb-0"> {{-- Removed px and pb as they are no longer needed on this container --}}
+                        <!-- Scheduled Activity Card -->
+                         <div class="grid grid-cols-1 lg:grid-cols-2 w-full px-0 pb-0 row-span-1 gap-3"> {{-- Removed px and pb as they are no longer needed on this container --}}
                             {{-- Increased py- for taller buttons --}}
-                            <button type="button" class="flex-1 px-5 py-3 text-sm font-medium text-white bg-mainblue rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300">Edit</button>
-                            <button type="button" class="flex-1 px-5 py-3 text-sm font-medium text-mainblue bg-white border border-mainblue rounded-lg hover:bg-blue-50 focus:outline-none focus:ring-4 focus:ring-300">Remove</button>
+                            <button type="button" class="col-span-1 px-5 py-3 text-sm font-medium text-white bg-mainblue rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300">Edit</button>
+                            <button type="button" class="col-span-1 px-5 py-3 text-sm font-medium text-mainblue bg-white border border-mainblue rounded-lg hover:bg-blue-50 focus:outline-none focus:ring-4 focus:ring-300">Remove</button>
                         </div>
                     </div>
 
-                    {{-- Right div: BHW INFO --}}
-                    <div class="flex-grow bg-[#F7F7F7] rounded-lg p-12">
-                        <h2 class="text-xl font-semibold text-main_font mb-6">BHW INFO</h2>
-                        <div class="grid grid-cols-[auto_1fr] gap-x-12 gap-y-3 text-normal_font text-sm">
-                            <p class="font-medium">FIRST NAME:</p>
-                            <p>RON</p>
-                            <p class="font-medium">LAST NAME:</p>
-                            <p>Mortega</p>
-                            <p class="font-medium">MIDDLE NAME:</p>
-                            <p>PETER</p>
-                            <p class="font-medium">SUFFIX:</p>
-                            <p>N/A</p>
-                            <p class="font-medium">BIRTH DATE:</p>
-                            <p>March 17, 2024</p>
-                            <p class="font-medium">CONTACT NUMBER:</p>
-                            <p>09789622025</p>
+                    <!-- Right Column (Resident Info) -->
+                    <div class="col-span-1 xl:col-span-2 h-full bg-f7 rounded-lg px-6 sm:px-10 lg:px-12 py-8">
+                        <!-- Header -->
+                        <div class="flex items-center gap-2 mb-6">
+                            <h2 class="text-xl font-semibold text-main_font">Resident Info</h2>
+                        </div>
 
-                            <div class="col-span-2 my-4"></div>
+                        <!-- Info Grid -->
+                        <div class="grid grid-cols-1 gap-y-4 text-xs">
+                            <div class="grid grid-rows-2 md:grid-cols-3 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">FIRST NAME:</p>
+                                <p class="text-normal_font">Ron Peter</p>
+                            </div>
 
-                            <p class="font-medium">HOUSEHOLD NO.:</p>
-                            <p>#23455</p>
+                            <div class="grid grid-rows-2 md:grid-cols-3 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">LAST NAME:</p>
+                                <p class="text-normal_font">Mortega</p>
+                            </div>
+
+                            <div class="grid grid-rows-2 md:grid-cols-3 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">MIDDLE NAME:</p>
+                                <p class="text-normal_font">Jazareno</p>
+                            </div>
+
+                            <div class="grid grid-rows-2 md:grid-cols-3 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">SUFFIX:</p>
+                                <p class="text-normal_font">III</p>
+                            </div>
+
+                            <div class="grid grid-rows-2 md:grid-cols-3 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">BIRTHDATE:</p>
+                                <p class="text-normal_font">December 10, 2002 (22 Years old)</p>
+                            </div>
+
+                            <div class="grid grid-rows-2 md:grid-cols-3 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">ADREESS:</p>
+                                <p class="text-normal_font">Purok 1, Brgy. Ilawod, Daraga, Albay</p>
+                            </div>
+
+                            <div class="grid grid-rows-2 md:grid-cols-3 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">SEX:</p>
+                                <p class="text-normal_font">Male</p>
+                            </div>
+
+                            <div class="grid grid-rows-2 md:grid-cols-3 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">MOBILE NUMBER:</p>
+                                <p class="text-normal_font">09134579</p>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 {{-- "Ron's Activity Log" label --}}
-                <h2 class="text-2xl font-semibold text-main_font mt-8 mb-4">Ron's Activity Log</h2>
+                <h2 class="text-2xl font-semibold text-main_font mt-8">Ron's Activity Log</h2>
 
-                <div class="bg-white p-6 rounded-xl shadow">
+                <div class="bg-white p-6 rounded-xl">
                     <div class="flex flex-col slg2:flex-row slg2:items-end gap-4 mb-4">
                         <div class="w-full slg2:w-64 slg2:flex-grow slg2:max-w-md">
                             <label for="default-search" class="mb-2 text-sm font-medium text-main_font">Search Name?</label>
@@ -80,7 +106,7 @@
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
                                 </svg>
                             </button>
-                            <div id="dateDropdownMenu" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
+                            <div id="dateDropdownMenu" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg w-44">
                                 <ul class="py-2 text-sm text-gray-700" aria-labelledby="dateDropdown">
                                     <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">All Date</a></li>
                                     <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Last Week</a></li>
@@ -90,7 +116,7 @@
                         </div>
                     </div>
 
-                    <div class="relative overflow-x-auto shadow-md rounded-lg">
+                    <div class="relative overflow-x-auto rounded-lg">
                         <table class="w-full text-sm text-left text-main_font">
                             <thead class="text-xs text-main_font uppercase bg-col_tab_h text-center">
                                 <tr>
