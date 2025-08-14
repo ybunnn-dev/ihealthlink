@@ -52,15 +52,10 @@
                                     </div>
                                     
                                     <!-- Add Family Button -->
-                                    <div class="w-full xs:w-40 pt-5 xs:pt-0" data-modal-target="add-household-modal" data-modal-toggle="add-household-modal">
+                                    <div class="w-full xs:w-40 pt-5 xs:pt-0" data-modal-target="add-family-modal" data-modal-toggle="add-family-modal">
                                         <button type="button" class="w-full h-[2.375rem] text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3">Add Family</button>
                                         
                                     </div>
-                                    @include('components.modals.add-household-modal')
-                                    @include('components.modals.existing-member-modal')
-                                    @include('components.modals.existing-family-head-modal')
-                                    @include('components.modals.existing-household-head-modal')
-                                    @include('components.modals.new-resident-modal')
                                 </div>
                             </div>
                         </div>
@@ -158,4 +153,5 @@
             </div>
         </div>
     </div>
+    @include('components.modals.add-family-modal')
 </x-app-layout>

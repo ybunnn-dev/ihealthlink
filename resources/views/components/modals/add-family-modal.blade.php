@@ -13,9 +13,32 @@
             <!-- Modal body -->
             <div class="p-4 md:p-5 space-y-4">
                 <div class="grid grid-cols-1 gap-3">
-                    <div class="grid grid-cols-1 gap-1 relative col-span-1 mb-3">
-                        <label for="enterFamilyHead" class="text-sm font-medium text-main_font">FAMILY HEAD</label>
-                        <input type="text" id="enterFamilyHead" class="border border-gray-300 text-gray-700 rounded-lg p-2">
+                    <div class="grid grid-cols-1 slg:grid-cols-3 gap-3">
+                        <div class="grid grid-cols-1 gap-1 relative col-span-1 mb-3 col-span-2">
+                            <label for="enterFamilyHead" class="text-sm font-medium text-main_font">FAMILY HEAD</label>
+                            <input type="text" id="enterFamilyHead" class="border border-gray-300 text-gray-700 rounded-lg p-2">
+                        </div>
+                        <div class="grid grid-cols-1 gap-1 relative col-span-1 mb-3 col-span-1">
+                            <label for="is4ps" class="text-sm font-medium text-main_font">4PS</label>
+                            <button id="is4ps" data-dropdown-toggle="4ps_dropdownMenu"
+                                class="w-full text-gray-400 bg-white focus:outline-none font-medium border border-gray-300 rounded-lg text-md p-2 text-center inline-flex items-center justify-between"
+                                type="button">
+                                Select
+                                <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                    viewBox="0 0 10 6">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="m1 1 4 4 4-4" />
+                                </svg>
+                            </button>
+
+                            <div id="4ps_dropdownMenu"
+                                class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-full absolute top-full mt-1">
+                                <ul class="py-2 text-sm text-gray-700" aria-labelledby="is4ps">
+                                    <li><button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-value="Jr.">Yes</button></li>
+                                    <li><button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-value="Sr.">No</button></li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                     <div class="flex items-center gap-3 mb-3">
                         <hr class="flex-grow border-t border-gray-200">
