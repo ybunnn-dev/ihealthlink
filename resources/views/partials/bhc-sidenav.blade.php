@@ -27,7 +27,6 @@
         </div>
 
        <!--<hr class="border-t border-t-[0.4px] border-gray-200 mt-6 mx-4">-->
-
         {{-- Navigation --}}
         <ul class="flex-1 mt-10 text-sm px-3">
             <!-- Dashboard -->
@@ -321,7 +320,11 @@
                 </a>
             </li>
         </ul>
-
+        <div class="h-36 bg-gray-200 mt-5 mx-3 mb-6 rounded-lg">
+            <div class="p-3 h-full flex items-center">
+                Good Morning Brgy. Tagas!
+            </div>
+        </div>
         <button
             @click="toggleSidebar"
             class="absolute right-0 bottom-12 -mr-4 transform translate-y-1/2 z-20 bg-f7 text-white p-1 rounded-full transition-all hover:bg-f7/90 shadow-md"

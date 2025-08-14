@@ -41,7 +41,7 @@
                             </button>
 
                             <!-- Tooltip bubble -->
-                            <div class="absolute top-full mt-2 px-3 py-1 text-center text-xs text-white bg-gray-700 rounded-md shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10">
+                            <div class="absolute top-full mt-2 px-3 py-1 text-center text-xs text-white bg-gray-700 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10">
                                 <div class="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 rotate-45 bg-gray-700"></div>
                                 Switch Program
                             </div>
