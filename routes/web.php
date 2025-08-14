@@ -96,6 +96,11 @@ Route::middleware([
         return view('midwife.families');
     })->name('midwife.families');
 
+
+    Route::get('/midwife/families/spec', function(){
+        return view('midwife.spec-family');
+    })->name('midwife.cur-fam');
+
     Route::get('/midwife/residents/spec-res', function(){
         return view('midwife.spec-resident');
     })->name('midwife.spec-resident');

@@ -110,7 +110,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr class="bg-white border-b bg-f7 text-normal_font" onclick="window.location='{{ route('midwife.spechouse') }}'">
+                                <tr class="bg-white border-b bg-f7 text-normal_font" onclick="window.location='{{ route('midwife.cur-fam') }}'">
                                     <th scope="row" class="pl-6 py-4 font-medium text-normal_font whitespace-nowrap">
                                         001
                                     </th>
