@@ -13,34 +13,59 @@
             <!-- Modal body -->
             <div class="p-4 md:p-5 space-y-4">
                 <div class="grid grid-cols-1 gap-3">
-                    <div class="grid grid-cols-1 gap-1 relative col-span-1">
-                        <label for="choosePurok" class="text-sm font-medium text-main_font">PUROK/SITIO</label>
-                        <button id="choosePurok" data-dropdown-toggle="choosePurokMenu"
-                            class="w-full text-main_font bg-white focus:outline-none font-medium border border-gray-300 rounded-lg text-md p-2 text-center inline-flex items-center justify-between"
-                            type="button">
-                            Select
-                            <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                            viewBox="0 0 10 6">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="m1 1 4 4 4-4" />
-                                </svg>
-                        </button>
-
-                        <!-- Dropdown Menu -->
-                        <div id="choosePurokMenu"
-                            class="z-10 hidden bg-f7 divide-y divide-gray-100 rounded-lg shadow w-full absolute mt-1">
-                            <ul class="py-2 text-sm text-gray-700">
-                                <li><button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100">1</button></li>
-                                <li><button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100">2</button></li>
-                                <li><button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100">3</button></li>
-                                <li><button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100">4</button></li>
-                                <li><button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100">5</button></li>
-                            </ul>
-                        </div>
-                    </div>
                     <div class="grid grid-cols-1 gap-1 relative col-span-1 mb-3">
                         <label for="enterHouseholdHead" class="text-sm font-medium text-main_font">HOUSEHOLD HEAD</label>
                         <input type="text" id="enterHouseholdHead" class="border border-gray-300 text-gray-700 rounded-lg p-2">
+                    </div>
+                    <div class="grid grid-cols-1 slg2:grid-cols-2 col-span-1 gap-3">
+                        <div class="grid grid-cols-1 gap-1 relative col-span-1">
+                            <label for="choosePurok" class="text-sm font-medium text-main_font">PUROK/SITIO</label>
+                            <button id="choosePurok" data-dropdown-toggle="choosePurokMenu"
+                                class="w-full text-main_font bg-white focus:outline-none font-medium border border-gray-300 rounded-lg text-md p-2 text-center inline-flex items-center justify-between"
+                                type="button">
+                                Select
+                                <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                viewBox="0 0 10 6">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="m1 1 4 4 4-4" />
+                                    </svg>
+                            </button>
+
+                            <!-- Dropdown Menu -->
+                            <div id="choosePurokMenu"
+                                class="z-10 hidden bg-f7 divide-y divide-gray-100 rounded-lg shadow w-full absolute mt-1">
+                                <ul class="py-2 text-sm text-gray-700">
+                                    <li><button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100">1</button></li>
+                                    <li><button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100">2</button></li>
+                                    <li><button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100">3</button></li>
+                                    <li><button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100">4</button></li>
+                                    <li><button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100">5</button></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 gap-1 relative col-span-1">
+                            <label for="chooseWaterSource" class="text-sm font-medium text-main_font">WATER SOURCE</label>
+                            <button id="chooseWaterSource" data-dropdown-toggle="chooseWaterSourceMenu"
+                                class="w-full text-main_font bg-white focus:outline-none font-medium border border-gray-300 rounded-lg text-md p-2 text-center inline-flex items-center justify-between"
+                                type="button">
+                                Select
+                                <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                viewBox="0 0 10 6">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="m1 1 4 4 4-4" />
+                                    </svg>
+                            </button>
+
+                            <div id="chooseWaterSourceMenu"
+                                class="z-10 hidden bg-f7 divide-y divide-gray-100 rounded-lg shadow w-full absolute mt-1">
+                                <ul class="py-2 text-sm text-gray-700">
+                                    <li><button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100">Pumpwell</button></li>
+                                    <li><button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100">Open Well</button></li>
+                                    <li><button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100">Purified Water</button></li>
+                                    <li><button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100">Tap Water</button></li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                     <div class="flex items-center gap-3 mb-3">
                         <hr class="flex-grow border-t border-gray-200">
