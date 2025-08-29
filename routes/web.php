@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\BarangayController;
 
 Route::get('/', function () {
     return view('auth.login');
@@ -40,9 +41,7 @@ Route::middleware([
     })->name('mho.spec-hprog');
 
     //Route for barangays
-    Route::get('/mho/barangays', function(){
-        return view('mho.barangay-list');
-    })->name('mho.barangays');
+    Route::get('/mho/barangays', [BarangayController::class, 'listView'])->name('mho.barangays');
 
     //Route for specific info for barangays
     Route::get('/mho/barangays/spec', function(){

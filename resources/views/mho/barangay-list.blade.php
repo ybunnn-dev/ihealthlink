@@ -1,17 +1,14 @@
 <x-app-layout>
     <div class="py-12 px-5">
         <div class="max-w-[90rem] mx-auto sm:px-6 lg:px-8">
-            <!-- Title -->
             <h1 class="text-3xl font-semibold text-sub_blue mb-3">Barangays</h1>
-
             <div class="bg-f7 rounded-xl overflow-hidden">
                 <div class="p-6">
                     <div class="grid grid-rows-1 gap-1">
                         <div class="pb-6">
                             <div class="flex flex-col slg2:flex-row slg2:flex-nowrap items-end gap-4">
-                                <!-- Search bar: Allow it to grow and shrink, but give it a max-width. -->
                                 <div class="w-full slg2:flex-grow slg2:max-w-md">
-                                    <label for="default-search" class="mb-2 text-sm font-medium text-main_font">Search for barangay?</label> 
+                                    <label for="default-search" class="mb-2 text-sm font-medium text-main_font">Search for barangay?</label>
                                     <div class="relative">
                                         <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                                             <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
@@ -21,11 +18,10 @@
                                         <input type="search" id="default-search" class="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500" placeholder="Search..."/>
                                     </div>
                                 </div>
-                                
+
                                 <div class="flex flex-col sm:flex-row flex-wrap gap-4 items-end slg2:flex-shrink-0">
-                                    <!-- Category Filter -->
                                     <div class="w-full sm:w-48">
-                                        <label for="categoryDropdown" class="mb-2 text-sm font-medium text-main_font">Filter by</label> 
+                                        <label for="categoryDropdown" class="mb-2 text-sm font-medium text-main_font">Filter by</label>
                                         <button id="categoryDropdown" data-dropdown-toggle="categoryDropdownMenu" class="w-full text-main_font bg-f7 focus:outline-none font-medium border border-navboard rounded-lg text-sm px-4 py-2 text-center inline-flex items-center justify-between h-[2.375rem]" type="button">
                                         Alphabetical
                                         <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
@@ -33,10 +29,9 @@
                                         </svg>
                                         </button>
                                     </div>
-                                    
-                                    <!-- Date Filter -->
+
                                     <div class="w-full sm:w-48">
-                                        <label for="dateDropdown" class="mb-2 text-sm font-medium text-main_font">Sort By Date</label> 
+                                        <label for="dateDropdown" class="mb-2 text-sm font-medium text-main_font">Sort By Date</label>
                                         <button id="dateDropdown" data-dropdown-toggle="dateDropdownMenu" class="w-full text-main_font bg-f7 focus:outline-none font-medium border border-navboard rounded-lg text-sm px-4 py-2 text-center inline-flex items-center justify-between h-[2.375rem]" type="button">
                                         All Date
                                         <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
@@ -44,131 +39,66 @@
                                         </svg>
                                         </button>
                                     </div>
-                                    
-                                    <!-- Add Medicine Button -->
+
                                     <div class="w-full sm:w-40 pt-5 sm:pt-0">
-                                        <button type="button" class="w-full h-[2.375rem] text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3">Add Barangay</button>
+                                        <button type="button" class="w-full h-[2.375rem] text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3" data-modal-target="add-barangay-modal" data-modal-toggle="add-barangay-modal">Add Barangay</button>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <!-- Dropdown menus -->
-                        <div id="categoryDropdownMenu" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700">
-                        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200">
-                            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Option 1</a></li>
-                            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Option 2</a></li>
-                        </ul>
-                        </div>
-
-                        <div id="dateDropdownMenu" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700">
-                        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200">
-                            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Last Week</a></li>
-                            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Last Year</a></li>
-                        </ul>
                         </div>
                         <div class="relative overflow-x-auto">
                             <table class="w-full text-sm text-left text-main_font bg-col_tab_h">
                                 <thead class="text-xs text-main_font uppercase text-center" >
                                     <tr>
-                                        <th scope="col" class="px-6 py-3">
-                                            BARANGAY #
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            NAME
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            NO. OF PUROK
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            NO. OF RESIDENTS
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            DATE ADDED
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            DATE UPDATED
-                                        </th>
+                                        <th scope="col" class="px-6 py-3">BARANGAY #</th>
+                                        <th scope="col" class="px-6 py-3">NAME</th>
+                                        <th scope="col" class="px-6 py-3">NO. OF PUROK</th>
+                                        <th scope="col" class="px-6 py-3">NO. OF RESIDENTS</th>
+                                        <th scope="col" class="px-6 py-3">DATE ADDED</th>
+                                        <th scope="col" class="px-6 py-3">DATE UPDATED</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr class="bg-white border-b bg-f7 text-normal_font text-center" onclick="window.location='{{ route('mho.spec-barangay') }}'">
-                                        <th scope="row" class="px-6 py-4 font-medium text-normal_font whitespace-nowrap">
-                                            121
-                                        </th>
-                                        <td class="px-6 py-4">
-                                            Tagas
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            6
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            99,999
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            Feb 10, 2022
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            Feb 10, 2025
-                                        </td>
-                                    </tr>
-                                    <tr class="bg-white border-b bg-f7 text-normal_font text-center">
-                                        <th scope="row" class="px-6 py-4 font-medium text-normal_font whitespace-nowrap">
-                                            122
-                                        </th>
-                                        <td class="px-6 py-4">
-                                            Ilawod
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            4
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            10,000
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            Feb 10, 2020
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            Feb 10, 2025
-                                        </td>
-                                    </tr>
-                                    <tr class="bg-white border-b bg-f7 text-normal_font text-center">
-                                        <th scope="row" class="px-6 py-4 font-medium text-normal_font whitespace-nowrap">
-                                            123
-                                        <td class="px-6 py-4">
-                                            Sipi
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            9
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            2,000
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            Feb 10, 2024
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            Feb 10, 2025
-                                        </td>
-                                    </tr>
-                                    <tr class="bg-white border-b bg-f7 text-normal_font text-center">
-                                        <th scope="row" class="px-6 py-4 font-medium text-normal_font whitespace-nowrap">
-                                            124
-                                        <td class="px-6 py-4">
-                                            Culliat
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            8
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            12,000
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            Feb 10, 2025
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            Feb 10, 2025
-                                        </td>
-                                    </tr>
+                                    @forelse ($barangays as $barangay)
+                                        <tr class="border-b bg-f7 text-normal_font text-center cursor-pointer hover:bg-gray-100" onclick="window.location='{{ route('mho.spec-barangay', $barangay->id) }}'">
+                                            <th scope="row" class="px-6 py-4 font-medium text-normal_font whitespace-nowrap">
+                                                {{ $barangay->id }}
+                                            </th>
+                                            <td class="px-6 py-4">
+                                                {{ $barangay->name }}
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                {{-- Make sure this matches your controller variable --}}
+                                                {{ $barangay->puroks_count ?? $barangay->number_of_puroks }}
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                {{-- Make sure this matches your controller variable --}}
+                                                {{ number_format($barangay->residents_count ?? $barangay->number_of_residents) }}
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                {{ $barangay->created_at->format('M d, Y') }}
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                {{ $barangay->updated_at->format('M d, Y') }}
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        {{-- This is the corrected empty state --}}
+                                        <tr class="border-b bg-f7 text-normal_font text-center cursor-pointer hover:bg-gray-100">
+                                            {{-- This cell will span all 6 columns of your table --}}
+                                            <td colspan="6">
+                                                <div class="text-center py-10">
+                                                    <img src="{{ asset('images/illustrations/empty.png') }}" alt="No barangays found" class="mx-auto w-64">
+                                                    <p class="mt-5 text-lg font-medium text-gray-700">
+                                                        {{ $message ?? "Oops! You haven't added any barangay yet." }}
+                                                    </p>
+                                                    <p class="mt-2 text-sm text-gray-500">
+                                                        Click the "Add Barangay" button to get started.
+                                                    </p>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @endforelse
                                 </tbody>
                             </table>
                         </div>
@@ -177,4 +107,5 @@
             </div>
         </div>
     </div>
+    @include('components.modals.add-barangay-modal')
 </x-app-layout>
