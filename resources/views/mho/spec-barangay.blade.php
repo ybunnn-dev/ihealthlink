@@ -1,10 +1,10 @@
 <x-app-layout>
     <div class="py-12 px-5">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-[90rem] mx-auto sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 gap-4">
                 <a href="{{ route('mho.barangays') }}">
                     <div class="flex items-center space-x-2"> <svg class="w-5 h-5" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M5 1H4L0 5L4 9H5V6H11C12.6569 6 14 7.34315 14 9C14 10.6569 12.6569 12 11 12H4V14H11C13.7614 14 16 11.7614 16 9C16 6.23858 13.7614 4 11 4H5V1Z" fill="#323643"></path> </g></svg>
-                        <span>Return</span>
+                        <span class="font-semibold">Return</span>
                     </div>
                 </a>
 
@@ -19,7 +19,8 @@
                                 viewBox="0 0 24 24" fill="#A0A0A0" xmlns="http://www.w3.org/2000/svg">
                                 <circle cx="12" cy="12" r="10"></circle>
                             </svg>
-                            <p class="text-main_font font-bold mt-2">BRGY. TAGAS</p>
+                             <h1 class="text-main_font font-bold mt-3 text-xl">Brgy. Tagas</h1>
+                            <p class="text-normal_font font-bold">Brgy #144</p> 
                         </div>
 
                         {{-- Buttons section: Now a separate div, taking full width and no background --}}
@@ -38,35 +39,49 @@
                             </svg>
                             <h2 class="text-xl font-semibold text-main_font">Barangay Info</h2>
                         </div>
-                        
-                        <div class="grid grid-cols-[auto_1fr] gap-x-12 gap-y-3 text-normal_font text-sm">
-                            <p class="font-medium">NAME:</p>
-                            <p>TAGAS</p>
-                            <p class="font-medium">ZIP CODE:</p>
-                            <p>4501</p>
-                            <p class="font-medium">NO. OF PUROKS:</p>
-                            <p>10</p>
-                            <p class="font-medium">NO. OF RESIDENTS:</p>
-                            <p>N/A</p>
-                            <p class="font-medium">NO. OF HOUSEHOLDS:</p>
-                            <p>N/A</p>
-                            <p class="font-medium">NO. OF FAMILIES:</p>
-                            <p>N/A</p>
-                            <p class="font-medium">ASSIGNED MIDWIDE:</p>
-                            <p>RON PETER MORTEGA</p>
-                            <p class="font-medium">DATE ADDED:</p>
-                            <p>FEB 04, 2025</p>
+                        <div class="grid grid-cols-1 gap-y-4 text-xs">
+                            <div class="grid grid-rows-2 md:grid-cols-3 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">NAME:</p>
+                                <p class="text-normal_font">Tagas</p>
+                            </div>
 
+                            <div class="grid grid-rows-2 md:grid-cols-3 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">NO. OF PUROKS:</p>
+                                <p class="text-normal_font">Mortega</p>
+                            </div>
 
-                            <div class="col-span-2 my-4"></div>
+                             <div class="grid grid-rows-2 md:grid-cols-3 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">NO. OF RESIDENTS:</p>
+                                <p class="text-normal_font">Mortega</p>
+                            </div>
+
+                            <div class="grid grid-rows-2 md:grid-cols-3 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">NO. OF HOUSEHOLDS:</p>
+                                <p class="text-normal_font">Mortega</p>
+                            </div>
+
+                            <div class="grid grid-rows-2 md:grid-cols-3 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">NO. OF FAMILIES:</p>
+                                <p class="text-normal_font">Mortega</p>
+                            </div>
+                            <div class="grid grid-rows-2 md:grid-cols-3 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">ASSIGNED MIDWIDE:</p>
+                                <p class="text-normal_font">December 10, 2002 (22 Years old)</p>
+                            </div>
+
+                            <div class="grid grid-rows-2 md:grid-cols-3 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">DATE ADDED:</p>
+                                <p class="text-normal_font">DATE ADDED:</p>
+                            </div>
+
                         </div>
                     </div>
                 </div>
 
                 {{-- purok table label --}}
-                <h2 class="text-2xl font-semibold text-main_font mt-8 mb-4">Puroks</h2>
+                <h2 class="text-2xl font-semibold text-main_font mt-4 mb-2">Puroks</h2>
 
-                <div class="bg-white p-6 rounded-xl shadow">
+                <div class="bg-white p-6 rounded-xl">
                     <div class="flex flex-col slg2:flex-row slg2:items-end gap-4 mb-4">
                         <div class="w-full slg2:w-64 slg2:flex-grow slg2:max-w-md">
                             <label for="default-search" class="mb-2 text-sm font-medium text-main_font">Search Name?</label>
@@ -88,7 +103,7 @@
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
                                 </svg>
                             </button>
-                            <div id="dateDropdownMenu" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
+                            <div id="dateDropdownMenu" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg w-44">
                                 <ul class="py-2 text-sm text-gray-700" aria-labelledby="dateDropdown">
                                     <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">All Date</a></li>
                                     <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Last Week</a></li>
@@ -104,7 +119,7 @@
 
                     </div>
 
-                    <div class="relative overflow-x-auto shadow-md rounded-lg">
+                    <div class="relative overflow-x-auto rounded-lg">
                         <table class="w-full text-sm text-left text-main_font">
                             <thead class="text-xs text-main_font uppercase bg-col_tab_h text-center">
                                 <tr>

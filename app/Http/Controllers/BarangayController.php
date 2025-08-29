@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Barangay;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class BarangayController extends Controller
 {
@@ -44,12 +46,9 @@ class BarangayController extends Controller
         // Paginate the results as usual
         $barangays = $query->paginate(15)->appends($request->query());
 
-        // --- Add temporary data for display ---
-        // This loop runs only if barangays were found and adds a random
-        // number for purok and resident counts to each one.
         foreach ($barangays as $barangay) {
-            $barangay->puroks_count = rand(3, 7);       // Assign a random number of puroks (e.g., between 3 and 7)
-            $barangay->residents_count = rand(1200, 4500); // Assign a random number of residents
+            $barangay->puroks_count = rand(3, 7);    
+            $barangay->residents_count = rand(1200, 4500); 
         }
 
         return view('mho.barangay-list', compact('barangays'));
@@ -63,13 +62,31 @@ class BarangayController extends Controller
     
     public function store(Request $request)
     {
-        $request->validate(['name' => 'required|string|max:255']);
-        return Barangay::create($request->only('name'));
+        $validated = $request->validate([
+            'name' => [
+                'required', 'string', 'max:255',
+                Rule::unique('barangays', 'name'),
+            ],
+        ]);
+
+        // Create the new barangay, adding the logged-in user's ID
+        $barangay = Barangay::create([
+            'name' => $validated['name'],
+            'user_id' => Auth::id(), // <-- This gets the logged-in user's ID
+        ]);
+
+        return response()->json([
+            'message' => 'Barangay added successfully!',
+            'barangay' => $barangay
+        ], 201);
     }
 
+   // in app/Http/Controllers/BarangayController.php
+
+    // No changes needed here! This method already works with the new route.
     public function show(Barangay $barangay)
     {
-        return $barangay->loadCount(['puroks', 'residents']);
+        return view('mho.spec-barangay', compact('barangay'));
     }
 
     public function update(Request $request, Barangay $barangay)

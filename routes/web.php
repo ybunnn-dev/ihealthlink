@@ -43,6 +43,14 @@ Route::middleware([
     //Route for barangays
     Route::get('/mho/barangays', [BarangayController::class, 'listView'])->name('mho.barangays');
 
+    //Route for adding barangays
+    Route::post('/add-brgy', [BarangayController::class, 'store'])->name('barangays.store');
+
+    //Corrected route to go to a specific barangay
+    Route::get('/mho/barangays/{barangay}-{name}', [BarangayController::class, 'show'])
+        ->name('mho.barangays.show')
+        ->where(['barangay' => '[0-9]+', 'name' => '[a-zA-Z0-9-]+']);
+
     //Route for specific info for barangays
     Route::get('/mho/barangays/spec', function(){
         return view('mho.spec-barangay');

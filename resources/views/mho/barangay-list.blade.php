@@ -1,4 +1,6 @@
+@section('page-id', 'dashboard')
 <x-app-layout>
+    @section('title', 'Barangays')
     <div class="py-12 px-5">
         <div class="max-w-[90rem] mx-auto sm:px-6 lg:px-8">
             <h1 class="text-3xl font-semibold text-sub_blue mb-3">Barangays</h1>
@@ -41,7 +43,7 @@
                                     </div>
 
                                     <div class="w-full sm:w-40 pt-5 sm:pt-0">
-                                        <button type="button" class="w-full h-[2.375rem] text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3" data-modal-target="add-barangay-modal" data-modal-toggle="add-barangay-modal">Add Barangay</button>
+                                        <button type="button" id="page-add-barangay-button" class="w-full h-[2.375rem] text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3">Add Barangay</button>
                                     </div>
                                 </div>
                             </div>
@@ -60,7 +62,9 @@
                                 </thead>
                                 <tbody>
                                     @forelse ($barangays as $barangay)
-                                        <tr class="border-b bg-f7 text-normal_font text-center cursor-pointer hover:bg-gray-100" onclick="window.location='{{ route('mho.spec-barangay', $barangay->id) }}'">
+                                            <tr class="bg-white border-b bg-f7 text-normal_font text-center cursor-pointer hover:bg-gray-100" 
+                                                    onclick="window.location='{{ route('mho.barangays.show', ['barangay' => $barangay->id, 'name' => Str::slug($barangay->name)]) }}'"
+                                                >                                            
                                             <th scope="row" class="px-6 py-4 font-medium text-normal_font whitespace-nowrap">
                                                 {{ $barangay->id }}
                                             </th>

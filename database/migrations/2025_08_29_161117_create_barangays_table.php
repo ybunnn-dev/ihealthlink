@@ -15,6 +15,7 @@ return new class extends Migration
         Schema::create('barangays', function (Blueprint $table) {
             $table->id(); // id
             $table->string('name'); // barangay name
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); 
             $table->timestamps(); // created_at, updated_at
         });
 
