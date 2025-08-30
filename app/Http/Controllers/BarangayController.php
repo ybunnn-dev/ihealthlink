@@ -54,6 +54,50 @@ class BarangayController extends Controller
         return view('mho.barangay-list', compact('barangays'));
     }
     // --- Other API/CRUD methods remain the same ---
+    public function search(Request $request)
+    {
+        // Get and Validate Query Parameters
+        $searchQuery = $request->input('search');
+        $sortBy = $request->input('sort_by', 'name');
+        $dateFilter = $request->input('date_filter');
+
+        $query = Barangay::query();
+
+        // Apply search and date filter logic
+        $query->when($searchQuery, fn($q) => $q->where('name', 'like', "%{$searchQuery}%"));
+        $query->when($dateFilter, function ($q, $dateFilter) {
+            switch ($dateFilter) {
+                case 'week': return $q->where('created_at', '>=', now()->subWeek());
+                case 'month': return $q->where('created_at', '>=', now()->subMonth());
+                case 'year': return $q->where('created_at', '>=', now()->subYear());
+            }
+        });
+
+        // Database-level sorting
+        if (in_array($sortBy, ['name', 'created_at'])) {
+            $query->orderBy($sortBy, 'asc');
+        }
+
+        $barangays = $query->paginate(15)->withQueryString();
+
+        // Add Temporary Data to the paginated collection
+        $barangays->getCollection()->transform(function ($barangay) {
+            $barangay->puroks_count = rand(3, 7);
+            $barangay->residents_count = rand(1200, 4500);
+            return $barangay;
+        });
+
+        // Collection-level sorting for temporary data
+        if (in_array($sortBy, ['puroks_count', 'residents_count'])) {
+            $sortedItems = $barangays->getCollection()->sortBy($sortBy);
+            $barangays->setCollection($sortedItems);
+        }
+
+        // --- FINAL, CORRECTED RESPONSE ---
+        // Return the paginator instance directly. Laravel will automatically
+        // convert it to a structured JSON response with your data.
+        return response()->json($barangays);
+    }
 
     public function index()
     {

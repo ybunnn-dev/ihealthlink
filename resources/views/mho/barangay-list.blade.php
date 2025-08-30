@@ -22,62 +22,49 @@
                                 </div>
 
                                 <div class="flex flex-col sm:flex-row flex-wrap gap-4 items-end slg2:flex-shrink-0">
-                                    {{-- This is the updated "Sort By" dropdown --}}
+                                    {{-- Sort By Dropdown --}}
                                     <div class="w-full sm:w-48">
                                         <label for="sortByDropdownBrgy" class="mb-2 text-sm font-medium text-main_font">Sort By</label>
                                         <button id="sortByDropdownBrgy" data-dropdown-toggle="sortByDropdownBrgyMenu" class="w-full text-main_font bg-f7 focus:outline-none font-medium border border-navboard rounded-lg text-sm px-4 py-2 text-center inline-flex items-center justify-between h-[2.375rem]" type="button">
-                                        Name Ascending
-                                        <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-                                        </svg>
+                                            Name
+                                            <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                                            </svg>
                                         </button>
                                     </div>
-
                                     <div id="sortByDropdownBrgyMenu" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
                                         <ul class="py-2 text-sm text-normal_font" aria-labelledby="sortByDropdownBrgy">
                                             <li>
-                                                <a href="#" class="block px-4 py-2 hover:bg-gray-100">All</a>
+                                                <a href="#" data-value="all" class="block px-4 py-2 hover:bg-gray-100">All</a>
                                             </li>
                                             <li>
-                                                <a href="#" class="block px-4 py-2 hover:bg-gray-100">Name</a>
+                                                <a href="#" data-value="name" class="block px-4 py-2 hover:bg-gray-100">Name</a>
                                             </li>
-                            
                                             <li>
-                                                <a href="#" class="block px-4 py-2 hover:bg-gray-100">Puroks</a>
+                                                <a href="#" data-value="puroks_count" class="block px-4 py-2 hover:bg-gray-100">Puroks</a>
                                             </li>
-                                        
                                             <li>
-                                                <a href="#" class="block px-4 py-2 hover:bg-gray-100">Residents</a>
+                                                <a href="#" data-value="residents_count" class="block px-4 py-2 hover:bg-gray-100">Residents</a>
                                             </li>
                                         </ul>
                                     </div>
 
-                                    {{-- This is the updated "Date Added" dropdown --}}
+                                    {{-- Date Added Dropdown --}}
                                     <div class="w-full sm:w-48">
                                         <label for="dateDropdown" class="mb-2 text-sm font-medium text-main_font">Date Added</label>
                                         <button id="dateDropdown" data-dropdown-toggle="dateDropdownMenu" class="w-full text-main_font bg-f7 focus:outline-none font-medium border border-navboard rounded-lg text-sm px-4 py-2 text-center inline-flex items-center justify-between h-[2.375rem]" type="button">
-                                        All Date
-                                        <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-                                        </svg>
+                                            All Date
+                                            <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                                            </svg>
                                         </button>
                                     </div>
-
-                                     <div id="dateDropdownMenu" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
+                                    <div id="dateDropdownMenu" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
                                         <ul class="py-2 text-sm text-gray-700" aria-labelledby="dateDropdown">
-                                            <li>
-                                                <a href="#" class="block px-4 py-2 hover:bg-gray-100">Last Week</a>
-                                            </li>
-                                            <li>
-                                                <a href="#" class="block px-4 py-2 hover:bg-gray-100">Last Month</a>
-                                            </li>
-                                            <li>
-                                                <a href="#" class="block px-4 py-2 hover:bg-gray-100">Last Year</a>
-                                            </li>
-
-                                            <li>
-                                                <a href="#" class="block px-4 py-2 hover:bg-gray-100">Custom</a>
-                                            </li>
+                                            <li><a href="#" data-value="all" class="block px-4 py-2 hover:bg-gray-100">All Date</a></li>
+                                            <li><a href="#" data-value="week" class="block px-4 py-2 hover:bg-gray-100">Last Week</a></li>
+                                            <li><a href="#" data-value="month" class="block px-4 py-2 hover:bg-gray-100">Last Month</a></li>
+                                            <li><a href="#" data-a-value="year" class="block px-4 py-2 hover:bg-gray-100">Last Year</a></li>
                                         </ul>
                                     </div>
 
@@ -99,7 +86,7 @@
                                         <th scope="col" class="px-6 py-3 text-start">DATE UPDATED</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody id="barangay-table-body">
                                     @forelse ($barangays as $barangay)
                                         <tr class="bg-white border-b bg-f7 text-normal_font text-start cursor-pointer hover:bg-gray-100" 
                                             onclick="window.location='{{ route('mho.barangays.show', ['barangay' => $barangay->id, 'name' => Str::slug($barangay->name)]) }}'"
@@ -146,7 +133,7 @@
                         </div>
 
                         {{-- PAGINATION LINKS ADDED HERE --}}
-                        <div class="mt-4">
+                        <div class="mt-4" id="pagination-links">
                             {{ $barangays->links() }}
                         </div>
 

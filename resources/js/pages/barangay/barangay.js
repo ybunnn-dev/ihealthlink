@@ -116,3 +116,97 @@
             addBarangayModal.show();
         });
     }
+
+    // --- DOM Elements ---
+    //Search Changes
+    const searchInput = document.getElementById('default-search');
+    const sortByMenu = document.getElementById('sortByDropdownBrgyMenu');
+    const dateFilterMenu = document.getElementById('dateDropdownMenu');
+    const tableBody = document.getElementById('barangay-table-body');
+    const sortByButton = document.querySelector('#sortByDropdownBrgy');
+
+    // --- State Management (Simplified) ---
+    let searchQuery = '';
+    let sortBy = 'name'; // Default sort is 'name'
+    let dateFilter = 'all';
+    // REMOVED: sortOrder is no longer needed
+
+    const debounce = (func, delay = 300) => {
+        let timeout;
+        return (...args) => {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), delay);
+        };
+    };
+
+    const fetchBarangays = async (page = 1) => {
+        // SIMPLIFIED: The params no longer include sort_order
+        const params = new URLSearchParams({
+            search: searchQuery,
+            sort_by: sortBy,
+            date_filter: dateFilter,
+            page: page
+        });
+        
+        const url = `/mho/barangays/search?${params.toString()}`;
+        history.pushState(null, '', `/mho/barangays?${params.toString()}`);
+
+        try {
+            tableBody.innerHTML = `<tr><td colspan="6" class="text-center py-10">Loading...</td></tr>`;
+            const response = await fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+            if (!response.ok) throw new Error('Network response was not ok');
+            const data = await response.json();
+            tableBody.innerHTML = data.table_html;
+            
+            const paginationContainer = document.getElementById('pagination-links');
+            if (paginationContainer) {
+                paginationContainer.innerHTML = data.pagination_html;
+            }
+        } catch (error) {
+            console.error('Fetch error:', error);
+            tableBody.innerHTML = `<tr><td colspan="6" class="text-center py-10 text-red-500">Failed to load data.</td></tr>`;
+        }
+    };
+
+    // --- Event Listeners ---
+
+    // 1. Search Input
+    searchInput.addEventListener('input', debounce((e) => {
+        searchQuery = e.target.value;
+        fetchBarangays(1);
+    }));
+
+    // 2. Sort By Dropdown (Simplified)
+    sortByMenu.addEventListener('click', (e) => {
+        e.preventDefault();
+        const link = e.target.closest('a');
+        if (!link) return;
+        
+        // It now only gets the column name to sort by
+        sortBy = link.getAttribute('data-value');
+        
+        // Updates the button text to the selected option
+        sortByButton.firstChild.nodeValue = `${link.textContent.trim()} `;
+        fetchBarangays(1);
+    });
+
+    // 3. Date Filter Dropdown
+    dateFilterMenu.addEventListener('click', (e) => {
+        e.preventDefault();
+        const link = e.target.closest('a');
+        if (!link) return;
+        dateFilter = link.getAttribute('data-value');
+        fetchBarangays(1);
+    });
+
+    // 4. Pagination Links (Robust version)
+    document.body.addEventListener('click', (e) => {
+        const link = e.target.closest('#pagination-links a');
+        if (!link) return;
+        e.preventDefault();
+        if (link.parentElement.classList.contains('disabled')) return;
+        const url = new URL(link.href);
+        const page = url.searchParams.get('page');
+        if (page) fetchBarangays(page);
+    });
+

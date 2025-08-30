@@ -5,7 +5,8 @@ import sideMenu from './components/side-menu-bhc.js';
 import 'flowbite';
 import 'flowbite-datepicker';
 
-import('./pages/barangay.js');
+import('./pages/barangay/barangay.js');
+import('./pages/barangay/components/search-sort.js');
 
 document.addEventListener('DOMContentLoaded', () => {
   const bodyClass = document.body.classList;
