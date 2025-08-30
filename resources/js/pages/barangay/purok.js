@@ -18,3 +18,15 @@ const confirmProceedBtn = document.getElementById('confirm-proceed-button');
 const cancelConfirmBtn = confirmPurokModalEl.querySelector('[data-modal-hide="confirm-add-purok-modal"]');
 
 
+openPurokConfirmBtn.addEventListener('click', function () {
+    const purokName = purokNameInput.value.trim();
+    if (purokName === '') {
+        alert('Please enter a purok name.');
+        return;
+    }
+    const purokNamePlaceholder = document.getElementById('purok-name-to-confirm');
+    purokNamePlaceholder.textContent = purokName;
+
+    addPurokModal.hide();
+    confirmPurokModal.show();    
+});
