@@ -50,7 +50,7 @@ Route::middleware([
     Route::get('/mho/barangays/search', [BarangayController::class, 'search'])->name('mho.barangays.search');
 
     //Corrected route to go to a specific barangay
-    Route::get('/mho/barangays/{barangay}-{name}', [BarangayController::class, 'show'])
+    Route::get('/mho/barangays/{barangay}/{name}', [BarangayController::class, 'show'])
         ->name('mho.barangays.show')
         ->where(['barangay' => '[0-9]+', 'name' => '[a-zA-Z0-9-]+']);
 

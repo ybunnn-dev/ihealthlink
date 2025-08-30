@@ -51,7 +51,20 @@
         tableBody.innerHTML = '';
 
         if (barangays.length === 0) {
-            tableBody.innerHTML = `<tr><td colspan="6" class="text-center py-10">No barangays found.</td></tr>`;
+            tableBody.innerHTML = `
+                <tr class="border-b bg-f7 text-normal_font text-center">
+                    <td colspan="6">
+                        <div class="text-center py-10">
+                            <img src="${emptyStateImageUrl}" alt="No barangays found" class="mx-auto w-64">
+                            <p class="mt-5 text-lg font-medium text-gray-700">
+                                No Barangays Found
+                            </p>
+                            <p class="mt-2 text-sm text-gray-500">
+                                Your search or filter returned no results.
+                            </p>
+                        </div>
+                    </td>
+                </tr>`;
             return;
         }
 

@@ -143,4 +143,7 @@
         </div>
     </div>
     @include('components.modals.add-barangay-modal')
+    <script>
+        const emptyStateImageUrl = "{{ asset('images/illustrations/not-found.png') }}";
+    </script>
 </x-app-layout>
