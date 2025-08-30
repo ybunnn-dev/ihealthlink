@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BarangayController;
+use App\Http\Controllers\PurokController;
 
 Route::get('/', function () {
     return view('auth.login');
@@ -53,6 +54,8 @@ Route::middleware([
     Route::get('/mho/barangays/{barangay}/{name}', [BarangayController::class, 'show'])
         ->name('mho.barangays.show')
         ->where(['barangay' => '[0-9]+', 'name' => '[a-zA-Z0-9-]+']);
+
+    Route::post('/add-purok', [PurokController::class, 'addPurok'])->name('puroks.add');
 
     //Route for specific info for barangays
     Route::get('/mho/barangays/spec', function(){

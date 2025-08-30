@@ -82,4 +82,6 @@
             </div>
         </div>
     </div>
+    <div id="purok-page-container" data-barangay-id="{{ $barangay->id }}">
+    </div>
 </x-app-layout>
