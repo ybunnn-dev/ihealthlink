@@ -6,6 +6,7 @@ import 'flowbite';
 import 'flowbite-datepicker';
 
 import('./pages/barangay/barangay.js');
+import('./pages/barangay/purok.js');
 import('./pages/barangay/components/search-sort.js');
 
 document.addEventListener('DOMContentLoaded', () => {

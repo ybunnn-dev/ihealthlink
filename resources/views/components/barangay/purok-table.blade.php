@@ -18,7 +18,7 @@
 
             <div class="w-full xs:w-48">
                 <label for="purokDateDropdown" class="mb-2 text-sm font-medium text-main_font">Sort By Date</label>
-                <button id="purokDateDropdown" data-dropdown-toggle="purokDateDropdownMenu" class="w-full text-main_font bg-[#F7F7F7] focus:outline-none font-medium border border-gray-300 rounded-lg text-sm px-4 py-2 text-center inline-flex items-center justify-between h-[2.375rem]" type="button">
+                <button id="purokDateDropdown" data-dropdown-toggle="purokDateDropdownMenu" class="w-full text-main_font bg-[white] focus:outline-none font-medium border border-gray-300 rounded-lg text-sm px-4 py-2 text-center inline-flex items-center justify-between h-[2.375rem]" type="button">
                     All Date
                     <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
@@ -34,7 +34,7 @@
             </div>
 
             <div class="w-full sm:w-40 pt-5 sm:pt-0">
-                <button type="button" class="w-full h-[2.375rem] text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3">Add Purok</button>
+                <button type="button" id="page-add-purok-button" class="w-full h-[2.375rem] text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3">Add Purok</button>
             </div>
         </div>
 
@@ -85,3 +85,4 @@
         </div>
     </div>
 </div>
+@include('components.modals.add-purok-modal')
