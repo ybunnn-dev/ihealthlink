@@ -2,7 +2,7 @@
 
 
 namespace App\Http\Controllers;
-
+use App\Http\Controllers\PurokController;
 use App\Models\Barangay;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -134,7 +134,21 @@ class BarangayController extends Controller
     // No changes needed here! This method already works with the new route.
     public function show(Barangay $barangay)
     {
-        return view('mho.spec-barangay', compact('barangay'));
+        $barangay->load('puroks');
+
+        // Sample data
+        $midwives = ['Elena Reyes', 'Maria Santos', 'Luzviminda Cruz', 'Teresita Gomez'];
+        $barangay->residents_count  = rand(1200, 4500);
+        $barangay->households_count = rand(300, 800);
+        $barangay->families_count   = rand(350, 950);
+        $barangay->assigned_midwife = $midwives[array_rand($midwives)];
+
+        //  Call PurokController to get purok data
+        $purokController = new PurokController();
+        $puroks = $purokController->getByBarangay($barangay);
+
+
+        return view('mho.spec-barangay', compact('barangay', 'puroks'));
     }
 
     public function update(Request $request, Barangay $barangay)

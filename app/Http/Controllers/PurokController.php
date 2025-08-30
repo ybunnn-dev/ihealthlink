@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Purok;
+use App\Models\Barangay;
 use Illuminate\Http\Request;
 
 class PurokController extends Controller
@@ -12,35 +13,17 @@ class PurokController extends Controller
         return Purok::with('barangay')->get();
     }
 
-    public function store(Request $request)
+    public function getByBarangay(Barangay $barangay)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'brgy_id' => 'required|exists:barangays,id'
-        ]);
+        $puroks = Purok::where('brgy_id', $barangay->id)->get();
 
-        return Purok::create($request->only('name', 'brgy_id'));
+        $puroks->transform(function ($purok) {
+            $purok->households_count = rand(10, 50);
+            $purok->residents_count  = rand(50, 300);
+            return $purok;
+        });
+
+        return $puroks;
     }
-
-    public function show(Purok $purok)
-    {
-        return $purok->load('barangay');
-    }
-
-    public function update(Request $request, Purok $purok)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'brgy_id' => 'required|exists:barangays,id'
-        ]);
-
-        $purok->update($request->only('name', 'brgy_id'));
-        return $purok;
-    }
-
-    public function destroy(Purok $purok)
-    {
-        $purok->delete();
-        return response()->noContent();
-    }
+    
 }
