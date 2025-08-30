@@ -8,6 +8,7 @@ import 'flowbite-datepicker';
 import('./pages/barangay/barangay.js');
 import('./pages/barangay/purok.js');
 import('./pages/barangay/components/search-sort.js');
+import('./pages/barangay/components/purok-sort.js');
 
 document.addEventListener('DOMContentLoaded', () => {
   const bodyClass = document.body.classList;
