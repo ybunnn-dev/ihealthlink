@@ -81,6 +81,10 @@ class BarangayController extends Controller
         ], 201);
     }
 
+    public function filter(){
+
+    }
+
    // in app/Http/Controllers/BarangayController.php
 
     // No changes needed here! This method already works with the new route.

@@ -1,4 +1,4 @@
-@section('page-id', 'dashboard')
+@section('page-id', 'barangay')
 <x-app-layout>
     @section('title', 'Barangays')
     <div class="py-12 px-5">
@@ -22,24 +22,63 @@
                                 </div>
 
                                 <div class="flex flex-col sm:flex-row flex-wrap gap-4 items-end slg2:flex-shrink-0">
+                                    {{-- This is the updated "Sort By" dropdown --}}
                                     <div class="w-full sm:w-48">
-                                        <label for="categoryDropdown" class="mb-2 text-sm font-medium text-main_font">Filter by</label>
-                                        <button id="categoryDropdown" data-dropdown-toggle="categoryDropdownMenu" class="w-full text-main_font bg-f7 focus:outline-none font-medium border border-navboard rounded-lg text-sm px-4 py-2 text-center inline-flex items-center justify-between h-[2.375rem]" type="button">
-                                        Alphabetical
+                                        <label for="sortByDropdownBrgy" class="mb-2 text-sm font-medium text-main_font">Sort By</label>
+                                        <button id="sortByDropdownBrgy" data-dropdown-toggle="sortByDropdownBrgyMenu" class="w-full text-main_font bg-f7 focus:outline-none font-medium border border-navboard rounded-lg text-sm px-4 py-2 text-center inline-flex items-center justify-between h-[2.375rem]" type="button">
+                                        Name Ascending
                                         <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
                                         </svg>
                                         </button>
                                     </div>
 
+                                    <div id="sortByDropdownBrgyMenu" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
+                                        <ul class="py-2 text-sm text-normal_font" aria-labelledby="sortByDropdownBrgy">
+                                            <li>
+                                                <a href="#" class="block px-4 py-2 hover:bg-gray-100">All</a>
+                                            </li>
+                                            <li>
+                                                <a href="#" class="block px-4 py-2 hover:bg-gray-100">Name</a>
+                                            </li>
+                            
+                                            <li>
+                                                <a href="#" class="block px-4 py-2 hover:bg-gray-100">Puroks</a>
+                                            </li>
+                                        
+                                            <li>
+                                                <a href="#" class="block px-4 py-2 hover:bg-gray-100">Residents</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                    {{-- This is the updated "Date Added" dropdown --}}
                                     <div class="w-full sm:w-48">
-                                        <label for="dateDropdown" class="mb-2 text-sm font-medium text-main_font">Sort By Date</label>
+                                        <label for="dateDropdown" class="mb-2 text-sm font-medium text-main_font">Date Added</label>
                                         <button id="dateDropdown" data-dropdown-toggle="dateDropdownMenu" class="w-full text-main_font bg-f7 focus:outline-none font-medium border border-navboard rounded-lg text-sm px-4 py-2 text-center inline-flex items-center justify-between h-[2.375rem]" type="button">
                                         All Date
                                         <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
                                         </svg>
                                         </button>
+                                    </div>
+
+                                     <div id="dateDropdownMenu" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
+                                        <ul class="py-2 text-sm text-gray-700" aria-labelledby="dateDropdown">
+                                            <li>
+                                                <a href="#" class="block px-4 py-2 hover:bg-gray-100">Last Week</a>
+                                            </li>
+                                            <li>
+                                                <a href="#" class="block px-4 py-2 hover:bg-gray-100">Last Month</a>
+                                            </li>
+                                            <li>
+                                                <a href="#" class="block px-4 py-2 hover:bg-gray-100">Last Year</a>
+                                            </li>
+
+                                            <li>
+                                                <a href="#" class="block px-4 py-2 hover:bg-gray-100">Custom</a>
+                                            </li>
+                                        </ul>
                                     </div>
 
                                     <div class="w-full sm:w-40 pt-5 sm:pt-0">
@@ -50,22 +89,22 @@
                         </div>
                         <div class="relative overflow-x-auto">
                             <table class="w-full text-sm text-left text-main_font bg-col_tab_h">
-                                <thead class="text-xs text-main_font uppercase text-center" >
-                                    <tr>
-                                        <th scope="col" class="px-6 py-3">BARANGAY #</th>
-                                        <th scope="col" class="px-6 py-3">NAME</th>
-                                        <th scope="col" class="px-6 py-3">NO. OF PUROK</th>
-                                        <th scope="col" class="px-6 py-3">NO. OF RESIDENTS</th>
-                                        <th scope="col" class="px-6 py-3">DATE ADDED</th>
-                                        <th scope="col" class="px-6 py-3">DATE UPDATED</th>
+                                <thead class="text-xs text-main_font uppercase text-start" >
+                                    <tr class="text-start">
+                                        <th scope="col" class="px-6 py-3 text-start">BARANGAY #</th>
+                                        <th scope="col" class="px-6 py-3 text-start">NAME</th>
+                                        <th scope="col" class="px-6 py-3 text-start">NO. OF PUROK</th>
+                                        <th scope="col" class="px-6 py-3 text-start">NO. OF RESIDENTS</th>
+                                        <th scope="col" class="px-6 py-3 text-start">DATE ADDED</th>
+                                        <th scope="col" class="px-6 py-3 text-start">DATE UPDATED</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @forelse ($barangays as $barangay)
-                                            <tr class="bg-white border-b bg-f7 text-normal_font text-center cursor-pointer hover:bg-gray-100" 
-                                                    onclick="window.location='{{ route('mho.barangays.show', ['barangay' => $barangay->id, 'name' => Str::slug($barangay->name)]) }}'"
-                                                >                                            
-                                            <th scope="row" class="px-6 py-4 font-medium text-normal_font whitespace-nowrap">
+                                        <tr class="bg-white border-b bg-f7 text-normal_font text-start cursor-pointer hover:bg-gray-100" 
+                                            onclick="window.location='{{ route('mho.barangays.show', ['barangay' => $barangay->id, 'name' => Str::slug($barangay->name)]) }}'"
+                                            >                                            
+                                            <th scope="row" class="px-6 py-4 font-medium text-start text-normal_font whitespace-nowrap">
                                                 {{ $barangay->id }}
                                             </th>
                                             <td class="px-6 py-4">
@@ -87,7 +126,6 @@
                                             </td>
                                         </tr>
                                     @empty
-                                        {{-- This is the corrected empty state --}}
                                         <tr class="border-b bg-f7 text-normal_font text-center cursor-pointer hover:bg-gray-100">
                                             {{-- This cell will span all 6 columns of your table --}}
                                             <td colspan="6">
@@ -106,6 +144,12 @@
                                 </tbody>
                             </table>
                         </div>
+
+                        {{-- PAGINATION LINKS ADDED HERE --}}
+                        <div class="mt-4">
+                            {{ $barangays->links() }}
+                        </div>
+
                     </div>
                 </div>
             </div>
