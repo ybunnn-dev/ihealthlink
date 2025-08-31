@@ -38,7 +38,6 @@ confirmPurokCheckbox.addEventListener('change', function () {
 });
 
 
-
 confirmProceedPurokBtn.addEventListener('click', async function () {
     // Correctly get the purok name from the purok input
     const purokNameToInsert = purokNameInput.value.trim();

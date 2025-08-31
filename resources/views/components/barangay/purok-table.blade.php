@@ -1,5 +1,8 @@
 <div class="col-span-1">
     {{-- purok table label --}}
+    <script>
+         window.initialPurokData = @json($puroks);
+    </script>
     <h2 class="text-2xl font-semibold text-main_font mt-4 mb-4">Puroks in Brgy. {{ $barangay->name }}</h2>
 
     <div class="bg-white p-6 rounded-xl">
@@ -39,7 +42,7 @@
         </div>
 
         <div class="relative overflow-x-auto rounded-lg">
-            <table class="w-full text-sm text-left text-main_font">
+            <table class="w-full text-sm text-left text-main_font" id="purok-table-body">
                 <thead class="text-xs text-main_font uppercase bg-col_tab_h text-center">
                     <tr>
                         <th scope="col" class="px-6 py-3">PUROK ID</th>

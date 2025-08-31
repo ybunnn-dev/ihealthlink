@@ -57,7 +57,7 @@ Route::middleware([
 
     Route::post('/add-purok', [PurokController::class, 'addPurok'])->name('puroks.add');
 
-    Route::get('/mho/barangays/{barangay}/puroks/search', [PurokController::class, 'search'])->name('puroks.search');
+    Route::get('/mho/barangays/{barangay}/search', [PurokController::class, 'search'])->name('puroks.search');
 
     //Route for specific info for barangays
     Route::get('/mho/barangays/spec', function(){

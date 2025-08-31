@@ -73,30 +73,5 @@ class PurokController extends Controller
                 'message' => 'An error occurred while saving the purok.'
             ], 500);
         }
-    }
-
-    public function search(Request $request, Barangay $barangay)
-    {
-        // Start a query for Puroks that belong to the specified Barangay
-        $query = Purok::where('brgy_id', $barangay->id);
-
-        // 1. Handle Search by Name
-        $query->when($request->search, function ($q, $search) {
-            return $q->where('name', 'like', "%{$search}%");
-        });
-
-        // 2. Handle Date Filtering
-        $query->when($request->date_filter && $request->date_filter !== 'all', function ($q, $dateFilter) {
-            if ($dateFilter === 'last_week') {
-                return $q->where('created_at', '>=', now()->subWeek());
-            }
-            if ($dateFilter === 'last_month') {
-                return $q->where('created_at', '>=', now()->subMonth());
-            }
-        });
-
-        // Always sort by the newest records first and paginate
-        return $query->latest()->paginate(10);
-    }
-        
+    }      
 }

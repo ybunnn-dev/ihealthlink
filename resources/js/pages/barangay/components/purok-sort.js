@@ -1,117 +1,144 @@
-    // --- 1. Element Selectors & State ---
-    const searchInput = document.getElementById('purok-search');
-    const dateFilterMenu = document.getElementById('purokDateDropdownMenu');
-    const tableBody = document.getElementById('purok-table-body');
-    const paginationContainer = document.getElementById('purok-pagination-links');
-    const dateFilterButton = document.getElementById('purokDateDropdown');
 
-    // Get the current barangay ID (make sure your container has this)
-    const container = document.getElementById('purok-page-container');
-    const barangayId = container.dataset.barangayId;
+// The complete, unfiltered list of puroks from the server
+const allPuroks = window.initialPurokData || [];
 
-    let searchQuery = '';
-    let dateFilter = 'all'; // Default date filter
+// DOM element references
+const searchInput = document.getElementById('purok-search');
+const dateFilterMenu = document.getElementById('purokDateDropdownMenu');
+const dateFilterButton = document.getElementById('purokDateDropdown');
+const tableBody = document.getElementById('purok-table-body');
+// NOTE: Add your modal logic here if needed for 'page-add-purok-button'
 
-    // --- 2. Core Functions ---
-    const debounce = (func, delay = 300) => {
-        let timeout;
-        return (...args) => {
-            clearTimeout(timeout);
-            timeout = setTimeout(() => func.apply(this, args), delay);
-        };
-    };
+// Application state
+let searchQuery = '';
+let dateFilter = 'all';
 
-    const fetchPuroks = async (page = 1) => {
-        const params = new URLSearchParams({
-            search: searchQuery,
-            date_filter: dateFilter,
-            page: page
-        });
-        
-        const url = `/mho/barangays/${barangayId}/puroks/search?${params.toString()}`;
 
-        try {
-            tableBody.innerHTML = `<tr><td colspan="6" class="text-center py-10">Loading...</td></tr>`;
-            const response = await fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
-            if (!response.ok) throw new Error('Network response was not ok');
-            
-            const apiResponse = await response.json();
-            
-            renderTable(apiResponse.data);
-            renderPagination(apiResponse);
+// --- 2. Core Logic ---
 
-        } catch (error) {
-            console.error('Fetch error:', error);
-            tableBody.innerHTML = `<tr><td colspan="6" class="text-center py-10 text-red-500">Failed to load data.</td></tr>`;
-        }
-    };
+/**
+ * The main rendering function. It filters the data and updates the table.
+ */
+const render = () => {
+    let processedData = allPuroks;
+    console.log(processedData);
+    // Apply search filter (case-insensitive)
+    if (searchQuery) {
+        const lowerCaseQuery = searchQuery.toLowerCase();
+        processedData = processedData.filter(purok =>
+            purok.name.toLowerCase().includes(lowerCaseQuery)
+        );
+    }
 
-    const renderTable = (puroks) => {
-        // This function remains the same as the previous example
-        tableBody.innerHTML = '';
-        if (puroks.length === 0) {
-            tableBody.innerHTML = `<tr><td colspan="6" class="text-center py-10">No puroks found.</td></tr>`;
-            return;
-        }
-        let tableHtml = '';
-        puroks.forEach(purok => {
-             const createdAt = new Date(purok.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-             tableHtml += `
-                <tr class="bg-white border-b text-normal_font hover:bg-gray-50">
-                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">${purok.id}</th>
-                    <td class="px-6 py-4">${purok.name}</td>
-                    <td class="px-6 py-4">${purok.households_count || 'N/A'}</td>
-                    <td class="px-6 py-4">${purok.residents_count || 'N/A'}</td>
-                    <td class="px-6 py-4">${createdAt}</td>
-                    <td class="px-6 py-4 align-middle">
-                        <div class="flex items-center space-x-4">
-                            </div>
-                    </td>
-                </tr>`;
-        });
-        tableBody.innerHTML = tableHtml;
-    };
+    // Apply date filter
+    if (dateFilter !== 'all') {
+        const now = new Date();
+        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
-    const renderPagination = (apiResponse) => {
-        // This function also remains the same
-        const links = apiResponse.links;
-        paginationContainer.innerHTML = '';
-        if (!links || links.length <= 3) return;
-        let paginationHtml = '<nav class="flex items-center justify-between"><div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-center"><div class="flex gap-1">';
-        links.forEach(link => {
-            if (link.url) {
-                let label = link.label.replace('&laquo;', 'Prev').replace('&raquo;', 'Next');
-                let activeClass = link.active ? 'bg-mainblue text-white' : 'bg-white text-gray-500 hover:bg-gray-50';
-                paginationHtml += `<a href="${link.url}" class="${activeClass} relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md">${label}</a>`;
+        processedData = processedData.filter(purok => {
+            const purokDate = new Date(purok.created_at);
+            const diffTime = today - purokDate;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+            if (dateFilter === 'last_week') {
+                return diffDays > 0 && diffDays <= 7;
             }
+            if (dateFilter === 'last_month') {
+                return diffDays > 0 && diffDays <= 30;
+            }
+            return true;
         });
-        paginationHtml += '</div></div></nav>';
-        paginationContainer.innerHTML = paginationHtml;
-    };
+    }
+
     
-    // --- 3. Event Listeners ---
-    searchInput.addEventListener('input', debounce(e => {
-        searchQuery = e.target.value;
-        fetchPuroks(1);
-    }, 300));
+    // Update the DOM with all filtered results
+    renderTable(processedData);
+};
 
-    dateFilterMenu.addEventListener('click', e => {
-        e.preventDefault();
-        const link = e.target.closest('a');
-        if (!link) return;
-        dateFilter = link.getAttribute('data-value');
-        dateFilterButton.firstChild.nodeValue = `${link.textContent.trim()} `;
-        fetchPuroks(1);
+
+// --- 3. Rendering Function ---
+
+/**
+ * Renders the HTML for the table body.
+ * @param {Array} puroks - The array of puroks to display.
+ */
+const renderTable = (puroks) => {
+    tableBody.innerHTML = ''; // Clear previous results
+
+    if (puroks.length === 0) {
+        const emptyRow = `
+            <tr class="border-b">
+                <td colspan="6" class="text-center py-10">
+                    <p class="font-medium text-gray-700">No puroks found matching your criteria.</p>
+                    <p class="text-sm text-gray-500">Try adjusting your search or filters.</p>
+                </td>
+            </tr>`;
+        tableBody.innerHTML = emptyRow;
+        return;
+    }
+
+    let tableHtml = '';
+    puroks.forEach(purok => {
+        // Safely format the date
+        const createdAt = new Date(purok.created_at).toLocaleDateString('en-US', {
+            month: 'short', day: 'numeric', year: 'numeric'
+        });
+
+        tableHtml += `
+            <tr class="bg-white border-b text-normal_font hover:bg-gray-50">
+                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">${purok.id}</th>
+                <td class="px-6 py-4">${purok.name}</td>
+                <td class="px-6 py-4">${purok.households_count}</td>
+                <td class="px-6 py-4">${purok.residents_count}</td>
+                <td class="px-6 py-4">${createdAt}</td>
+                <td class="px-6 py-4">
+                    <div class="flex justify-center items-center space-x-4">
+                        <a href="#" title="View Purok" class="text-maingreen hover:text-green-900">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z" /><path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.022 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" /></svg>
+                        </a>
+                        <a href="#" title="Edit Purok" class="text-mainblue hover:text-blue-900">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor"><path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" /><path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" /></svg>
+                        </a>
+                        <button type="button" title="Delete Purok" class="text-red1 hover:text-red-900">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" /></svg>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        `;
     });
+    tableBody.innerHTML = tableHtml;
+};
 
-    paginationContainer.addEventListener('click', e => {
-        e.preventDefault();
-        const link = e.target.closest('a');
-        if (!link || !link.href) return;
-        const url = new URL(link.href);
-        const page = url.searchParams.get('page');
-        if (page) fetchPuroks(page);
-    });
 
-    // --- Initial Load ---
-    fetchPuroks();
+// --- 4. Utility Function ---
+
+/**
+ * Delays function execution to prevent rapid firing (e.g., on keyup).
+ */
+const debounce = (func, delay = 300) => {
+    let timeout;
+    return (...args) => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), delay);
+    };
+};
+
+
+// --- 5. Event Handlers ---
+
+searchInput.addEventListener('input', debounce(e => {
+    searchQuery = e.target.value;
+    render();
+}));
+
+dateFilterMenu.addEventListener('click', e => {
+    e.preventDefault();
+    const link = e.target.closest('a');
+    if (!link) return;
+
+    dateFilter = link.dataset.value;
+    dateFilterButton.firstChild.nodeValue = `${link.textContent.trim()} `;
+    render();
+});
+

@@ -5,10 +5,6 @@ import sideMenu from './components/side-menu-bhc.js';
 import 'flowbite';
 import 'flowbite-datepicker';
 
-import('./pages/barangay/barangay.js');
-import('./pages/barangay/purok.js');
-import('./pages/barangay/components/search-sort.js');
-import('./pages/barangay/components/purok-sort.js');
 
 document.addEventListener('DOMContentLoaded', () => {
   const bodyClass = document.body.classList;
@@ -24,8 +20,20 @@ document.addEventListener('DOMContentLoaded', () => {
     import('./resident.js');
     
   } else if(bodyClass.contains('dashboard')){
+
     import('./charts/dash-health-programs.js');
-  }else {
+
+  } else if(bodyClass.contains('barangay')){
+    import('./pages/barangay/barangay.js');
+    import('./pages/barangay/components/search-sort.js');
+
+  } else if(bodyClass.contains('spec-brgy')){
+
+    import('./pages/barangay/purok.js');
+    import('./pages/barangay/components/purok-sort.js');
+    
+  }
+  else {
     console.log('⚠️ Not on reports page - charts not loaded');
   }
 
