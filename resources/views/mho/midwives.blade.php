@@ -1,6 +1,6 @@
 {{-- Your original view file, e.g., midwives.blade.php --}}
 
-@section('page-id', 'midwifes')
+@section('page-id', 'midwives')
 @section('title', 'Midwives')
 
 <x-app-layout>
@@ -59,7 +59,13 @@
                                     </div>
                                     
                                     <div class="w-full xs:w-40 pt-5 xs:pt-0">
-                                        <button type="button" class="w-full h-[2.375rem] text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3">Add Midwife</button>
+                                        <button
+                                            type="button"
+                                            data-modal-target="add-midwife-modal"
+                                            data-modal-toggle="add-midwife-modal"
+                                            class="w-full h-[2.375rem] text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3">
+                                            Add Midwife
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -72,4 +78,5 @@
             </div>
         </div>
     </div>
+    @include('components.modals.add-midwife')
 </x-app-layout>

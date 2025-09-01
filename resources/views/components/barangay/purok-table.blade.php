@@ -1,8 +1,9 @@
 <div class="col-span-1">
-    {{-- purok table label --}}
+
     <script>
          window.initialPurokData = @json($puroks);
     </script>
+    
     <h2 class="text-2xl font-semibold text-main_font mt-4 mb-4">Puroks in Brgy. {{ $barangay->name }}</h2>
 
     <div class="bg-white p-6 rounded-xl">

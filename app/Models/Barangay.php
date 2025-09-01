@@ -26,6 +26,7 @@ class Barangay extends Model
     // One Barangay has many Midwives
     public function midwives()
     {
-        return $this->hasMany(Midwife::class);
+        return $this->hasMany(Midwife::class, 'brgy_id'); // match your actual column
     }
+
 }

@@ -32,9 +32,11 @@ document.addEventListener('DOMContentLoaded', () => {
     import('./pages/barangay/purok.js');
     import('./pages/barangay/components/purok-sort.js');
     
+  }else if(bodyClass.contains('midwives')){
+    import('./pages/midwife/add-midwife.js');
   }
   else {
-    console.log('⚠️ Not on reports page - charts not loaded');
+    console.log('Not on reports page - charts not loaded');
   }
 
   // Datepicker styling fix

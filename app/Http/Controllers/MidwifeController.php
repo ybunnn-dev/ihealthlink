@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use App\Models\Midwife;
+use App\Models\Barangay;
 
 class MidwifeController extends Controller
 {
@@ -12,18 +13,18 @@ class MidwifeController extends Controller
      */
     public function index()
     {
-        // Fetch all personnels that are midwives (role_id = 2)
-        $midwives = Midwife::with(['users', 'barangays']) // eager load the relations you used
+        $emptyBrgy = Barangay::whereDoesntHave('midwives')->get();
+
+        
+        $midwives = Midwife::with(['users', 'barangays'])
             ->where('role_id', 2)
             ->get();
 
         // Re-organize into table-friendly rows
         $rows = $midwives->map(function ($m) {
-            // tolerant access: use plural relation name if present, otherwise singular
             $user = $m->users ?? $m->user ?? null;
             $barangay = $m->barangays ?? $m->barangay ?? null;
 
-            // build full name from parts (fall back to name if older schema)
             $parts = array_filter([
                 $user->firstName ?? null,
                 $user->middleName ?? null,
@@ -41,11 +42,10 @@ class MidwifeController extends Controller
             ];
         });
 
-        // Log the reorganized rows (array form)
-        Log::info('Midwives reorganized:', $rows->toArray());
-
-        // Pass the rows to the Blade view as $midwives
-        return view('mho.midwives', ['midwives' => $rows]);
+        return view('mho.midwives', [
+            'midwives'   => $rows,
+            'emptyBrgy'  => $emptyBrgy,
+        ]);
     }
 
     /**

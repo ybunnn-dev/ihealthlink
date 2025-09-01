@@ -18,9 +18,6 @@ class BarangayController extends Controller
         // Start a query builder instance
         $query = Barangay::query();
 
-        // We comment this out because we will add temporary data manually
-        // $query->withCount(['puroks', 'residents']);
-
         // --- Search Logic ---
         $query->when($request->filled('search'), function ($q) use ($request) {
             $searchTerm = $request->input('search');
@@ -156,11 +153,5 @@ class BarangayController extends Controller
         $request->validate(['name' => 'required|string|max:255']);
         $barangay->update($request->only('name'));
         return $barangay;
-    }
-
-    public function destroy(Barangay $barangay)
-    {
-        $barangay->delete();
-        return response()->noContent();
     }
 }
