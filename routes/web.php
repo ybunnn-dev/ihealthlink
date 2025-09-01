@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BarangayController;
 use App\Http\Controllers\PurokController;
+use App\Http\Controllers\MidwifeController;
 
 Route::get('/', function () {
     return view('auth.login');
@@ -59,15 +60,10 @@ Route::middleware([
 
     Route::get('/mho/barangays/{barangay}/search', [PurokController::class, 'search'])->name('puroks.search');
 
-    //Route for specific info for barangays
-    Route::get('/mho/barangays/spec', function(){
-        return view('mho.spec-barangay');
-    })->name('mho.spec-barangay');
+    Route::get('/mho/midwives', [MidwifeController::class, 'index'])->name('mho.midwives');
 
     //Route for midwives list
-    Route::get('/mho/midwives', function(){
-        return view('mho.midwives');
-    })->name('mho.midwives');
+   
 
     //Route for specific midwife
     Route::get('/mho/midwives/spec', function(){

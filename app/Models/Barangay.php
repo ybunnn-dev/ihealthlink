@@ -17,8 +17,15 @@ class Barangay extends Model
         return $this->hasMany(Purok::class, 'brgy_id');
     }
 
+    // Barangay belongs to a User (e.g., captain, head)
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    // One Barangay has many Midwives
+    public function midwives()
+    {
+        return $this->hasMany(Midwife::class);
     }
 }
