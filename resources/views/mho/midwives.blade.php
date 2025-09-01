@@ -60,6 +60,7 @@
                                     
                                     <div class="w-full xs:w-40 pt-5 xs:pt-0">
                                         <button
+                                            id="add-midwife-button"
                                             type="button"
                                             data-modal-target="add-midwife-modal"
                                             data-modal-toggle="add-midwife-modal"

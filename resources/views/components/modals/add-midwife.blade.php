@@ -1,6 +1,8 @@
- <script>
-        window.emptyBarangay = @json($emptyBrgy);
+<script>
+    // This script passes the available barangay data from your Laravel backend to the frontend.
+    window.emptyBarangay = @json($emptyBrgy);
 </script>
+
 <div id="add-midwife-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
     <div class="relative p-4 w-full max-w-2xl max-h-full">
         <div class="relative">
@@ -43,6 +45,36 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="grid grid-cols-1 slg:grid-cols-2 col-span-1 gap-4">
+                            <div class="flex flex-col col-span-1">
+                                <label class="text-sm text-main_font font-medium">CONTACT NO.</label>
+                                <input type="text" id="contactNo" class="border border-gray-300 text-gray-700 rounded-lg p-2">
+                            </div>
+                            <div class="flex flex-col col-span-1">
+                                <label class="text-sm text-main_font font-medium">EMAIL ADDRESS</label>
+                                <input type="email" id="midwifeEmail" class="border border-gray-300 text-gray-700 rounded-lg p-2">
+                            </div>
+                        </div>
+                         <div class="flex flex-col col-span-1 relative">
+                            <label for="barangayDropdown" class="text-sm font-medium text-main_font">BARANGAY</label>
+                            <button id="barangayDropdown" data-dropdown-toggle="barangayDropdownMenu"
+                                class="w-full text-main_font bg-white focus:outline-none font-medium border border-gray-300 rounded-lg text-md p-2 text-center inline-flex items-center justify-between"
+                                type="button">
+                                Select Barangay
+                                <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                    viewBox="0 0 10 6">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="m1 1 4 4 4-4" />
+                                </svg>
+                            </button>
+                            <div id="barangayDropdownMenu"
+                                class="z-10 hidden bg-f7 divide-y divide-gray-100 rounded-lg shadow w-full absolute top-full mt-1">
+                                <ul class="py-2 text-sm text-gray-700" aria-labelledby="barangayDropdown">
+                                    </ul>
+                            </div>
+                        </div>
+                        
                         <div class="grid grid-cols-1 slg:grid-cols-2 col-span-1 gap-4">
                             <div class="flex flex-col col-span-1">
                                 <label class="text-sm text-main_font font-medium">BIRTHDATE</label>
@@ -106,36 +138,6 @@
                                 </div>
                             </div>
                         </div>
-                       <div class="grid grid-cols-1 slg:grid-cols-2 col-span-1 gap-4">
-                            <div class="flex flex-col col-span-1">
-                                <label class="text-sm text-main_font font-medium">CONTACT NO.</label>
-                                <input type="text" id="contactNo" class="border border-gray-300 text-gray-700 rounded-lg p-2">
-                            </div>
-
-                            <div class="flex flex-col col-span-1 relative">
-                                <label for="barangayDropdown" class="text-sm font-medium text-main_font">BARANGAY</label>
-                                <button id="barangayDropdown" data-dropdown-toggle="barangayDropdownMenu"
-                                    class="w-full text-main_font bg-white focus:outline-none font-medium border border-gray-300 rounded-lg text-md p-2 text-center inline-flex items-center justify-between"
-                                    type="button">
-                                    Select Barangay
-                                    <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                                        viewBox="0 0 10 6">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="m1 1 4 4 4-4" />
-                                    </svg>
-                                </button>
-
-                                <div id="barangayDropdownMenu"
-                                    class="z-10 hidden bg-f7 divide-y divide-gray-100 rounded-lg shadow w-full absolute top-full mt-1">
-                                    <ul class="py-2 text-sm text-gray-700" aria-labelledby="barangayDropdown">
-                                        <li><button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100">Barangay Parian</button></li>
-                                        <li><button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100">Barangay Lecheria</button></li>
-                                        <li><button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100">Barangay Halang</button></li>
-                                        <li><button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100">Barangay Canlubang</button></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                     <div class="flex justify-end items-end pt-4">
                         <div class="grid grid-cols-1 slg:grid-cols-5 gap-3 w-full max-w-xs">
@@ -156,3 +158,5 @@
         </div>
     </div>
 </div>
+
+@include('components.modals.add-midwife-confirmation')

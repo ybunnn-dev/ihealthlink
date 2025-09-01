@@ -1,38 +1,70 @@
-// --- Element Selection ---
+// --- Global State ---
+let midwifePayload = {}; // NEW: Holds the form data for the confirmation step
+
+// --- Element Selection (Main Form) ---
 const availableBarangay = window.emptyBarangay || [];
 const submitButton = document.getElementById('addMidwifeSubmitBtn');
 const birthdateInput = document.getElementById('midwifeBdate');
 const ageInput = document.getElementById('midwifeAge');
 
+
 const textInputs = [
     document.getElementById('midwifeFirstName'),
     document.getElementById('midwifeLastName'),
-    document.getElementById('contactNo')
+    document.getElementById('midwifeMiddleName'),
+    document.getElementById('contactNo'),
+    document.getElementById('midwifeEmail'),
 ];
 
-const dropdownButtons = [
+const requiredDropdowns = [
     document.getElementById('sexDropdown'),
     document.getElementById('civilStatusDropdown'),
     document.getElementById('religionDropdown'),
     document.getElementById('barangayDropdown')
 ];
 
-const allDropdowns = [...dropdownButtons, document.getElementById('prefixDropdown')];
+const allDropdowns = [...requiredDropdowns, document.getElementById('prefixDropdown')];
 
-// --- Setup Age Input ---
+// --- NEW: Element Selection (Modal Management) ---
+const addMidwifeModalEl = document.getElementById('add-midwife-modal');
+const confirmModalEl = document.getElementById('confirm-add-midwife-modal');
+
+// Manual modal functions - more reliable than Flowbite Modal class
+const showModal = (modalEl) => {
+    if (modalEl) {
+        modalEl.classList.remove('hidden');
+        modalEl.setAttribute('aria-hidden', 'false');
+        modalEl.style.display = 'flex';
+        document.body.classList.add('overflow-hidden');
+    }
+};
+
+const hideModal = (modalEl) => {
+    if (modalEl) {
+        modalEl.classList.add('hidden');
+        modalEl.setAttribute('aria-hidden', 'true');
+        modalEl.style.display = 'none';
+        document.body.classList.remove('overflow-hidden');
+    }
+};
+
+const confirmCheckbox = document.getElementById('confirm-midwife-checkbox');
+const proceedButton = document.getElementById('confirm-add-midwife-button');
+const midwifeNameSpan = document.getElementById('midwife-name-to-confirm');
+
+// --- Setup & Helper Functions ---
+
+// Setup Age Input
 ageInput.disabled = true;
 ageInput.classList.add('bg-gray-100');
 
-// --- Populate Barangay Dropdown ---
+// Populate Barangay Dropdown (This function is unchanged)
 const populateBarangayDropdown = () => {
     const menu = document.getElementById('barangayDropdownMenu');
     if (!menu) return;
-    
     const list = menu.querySelector('ul');
     if (!list) return;
-    
     list.innerHTML = '';
-    
     if (availableBarangay.length > 0) {
         availableBarangay.forEach(barangay => {
             const listItem = document.createElement('li');
@@ -52,54 +84,42 @@ const populateBarangayDropdown = () => {
     }
 };
 
-// --- Validation ---
+// Validation (This function is unchanged)
 const validateForm = () => {
-    const allInputsFilled = textInputs.every(input => input.value.trim() !== '') && 
-                           birthdateInput.value.trim() !== '';
-    
-    const allDropdownsSelected = dropdownButtons.every(button => {
-        return !button.textContent.trim().startsWith('Select');
-    });
-    
+    const allInputsFilled = [...textInputs, birthdateInput, ageInput].every(input => input.value.trim() !== '');
+    const allDropdownsSelected = requiredDropdowns.every(button => !button.textContent.trim().startsWith('Select'));
     submitButton.disabled = !(allInputsFilled && allDropdownsSelected);
 };
 
-// --- Age Calculation ---
+// Age Calculation (This function is unchanged as you requested)
 const calculateAndSetAge = () => {
     const birthDateString = birthdateInput.value;
-    
     if (!birthDateString) {
         ageInput.value = '';
         validateForm();
         return;
     }
-    
     const birthDate = new Date(birthDateString);
     const today = new Date();
-    
     if (isNaN(birthDate.getTime()) || birthDate > today) {
         ageInput.value = '';
         validateForm();
         return;
     }
-    
     let age = today.getFullYear() - birthDate.getFullYear();
     const monthDifference = today.getMonth() - birthDate.getMonth();
-    
     if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
         age--;
     }
-    
     ageInput.value = age;
     validateForm();
 };
 
-// --- Dropdown Setup ---
+// Dropdown Setup (This function is unchanged)
 const setupDropdown = (button) => {
     const menuId = button.getAttribute('data-dropdown-toggle');
     const menu = document.getElementById(menuId);
     if (!menu) return;
-    
     const options = menu.querySelectorAll('ul li button');
     options.forEach(option => {
         option.addEventListener('click', () => {
@@ -112,45 +132,104 @@ const setupDropdown = (button) => {
     });
 };
 
-// --- Event Listeners ---
+
+// --- Event Listeners & Initializations ---
+
 populateBarangayDropdown();
 
-textInputs.forEach(input => {
+[...textInputs, birthdateInput].forEach(input => {
     input.addEventListener('input', validateForm);
 });
 
-// Multiple event listeners for birthdate to support different datepicker types
-birthdateInput.addEventListener('change', calculateAndSetAge);
-birthdateInput.addEventListener('input', calculateAndSetAge);
-birthdateInput.addEventListener('changeDate', calculateAndSetAge); // Bootstrap datepicker
+birthdateInput.addEventListener('changeDate', calculateAndSetAge);
 
 allDropdowns.forEach(setupDropdown);
+validateForm(); // Initial validation check
 
-// --- Form Submission ---
+
+// --- Form Submission Logic ---
+
 const getDropdownValue = (elementId) => {
     const element = document.getElementById(elementId);
     const text = element.textContent.trim();
     return text.startsWith('Select') ? null : text;
 };
 
+// MODIFIED: This button now temporarily closes the main modal and opens the confirmation modal
 submitButton.addEventListener('click', function(event) {
     event.preventDefault();
     
-    const payload = {
+    // 1. Build the payload and store it globally
+    midwifePayload = {
         firstName: document.getElementById('midwifeFirstName').value.trim(),
         lastName: document.getElementById('midwifeLastName').value.trim(),
         middleName: document.getElementById('midwifeMiddleName').value.trim() || null,
-        suffix: getDropdownValue('prefixDropdown'),
+        suffix: getDropdownValue('prefixDropdown') || null,
         birthdate: birthdateInput.value.trim(),
         age: ageInput.value.trim(),
         sex: getDropdownValue('sexDropdown'),
         civilStatus: getDropdownValue('civilStatusDropdown'),
         religion: getDropdownValue('religionDropdown'),
         contactNo: document.getElementById('contactNo').value.trim(),
-        barangayId: document.getElementById('barangayDropdown').dataset.selectedId || null
+        barangayId: document.getElementById('barangayDropdown').dataset.selectedId,
+        email: document.getElementById('midwifeEmail').value.trim(),
     };
-    console.table(payload);
+    
+    // 2. Prepare the confirmation modal
+    const fullName = `${midwifePayload.firstName} ${midwifePayload.lastName}`;
+    midwifeNameSpan.textContent = fullName;
+    
+    // Reset confirmation modal state for next use
+    confirmCheckbox.checked = false;
+    proceedButton.disabled = true;
+    
+    // 3. Hide the main modal and show the confirmation modal
+    hideModal(addMidwifeModalEl);
+    showModal(confirmModalEl);
 });
 
-// Initial validation
-validateForm();
+// NEW: Event listeners for the confirmation modal
+confirmCheckbox.addEventListener('change', function() {
+    // Enable/disable the proceed button based on checkbox state
+    proceedButton.disabled = !this.checked;
+});
+
+proceedButton.addEventListener('click', function() {
+    // This is the final action. It logs the data that was stored earlier.
+    console.log("--- Confirmed Payload ---");
+    console.table(midwifePayload);
+
+    // After logging, you would make your API call here.
+    
+    // Hide the confirmation modal and provide user feedback
+    hideModal(confirmModalEl);
+    
+    alert("Midwife details confirmed! Check the console (F12) for the data payload.");
+});
+
+// NEW: Handle cancel action in confirmation modal
+const cancelConfirmButton = document.getElementById('close-confirm-add-midwife');
+if (cancelConfirmButton) {
+    cancelConfirmButton.addEventListener('click', function() {
+        // When user cancels confirmation, hide confirmation modal and show main modal again
+        hideModal(confirmModalEl);
+        showModal(addMidwifeModalEl);
+    });
+}
+
+// Optional: Function to reset the form (you can use this if needed)
+const resetForm = () => {
+    [...textInputs, birthdateInput, ageInput].forEach(input => {
+        input.value = '';
+    });
+    
+    allDropdowns.forEach(button => {
+        const defaultText = button.id === 'prefixDropdown' ? 'Select Prefix' : 
+                           button.id === 'sexDropdown' ? 'Select Sex' :
+                           button.id === 'barangayDropdown' ? 'Select Barangay' : 'Select';
+        button.textContent = defaultText;
+        delete button.dataset.selectedId;
+    });
+    
+    validateForm();
+};
