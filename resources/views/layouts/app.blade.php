@@ -19,7 +19,7 @@
         <!-- Styles -->
         @livewireStyles
     </head>
-    <body class="font-sans antialiased bg-bg_col @yield('page-id', 'default-page')" data-theme="light">
+    <body class="font-sans antialiased bg-white @yield('page-id', 'default-page')" data-theme="light">
         <x-banner />
 
         <div class="min-h-screen bg-bg-col flex">
@@ -31,10 +31,10 @@
                 @endif
             @endauth
             <!-- Main Content - Fixed to screen height -->
-            <div class="flex-1 flex flex-col h-screen overflow-hidden">
+            <div class="flex-1 flex flex-col h-screen overflow-hidden pb-4">
                 <!-- Scrollable Page Content -->
                  @livewire('navigation-menu')
-                <main class="flex-1 overflow-y-auto">
+                <main class="flex-1 overflow-y-auto rounded-xl bg-bg_col">
                     {{ $slot }}
                 </main>
             </div>

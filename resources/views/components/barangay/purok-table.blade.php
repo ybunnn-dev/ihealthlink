@@ -42,7 +42,7 @@
         </div>
 
         <div class="relative overflow-x-auto rounded-lg">
-            <table class="w-full text-sm text-left text-main_font" id="purok-table-body">
+            <table class="w-full text-sm text-left text-main_font">
                 <thead class="text-xs text-main_font uppercase bg-col_tab_h text-center">
                     <tr>
                         <th scope="col" class="px-6 py-3">PUROK ID</th>
@@ -53,7 +53,7 @@
                         <th scope="col" class="px-6 py-3">ACTIONS</th>
                     </tr>
                 </thead>
-                <tbody class="text-center">
+                <tbody class="text-center" id="purok-table-body">
                     @forelse ($puroks as $purok)
                         <tr class="bg-white border-b text-normal_font hover:bg-gray-50">
                             <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">

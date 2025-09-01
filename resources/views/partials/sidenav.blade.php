@@ -1,4 +1,4 @@
-<div x-data="sideMenu()" class="relative flex flex-col min-h-screen border-navboard boarder-main_font hidden slg2:flex">
+<div x-data="sideMenu()" class="relative flex flex-col min-h-screen hidden slg2:flex">
     {{-- Sidebar --}}
     <div
         :class="{ 'w-60': open, 'w-20': !open }"

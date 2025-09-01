@@ -1,6 +1,9 @@
+@section('page-id', 'midwifes')
+@section('title', 'Midwives')
+
 <x-app-layout>
     <div class="py-12 px-5">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-[90rem] mx-auto sm:px-6 lg:px-8">
             <h1 class="text-3xl font-semibold text-sub_blue mb-3">Midwives</h1>
             <div class="bg-f7 rounded-xl overflow-hidden">
                 <div class="p-6">
@@ -107,7 +110,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr class="bg-white border-b bg-f7 text-normal_font text-center" onclick="window.location='{{ route('midwife.BHWs-profile') }}'">
+                                <tr class="bg-white border-b bg-f7 text-normal_font text-center" onclick="window.location='{{ route('mho.midwife-spec') }}'">
                                     <th scope="row" class="px-6 py-4 font-medium text-normal_font whitespace-nowrap">
                                         121
                                     </th>
