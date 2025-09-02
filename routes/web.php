@@ -62,8 +62,8 @@ Route::middleware([
 
     Route::get('/mho/midwives', [MidwifeController::class, 'index'])->name('mho.midwives');
 
-    //Route for midwives list
-   
+    // add midwife
+    Route::post('/mho/add-midwife', [MidwifeController::class, 'store']);
 
     //Route for specific midwife
     Route::get('/mho/midwives/spec', function(){

@@ -8,6 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class Midwife extends Model
 {
     protected $table = 'personnel'; // use personnel table
+    
+    protected $fillable = [
+        'user_id',
+        'role_id',
+        'brgy_id',
+        'status',
+        'added_by',
+    ];
 
     public function users()
     {

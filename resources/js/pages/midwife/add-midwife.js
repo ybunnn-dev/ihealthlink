@@ -94,6 +94,7 @@ const validateForm = () => {
 // Age Calculation (This function is unchanged as you requested)
 const calculateAndSetAge = () => {
     const birthDateString = birthdateInput.value;
+    console.log('boto mo');
     if (!birthDateString) {
         ageInput.value = '';
         validateForm();
@@ -194,17 +195,40 @@ confirmCheckbox.addEventListener('change', function() {
     proceedButton.disabled = !this.checked;
 });
 
-proceedButton.addEventListener('click', function() {
-    // This is the final action. It logs the data that was stored earlier.
-    console.log("--- Confirmed Payload ---");
-    console.table(midwifePayload);
+// Function to submit midwife data to the API
+async function submitMidwifeData(payload) {
+    try {
+        const response = await fetch('/mho/add-midwife', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: JSON.stringify(payload)
+        });
 
-    // After logging, you would make your API call here.
+        const data = await response.json();
+
+        if (response.ok) {
+            console.log('Success:', data);
+            alert('Midwife added successfully!');
+        } else {
+            console.error('Error:', data);
+            alert('Error adding midwife: ' + (data.message || 'Please check the form and try again.'));
+        }
+    } catch (error) {
+        console.error('Network error:', error);
+        alert('Network error. Please try again.');
+    }
+}
+
+// Modified event listener for the proceed button
+proceedButton.addEventListener('click', function() {
+    // Submit the data to the API
+    submitMidwifeData(midwifePayload);
     
-    // Hide the confirmation modal and provide user feedback
+    // Hide the confirmation modal
     hideModal(confirmModalEl);
-    
-    alert("Midwife details confirmed! Check the console (F12) for the data payload.");
 });
 
 // NEW: Handle cancel action in confirmation modal
