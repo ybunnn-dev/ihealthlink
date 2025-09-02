@@ -138,9 +138,43 @@ class MidwifeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show()
+    public function show(string $name, string $m_id)
     {
-       
+        // 1. Find the midwife record using the unique ID ($m_id) from the URL.
+        // The $name parameter is not needed for the query but must be in the signature.
+        $midwife = Midwife::with(['users', 'barangays'])->findOrFail($m_id);
+
+        // 2. Extract the related user and barangay objects for easier access.
+        $user = $midwife->users;
+        $barangay = $midwife->barangays;
+
+        // 3. Consolidate all the required details into a single array.
+        $data = [
+            // Personnel Details from the Midwife model
+            'midwife_id'    => $midwife->id,
+            'status'        => ucfirst($midwife->status),
+            'date_added'    => $midwife->created_at->format('F d, Y h:i A'),
+
+            // Personal Information from the User model
+            'user_id'       => $user->id,
+            'firstName'     => $user->firstName,
+            'lastName'      => $user->lastName,
+            'middleName'    => $user->middleName,
+            'suffix'        => $user->suffix,
+            'fullName'      => trim("{$user->firstName} {$user->middleName} {$user->lastName} {$user->suffix}"),
+            'email'         => $user->email,
+            'contact_no'    => $user->contact_no,
+            'birthdate'     => Carbon::parse($user->birthdate)->format('F d, Y'),
+            'age'           => Carbon::parse($user->birthdate)->age,
+            
+            // Assignment Details from the Barangay model
+            'barangay_id'   => $barangay->id,
+            'barangay_name' => $barangay->name,
+        ];
+        \Log::info('Midwife details:', $data);
+
+        // 4. Return the view and pass the consolidated data.
+       return view('mho.spec-midwife', ['midwife' => $data]);
     }
 
 

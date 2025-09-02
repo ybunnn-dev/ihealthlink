@@ -70,6 +70,9 @@ Route::middleware([
         return view('mho.spec-midwife');
     })->name('mho.midwife-spec');
 
+    Route::get('/mho/midwife/{name}/{m_id}', [MidwifeController::class, 'show'])
+        ->name('mho.midwife.show');
+
      //route for mho reports
     Route::get('/mho/reports', function(){
         return view('mho.reports');
