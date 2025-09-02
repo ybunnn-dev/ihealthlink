@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\MidwifeCredentialsMail;
+
 
 use App\Models\Midwife;
 use App\Models\Barangay;
@@ -95,7 +98,6 @@ class MidwifeController extends Controller
         // Log the received payload
         Log::info('Midwife creation payload received:', $request->all());
 
-        // Generate a random password
         $password = Str::random(8);
         $birthdate = Carbon::createFromFormat('m/d/Y', $request->birthdate)->format('Y-m-d');
 
@@ -109,9 +111,10 @@ class MidwifeController extends Controller
             'contact_no' => $request->contactNo,
             'email' => $request->email,
             'password' => bcrypt($password),
+            'role_id' => 2,
         ]);
 
-        // Create personnel record
+        // Create personnel (midwife) record
         $personnel = Midwife::create([
             'user_id' => $user->id,
             'role_id' => 2, // midwife role
@@ -119,14 +122,16 @@ class MidwifeController extends Controller
             'status' => 'active',
         ]);
 
+        // Send email with credentials
+        Mail::to($user->email)->send(new MidwifeCredentialsMail($user->email, $password));
 
         return response()->json([
             'success' => true,
-            'message' => 'Midwife created successfully (password not emailed yet)',
+            'message' => 'Midwife created successfully and credentials emailed',
             'data' => [
                 'user' => $user,
                 'personnel' => $personnel,
-                'password' => $password // for testing only; remove before production
+                'password' => $password // optional, remove for production
             ]
         ], 201);
     }
