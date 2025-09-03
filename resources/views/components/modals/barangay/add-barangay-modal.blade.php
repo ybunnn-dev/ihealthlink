@@ -22,4 +22,4 @@
         </div>
     </div>
 </div>
-@include('components.modals.add-barangay-confirmation')
+@include('components.modals.barangay.add-barangay-confirmation')

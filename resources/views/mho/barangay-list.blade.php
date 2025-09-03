@@ -142,7 +142,7 @@
             </div>
         </div>
     </div>
-    @include('components.modals.add-barangay-modal')
+    @include('components.modals.barangay.add-barangay-modal')
     <script>
         const emptyStateImageUrl = "{{ asset('images/illustrations/not-found.png') }}";
     </script>
