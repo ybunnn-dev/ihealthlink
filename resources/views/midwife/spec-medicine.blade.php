@@ -115,6 +115,9 @@
                                             TOTAL STOCK
                                         </th>
                                         <th scope="col" class="px-6 py-3">
+                                            REMAINING
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
                                             DATE ADDED
                                         </th>
                                         <th scope="col" class="px-6 py-3">
@@ -134,6 +137,9 @@
                                             121
                                         </td>
                                         <td class="px-6 py-4">
+                                            150
+                                        </td>
+                                         <td class="px-6 py-4">
                                             150
                                         </td>
                                         <td class="px-6 py-4">
@@ -158,6 +164,9 @@
                                         <td class="px-6 py-4">
                                             75
                                         </td>
+                                         <td class="px-6 py-4">
+                                            150
+                                        </td>
                                         <td class="px-6 py-4">
                                             2025-02-10
                                         </td>
@@ -179,6 +188,9 @@
                                         </td>
                                         <td class="px-6 py-4">
                                             200
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            150
                                         </td>
                                         <td class="px-6 py-4">
                                             2025-02-11
