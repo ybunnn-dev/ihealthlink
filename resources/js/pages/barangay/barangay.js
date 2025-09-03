@@ -90,7 +90,7 @@
                 const barangaySlug = barangayNameToInsert.toLowerCase().replace(/\s+/g, '-');
 
                 // Construct the final URL with both ID and name slug
-                const finalUrl = `/mho/barangays/${newBarangayId}-${barangaySlug}`;
+                const finalUrl = `/mho/barangays/${newBarangayId}/${barangaySlug}`;
 
                 // Redirect to the new URL
                 window.location.href = finalUrl;
