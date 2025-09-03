@@ -18,7 +18,7 @@ class BarangayController extends Controller
     public function listView(Request $request)
     {
         // Start query with purok count
-        $query = Barangay::withCount('puroks');
+        $query = Barangay::withCount('puroks')->where('status', 'active');;
 
         // --- Search Logic ---
         $query->when($request->filled('search'), function ($q) use ($request) {
@@ -62,7 +62,8 @@ class BarangayController extends Controller
         $dateFilter = $request->input('date_filter');
 
         // Include puroks_count directly in the query
-        $query = Barangay::withCount('puroks');
+        $query = Barangay::withCount('puroks')
+            ->where('status', 'active'); // ✅ Only active barangays
 
         // Apply search and date filter logic
         $query->when($searchQuery, fn($q) => $q->where('name', 'like', "%{$searchQuery}%"));
@@ -178,5 +179,17 @@ class BarangayController extends Controller
             'barangay' => $barangay
         ]);
     }
+
+    public function deactivate(Request $request, Barangay $barangay)
+    {
+        $barangay->update([
+            'status' => 'inactive'
+        ]);
+
+        return response()->json([
+            'message' => 'Barangay set to inactive successfully.'
+        ]);
+    }
+
     
 }

@@ -2,21 +2,27 @@
     // --- 1. Get HTML elements ---
     const editBarangayModalEl = document.getElementById('edit-barangay-modal');
     const confirmEditModalEl = document.getElementById('confirm-edit-barangay-modal');
+    const removeModalEl = document.getElementById('remove-barangay-modal');
     const mainTriggerBtn = document.getElementById('edit-brgy-button');
+    const removeTrigger = document.getElementById('remove-brgy-button');
 
     // --- 2. Create Flowbite Modal Instances (without the generic onHide option) ---
     const editBarangayModal = new Modal(editBarangayModalEl);
     const confirmEditModal = new Modal(confirmEditModalEl);
-   
+    const removeModal = new Modal(removeModalEl);
     
     // --- 4. Get other elements ---
+    
     const barangayNameInput = document.getElementById('barangay-name-input');
     const openConfirmBtn = document.getElementById('open-confirmation-modal-button');
     const confirmCheckbox = document.getElementById('confirm-barangay-checkbox');
+    const removeCheckBox = document.getElementById('remove-barangay-checkbox');
     const confirmProceedBtn = document.getElementById('confirm-proceed-button');
     const brgyName = window.brgy_name || [];
     const cancelConfirmBtn = confirmEditModalEl.querySelector('[data-modal-hide="confirm-edit-barangay-modal"]');
     const cancelEdit = document.getElementById('cancel-edit-barangay');
+    const cancelRemove = document.getElementById('remove-cancel');
+    const proceedRemove = document.getElementById('confirm-remove-button');
 
     // --- 3. Add Event Listener to Open the First Modal ---
     mainTriggerBtn.addEventListener('click', function() {
@@ -24,6 +30,14 @@
         editBarangayModal.show();
     });
 
+    removeTrigger.addEventListener('click', function(){
+        document.getElementById('barangay-name-to-remove').textContent = brgyName;
+        removeModal.show();
+    });
+
+    cancelRemove.addEventListener('click', function(){
+        removeModal.hide();
+    });
     // --- 5. Open the confirmation modal ---
     openConfirmBtn.addEventListener('click', function () {
         const barangayName = barangayNameInput.value.trim();
@@ -44,8 +58,49 @@
         confirmProceedBtn.disabled = !this.checked;
     });
 
+    removeCheckBox.addEventListener('change', function () {
+        proceedRemove.disabled = !this.checked;
+    });
+
+
 
     // --- 7. Handle the final confirmation ---
+    proceedRemove.addEventListener('click', async function(){
+        const barangayId = this.getAttribute('data-id'); 
+
+        this.disabled = true;
+        this.textContent = 'Deactivating...';
+
+        try {
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+            const response = await fetch(`/barangays/${barangayId}/deactivate`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken
+                }
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.message || 'Failed to deactivate barangay.');
+            }
+
+            window.location.href = '/mho/barangays';
+
+        } catch (error) {
+            console.error('Deactivate Error:', error);
+            alert('An error occurred while deactivating the barangay.');
+            this.disabled = false;
+            this.textContent = 'Confirm Remove';
+        }
+    });
+
+
+
     confirmProceedBtn.addEventListener('click', async function () {
         const barangayId = this.getAttribute('data-id'); // put data-id="{{ $barangay->id }}" on your button
         const barangayNameToInsert = barangayNameInput.value.trim();

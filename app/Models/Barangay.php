@@ -9,7 +9,7 @@ class Barangay extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'user_id'];
+    protected $fillable = ['name', 'user_id', 'status'];
 
     // One Barangay has many Puroks
     public function puroks()

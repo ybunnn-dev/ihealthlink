@@ -49,6 +49,9 @@ Route::middleware([
     Route::post('/add-brgy', [BarangayController::class, 'store'])->name('barangays.store');
 
     Route::put('/barangays/{barangay}', [BarangayController::class, 'update'])->name('barangays.update');
+
+    Route::put('/barangays/{barangay}/deactivate', [BarangayController::class, 'deactivate'])->name('barangays.deactivate');
+
     
     //fitler, search, and sort functions for the barangay module
     Route::get('/mho/barangays/search', [BarangayController::class, 'search'])->name('mho.barangays.search');
