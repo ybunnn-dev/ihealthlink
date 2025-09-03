@@ -82,4 +82,24 @@ class User extends Authenticatable
         return $this->belongsTo(Role::class);
     }
 
+    public function addedMedicines(): HasMany
+    {
+        return $this->hasMany(Medicine::class, 'added_by');
+    }
+
+    /**
+     * Get all medicine inventories added by this user
+     */
+    public function addedInventories(): HasMany
+    {
+        return $this->hasMany(MedicineInventory::class, 'added_by');
+    }
+
+    /**
+     * Get all medicine distributions made by this user
+     */
+    public function medicineDistributions(): HasMany
+    {
+        return $this->hasMany(MedicineDistribution::class, 'distributed_by');
+    }
 }
