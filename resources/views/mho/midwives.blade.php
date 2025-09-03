@@ -39,7 +39,7 @@
                                         <div id="midwife-filter-menu" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
                                             <ul class="py-2 text-sm text-gray-700" aria-labelledby="midwife-filter-button">
                                                 {{-- IDs ADDED --}}
-                                                <li><a href="#" id="filter-alphabetical" class="block px-4 py-2 hover:bg-gray-100">Alphabetical</a></li>
+                                                <li><a href="#" id="filter-alphabetical" class="block px-4 py-2 hover:bg-gray-100">By Name</a></li>
                                                 <li><a href="#" id="filter-age-asc" class="block px-4 py-2 hover:bg-gray-100">Age Ascending</a></li>
                                                 <li><a href="#" id="filter-age-desc" class="block px-4 py-2 hover:bg-gray-100">Age Descending</a></li>
                                             </ul>
@@ -59,8 +59,11 @@
                                         <div id="midwife-sort-menu" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44">
                                             <ul class="py-2 text-sm text-gray-700">
                                                 {{-- IDs ADDED --}}
+                                                <li><a href="#" id="no-sort" class="block px-4 py-2 hover:bg-gray-100">All Time</a></li>
                                                 <li><a href="#" id="sort-last-week" class="block px-4 py-2 hover:bg-gray-100">Last Week</a></li>
+                                                <li><a href="#" id="sort-last-year" class="block px-4 py-2 hover:bg-gray-100">Last Month</a></li>
                                                 <li><a href="#" id="sort-last-year" class="block px-4 py-2 hover:bg-gray-100">Last Year</a></li>
+                                                <li><a href="#" id="sort-custom" class="block px-4 py-2 hover:bg-gray-100">Custom Date</a></li>
                                             </ul>
                                         </div>
                                     </div>

@@ -5,6 +5,7 @@ const sortMenu = document.getElementById('midwife-sort-menu');
 const tableBody = document.getElementById('midwives-table-body');
 const paginationContainer = document.getElementById('midwives-pagination-links'); // Make sure your HTML has this ID
 const filterButton = document.getElementById('midwife-filter-button');
+const sortButton = document.getElementById('midwife-sort-button');
 
 // Default state variables
 let searchQuery = '', filterBy = 'alphabetical', sortBy = 'newest';
@@ -160,6 +161,7 @@ if (filterMenu) {
         if (!link) return;
         filterBy = link.getAttribute('id'); // e.g., 'filter-alphabetical'
         filterButton.firstChild.nodeValue = `${link.textContent.trim()} `; // Updates button text
+        console.log(filterBy);
         fetchMidwives(1);
     });
 }
@@ -170,7 +172,8 @@ if (sortMenu) {
         const link = e.target.closest('a');
         if (!link) return;
         sortBy = link.getAttribute('id'); // e.g., 'sort-last-week'
-        // You might want to update the sort button's text here as well
+        sortButton.firstChild.nodeValue = `${link.textContent.trim()}`;
+        console.log(sortBy);
         fetchMidwives(1);
     });
 }
