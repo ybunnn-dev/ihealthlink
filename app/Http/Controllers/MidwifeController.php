@@ -25,13 +25,14 @@ class MidwifeController extends Controller
     {
         $emptyBrgy = Barangay::whereDoesntHave('midwives')->get();
 
-        
-        $midwives = Midwife::with(['users', 'barangays'])
+        // The query now includes latest() for sorting and paginate() for pagination.
+        $midwivesPaginator = Midwife::with(['users', 'barangays'])
             ->where('role_id', 2)
-            ->get();
+            ->latest() // This orders the results by 'created_at' in descending order.
+            ->paginate(15); // Fetches 15 records per page.
 
-        // Re-organize into table-friendly rows
-        $rows = $midwives->map(function ($m) {
+        // Use through() to apply your mapping logic to the paginated collection.
+        $rows = $midwivesPaginator->through(function ($m) {
             $user = $m->users ?? $m->user ?? null;
             $barangay = $m->barangays ?? $m->barangay ?? null;
 
@@ -53,19 +54,10 @@ class MidwifeController extends Controller
         });
 
         return view('mho.midwives', [
-            'midwives'   => $rows,
+            'midwives'   => $rows, // Pass the paginator with transformed items to the view.
             'emptyBrgy'  => $emptyBrgy,
         ]);
     }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
     /**
      * Store a newly created resource in storage.
      */
@@ -177,28 +169,69 @@ class MidwifeController extends Controller
        return view('mho.spec-midwife', ['midwife' => $data]);
     }
 
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function search(Request $request)
     {
-        //
+        // Get and Validate Query Parameters
+        $searchQuery = $request->input('search');
+        $sortBy = $request->input('sort_by', 'alphabetical'); // default alphabetical
+        $dateFilter = $request->input('date_filter');
+
+        \Log::info($searchQuery);
+
+        $query = Midwife::query()->with(['users', 'barangays']);
+
+        // --- Search ---
+        $query->when($searchQuery, function ($q, $searchQuery) {
+            $q->whereHas('users', function ($sub) use ($searchQuery) {
+                $sub->where('firstName', 'like', "%{$searchQuery}%")
+                    ->orWhere('lastName', 'like', "%{$searchQuery}%")
+                    ->orWhere('middleName', 'like', "%{$searchQuery}%")
+                    ->orWhere('suffix', 'like', "%{$searchQuery}%")
+                    // Full name search
+                    ->orWhereRaw("CONCAT_WS(' ', firstName, middleName, lastName, suffix) LIKE ?", ["%{$searchQuery}%"]);
+            });
+        });
+
+        // --- Date Filter ---
+        $query->when($dateFilter, function ($q, $dateFilter) {
+            switch ($dateFilter) {
+                case 'week': return $q->where('personnel.created_at', '>=', now()->subWeek());
+                case 'month': return $q->where('personnel.created_at', '>=', now()->subMonth());
+                case 'year': return $q->where('personnel.created_at', '>=', now()->subYear());
+            }
+        });
+
+        // --- Sorting ---
+        switch ($sortBy) {
+            case 'age-asc':
+                $query->join('users', 'personnel.user_id', '=', 'users.id')
+                    ->select('personnel.*')
+                    ->orderBy('users.birthdate', 'asc');
+                break;
+
+            case 'age-desc':
+                $query->join('users', 'personnel.user_id', '=', 'users.id')
+                    ->select('personnel.*')
+                    ->orderBy('users.birthdate', 'desc');
+                break;
+
+            case 'alphabetical':
+            default:
+                $query->join('users', 'personnel.user_id', '=', 'users.id')
+                    ->select('personnel.*')
+                    ->orderBy('users.lastName', 'asc')
+                    ->orderBy('users.firstName', 'asc');
+                break;
+        }
+
+        // --- Paginate ---
+        
+        $midwives = $query->paginate(15)->withQueryString();
+       
+        return response()->json($midwives);
     }
+
 }

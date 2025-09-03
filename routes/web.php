@@ -66,9 +66,7 @@ Route::middleware([
     Route::post('/mho/add-midwife', [MidwifeController::class, 'store']);
 
     //Route for specific midwife
-    Route::get('/mho/midwives/spec', function(){
-        return view('mho.spec-midwife');
-    })->name('mho.midwife-spec');
+    Route::get('/mho/midwives/search', [MidwifeController::class, 'search'])->name('mho.midwives.search');
 
     Route::get('/mho/midwife/{name}/{m_id}', [MidwifeController::class, 'show'])
         ->name('mho.midwife.show');
