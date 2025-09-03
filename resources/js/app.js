@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
     import('./pages/barangay/components/search-sort.js');
 
   } else if(bodyClass.contains('spec-brgy')){
-
+    import('./pages/barangay/spec-barangay.js');
     import('./pages/barangay/purok.js');
     import('./pages/barangay/components/purok-sort.js');
     
