@@ -18,26 +18,26 @@
                                 <polygon points="238.688,386.922 273.297,386.922 273.297,345.828 314.375,345.828 314.375,311.25 273.297,311.25 273.297,270.156 238.688,270.156 238.688,311.25 197.625,311.25 197.625,345.828 238.688,345.828 "></polygon>
                             </g>
                         </svg>
-                        <p class="text-main_font font-bold">Alaxan FR</p>
-                        <p class="text-main_font font-medium">Medicine  #13356</p>
+                        <p class="text-main_font font-bold">{{ $medicine->medicine_name }}</p>
+                        <p class="text-main_font font-medium">Medicine #{{ $medicine->id }}</p>
                     </div>
                     <div class="flex-grow h-full bg-f7 rounded-lg p-12 col-span-1 slg:col-span-2">
                         <h2 class="text-xl font-semibold text-main_font mb-6">Medicine Info</h2>
                         <div class="grid grid-cols-[auto_1fr] gap-x-12 gap-y-3 text-normal_font text-sm">
                             <p class="font-medium">MEDICINE NAME:</p>
-                            <p>Alaxan FR</p>
+                            <p>{{ $medicine->medicine_name }}</p>
 
                             <p class="font-medium">GENERIC NAME:</p>
-                            <p>Ibuprofen + Paracetamol</p>
+                            <p>{{ $medicine->generic_name ?? 'N/A' }}</p>
 
                             <p class="font-medium">CATEGORY:</p>
-                            <p>Pain Killer</p>
+                            <p>{{ $medicine->category }}</p>
 
                             <p class="font-medium">FORM:</p>
-                            <p>Tablet</p>
+                            <p>{{ $medicine->form }}</p>
 
                             <p class="font-medium">DESCRIPTION:</p>
-                            <p>Alaxan is a combination of Ibuprofen (200mg) and Paracetamol (325mg) used to relieve mild to moderate pain such as headache, body pain, muscle aches, joint pain, and fever.</p>
+                            <p>{{ $medicine->description ?? 'No description available' }}</p>
                         </div>
                     </div>
                 </div>
@@ -129,72 +129,44 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr class="bg-white border-b bg-f7 text-normal_font text-center">
-                                        <td class="px-6 py-4 font-medium text-normal_font whitespace-nowrap">
-                                            121
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            150
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            2025-01-01
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            2025-05-15
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            Jane Doe
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            <span class="bg-red-100 border-1 border-red-500 text-red-800 text-xs font-medium px-2 py-1 rounded-full w-32 text-center inline-block">
-                                                Expired
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    <tr class="bg-white border-b bg-f7 text-normal_font text-center">
-                                        <td class="px-6 py-4 font-medium text-normal_font whitespace-nowrap">
-                                            122
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            75
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            2025-02-10
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            2025-11-20
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            John Smith
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            <span class="bg-yellow-100 border-1 border-yellow-500 text-yellow-800 text-xs font-medium px-2 py-1 rounded-full w-32 text-center inline-block">
-                                                Near Expiration
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    <tr class="bg-white border-b bg-f7 text-normal_font text-center">
-                                        <td class="px-6 py-4 font-medium text-normal_font whitespace-nowrap">
-                                            123
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            200
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            2025-02-11
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            2027-01-15
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            Sarah Lee
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            <span class="bg-green-100 border-1 border-green-500 text-green-800 text-xs font-medium px-2 py-1 rounded-full w-32 text-center inline-block">
-                                                Good
-                                            </span>
-                                        </td>
-                                    </tr>
+                                    @forelse($inventories as $inventory)
+                                        <tr class="bg-white border-b bg-f7 text-normal_font text-center">
+                                            <td class="px-6 py-4 font-medium text-normal_font whitespace-nowrap">
+                                                {{ $inventory->id }}
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                {{ $inventory->stock }}
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                {{ $inventory->date_received->format('Y-m-d') }}
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                {{ $inventory->expiry_date->format('Y-m-d') }}
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                {{ $inventory->addedBy->name ?? 'Unknown' }}
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                @if($inventory->is_expired)
+                                                    <span class="bg-red-100 border-1 border-red-500 text-red-800 text-xs font-medium px-2 py-1 rounded-full w-32 text-center inline-block">
+                                                        Expired
+                                                    </span>
+                                                @elseif($inventory->is_expiring_soon)
+                                                    <span class="bg-yellow-100 border-1 border-yellow-500 text-yellow-800 text-xs font-medium px-2 py-1 rounded-full w-32 text-center inline-block">
+                                                        Near Expiration
+                                                    </span>
+                                                @else
+                                                    <span class="bg-green-100 border-1 border-green-500 text-green-800 text-xs font-medium px-2 py-1 rounded-full w-32 text-center inline-block">
+                                                        Good
+                                                    </span>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr class="bg-white border-b bg-f7 text-normal_font text-center">
+                                            <td colspan="6" class="px-6 py-4">No batches available for this medicine.</td>
+                                        </tr>
+                                    @endforelse
                                 </tbody>
                             </table>
                         </div>

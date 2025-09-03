@@ -102,66 +102,35 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr class="bg-white border-b bg-f7 text-normal_font text-center" onclick="window.location='{{ route('midwife.medicines-view') }}'">
-                                        <th scope="row" class="px-6 py-4 font-medium text-normal_font whitespace-nowrap">
-                                            121
-                                        </th>
-                                        <td class="px-6 py-4">
-                                            Alaxan
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            1
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            Pain Killer
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            Capsule
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            Feb 10, 2025
-                                        </td>
-                                    </tr>
-                                    <tr class="bg-white border-b bg-f7 text-normal_font text-center">
-                                        <th scope="row" class="px-6 py-4 font-medium text-normal_font whitespace-nowrap">
-                                            122
-                                        </th>
-                                        <td class="px-6 py-4">
-                                            Biogesic
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            1
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            Pain Killer
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            Capsule
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            Feb 10, 2025
-                                        </td>
-                                    </tr>
-                                    <tr class="bg-white border-b bg-f7 text-normal_font text-center">
-                                        <th scope="row" class="px-6 py-4 font-medium text-normal_font whitespace-nowrap">
-                                            123
-                                        </th>
-                                        <td class="px-6 py-4">
-                                            Amoxicillin
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            1
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            Pain Killer
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            Capsule
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            Feb 10, 2025
-                                        </td>
-                                    </tr>
+                                    @forelse($medicines as $medicine)
+                                        <tr class="bg-white border-b bg-f7 text-normal_font text-center" onclick="window.location='{{ route('midwife.medicines.show', $medicine->id) }}'" class="cursor-pointer hover:bg-gray-100">
+                                            <th scope="row" class="px-6 py-4 font-medium text-normal_font whitespace-nowrap">
+                                                {{ $medicine->id }}
+                                            </th>
+                                            <td class="px-6 py-4">
+                                                {{ $medicine->medicine_name }}
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                {{-- If you don’t yet track quantity, just show 0 or leave blank --}}
+                                                0
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                {{ $medicine->category }}
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                {{ $medicine->form }}
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                {{ $medicine->updated_at->format('M d, Y') }}
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="6" class="px-6 py-4 text-center text-gray-500">
+                                                No medicines found.
+                                            </td>
+                                        </tr>
+                                    @endforelse
                                 </tbody>
                             </table>
                         </div>
