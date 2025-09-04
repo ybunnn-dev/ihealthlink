@@ -28,12 +28,21 @@ document.addEventListener('DOMContentLoaded', () => {
     import('./pages/barangay/components/search-sort.js');
 
   } else if(bodyClass.contains('spec-brgy')){
-
+    import('./pages/barangay/spec-barangay.js');
     import('./pages/barangay/purok.js');
+    import('./pages/barangay/spec-purok.js');
     import('./pages/barangay/components/purok-sort.js');
     
   }else if(bodyClass.contains('midwives')){
     import('./pages/midwife/add-midwife.js');
+    import('./pages/midwife/components/search-sort.js');
+
+  }else if(bodyClass.contains('spec-midwife')){
+    import('./pages/midwife/edit-midwife.js');
+    import('./pages/midwife/remove-midwife.js');
+
+  }else if(bodyClass.contains('health-programs')){
+    import('./pages/health-programs/add-health-program.js');
   }
   else {
     console.log('Not on reports page - charts not loaded');

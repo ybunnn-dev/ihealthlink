@@ -7,6 +7,11 @@ const submitButton = document.getElementById('addMidwifeSubmitBtn');
 const birthdateInput = document.getElementById('midwifeBdate');
 const ageInput = document.getElementById('midwifeAge');
 
+//success modal elements
+const successModalEl = document.getElementById('success-modal');
+const successMesageHeader = document.getElementById('success-msg-head');
+const successMessage = document.getElementById('success-message');
+const closeSuccessModalButton = document.getElementById('close-success-modal-button');
 
 const textInputs = [
     document.getElementById('midwifeFirstName'),
@@ -57,6 +62,11 @@ const midwifeNameSpan = document.getElementById('midwife-name-to-confirm');
 // Setup Age Input
 ageInput.disabled = true;
 ageInput.classList.add('bg-gray-100');
+
+const options = {
+    // This prevents the modal from closing when the backdrop is clicked
+    backdrop: 'static', 
+};
 
 // Populate Barangay Dropdown (This function is unchanged)
 const populateBarangayDropdown = () => {
@@ -211,7 +221,16 @@ async function submitMidwifeData(payload) {
 
         if (response.ok) {
             console.log('Success:', data);
-            alert('Midwife added successfully!');
+            
+            const successModal = new Modal(successModalEl, options);
+            const confAddMidwifeModal = new Modal(confirmModalEl);
+
+            if(successModal && confAddMidwifeModal){
+                successMesageHeader.textContent = 'Midwife Added';
+                successMessage.textContent = `${payload.firstName ?? ''} ${payload.middleName ?? ''} ${payload.lastName ?? ''}${payload.suffix ? ' ' + payload.suffix : ''} has been added`;
+                confAddMidwifeModal.hide();
+                successModal.show();
+            }
         } else {
             console.error('Error:', data);
             alert('Error adding midwife: ' + (data.message || 'Please check the form and try again.'));
@@ -257,3 +276,8 @@ const resetForm = () => {
     
     validateForm();
 };
+
+
+closeSuccessModalButton.addEventListener('click', function(){
+    window.location.href = '/mho/midwives';
+});

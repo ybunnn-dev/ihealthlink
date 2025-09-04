@@ -12,6 +12,7 @@ const confirmProceedPurokBtn = document.getElementById('confirm-proceed-purok-bu
 const cancelConfirmBtn = confirmPurokModalEl.querySelector('[data-modal-hide="confirm-add-purok-modal"]');
 const purokPageContainer = document.getElementById('purok-page-container');
 const currentBarangayId = purokPageContainer.dataset.barangayId;
+const cancelAddPurok = document.getElementById('cancel-add-purok');
 
 mainTriggerBtn.addEventListener('click', function() {
     addPurokModal.show();
@@ -92,5 +93,12 @@ if (cancelConfirmBtn) {
     cancelConfirmBtn.addEventListener('click', function() {
         confirmPurokModal.hide();
         addPurokModal.show();
+    });
+}
+
+if(cancelAddPurok){
+    cancelAddPurok.addEventListener('click', function(){
+        purokNameInput.value = '';
+        addPurokModal.hide();
     });
 }

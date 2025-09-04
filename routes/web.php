@@ -2,9 +2,9 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\BarangayController;
-use App\Http\Controllers\PurokController;
-use App\Http\Controllers\MidwifeController;
+use App\Http\Controllers\Web\BarangayController;
+use App\Http\Controllers\Web\PurokController;
+use App\Http\Controllers\Web\MidwifeController;
 use App\Http\Controllers\MedicineController;
 use App\Http\Controllers\MedicineInventoryController;
 
@@ -50,6 +50,18 @@ Route::middleware([
     //Route for adding barangays
     Route::post('/add-brgy', [BarangayController::class, 'store'])->name('barangays.store');
 
+    //edit barangay
+    Route::put('/barangays/{barangay}', [BarangayController::class, 'update'])->name('barangays.update');
+
+    //soft delete barangay
+    Route::put('/barangays/{barangay}/deactivate', [BarangayController::class, 'deactivate'])->name('barangays.deactivate');
+
+    //edit purok
+    Route::put('mho/puroks/{id}', [PurokController::class, 'update'])->name('puroks.update');
+    
+    //removing a purok
+    Route::put('/mho/puroks/remove/{id}', [PurokController::class, 'remove'])->name('mho.puroks.remove');
+
     //fitler, search, and sort functions for the barangay module
     Route::get('/mho/barangays/search', [BarangayController::class, 'search'])->name('mho.barangays.search');
 
@@ -68,12 +80,16 @@ Route::middleware([
     Route::post('/mho/add-midwife', [MidwifeController::class, 'store']);
 
     //Route for specific midwife
-    Route::get('/mho/midwives/spec', function () {
-        return view('mho.spec-midwife');
-    })->name('mho.midwife-spec');
+    Route::get('/mho/midwives/search', [MidwifeController::class, 'search'])->name('mho.midwives.search');
 
     Route::get('/mho/midwife/{name}/{m_id}', [MidwifeController::class, 'show'])
         ->name('mho.midwife.show');
+
+    // edit midwife info
+    Route::put('mho/midwife/{id}/update', [MidwifeController::class, 'update'])->name('midwives.update');
+
+    //remove midwife
+    Route::put('/mho/midwife/{user}/remove', [MidwifeController::class, 'remove']);
 
     //route for mho reports
     Route::get('/mho/reports', function () {

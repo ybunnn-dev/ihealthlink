@@ -2,6 +2,9 @@
 @section('title', 'Brgy. ' . $barangay->name)
 
 <x-app-layout>
+     <script>
+         window.brgy_name = @json($barangay->name);
+    </script>
     <div class="py-12 px-5">
         <div class="max-w-[90rem] mx-auto sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 gap-4">
@@ -27,8 +30,8 @@
 
                         
                         <div class="grid grid-cols-1 slg: grid-cols-2 gap-3 w-full">
-                            <button type="button" class="flex-1 px-5 py-3 text-sm font-medium text-white bg-mainblue rounded-lg hover:bg-blue-700 col-span-1">Edit</button>
-                            <button type="button" class="flex-1 px-5 py-3 text-sm font-medium text-mainblue bg-white border border-mainblue rounded-lg hover:bg-blue-50 col-span-1">Remove</button>
+                            <button id="edit-brgy-button" type="button" class="flex-1 px-5 py-3 text-sm font-medium text-white bg-mainblue rounded-lg hover:bg-blue-700 col-span-1">Edit</button>
+                            <button id="remove-brgy-button" type="button" class="flex-1 px-5 py-3 text-sm font-medium text-mainblue bg-white border border-mainblue rounded-lg hover:bg-blue-50 col-span-1">Remove</button>
                         </div>
                     </div>
 
@@ -84,4 +87,6 @@
     </div>
     <div id="purok-page-container" data-barangay-id="{{ $barangay->id }}">
     </div>
+    @include('components.modals.barangay.edit-barangay-modal')
+    @include('components.modals.barangay.remove-barangay-modal')
 </x-app-layout>

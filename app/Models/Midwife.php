@@ -31,4 +31,14 @@ class Midwife extends Model
     {
         return $this->belongsTo(Role::class, 'role_id');
     }
+    public function getNameAttribute()
+    {
+        $user = $this->users;
+        if (!$user) return null;
+
+        // Example: "Peter Montefalco Jr."
+        return trim("{$user->firstName} {$user->lastName} " . ($user->suffix ?? ''));
+    }
+
+    protected $appends = ['name'];
 }

@@ -13,52 +13,63 @@
                         <div class="pb-6">
                             <div class="flex flex-col slg2:flex-row slg2:items-end gap-4">
                                 <div class="w-full slg2:w-64 slg2:flex-grow slg2:max-w-md">
-                                    <label for="default-search" class="mb-2 text-sm font-medium text-main_font">Search</label>
+                                    <label for="midwife-search-input" class="mb-2 text-sm font-medium text-main_font">Search</label>
                                     <div class="relative">
                                         <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                                             <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                                             </svg>
                                         </div>
-                                        <input type="search" id="default-search" class="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500" placeholder="Search..."/>
+                                        {{-- ID CHANGED --}}
+                                        <input type="search" id="midwife-search-input" class="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500" placeholder="Search..."/>
                                     </div>
                                 </div>
                                 
                                 <div class="flex flex-col xs:flex-row gap-4 slg2:items-end flex-none">
                                     <div class="w-full xs:w-48">
-                                        <label for="purokDropdown" class="mb-2 text-sm font-medium text-main_font">Filter By</label>
-                                        <button id="purokDropdown" data-dropdown-toggle="purokDropdownMenu" class="w-full text-main_font bg-f7 focus:outline-none font-medium border border-navboard rounded-lg text-sm px-4 py-2 text-center inline-flex items-center justify-between h-[2.375rem]" type="button">
+                                        <label for="midwife-filter-button" class="mb-2 text-sm font-medium text-main_font">Filter By</label>
+                                        {{-- ID CHANGED --}}
+                                        <button id="midwife-filter-button" data-dropdown-toggle="midwife-filter-menu" class="w-full text-main_font bg-f7 focus:outline-none font-medium border border-navboard rounded-lg text-sm px-4 py-2 text-center inline-flex items-center justify-between h-[2.375rem]" type="button">
                                             Alphabetical
                                             <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4" />
                                             </svg>
                                         </button>
-                                        <div id="purokDropdownMenu" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
-                                            <ul class="py-2 text-sm text-gray-700" aria-labelledby="purokDropdown">
-                                                <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Alphabetical</a></li>
-                                                <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Age Ascending</a></li>
-                                                <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Age Descending</a></li>
+                                        {{-- ID CHANGED --}}
+                                        <div id="midwife-filter-menu" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
+                                            <ul class="py-2 text-sm text-gray-700" aria-labelledby="midwife-filter-button">
+                                                {{-- IDs ADDED --}}
+                                                <li><a href="#" id="filter-alphabetical" class="block px-4 py-2 hover:bg-gray-100">By Name</a></li>
+                                                <li><a href="#" id="filter-age-asc" class="block px-4 py-2 hover:bg-gray-100">Age Ascending</a></li>
+                                                <li><a href="#" id="filter-age-desc" class="block px-4 py-2 hover:bg-gray-100">Age Descending</a></li>
                                             </ul>
                                         </div>
                                     </div>
                                     
                                     <div class="w-full xs:w-48">
-                                        <label for="dateDropdown" class="mb-2 text-sm font-medium text-main_font">Sort By Date</label>
-                                        <button id="dateDropdown" data-dropdown-toggle="dateDropdownMenu" class="w-full text-main_font bg-f7 focus:outline-none font-medium border border-navboard rounded-lg text-sm px-4 py-2 text-center inline-flex items-center justify-between h-[2.375rem]" type="button">
+                                        <label for="midwife-sort-button" class="mb-2 text-sm font-medium text-main_font">Sort By Date</label>
+                                        {{-- ID CHANGED --}}
+                                        <button id="midwife-sort-button" data-dropdown-toggle="midwife-sort-menu" class="w-full text-main_font bg-f7 focus:outline-none font-medium border border-navboard rounded-lg text-sm px-4 py-2 text-center inline-flex items-center justify-between h-[2.375rem]" type="button">
                                             Date
                                             <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
                                             </svg>
                                         </button>
-                                        <div id="dateDropdownMenu" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44">
+                                        {{-- ID CHANGED --}}
+                                        <div id="midwife-sort-menu" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44">
                                             <ul class="py-2 text-sm text-gray-700">
-                                                <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Last Week</a></li>
-                                                <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Last Year</a></li>
+                                                {{-- IDs ADDED --}}
+                                                <li><a href="#" id="no-sort" class="block px-4 py-2 hover:bg-gray-100">All Time</a></li>
+                                                <li><a href="#" id="sort-last-week" class="block px-4 py-2 hover:bg-gray-100">Last Week</a></li>
+                                                <li><a href="#" id="sort-last-year" class="block px-4 py-2 hover:bg-gray-100">Last Month</a></li>
+                                                <li><a href="#" id="sort-last-year" class="block px-4 py-2 hover:bg-gray-100">Last Year</a></li>
+                                                <li><a href="#" id="sort-custom" class="block px-4 py-2 hover:bg-gray-100">Custom Date</a></li>
                                             </ul>
                                         </div>
                                     </div>
                                     
                                     <div class="w-full xs:w-40 pt-5 xs:pt-0">
+                                        {{-- This ID was already good, so it remains unchanged --}}
                                         <button
                                             id="add-midwife-button"
                                             type="button"
@@ -73,11 +84,16 @@
                         </div>
                         
                         <x-midwife.midwife-tables :midwives="$midwives" />
-
+                        <div id="midwives-pagination-links" class="mt-4">
+                            {{-- Pagination will be rendered here by JavaScript --}}
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    @include('components.modals.add-midwife')
+      <script>
+        const emptyStateImageUrl = "{{ asset('images/illustrations/not-found.png') }}";
+    </script>
+    @include('components.modals.midwife.add-midwife')
 </x-app-layout>

@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Web;
+
+use App\Http\Controllers\Controller;
 
 use App\Models\Purok;
 use App\Models\Barangay;
@@ -18,7 +20,9 @@ class PurokController extends Controller
 
     public function getByBarangay(Barangay $barangay)
     {
-        $puroks = Purok::where('brgy_id', $barangay->id)->get();
+        $puroks = Purok::where('brgy_id', $barangay->id)
+            ->where('status', 'active')
+            ->get();
 
         $puroks->transform(function ($purok) {
             $purok->households_count = rand(10, 50);
@@ -28,6 +32,7 @@ class PurokController extends Controller
 
         return $puroks;
     }
+
     public function addPurok(Request $request)
     {
         // --- 1. Validate the incoming request ---
@@ -73,5 +78,59 @@ class PurokController extends Controller
                 'message' => 'An error occurred while saving the purok.'
             ], 500);
         }
-    }      
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
+
+        $newName = $request->input('name');
+
+        // Find purok by ID
+        $purok = Purok::findOrFail($id);
+
+        // Check if another purok in the same barangay already has this name
+        $exists = Purok::where('brgy_id', $purok->brgy_id)
+            ->where('name', $newName)
+            ->where('id', '!=', $id) // exclude current purok
+            ->exists();
+
+        if ($exists) {
+            return response()->json([
+                'message' => "A purok with the name '{$newName}' already exists in this barangay.",
+                'status' => 'error',
+            ], 422);
+        }
+
+        // Update purok name
+        $purok->update([
+            'name' => $newName,
+        ]);
+
+        return response()->json([
+            'message' => 'Purok updated successfully!',
+            'purok_id' => $purok->id,
+            'new_name' => $purok->name,
+            'status' => 'success',
+        ], 200);
+    }
+    public function remove($id)
+    {
+        $purok = \App\Models\Purok::findOrFail($id);
+
+        // Update status to 'removed'
+        $purok->update([
+            'status' => 'inactive'
+        ]);
+
+        \Log::info("🗑️ Purok ID {$id} marked as removed (status updated)");
+
+        return response()->json([
+            'message' => 'Purok status updated to removed successfully!',
+            'purok_id' => $purok->id,
+            'status' => $purok->status,
+        ], 200);
+    }
 }

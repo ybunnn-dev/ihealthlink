@@ -9,13 +9,16 @@ class Barangay extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'user_id'];
+    protected $fillable = ['name', 'user_id', 'status'];
 
     // One Barangay has many Puroks
+    // Barangay.php
     public function puroks()
     {
-        return $this->hasMany(Purok::class, 'brgy_id');
+        return $this->hasMany(Purok::class, 'brgy_id')
+            ->where('status', 'active');
     }
+
 
     // Barangay belongs to a User (e.g., captain, head)
     public function user()
