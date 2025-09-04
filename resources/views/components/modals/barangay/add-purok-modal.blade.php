@@ -22,4 +22,4 @@
         </div>
     </div>
 </div>
-@include('components.modals.add-purok-confirmation')
+@include('components.modals.barangay.add-purok-confirmation')

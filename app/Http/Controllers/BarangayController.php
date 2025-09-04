@@ -63,7 +63,7 @@ class BarangayController extends Controller
 
         // Include puroks_count directly in the query
         $query = Barangay::withCount('puroks')
-            ->where('status', 'active'); // ✅ Only active barangays
+            ->where('status', 'active'); //  Only active barangays
 
         // Apply search and date filter logic
         $query->when($searchQuery, fn($q) => $q->where('name', 'like', "%{$searchQuery}%"));
