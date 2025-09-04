@@ -31,6 +31,7 @@ class MidwifeController extends Controller
         // The query now includes latest() for sorting and paginate() for pagination.
         $midwivesPaginator = Midwife::with(['users', 'barangays'])
             ->where('role_id', 2)
+            ->where('status', 'active') 
             ->latest() // This orders the results by 'created_at' in descending order.
             ->paginate(15); // Fetches 15 records per page.
 
@@ -248,7 +249,7 @@ class MidwifeController extends Controller
         // Log payload for debugging
         Log::info("Received update for midwife ID {$request->midwife_id}", $request->all());
 
-        // 1️⃣ Update the User model
+        // Update the User model
         $user = User::find($userId);
         if ($user) {
             $user->update([
@@ -265,7 +266,7 @@ class MidwifeController extends Controller
             ]);
         }
 
-        // 2️⃣ Update the Midwife model
+        // Update the Midwife model
         $midwife = Midwife::find($request->midwife_id);
         if ($midwife) {
             $midwife->update([
@@ -275,10 +276,41 @@ class MidwifeController extends Controller
             ]);
         }
 
-        // 3️⃣ Return a response
+        // Return a response
         return response()->json([
             'status' => 'success',
             'message' => 'Midwife updated successfully',
+            'user' => $user,
+            'midwife' => $midwife
+        ]);
+    }
+
+    public function remove(Request $request, $userId)
+    {
+        // Find the user
+        $user = User::find($request->user_id);
+        if ($user) {
+            $user->status = 'inactive';
+            $user->save();
+        }
+
+        // Find the midwife
+        $midwife = Midwife::where('user_id', $request->user_id)->first();
+        if ($midwife) {
+            $midwife->status = 'inactive';
+            $midwife->save();
+        }
+
+        // log for debugging
+        Log::info('Midwife removal set to inactive for user_id: ' . $request->user_id, [
+            'user_status' => $user?->status,
+            'midwife_status' => $midwife?->status
+        ]);
+
+        // 4Return response
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Midwife and user status set to inactive',
             'user' => $user,
             'midwife' => $midwife
         ]);

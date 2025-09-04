@@ -37,7 +37,8 @@ class User extends Authenticatable
         'role_id',
         'sex',
         'civil_status',
-        'religion'
+        'religion',
+        'status'
     ];
 
 

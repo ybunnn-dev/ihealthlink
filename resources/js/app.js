@@ -38,7 +38,11 @@ document.addEventListener('DOMContentLoaded', () => {
     import('./pages/midwife/components/search-sort.js');
 
   }else if(bodyClass.contains('spec-midwife')){
-    import('./pages/midwife/midwife-actions.js');
+    import('./pages/midwife/edit-midwife.js');
+    import('./pages/midwife/remove-midwife.js');
+
+  }else if(bodyClass.contains('health-programs')){
+    import('./pages/health-programs/add-health-program.js');
   }
   else {
     console.log('Not on reports page - charts not loaded');

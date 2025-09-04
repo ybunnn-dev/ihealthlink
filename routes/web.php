@@ -83,8 +83,11 @@ Route::middleware([
     Route::get('/mho/midwife/{name}/{m_id}', [MidwifeController::class, 'show'])
         ->name('mho.midwife.show');
 
-    // web.php
+    // edit midwife info
     Route::put('mho/midwife/{id}/update', [MidwifeController::class, 'update'])->name('midwives.update');
+
+    //remove midwife
+    Route::put('/mho/midwife/{user}/remove', [MidwifeController::class, 'remove']);
 
      //route for mho reports
     Route::get('/mho/reports', function(){
