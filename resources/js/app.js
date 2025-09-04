@@ -30,6 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
   } else if(bodyClass.contains('spec-brgy')){
     import('./pages/barangay/spec-barangay.js');
     import('./pages/barangay/purok.js');
+    import('./pages/barangay/spec-purok.js');
     import('./pages/barangay/components/purok-sort.js');
     
   }else if(bodyClass.contains('midwives')){

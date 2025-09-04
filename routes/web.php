@@ -48,11 +48,18 @@ Route::middleware([
     //Route for adding barangays
     Route::post('/add-brgy', [BarangayController::class, 'store'])->name('barangays.store');
 
+    //edit barangay
     Route::put('/barangays/{barangay}', [BarangayController::class, 'update'])->name('barangays.update');
 
+    //soft delete barangay
     Route::put('/barangays/{barangay}/deactivate', [BarangayController::class, 'deactivate'])->name('barangays.deactivate');
 
+    //edit purok
+    Route::put('mho/puroks/{id}', [PurokController::class, 'update'])->name('puroks.update');
     
+    //removing a purok
+    Route::put('/mho/puroks/remove/{id}', [PurokController::class, 'remove'])->name('mho.puroks.remove');
+
     //fitler, search, and sort functions for the barangay module
     Route::get('/mho/barangays/search', [BarangayController::class, 'search'])->name('mho.barangays.search');
 
