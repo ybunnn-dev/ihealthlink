@@ -5,8 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Web\BarangayController;
 use App\Http\Controllers\Web\PurokController;
 use App\Http\Controllers\Web\MidwifeController;
-use App\Http\Controllers\MedicineController;
-use App\Http\Controllers\MedicineInventoryController;
+use App\Http\Controllers\Web\MedicineController;
+use App\Http\Controllers\Web\MedicineInventoryController;
 
 Route::get('/', function () {
     return view('auth.login');
