@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
     import('./pages/midwife/components/search-sort.js');
 
   }else if(bodyClass.contains('spec-midwife')){
-    console.log('vakla ka');
+    import('./pages/midwife/midwife-actions.js');
   }
   else {
     console.log('Not on reports page - charts not loaded');

@@ -1,8 +1,11 @@
 <?php
 
 
-namespace App\Http\Controllers;
-use App\Http\Controllers\PurokController;
+namespace App\Http\Controllers\Web;
+
+use App\Http\Controllers\Controller;
+
+use App\Http\Controllers\Web\PurokController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;

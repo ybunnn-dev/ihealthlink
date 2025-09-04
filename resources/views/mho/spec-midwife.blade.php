@@ -34,7 +34,7 @@
 
                         {{-- Buttons section --}}
                         <div class="grid grid-cols-1 slg:grid-cols-2 gap-3">
-                            <button type="button" class="col-span-1 px-5 py-3 text-sm font-medium text-white bg-mainblue rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300">Edit</button>
+                            <button id="edit-midwife-btn" type="button" class="col-span-1 px-5 py-3 text-sm font-medium text-white bg-mainblue rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300">Edit</button>
                             <button type="button" class="col-span-1 px-5 py-3 text-sm font-medium text-mainblue bg-white border border-mainblue rounded-lg hover:bg-blue-50 focus:outline-none focus:ring-4 focus:ring-blue-300">Remove</button>
                         </div>
                     </div>

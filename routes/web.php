@@ -2,9 +2,9 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\BarangayController;
-use App\Http\Controllers\PurokController;
-use App\Http\Controllers\MidwifeController;
+use App\Http\Controllers\Web\BarangayController;
+use App\Http\Controllers\Web\PurokController;
+use App\Http\Controllers\Web\MidwifeController;
 
 Route::get('/', function () {
     return view('auth.login');
@@ -82,6 +82,9 @@ Route::middleware([
 
     Route::get('/mho/midwife/{name}/{m_id}', [MidwifeController::class, 'show'])
         ->name('mho.midwife.show');
+
+    // web.php
+    Route::put('mho/midwife/{id}/update', [MidwifeController::class, 'update'])->name('midwives.update');
 
      //route for mho reports
     Route::get('/mho/reports', function(){

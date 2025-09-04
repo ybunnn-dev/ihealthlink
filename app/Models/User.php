@@ -34,7 +34,10 @@ class User extends Authenticatable
         'contact_no',
         'email',
         'password',
-        'role_id'
+        'role_id',
+        'sex',
+        'civil_status',
+        'religion'
     ];
 
 

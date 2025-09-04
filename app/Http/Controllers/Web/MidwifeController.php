@@ -1,6 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Web;
+
+use App\Http\Controllers\Controller;
+
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -135,6 +138,7 @@ class MidwifeController extends Controller
         // 1. Find the midwife record using the unique ID ($m_id) from the URL.
         // The $name parameter is not needed for the query but must be in the signature.
         $midwife = Midwife::with(['users', 'barangays'])->findOrFail($m_id);
+        $emptyBrgy = Barangay::whereDoesntHave('midwives')->get();
 
         // 2. Extract the related user and barangay objects for easier access.
         $user = $midwife->users;
@@ -158,15 +162,20 @@ class MidwifeController extends Controller
             'contact_no'    => $user->contact_no,
             'birthdate'     => Carbon::parse($user->birthdate)->format('F d, Y'),
             'age'           => Carbon::parse($user->birthdate)->age,
-            
+            'sex'           => $user->sex,
+            'civil_status'  => $user->civil_status,
+            'religion'      => $user->religion,
+
             // Assignment Details from the Barangay model
             'barangay_id'   => $barangay->id,
             'barangay_name' => $barangay->name,
         ];
-        \Log::info('Midwife details:', $data);
 
         // 4. Return the view and pass the consolidated data.
-       return view('mho.spec-midwife', ['midwife' => $data]);
+       return view('mho.spec-midwife', [
+            'midwife' => $data,
+            'avail_brgy' => $emptyBrgy
+        ]);
     }
 
     /**
@@ -232,6 +241,47 @@ class MidwifeController extends Controller
         $midwives = $query->paginate(15)->withQueryString();
        
         return response()->json($midwives);
+    }
+
+    public function update(Request $request, $userId)
+    {
+        // Log payload for debugging
+        Log::info("Received update for midwife ID {$request->midwife_id}", $request->all());
+
+        // 1️⃣ Update the User model
+        $user = User::find($userId);
+        if ($user) {
+            $user->update([
+                'firstName'     => $request->firstName,
+                'lastName'      => $request->lastName,
+                'middleName'    => $request->middleName,
+                'suffix'        => $request->suffix,
+                'birthdate'     => $request->birthdate,
+                'contact_no'    => $request->contact_no,
+                'email'         => $request->email,
+                'sex'           => $request->sex,
+                'civil_status'  => $request->civil_status,
+                'religion'      => $request->religion,
+            ]);
+        }
+
+        // 2️⃣ Update the Midwife model
+        $midwife = Midwife::find($request->midwife_id);
+        if ($midwife) {
+            $midwife->update([
+                'brgy_id'    => $request->brgy_id,
+                'status'     => $request->status ?? $midwife->status,
+                // 'added_by' or other fields can be updated if needed
+            ]);
+        }
+
+        // 3️⃣ Return a response
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Midwife updated successfully',
+            'user' => $user,
+            'midwife' => $midwife
+        ]);
     }
 
 }
