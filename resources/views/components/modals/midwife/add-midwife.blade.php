@@ -159,4 +159,4 @@
     </div>
 </div>
 
-@include('components.modals.add-midwife-confirmation')
+@include('components.modals.midwife.add-midwife-confirmation')

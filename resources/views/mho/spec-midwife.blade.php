@@ -88,4 +88,6 @@
             </div>
         </div>
     </div>
+    @include('components.modals.midwife.edit-midwife-modal')
+    @include('components.modals.midwife.remove-midwife')
 </x-app-layout>

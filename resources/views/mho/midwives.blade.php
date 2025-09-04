@@ -95,5 +95,5 @@
       <script>
         const emptyStateImageUrl = "{{ asset('images/illustrations/not-found.png') }}";
     </script>
-    @include('components.modals.add-midwife')
+    @include('components.modals.midwife.add-midwife')
 </x-app-layout>
