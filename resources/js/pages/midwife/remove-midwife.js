@@ -14,6 +14,10 @@ const successMesageHeader = document.getElementById('success-msg-head');
 const successMessage = document.getElementById('success-message');
 const closeSuccessModalButton = document.getElementById('close-success-modal-button');
 
+const options = {
+    // This prevents the modal from closing when the backdrop is clicked
+    backdrop: 'static', 
+};
 
 openRemoveMidwifeModal.addEventListener('click', function () {
     // Initialize the modal
@@ -62,7 +66,7 @@ removeMidwifeBtn.addEventListener('click', async function() {
 
         // Optional: reload or close modal on success
         if (result.status === 'success') {
-            const successModal = new Modal(successModalEl);
+            const successModal = new Modal(successModalEl, options);
             const removeMidwife = new Modal(removeMidwifeModal);
 
             if(successModal && removeMidwife){

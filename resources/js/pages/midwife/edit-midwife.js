@@ -27,8 +27,19 @@ const confirmEditMidwifeCheckbox = document.getElementById('confirm-edit-midwife
 const closeConfirmEditMidwifeBtn = document.getElementById('close-confirm-edit-midwife');
 const confirmEditMidwifeBtn = document.getElementById('confirm-edit-midwife-button');
 
+
+const successModalEl = document.getElementById('success-modal');
+const successMesageHeader = document.getElementById('success-msg-head');
+const successMessage = document.getElementById('success-message');
+const closeSuccessModalButton = document.getElementById('close-success-modal-button');
+
+
 let editMidwifePayload = null;
 
+const options = {
+    // This prevents the modal from closing when the backdrop is clicked
+    backdrop: 'static', 
+};
 function populateBarangayDropdown(barangays) {
     const barangayMenu = document.querySelector('#editBarangayDropdownMenu ul');
     if (!barangayMenu || !editBarangayDropdown) return;
@@ -292,12 +303,24 @@ confirmEditMidwifeBtn.addEventListener('click', async function () {
 
         const result = await response.json();
         
+        // Optional: reload or close modal on success
         if (result.status === 'success') {
-            window.location.reload();
-        }
+            const successModal = new Modal(successModalEl, options);
+            const confirmEditMidwifeModal = new Modal(confirmEditMidwifeModalEl);
 
+            if(successModal && editMidwifeModal){
+                successMesageHeader.textContent = 'Midwife Updated';
+                successMessage.textContent = 'Midwife details has been updated';
+                confirmEditMidwifeModal.hide();
+                successModal.show();
+            }
+        }
 
     } catch (err) {
         console.error('Error sending payload:', err);
     }
+});
+
+closeSuccessModalButton.addEventListener('click', function(){
+     window.location.reload();
 });
