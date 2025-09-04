@@ -67,6 +67,6 @@ class Medicine extends Model
     public function batchesExpiringSoon()
     {
         return $this->inventories()->where('expiry_date', '<=', now()->addDays(30))
-                                  ->where('expiry_date', '>=', now());
+            ->where('expiry_date', '>=', now());
     }
 }
