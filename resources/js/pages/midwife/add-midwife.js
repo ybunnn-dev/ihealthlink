@@ -221,7 +221,6 @@ async function submitMidwifeData(payload) {
 
         if (response.ok) {
             console.log('Success:', data);
-            alert('Midwife added successfully!');
             
             const successModal = new Modal(successModalEl, options);
             const confAddMidwifeModal = new Modal(confirmModalEl);
