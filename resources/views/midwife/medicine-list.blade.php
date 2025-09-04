@@ -112,7 +112,7 @@
                                             </td>
                                             <td class="px-6 py-4">
                                                 {{-- If you don’t yet track quantity, just show 0 or leave blank --}}
-                                                0
+                                                {{ $medicine->remaining_stock }}
                                             </td>
                                             <td class="px-6 py-4">
                                                 {{ $medicine->category }}
@@ -140,4 +140,4 @@
         </div>
     </div>
 </x-app-layout>
-@include('components.modals.add-medicine-modal')
+@include('components.modals.medicine.add-medicine-modal')

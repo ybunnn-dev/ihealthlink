@@ -112,7 +112,7 @@
                                             BATCH ID
                                         </th>
                                         <th scope="col" class="px-6 py-3">
-                                            TOTAL STOCK
+                                            QUANTITY RECEIVED
                                         </th>
                                         <th scope="col" class="px-6 py-3">
                                             REMAINING
@@ -136,6 +136,9 @@
                                         <tr class="bg-white border-b bg-f7 text-normal_font text-center">
                                             <td class="px-6 py-4 font-medium text-normal_font whitespace-nowrap">
                                                 {{ $inventory->id }}
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                {{ $inventory->quantity_received }}
                                             </td>
                                             <td class="px-6 py-4">
                                                 {{ $inventory->stock }}
@@ -177,5 +180,5 @@
                 </div>
             </div>
         </div>
-        @include('components.modals.add-medicine-batch')
+        @include('components.modals.medicine.add-medicine-batch')
 </x-app-layout>

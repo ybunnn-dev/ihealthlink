@@ -1,19 +1,36 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use App\Models\Medicine;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Medicine;
+
 
 class MedicineController extends Controller
 {
     // Show all medicines
     public function index()
     {
-        $medicines = Medicine::orderBy('id', 'asc')->get();
+        // Get all medicines
+        $medicines = Medicine::with(['inventories'])->orderBy('id', 'asc')->get();
 
-        return view('midwife.medicine-list', compact('medicines'));
+        // Map each medicine to include remaining non-expired stock
+        $medicinesWithStock = $medicines->map(function ($medicine) {
+            $remainingStock = $medicine->inventories
+                ->filter(function ($inventory) {
+                    // Only include non-expired items
+                    return Carbon::parse($inventory->expiry_date)->isFuture();
+                })
+                ->sum('stock'); // sum up stock of non-expired inventories
+
+            $medicine->remaining_stock = $remainingStock; // attach remaining stock to medicine
+            return $medicine;
+        });
+
+        return view('midwife.medicine-list', [
+            'medicines' => $medicinesWithStock
+        ]);
     }
 
     public function show($id) // Show specific medicine details

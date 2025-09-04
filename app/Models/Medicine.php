@@ -30,11 +30,11 @@ class Medicine extends Model
     }
 
     /**
-     * Get all inventory records for this medicine
+     * Get all inventory records for this medicinec
      */
-    public function inventories(): HasMany
+    public function inventories()
     {
-        return $this->hasMany(MedicineInventory::class);
+        return $this->hasMany(MedicineInventory::class, 'medicine_id');
     }
 
     /**
