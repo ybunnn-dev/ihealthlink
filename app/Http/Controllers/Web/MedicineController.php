@@ -22,6 +22,7 @@ class MedicineController extends Controller
         // Get medicines only for the midwife's barangay
         $medicines = Medicine::with(['inventories'])
             ->where('brgy_id', $midwife->brgy_id)
+            ->where('status', 'active')
             ->orderBy('id', 'asc')
             ->get();
 
@@ -122,5 +123,25 @@ class MedicineController extends Controller
             'medicine' => $medicine
         ]);
     }
+    public function delete($id, Request $request)
+    {
+        $medicine = Medicine::find($id);
 
+        if (!$medicine) {
+            return response()->json([
+                'result' => 'error',
+                'message' => 'Medicine not found'
+            ], 404);
+        }
+
+        // Update status to inactive
+        $medicine->status = 'inactive';
+        $medicine->save();
+
+        return response()->json([
+            'result' => 'success',
+            'message' => 'Medicine marked as inactive',
+            'id' => $medicine->id
+        ]);
+    }
 }

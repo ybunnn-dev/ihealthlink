@@ -29,7 +29,7 @@
                         </div>
 
                         
-                        <div class="grid grid-cols-1 slg: grid-cols-2 gap-3 w-full">
+                        <div class="grid grid-cols-1 slg:grid-cols-2 gap-3 w-full">
                             <button id="edit-brgy-button" type="button" class="flex-1 px-5 py-3 text-sm font-medium text-white bg-mainblue rounded-lg hover:bg-blue-700 col-span-1">Edit</button>
                             <button id="remove-brgy-button" type="button" class="flex-1 px-5 py-3 text-sm font-medium text-mainblue bg-white border border-mainblue rounded-lg hover:bg-blue-50 col-span-1">Remove</button>
                         </div>

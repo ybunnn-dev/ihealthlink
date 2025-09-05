@@ -13,11 +13,12 @@
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
         <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
+        
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
         <!-- Styles -->
         @livewireStyles
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans antialiased bg-white @yield('page-id', 'default-page')" data-theme="light">
         <x-banner />
@@ -39,9 +40,10 @@
                 </main>
             </div>
         </div>
+        @stack('modals')
         @include('components.modals.language-modal')
         @include('components.modals.success-modal')
-        @stack('modals')
+        
         @livewireScripts
         @stack('scripts')
     </body>

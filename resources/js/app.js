@@ -50,6 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   }else if(bodyClass.contains('spec-med')){
     import('./pages/medicines/edit-medicine.js');
+    import('./pages/medicines/remove-medicine.js');
   }
   else {
     console.log('Not on reports page - charts not loaded');

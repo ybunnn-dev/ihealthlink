@@ -168,6 +168,10 @@ Route::middleware([
     //inside view 
     Route::get('/midwife/medicines/{id}', [MedicineController::class, 'show'])->name('midwife.medicines.show');
 
+
+    //delete a medicine
+    Route::put('/midwife/medicine/delete={id}', [MedicineController::class, 'delete']);
+
     // Store new medicine batch
     Route::post('/midwife/medicines/{id}/inventory', [MedicineInventoryController::class, 'store'])
     ->name('midwife.medicines.inventory.store');

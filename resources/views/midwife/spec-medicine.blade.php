@@ -35,8 +35,20 @@
                                     data-modal-toggle="edit-medicine-modal"
                                     data-id="{{ $medicine->id }}">
                                 Edit
-                            </button>                                
-                            <button id="remove-med-btn" type="button" class="col-span-1 px-5 py-3 text-sm font-medium text-mainblue bg-white border border-mainblue rounded-lg hover:bg-blue-50 focus:outline-none focus:ring-4 focus:ring-300">Remove</button>
+                            </button>   
+                            @push('modals')  
+                                @include('components.modals.medicine.edit-medicine-modal')       
+                            @endpush                    
+                            <button id="remove-med-btn" 
+                                    type="button" 
+                                    data-modal-target="confirm-delete-medicine-modal"
+                                    data-modal-toggle="confirm-delete-medicine-modal"
+                                    class="remove-medicine-btn col-span-1 px-5 py-3 text-sm font-medium text-mainblue bg-white border border-mainblue rounded-lg hover:bg-blue-50 focus:outline-none focus:ring-4 focus:ring-300">
+                                Remove
+                            </button>
+                            @push('modals')
+                                @include('components.modals.medicine.remove-medicine')
+                            @endpush
                         </div>
                     </div>
                     <div class="flex-grow h-full bg-f7 rounded-lg p-12 col-span-1 slg:col-span-2">
@@ -151,7 +163,7 @@
                                 </thead>
                                 <tbody>
                                     @forelse($inventories as $inventory)
-                                        <tr class="bg-white border-b bg-f7 text-normal_font text-center">
+                                        <tr class="bg-white border-b text-normal_font text-center">
                                             <td class="px-6 py-4 font-medium text-normal_font whitespace-nowrap">
                                                 {{ $inventory->id }}
                                             </td>
@@ -209,7 +221,5 @@
                 </div>
             </div>
         </div>
-        @include('components.modals.medicine.edit-medicine-modal')
         @include('components.modals.medicine.add-medicine-batch')
-        @include('components.modals.medicine.remove-medicine')
 </x-app-layout>

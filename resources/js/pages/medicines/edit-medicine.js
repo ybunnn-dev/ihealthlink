@@ -152,7 +152,7 @@ confirmUpdateMedicineBtn.addEventListener('click', function() {
         if(data.result == 'success'){
             if(confirmEditMedModal && successMedModal){
                 confirmEditMedModal.hide();
-                successMesageHeader.textContent = 'Medicined Updated';
+                successMesageHeader.textContent = 'Medicine Updated';
                 successMessage.textContent = 'Midwife details has been updated';
                 successMedModal.show();
             }
