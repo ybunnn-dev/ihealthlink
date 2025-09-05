@@ -1,4 +1,5 @@
-@section('title', 'Medicines | #134')
+@section('page-id', 'spec-med')
+@section('title', $medicine->medicine_name)
 <x-app-layout>
     <div class="py-12 px-5">
         <div class="max-w-[90rem] mx-auto sm:px-6 lg:px-8">
@@ -199,4 +200,6 @@
             </div>
         </div>
         @include('components.modals.medicine.add-medicine-batch')
+        @include('components.modals.medicine.edit-medicine-modal')
+        @include('components.modals.medicine.remove-medicine')
 </x-app-layout>
