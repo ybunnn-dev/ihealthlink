@@ -159,7 +159,7 @@ Route::middleware([
         ->name('midwife.medicines');
 
     // Store new medicine
-    Route::post('/midwife/medicines', [MedicineController::class, 'store'])
+    Route::post('/midwife/add-medicines', [MedicineController::class, 'store'])
         ->name('medicines.store');
 
     // Midwife-specific dashboard 

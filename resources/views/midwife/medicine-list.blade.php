@@ -1,4 +1,5 @@
 @section('title', 'Medicines')
+@section('page-id', 'medicines')
 <x-app-layout>
     <div class="py-12 px-5">
         <div class="max-w-[90rem] mx-auto sm:px-6 lg:px-8">
@@ -58,7 +59,7 @@
                                     
                                     <!-- Add Medicine Button -->
                                     <div class="w-full sm:w-40 pt-5 sm:pt-0">
-                                        <button type="button" class="w-full h-[2.375rem] text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3" data-modal-target="add-medicine-modal" data-modal-toggle="add-medicine-modal">Add Medicines</button>
+                                        <button id="add-med-btn" type="button" class="w-full h-[2.375rem] text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3">Add Medicines</button>
                                     </div>
                                 </div>
                             </div>
@@ -125,9 +126,18 @@
                                             </td>
                                         </tr>
                                     @empty
-                                        <tr>
-                                            <td colspan="6" class="px-6 py-4 text-center text-gray-500">
-                                                No medicines found.
+                                         <tr class="border-b bg-f7 text-normal_font text-center cursor-pointer hover:bg-gray-100">
+                                            {{-- This cell will span all 6 columns of your table --}}
+                                            <td colspan="6">
+                                                <div class="text-center py-10">
+                                                    <img src="{{ asset('images/illustrations/empty.png') }}" alt="No barangays found" class="mx-auto w-64">
+                                                    <p class="mt-5 text-lg font-medium text-gray-700">
+                                                        {{ $message ?? "Oops! You haven't added any barangay yet." }}
+                                                    </p>
+                                                    <p class="mt-2 text-sm text-gray-500">
+                                                        Click the "Add Medicine" button to get started.
+                                                    </p>
+                                                </div>
                                             </td>
                                         </tr>
                                     @endforelse

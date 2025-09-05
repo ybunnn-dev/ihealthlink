@@ -43,6 +43,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   }else if(bodyClass.contains('health-programs')){
     import('./pages/health-programs/add-health-program.js');
+
+  }else if(bodyClass.contains('medicines')){
+
+    import('./pages/medicines/add-medicine.js');
+    
   }
   else {
     console.log('Not on reports page - charts not loaded');
