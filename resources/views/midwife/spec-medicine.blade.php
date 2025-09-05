@@ -1,6 +1,9 @@
 @section('page-id', 'spec-med')
 @section('title', $medicine->medicine_name)
 <x-app-layout>
+    <script>
+         window.medicineData = @json($medicine);
+    </script>
     <div class="py-12 px-5">
         <div class="max-w-[90rem] mx-auto sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 gap-4">
@@ -25,8 +28,15 @@
                             <p class="text-main_font font-medium">Medicine #{{ $medicine->id }}</p>
                         </div>
                         <div class="grid grid-cols-1 lg:grid-cols-2 w-full px-0 pb-0 row-span-1 gap-3"> 
-                                <button id="edit-med-btn" type="button" class="col-span-1 px-5 py-3 text-sm font-medium text-white bg-mainblue rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300">Edit</button>
-                                <button id="remove-med-btn" type="button" class="col-span-1 px-5 py-3 text-sm font-medium text-mainblue bg-white border border-mainblue rounded-lg hover:bg-blue-50 focus:outline-none focus:ring-4 focus:ring-300">Remove</button>
+                            <button id="edit-med-btn" 
+                                    type="button" 
+                                    class="edit-medicine-btn col-span-1 px-5 py-3 text-sm font-medium text-white bg-mainblue rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300"
+                                    data-modal-target="edit-medicine-modal"
+                                    data-modal-toggle="edit-medicine-modal"
+                                    data-id="{{ $medicine->id }}">
+                                Edit
+                            </button>                                
+                            <button id="remove-med-btn" type="button" class="col-span-1 px-5 py-3 text-sm font-medium text-mainblue bg-white border border-mainblue rounded-lg hover:bg-blue-50 focus:outline-none focus:ring-4 focus:ring-300">Remove</button>
                         </div>
                     </div>
                     <div class="flex-grow h-full bg-f7 rounded-lg p-12 col-span-1 slg:col-span-2">
@@ -199,7 +209,7 @@
                 </div>
             </div>
         </div>
-        @include('components.modals.medicine.add-medicine-batch')
         @include('components.modals.medicine.edit-medicine-modal')
+        @include('components.modals.medicine.add-medicine-batch')
         @include('components.modals.medicine.remove-medicine')
 </x-app-layout>
