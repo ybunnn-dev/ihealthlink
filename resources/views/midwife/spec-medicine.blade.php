@@ -10,17 +10,23 @@
                     </div>
                 </a>
                 <div class="grid grid-cols-1 slg:grid-cols-3 gap-3">
-                    <div class="w-full h-full bg-f7 rounded-lg flex flex-col items-center justify-center p-4 col-span-1"> 
-                        <svg class="flex-shrink-0 w-32 h-32 lg:w-40 lg:h-40 xl2:w-44 xl2:h-44 text-main_font mb-3"
-                            version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor">
-                            <g>
-                                <path d="M358.359,23.406C358.359,10.484,347.875,0,334.953,0H177.047c-12.922,0-23.406,10.484-23.406,23.406v50.234 h204.719V23.406z"></path>
-                                <path d="M371.188,162.453c-20.766-10.391-27.703-34.641-27.703-55.422c0-1.344,0-3.328,0-5.875 c0-0.938,0-1.813,0-2.938H168.516c0,1.125,0,2,0,2.938c0,0.313,0,1.969,0,5.875c0,20.781-6.938,45.031-27.703,55.422 c-24.813,12.391-35.219,30.859-35.219,74.969c0,15.734,0,162.766,0,187.969c0,42.516,29.922,86.609,89.781,86.609h121.25 c59.859,0,89.781-44.094,89.781-86.609c0-25.203,0-172.234,0-187.969C406.406,193.313,396,174.844,371.188,162.453z M357.156,406.719H154.844V241.547h202.313V406.719z"></path>
-                                <polygon points="238.688,386.922 273.297,386.922 273.297,345.828 314.375,345.828 314.375,311.25 273.297,311.25 273.297,270.156 238.688,270.156 238.688,311.25 197.625,311.25 197.625,345.828 238.688,345.828 "></polygon>
-                            </g>
-                        </svg>
-                        <p class="text-main_font font-bold">{{ $medicine->medicine_name }}</p>
-                        <p class="text-main_font font-medium">Medicine #{{ $medicine->id }}</p>
+                    <div class="grid grid-rows-5 col-span-1 gap-3">
+                        <div class="w-full h-full bg-f7 rounded-lg flex flex-col items-center justify-center p-4 row-span-4"> 
+                            <svg class="flex-shrink-0 w-32 h-32 lg:w-40 lg:h-40 xl2:w-44 xl2:h-44 text-main_font mb-3"
+                                version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor">
+                                <g>
+                                    <path d="M358.359,23.406C358.359,10.484,347.875,0,334.953,0H177.047c-12.922,0-23.406,10.484-23.406,23.406v50.234 h204.719V23.406z"></path>
+                                    <path d="M371.188,162.453c-20.766-10.391-27.703-34.641-27.703-55.422c0-1.344,0-3.328,0-5.875 c0-0.938,0-1.813,0-2.938H168.516c0,1.125,0,2,0,2.938c0,0.313,0,1.969,0,5.875c0,20.781-6.938,45.031-27.703,55.422 c-24.813,12.391-35.219,30.859-35.219,74.969c0,15.734,0,162.766,0,187.969c0,42.516,29.922,86.609,89.781,86.609h121.25 c59.859,0,89.781-44.094,89.781-86.609c0-25.203,0-172.234,0-187.969C406.406,193.313,396,174.844,371.188,162.453z M357.156,406.719H154.844V241.547h202.313V406.719z"></path>
+                                    <polygon points="238.688,386.922 273.297,386.922 273.297,345.828 314.375,345.828 314.375,311.25 273.297,311.25 273.297,270.156 238.688,270.156 238.688,311.25 197.625,311.25 197.625,345.828 238.688,345.828 "></polygon>
+                                </g>
+                            </svg>
+                            <p class="text-main_font font-bold">{{ $medicine->medicine_name }}</p>
+                            <p class="text-main_font font-medium">Medicine #{{ $medicine->id }}</p>
+                        </div>
+                        <div class="grid grid-cols-1 lg:grid-cols-2 w-full px-0 pb-0 row-span-1 gap-3"> 
+                                <button id="edit-med-btn" type="button" class="col-span-1 px-5 py-3 text-sm font-medium text-white bg-mainblue rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300">Edit</button>
+                                <button id="remove-med-btn" type="button" class="col-span-1 px-5 py-3 text-sm font-medium text-mainblue bg-white border border-mainblue rounded-lg hover:bg-blue-50 focus:outline-none focus:ring-4 focus:ring-300">Remove</button>
+                        </div>
                     </div>
                     <div class="flex-grow h-full bg-f7 rounded-lg p-12 col-span-1 slg:col-span-2">
                         <h2 class="text-xl font-semibold text-main_font mb-6">Medicine Info</h2>
@@ -150,10 +156,10 @@
                                             <td class="px-6 py-4">
                                                 {{ $inventory->expiry_date->format('Y-m-d') }}
                                             </td>
-                                            <td class="px-6 py-4">
+                                            <td class="px-6 py-4 bg-f7">
                                                 {{ $inventory->addedBy->name ?? 'Unknown' }}
                                             </td>
-                                            <td class="px-6 py-4">
+                                            <td class="px-6 py-4 bg-f7">
                                                 @if($inventory->is_expired)
                                                     <span class="bg-red-100 border-1 border-red-500 text-red-800 text-xs font-medium px-2 py-1 rounded-full w-32 text-center inline-block">
                                                         Expired
@@ -170,8 +176,19 @@
                                             </td>
                                         </tr>
                                     @empty
-                                        <tr class="bg-white border-b bg-f7 text-normal_font text-center">
-                                            <td colspan="6" class="px-6 py-4">No batches available for this medicine.</td>
+                                        <tr class="border-b bg-f7 text-normal_font text-center cursor-pointer hover:bg-gray-100">
+                                            {{-- This cell will span all 6 columns of your table --}}
+                                            <td colspan="7">
+                                                <div class="text-center py-10">
+                                                    <img src="{{ asset('images/illustrations/empty.png') }}" alt="No barangays found" class="mx-auto w-64">
+                                                    <p class="mt-5 text-lg font-medium text-gray-700">
+                                                        {{ $message ?? "Oops! You haven't added any barangay yet." }}
+                                                    </p>
+                                                    <p class="mt-2 text-sm text-gray-500">
+                                                        Click the "Add Medicine" button to get started.
+                                                    </p>
+                                                </div>
+                                            </td>
                                         </tr>
                                     @endforelse
                                 </tbody>
