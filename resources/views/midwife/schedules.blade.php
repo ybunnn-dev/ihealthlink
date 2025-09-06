@@ -2,6 +2,13 @@
     @section('title', 'Schedules')
     @section('page-id', 'sched')
     <div class="py-12 px-5">
+        <script>
+            const data1 = @json($schedules);
+            document.addEventListener('DOMContentLoaded', function() {
+                console.log(data1);
+            });
+        </script>
+        
         <div class="max-w-[90rem] mx-auto sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 gap-3">
                 <h1 class="text-3xl font-semibold text-sub_blue mb-3 col-span-full">Schedules</h1>
@@ -130,7 +137,7 @@
                         </div>
                     </div>
                 </div>
-                <x-schedules.day-schedule-cards />
+                <x-schedules.day-schedule-cards :dailyActivities="$dailyActivities" />
             </div>
         </div>
     </div>
