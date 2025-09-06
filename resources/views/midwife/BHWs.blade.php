@@ -89,75 +89,45 @@
                         <table class="w-full text-sm text-left text-main_font bg-col_tab_h">
                             <thead class="text-xs text-main_font uppercase text-center">
                                 <tr>
-                                    <th scope="col" class="px-6 py-3">
-                                        BHW No.
-                                    </th>
-                                    <th scope="col" class="px-6 py-3">
-                                        BHWs Name
-                                    </th>
-                                    <th scope="col" class="px-6 py-3">
-                                        Assigned Purok
-                                    </th>
-                                    <th scope="col" class="px-6 py-3">
-                                        Date Added
-                                    </th>
-                                    <th scope="col" class="px-6 py-3">
-                                        Date Updated
-                                    </th>
+                                    <th scope="col" class="px-6 py-3">BHW No.</th>
+                                    <th scope="col" class="px-6 py-3">BHWs Name</th>
+                                    <th scope="col" class="px-6 py-3">Assigned Purok</th>
+                                    <th scope="col" class="px-6 py-3">Date Added</th>
+                                    <th scope="col" class="px-6 py-3">Date Updated</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr class="bg-white border-b bg-f7 text-normal_font text-center" onclick="window.location='{{ route('midwife.BHWs-profile') }}'">
-                                    <th scope="row" class="px-6 py-4 font-medium text-normal_font whitespace-nowrap">
-                                        121
-                                    </th>
-                                    <td class="px-6 py-4">
-                                        Jose P. Manalo
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        Purok 3
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        Feb 10, 2025
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        Feb 10, 2025
-                                    </td>
-                                </tr>
-                                <tr class="bg-white border-b bg-f7 text-normal_font text-center">
-                                    <th scope="row" class="px-6 py-4 font-medium text-normal_font whitespace-nowrap">
-                                        122
-                                    </th>
-                                    <td class="px-6 py-4">
-                                        Wally P. Bayola
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        Purok 5
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        Feb 11, 2025
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        Feb 14, 2025
-                                    </td>
-                                </tr>
-                                <tr class="bg-white border-b bg-f7 text-normal_font text-center">
-                                    <th scope="row" class="px-6 py-4 font-medium text-normal_font whitespace-nowrap">
-                                        123
-                                    </th>       
-                                    <td class="px-6 py-4">
-                                        Paulo P. Ballesteros
-                                    </td>             
-                                    <td class="px-6 py-4">
-                                        Purok 7
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        Feb 9, 2025
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        Feb 12, 2025
-                                    </td>
-                                </tr>
+                                @forelse ($bhws as $bhw)
+                                    {{-- We'll need to create this route later for the BHW profile page --}}
+                                    <tr class="bg-white border-b bg-f7 text-normal_font text-center hover:bg-gray-50 cursor-pointer" onclick="window.location='{{ route('midwife.bhws.show', $bhw->id) }}'">
+                                        
+                                        <th scope="row" class="px-6 py-4 font-medium text-normal_font whitespace-nowrap">
+                                            {{ $bhw->id }}
+                                        </th>
+
+                                        <td class="px-6 py-4">
+                                            {{ $bhw->name }}
+                                        </td>
+
+                                        <td class="px-6 py-4">
+                                            N/A {{-- Placeholder --}}
+                                        </td>
+
+                                        <td class="px-6 py-4">
+                                            {{ $bhw->created_at->format('M d, Y') }}
+                                        </td>
+
+                                        <td class="px-6 py-4">
+                                            {{ $bhw->updated_at->format('M d, Y') }}
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr class="bg-white border-b">
+                                        <td colspan="5" class="px-6 py-4 text-center text-gray-500">
+                                            No Barangay Health Workers found for your assigned barangay.
+                                        </td>
+                                    </tr>
+                                @endforelse
                             </tbody>
                         </table>
                     </div>
