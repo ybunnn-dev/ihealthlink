@@ -140,6 +140,8 @@ Route::middleware([
     })->name('midwife.spec-resident');
 
     Route::get('/barangay/schedules', [ScheduleController::class, 'index'])->name('midwife.sched');
+    
+    Route::put('/daily-activity/update', [ScheduleController::class, 'updateDailyActivity']);
 
     Route::get('/midwife/reports', function () {
         return view('midwife.reports');

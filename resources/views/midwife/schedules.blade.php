@@ -3,10 +3,7 @@
     @section('page-id', 'sched')
     <div class="py-12 px-5">
         <script>
-            const data1 = @json($schedules);
-            document.addEventListener('DOMContentLoaded', function() {
-                console.log(data1);
-            });
+            window.activityIcons= @json($activityIcons);
         </script>
         
         <div class="max-w-[90rem] mx-auto sm:px-6 lg:px-8">
@@ -14,7 +11,7 @@
                 <h1 class="text-3xl font-semibold text-sub_blue mb-3 col-span-full">Schedules</h1>
                 <x-schedules.sched-tab />
                 <div id="scheduledContent" class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    <div class="bg-white rounded-xl shadow-sm p-6 md:col-span-1">
+                    <div class="bg-white rounded-xl p-6 md:col-span-1">
                         <div class="flex items-center justify-between mb-4">
                             <button id="prevMonthBtn" class="text-gray-500 hover:text-gray-700">
                                 <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -43,7 +40,7 @@
                     <!-- Current Date Schedule Card -->
                     <x-schedules.calendar-card />
                     <!-- Upcoming Schedules Card -->
-                    <div class="bg-white rounded-xl shadow-sm p-6 md:col-span-1">
+                    <div class="bg-white rounded-xl p-6 md:col-span-1">
                         <h2 class="text-xl font-semibold text-main_font mb-4 flex items-center gap-2">
                             <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -102,7 +99,7 @@
                     </div>
 
                     <!-- Current Activity Card -->
-                    <div class="bg-white rounded-xl shadow-sm py-6 px-10 md:col-span-2">
+                    <div class="bg-white rounded-xl py-6 px-10 md:col-span-2">
                         <h2 class="text-xl font-semibold text-main_font mb-6">Current Activity</h2>
                         <div class="grid grid-cols-1 gap-y-3 text-sm max-w-[70%]">
                             <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1 md:gap-x-2">
@@ -137,7 +134,7 @@
                         </div>
                     </div>
                 </div>
-                <x-schedules.day-schedule-cards :dailyActivities="$dailyActivities" />
+                <x-schedules.day-schedule-cards :dailyActivities="$dailyActivities" :activityIcons="$activityIcons" />
             </div>
         </div>
     </div>

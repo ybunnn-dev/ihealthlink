@@ -54,6 +54,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   }else if(bodyClass.contains('sched')){
     import('./pages/schedules/tab-switch.js');
+     // Dynamically import your modal script and then call the function
+    import('./pages/schedules/edit-daily-activity.js').then(module => {
+        module.initDailyActivityModal();
+    });
   }
 
   else {

@@ -1,4 +1,4 @@
-<div class="bg-white rounded-xl shadow-sm py-6 px-10 md:col-span-2">
+<div class="bg-white rounded-xl py-6 px-10 md:col-span-2">
                     <!-- Header -->
                     <div class="flex items-center justify-between flex-wrap gap-3 mb-3">
                         <h2 class="text-xl font-semibold text-main_font flex items-center gap-2">

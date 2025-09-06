@@ -8,6 +8,7 @@ class ActivityIcons extends Model
 {
     protected $fillable = [
         'path', // the <path> for the SVG
+        'viewbox'
     ];
 
     // Optional: link back to daily activities
