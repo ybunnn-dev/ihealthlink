@@ -59,7 +59,7 @@ Route::middleware([
 
     //edit purok
     Route::put('mho/puroks/{id}', [PurokController::class, 'update'])->name('puroks.update');
-    
+
     //removing a purok
     Route::put('/mho/puroks/remove/{id}', [PurokController::class, 'remove'])->name('mho.puroks.remove');
 
@@ -175,13 +175,11 @@ Route::middleware([
 
     // Store new medicine batch
     Route::post('/midwife/medicines/{id}/inventory', [MedicineInventoryController::class, 'store'])
-    ->name('midwife.medicines.inventory.store');
+        ->name('midwife.medicines.inventory.store');
 
+    //bhw routes
     Route::get('/midwife/bhws/', [BHWController::class, 'index'])->name('midwife.bhws');
-
-    Route::get('/midwife/bhw-profile', function () {
-        return view('midwife.BHWs-profile');
-    })->name('midwife.BHWs-profile');
+    Route::get('/midwife/bhws/{bhw}', [BHWController::class, 'show'])->name('midwife.bhws.show');
 
     // Midwife-specific dashboard
     Route::get('/midwife/logs', function () {
