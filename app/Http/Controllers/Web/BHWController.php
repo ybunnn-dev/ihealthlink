@@ -21,5 +21,7 @@ use App\Models\User;
 
 class BHWController extends Controller
 {
-    //
+    public function index(){
+        return view('midwife.BHWs');
+    }
 }

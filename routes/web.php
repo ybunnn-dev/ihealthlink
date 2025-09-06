@@ -7,6 +7,7 @@ use App\Http\Controllers\Web\PurokController;
 use App\Http\Controllers\Web\MidwifeController;
 use App\Http\Controllers\Web\MedicineController;
 use App\Http\Controllers\Web\MedicineInventoryController;
+use App\Http\Controllers\Web\BHWController;
 
 Route::get('/', function () {
     return view('auth.login');
@@ -176,9 +177,7 @@ Route::middleware([
     Route::post('/midwife/medicines/{id}/inventory', [MedicineInventoryController::class, 'store'])
     ->name('midwife.medicines.inventory.store');
 
-    Route::get('/midwife/bhws', function () {
-        return view('midwife.BHWs');
-    })->name('midwife.bhws');
+    Route::get('/midwife/bhws/', [BHWController::class, 'index'])->name('midwife.bhws');
 
     Route::get('/midwife/bhw-profile', function () {
         return view('midwife.BHWs-profile');
