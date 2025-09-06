@@ -30,10 +30,10 @@ class MidwifeController extends Controller
 
         // The query now includes latest() for sorting and paginate() for pagination.
         $midwivesPaginator = Midwife::with(['users', 'barangays'])
-            ->where('role_id', 2)
             ->where('status', 'active') 
-            ->latest() // This orders the results by 'created_at' in descending order.
-            ->paginate(15); // Fetches 15 records per page.
+            ->latest() // Orders by 'created_at' descending
+            ->paginate(15);
+
 
         // Use through() to apply your mapping logic to the paginated collection.
         $rows = $midwivesPaginator->through(function ($m) {
