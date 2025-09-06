@@ -8,6 +8,7 @@ use App\Http\Controllers\Web\MidwifeController;
 use App\Http\Controllers\Web\MedicineController;
 use App\Http\Controllers\Web\MedicineInventoryController;
 use App\Http\Controllers\Web\BHWController;
+use App\Http\Controllers\Web\ScheduleController;
 
 Route::get('/', function () {
     return view('auth.login');
@@ -138,9 +139,7 @@ Route::middleware([
         return view('midwife.spec-resident');
     })->name('midwife.spec-resident');
 
-    Route::get('/midwife/schedules', function () {
-        return view('midwife.schedules');
-    })->name('midwife.sched');
+    Route::get('/barangay/schedules', [ScheduleController::class, 'index'])->name('midwife.sched');
 
     Route::get('/midwife/reports', function () {
         return view('midwife.reports');
@@ -174,8 +173,7 @@ Route::middleware([
     Route::put('/midwife/medicine/delete={id}', [MedicineController::class, 'delete']);
 
     // Store new medicine batch
-    Route::post('/midwife/medicines/{id}/inventory', [MedicineInventoryController::class, 'store'])
-    ->name('midwife.medicines.inventory.store');
+    Route::post('/midwife/medicines/{id}/inventory', [MedicineInventoryController::class, 'store'])->name('midwife.medicines.inventory.store');
 
     Route::get('/midwife/bhws/', [BHWController::class, 'index'])->name('midwife.bhws');
 

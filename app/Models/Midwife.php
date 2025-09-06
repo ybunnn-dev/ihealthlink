@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Schedules;
 
 class Midwife extends Model
 {
@@ -38,6 +39,18 @@ class Midwife extends Model
 
         // Example: "Peter Montefalco Jr."
         return trim("{$user->firstName} {$user->lastName} " . ($user->suffix ?? ''));
+    }
+
+    public function schedules()
+    {
+        return $this->hasManyThrough(
+            Schedules::class, // final model
+            self::class,                  // intermediate model (personnel / midwife)
+            'brgy_id',                    // Foreign key on personnel table (brgy_id)
+            'brgy_id',                    // Foreign key on schedules table (brgy_id)
+            'id',                         // Local key on midwife (personnel) table
+            'brgy_id'                     // Local key on schedules table (actually matches brgy_id)
+        );
     }
 
     protected $appends = ['name'];
