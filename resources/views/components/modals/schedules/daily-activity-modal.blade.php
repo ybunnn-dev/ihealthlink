@@ -58,4 +58,4 @@
         </div>
     </div>
 </div>
-@include('components.modals.schedules.confirm-edit-daily-activity');
+@include('components.modals.schedules.confirm-edit-daily-activity')
