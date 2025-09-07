@@ -348,6 +348,15 @@ cancelConfirmAddScheduleBtn.addEventListener('click', function(){
     addActivityModal.show();
 });
 
+
+
+const successSchedModalEl = document.getElementById('success-modal');
+const successSchedMesageHeader = document.getElementById('success-msg-head');
+const successSchedMessage = document.getElementById('success-message');
+const closeSuccessSchedModalButton = document.getElementById('close-success-modal-button');
+
+const successSchedModal = new Modal(successSchedModalEl);
+
 confirmAddScheduleBtn.addEventListener('click', function() {
     const addSchedPayload = {
         activity: activityNameInput.value.trim(),
@@ -371,10 +380,20 @@ confirmAddScheduleBtn.addEventListener('click', function() {
     .then(res => res.json())
     .then(data => {
         console.log("Response from backend:", data);
+        if(data.result == 'success'){
+            confirmAddSchedulModal.hide();
+            successSchedMesageHeader.textContent = "Schedule Added";
+            successSchedMessage.textContent = "Schedule has been added successfully";
+            successSchedModal.show();
+        }
     })
     .catch(err => {
         console.error("Error sending schedule:", err);
     });
+});
+
+closeSuccessSchedModalButton.addEventListener('click', function(){
+    window.location.reload();
 });
 
 validateAddActivityForms();

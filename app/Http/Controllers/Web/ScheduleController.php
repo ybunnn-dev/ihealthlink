@@ -80,7 +80,7 @@ class ScheduleController extends Controller
             'venue' => 'required|string|max:255',
             'health_program_id' => 'nullable|exists:health_programs,id',
             'bhws' => 'nullable|array',
-            'bhws.*.id' => 'required|integer|exists:bhws,id',
+            'bhws.*.id' => 'required|integer|exists:personnel,id',
         ]);
 
         $normalizedDate = Carbon::createFromFormat('m/d/Y', $validated['date'])->format('Y-m-d');
@@ -117,7 +117,7 @@ class ScheduleController extends Controller
         ]);
 
         return response()->json([
-            'success' => true,
+            'result' => 'success',
             'message' => 'Schedule created successfully',
             'data' => [
                 'schedule' => $schedule,
