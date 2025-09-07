@@ -1,0 +1,45 @@
+<div id="confirm-add-schedule-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative p-4 w-full max-w-lg max-h-full">
+        <div class="relative bg-white rounded-lg shadow-sm py-10 px-6">
+            <div class="flex flex-col items-center justify-center rounded-t mb-6 text-center">
+                <h3 class="text-xl font-semibold text-main_font">
+                    Confirm New Schedule
+                </h3>
+                <p class="text-sm text-normal_font mt-1">
+                    Please review and confirm the new schedule details.
+                </p>
+            </div>
+
+            <div class="px-4 md:px-5 py-3 space-y-3 bg-gray-50 rounded-lg border">
+                <div class="flex justify-between items-center text-sm">
+                    <span class="text-gray-600">Activity:</span>
+                    <strong id="schedule-activity-to-confirm" class="text-main_font text-right">Activity Name Here</strong>
+                </div>
+                <div class="flex justify-between items-center text-sm">
+                    <span class="text-gray-600">Date:</span>
+                    <strong id="schedule-date-to-confirm" class="text-main_font text-right">Date Here</strong>
+                </div>
+                <div class="flex justify-between items-center text-sm">
+                    <span class="text-gray-600">Time:</span>
+                    <strong id="schedule-time-to-confirm" class="text-main_font text-right">Time Here</strong>
+                </div>
+                <div class="flex justify-between items-center text-sm">
+                    <span class="text-gray-600">Venue:</span>
+                    <strong id="schedule-venue-to-confirm" class="text-main_font text-right">Venue Here</strong>
+                </div>
+            </div>
+
+            <div class="p-4 md:p-5 mt-4">
+                <div class="flex items-center justify-center">
+                    <input id="confirm-schedule-checkbox" type="checkbox" value="" class="w-4 h-4 text-mainblue bg-gray-100 border-gray-300 rounded focus:ring-mainblue">
+                    <label for="confirm-schedule-checkbox" class="ms-2 text-sm font-medium text-gray-900">I have reviewed the schedule details.</label>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-end border-t border-gray-200 rounded-b gap-3 pt-6 px-6">
+                <button id="cancel-confirm-add-schedule" type="button" class="py-2.5 px-5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100">Cancel</button>
+                <button id="confirm-add-schedule-btn" type="button" class="text-white bg-mainblue hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center disabled:opacity-50 disabled:cursor-not-allowed" disabled>Confirm & Add</button>
+            </div>
+        </div>
+    </div>
+</div>

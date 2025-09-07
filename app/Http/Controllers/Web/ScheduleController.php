@@ -8,6 +8,9 @@ use App\Models\Midwife;
 use App\Models\Schedules;
 use App\Models\DailyActivities;
 use App\Models\ActivityIcons;
+use App\Models\ScheduleAssignments;
+use Carbon\Carbon;
+
 
 class ScheduleController extends Controller
 {
@@ -33,7 +36,6 @@ class ScheduleController extends Controller
         }
         //can you log the data here before returning tghe view?
         // Pass both to the view
-        \Log::info('Daily Activities Data:', $dailyActivities->toArray());
         
         return view('midwife.schedules', compact('schedules', 'dailyActivities', 'activityIcons'));
     }
@@ -67,4 +69,61 @@ class ScheduleController extends Controller
             'data' => $dailyActivity
         ]);
     }
+
+    public function store(Request $request)
+    {
+        // Validate request
+        $validated = $request->validate([
+            'activity' => 'required|string|max:255',
+            'date' => 'required|string',
+            'time' => 'required|string|max:50',
+            'venue' => 'required|string|max:255',
+            'health_program_id' => 'nullable|exists:health_programs,id',
+            'bhws' => 'nullable|array',
+            'bhws.*.id' => 'required|integer|exists:bhws,id',
+        ]);
+
+        $normalizedDate = Carbon::createFromFormat('m/d/Y', $validated['date'])->format('Y-m-d');
+        $normalizedTime = Carbon::createFromFormat('H:i', $validated['time'])->format('H:i:s');
+
+        // Get the current midwife (and their barangay ID)
+        $midwife = Midwife::where('user_id', auth()->id())->firstOrFail();
+
+        // Save the schedule
+        $schedule = Schedules::create([
+            'activity' => $validated['activity'],
+            'date' => $normalizedDate,
+            'time' => $normalizedTime,
+            'venue' => $validated['venue'],
+            'brgy_id' => $midwife->brgy_id,
+            'health_program_id' => $validated['health_program_id'] ?? null,
+            'added_by' => auth()->id(),
+        ]);
+
+        // Assign BHWs if provided
+        if (!empty($validated['bhws'])) {
+            foreach ($validated['bhws'] as $bhw) {
+                ScheduleAssignments::create([
+                    'schedule_id' => $schedule->id,
+                    'personnel_id' => $bhw['id'],
+                ]);
+            }
+        }
+
+        // Log the saved data
+        \Log::info('New Schedule Saved:', [
+            'schedule' => $schedule->toArray(),
+            'bhws' => $validated['bhws'] ?? [],
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Schedule created successfully',
+            'data' => [
+                'schedule' => $schedule,
+                'bhws' => $validated['bhws'] ?? []
+            ]
+        ]);
+    }
+
 }

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Schedules;
 use App\Models\Midwife;
 use App\Models\BHW;
+use App\Models\ScheduleAssignments;
 
 class Schedules extends Model
 {
@@ -38,7 +39,6 @@ class Schedules extends Model
     {
         return $this->belongsTo(User::class, 'added_by');
     }
-
     // Link to assigned BHWs (many-to-many pivot)
     public function assignedBHWs()
     {

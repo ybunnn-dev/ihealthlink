@@ -9,6 +9,7 @@ use App\Http\Controllers\Web\MedicineController;
 use App\Http\Controllers\Web\MedicineInventoryController;
 use App\Http\Controllers\Web\BHWController;
 use App\Http\Controllers\Web\ScheduleController;
+use App\Http\Controllers\Web\HealthProgramController;
 
 Route::get('/', function () {
     return view('auth.login');
@@ -143,6 +144,8 @@ Route::middleware([
     
     Route::put('/daily-activity/update', [ScheduleController::class, 'updateDailyActivity']);
 
+    Route::get('/barangay/get-bhws', [BHWController::class, 'getBHWs'])->name('bhws.get');
+
     Route::get('/midwife/reports', function () {
         return view('midwife.reports');
     })->name('midwife.reports');
@@ -150,6 +153,11 @@ Route::middleware([
     Route::get('/midwife/health-program', function () {
         return view('midwife.health-program');
     })->name('midwife.health-program');
+
+
+    Route::get('/barangay/fetch/health-programs', [HealthProgramController::class, 'provideData'])->name('health.programs');
+
+
 
     Route::get('/midwife/health-program-profile', function () {
         return view('midwife.health-program-profile');
@@ -178,6 +186,8 @@ Route::middleware([
     Route::post('/midwife/medicines/{id}/inventory', [MedicineInventoryController::class, 'store'])->name('midwife.medicines.inventory.store');
 
     Route::get('/midwife/bhws/', [BHWController::class, 'index'])->name('midwife.bhws');
+
+    Route::post('/barangay/add-sched', [ScheduleController::class, 'store']);
 
     Route::get('/midwife/bhw-profile', function () {
         return view('midwife.BHWs-profile');

@@ -5,7 +5,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
             </h2>
-        <button id="add-activity-btn" class="w-32 h-[2rem] bg-mainblue rounded-md text-xs font-semibold text-f7 px-6" data-modal-target="add-activity-modal" data-modal-toggle="add-activity-modal">Add Activity</button>
+        <button id="add-activity-btn" class="w-32 h-[2rem] bg-mainblue rounded-md text-xs font-semibold text-f7 px-6">Add Activity</button>
     </div>
 
     <table class="w-full text-sm text-left text-main_font bg-col_tab_h">
