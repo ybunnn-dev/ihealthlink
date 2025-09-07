@@ -63,5 +63,5 @@
      <script>
         const emptyStateImageUrl = "{{ asset('images/illustrations/empty.png') }}";
     </script>
-    @include('components.modals.add-activity-modal')
+    @include('components.modals.schedules.add-activity-modal')
 </x-app-layout>
