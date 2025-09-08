@@ -56,6 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
     import('./pages/schedules/tab-switch.js');
     import('./pages/schedules/calendar.js');
     import('./pages/schedules/add-schedule.js');
+    import('./pages/schedules/edit-activity-modal.js');
      // Dynamically import your modal script and then call the function
     import('./pages/schedules/edit-daily-activity.js').then(module => {
         module.initDailyActivityModal();
