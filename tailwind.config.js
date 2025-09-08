@@ -97,6 +97,7 @@ export default {
     plugins: [
         forms,
         typography,
+        require('tailwind-scrollbar-hide'),
         require('tailwind-scrollbar'),
         require('flowbite/plugin'),
     ],
