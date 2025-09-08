@@ -157,6 +157,7 @@ Route::middleware([
 
     Route::get('/barangay/fetch/health-programs', [HealthProgramController::class, 'provideData'])->name('health.programs');
 
+    Route::put('/barangay/schedule/delete/{id}', [ScheduleController::class, 'softDelete']);
 
 
     Route::get('/midwife/health-program-profile', function () {

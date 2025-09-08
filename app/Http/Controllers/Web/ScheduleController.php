@@ -26,7 +26,9 @@ class ScheduleController extends Controller
         if ($midwife) {
             // Fetch schedules for their barangay
             $schedules = Schedules::where('brgy_id', $midwife->brgy_id)
+                                  ->where('status', 'active')
                                   ->with('assignedBHWs', 'healthProgram', 'barangay')
+
                                   ->get();
 
             // Fetch daily activities for their barangay
@@ -194,5 +196,18 @@ class ScheduleController extends Controller
             ]
         ]);
     }
+    public function softDelete($id)
+    {
+        $schedule = Schedules::findOrFail($id);
+        $schedule->status = 'inactive'; // soft delete
+        $schedule->save();
 
+        \Log::info('Schedule soft deleted', ['id' => $id]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Schedule marked as inactive',
+            'data' => ['id' => $id]
+        ]);
+    }
 }

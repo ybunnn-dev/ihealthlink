@@ -1,5 +1,6 @@
 // --- 1. GET HTML REFERENCES ---
 import { handleEditSchedule } from './edit-schedule.js';
+import { handleDeleteSchedule} from './remove-schedule.js';
 
 const currentMonthEl = document.getElementById('currentMonth');
 const calendarDatesEl = document.getElementById('calendarDates');
@@ -63,17 +64,6 @@ function handleViewSchedule(scheduleId) {
  * @param {string} scheduleId - The ID of the schedule to edit.
  */
 
-/**
- * Handles the click event for the 'Delete' button.
- * @param {string} scheduleId - The ID of the schedule to delete.
- */
-function handleDeleteSchedule(scheduleId) {
-    const schedule = window.scheds.find(s => s.id == scheduleId);
-    if (schedule) {
-        console.log("Delete clicked:", schedule);
-        // You can later add code here to show a confirmation modal.
-    }
-}
 // --- 3. PROCESS DATABASE DATA ---
 // Assumes 'window.scheds' is defined by your server and now uses the 'date' key.
 const scheduleData = {};
@@ -113,11 +103,6 @@ scheduleListBody.addEventListener('click', (event) => {
     }
 });
 
-/**
- * Updates the schedule list UI with a given set of schedules for a specific date.
- * @param {Array} schedules - An array of schedule objects for the day.
- * @param {Date} date - The date object for which to display schedules.
- */
 function updateScheduleList(schedules, date) {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
     scheduleDateHeader.textContent = date.toLocaleDateString('en-US', options);

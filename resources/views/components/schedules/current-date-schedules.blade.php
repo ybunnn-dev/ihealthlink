@@ -32,3 +32,4 @@
     </table>
 </div>
 @include('components.modals.schedules.edit-activity-modal')
+@include('components.modals.schedules.remove-activity-modal')
