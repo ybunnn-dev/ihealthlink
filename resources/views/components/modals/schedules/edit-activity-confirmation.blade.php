@@ -1,83 +1,45 @@
-<div id="edit-activity-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-    <div class="relative p-4 w-full max-w-2xl max-h-full">
-        <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700 py-10 px-6 max-w-full">
-            <div class="flex flex-col items-center justify-center rounded-t mb-6">
+<div id="confirm-edit-schedule-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative p-4 w-full max-w-lg max-h-full">
+        <div class="relative bg-white rounded-lg shadow-sm py-10 px-6">
+            <div class="flex flex-col items-center justify-center rounded-t mb-6 text-center">
                 <h3 class="text-xl font-semibold text-main_font">
-                    Edit Activity
+                    Confirm Schedule Changes
                 </h3>
-                <p class="text-sm text-normal_font">Please update the activity details to proceed.</p>
+                <p class="text-sm text-normal_font mt-1">
+                    Please review and confirm the updated schedule details.
+                </p>
             </div>
-            
-            <form id="edit-activity-form">
-                <input type="hidden" id="editActivityId" name="activity_id">
 
-                <div class="p-4 md:p-5 space-y-4">
-                    <div class="grid grid-cols-1 gap-3">
-                        <div class="grid grid-cols-1 gap-1 relative col-span-1 mb-3">
-                            <label for="editActivityNameInput" class="text-sm font-medium text-main_font">ACTIVITY</label>
-                            <input type="text" id="editActivityNameInput" class="border border-gray-300 text-gray-700 rounded-lg p-2">
-                        </div>
-                        <div class="grid grid-cols-1 slg:grid-cols-2 gap-3">
-                            <div class="grid grid-cols-1 gap-1 relative col-span-1 mb-3">
-                                <label for="editActivityDate" class="text-sm font-medium text-main_font">DATE</label>
-                                <div class="relative max-w-sm w-full">
-                                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                        <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                            <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
-                                        </svg>
-                                    </div>
-                                    <input datepicker type="text" id="editActivityDate" class="border border-gray-300 text-gray-700 rounded-lg p-2.5 pl-10 block w-full" placeholder="Select date">
-                                </div>
-                            </div>
-                            <div class="grid grid-cols-1 gap-1 relative col-span-1 mb-3">
-                                <label for="editActivityTime" class="block text-sm font-medium text-main_font">SELECT TIME</label>
-                                <div class="relative max-w-sm w-full">
-                                    <div class="absolute inset-y-0 end-0 top-0 flex items-center pe-3.5 pointer-events-none">
-                                        <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
-                                            <path fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z" clip-rule="evenodd"/>
-                                        </svg>
-                                    </div>
-                                    <input type="time" id="editActivityTime" class="bg-white border leading-none border-gray-300 text-gray-700 text-sm rounded-lg block w-full p-2.5 pl-4" required />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-1 gap-1 relative col-span-1 mb-3">
-                            <label for="editActivityVenue" class="text-sm font-medium text-main_font">VENUE</label>
-                             <input type="text" id="editActivityVenue" class="border border-gray-300 text-gray-700 rounded-lg p-2">
-                        </div>
-                        
-                        <div class="grid grid-cols-1 slg:grid-cols-2 gap-3">
-                            <div class="flex flex-col col-span-1 relative">
-                                <label for="editHealthProgramButton" class="text-sm font-medium text-main_font">HEALTH PROGRAM</label>
-                                <button id="editHealthProgramButton" class="w-full text-main_font bg-white focus:outline-none font-medium border border-gray-300 rounded-lg text-md p-2 text-left inline-flex items-center justify-between" type="button">
-                                    Select Program...
-                                </button>
-                                <input type="hidden" id="editHealthProgramId" name="health_program_id">
-                            </div>
+            <div class="px-4 md:px-5 py-3 space-y-3 bg-gray-50 rounded-lg border">
+                <div class="flex justify-between items-center text-sm">
+                    <span class="text-gray-600">Activity:</span>
+                    <strong id="edit-schedule-activity-to-confirm" class="text-main_font text-right">Updated Activity Name Here</strong>
+                </div>
+                <div class="flex justify-between items-center text-sm">
+                    <span class="text-gray-600">Date:</span>
+                    <strong id="edit-schedule-date-to-confirm" class="text-main_font text-right">Updated Date Here</strong>
+                </div>
+                <div class="flex justify-between items-center text-sm">
+                    <span class="text-gray-600">Time:</span>
+                    <strong id="edit-schedule-time-to-confirm" class="text-main_font text-right">Updated Time Here</strong>
+                </div>
+                <div class="flex justify-between items-center text-sm">
+                    <span class="text-gray-600">Venue:</span>
+                    <strong id="edit-schedule-venue-to-confirm" class="text-main_font text-right">Updated Venue Here</strong>
+                </div>
+            </div>
 
-                            <div class="flex flex-col col-span-1 relative">
-                                <label for="editBhwButton" class="block text-sm font-medium text-main_font">ASSIGNED BHW</label>
-                                <button id="editBhwButton" data-modal-target="select-bhw-modal" data-modal-toggle="select-bhw-modal" class="w-full text-main_font bg-white focus:outline-none font-medium border border-gray-300 rounded-lg text-md p-2 text-left inline-flex items-center justify-between" type="button">
-                                    Select BHW...
-                                </button>
-                                <input type="hidden" id="editAssignedBhwId" name="assigned_bhw_id">
-                            </div>
-                        </div>                    
-                    </div>
+            <div class="p-4 md:p-5 mt-4">
+                <div class="flex items-center justify-center">
+                    <input id="confirm-edit-schedule-checkbox" type="checkbox" value="" class="w-4 h-4 text-mainblue bg-gray-100 border-gray-300 rounded focus:ring-mainblue">
+                    <label for="confirm-edit-schedule-checkbox" class="ms-2 text-sm font-medium text-gray-900">I have reviewed the changes.</label>
                 </div>
-                <div class="flex items-center border-t border-gray-200 rounded-b dark:border-gray-600 gap-3 justify-end pt-6 px-6">
-                    <button id="cancel-edit-activity-btn" data-modal-hide="edit-activity-modal" type="button" class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100">Cancel</button>
-                    <button 
-                        id="edit-activity-submit-btn" 
-                        type="submit" 
-                        class="text-white bg-mainblue hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center disabled:bg-blue-400 disabled:cursor-not-allowed">
-                        Save Changes
-                    </button>                
-                </div>
-            </form>
+            </div>
+
+            <div class="flex items-center justify-end border-t border-gray-200 rounded-b gap-3 pt-6 px-6">
+                <button id="cancel-confirm-edit-schedule" type="button" class="py-2.5 px-5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100">Cancel</button>
+                <button id="confirm-edit-schedule-btn" type="button" class="text-white bg-mainblue hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center disabled:opacity-50 disabled:cursor-not-allowed" disabled>Confirm & Save</button>
+            </div>
         </div>
     </div>
 </div>
-
-@include('components.modals.schedules.choose-health-program')
-@include('components.modals.schedules.choose-bhw-modal')

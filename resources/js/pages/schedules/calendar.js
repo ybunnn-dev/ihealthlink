@@ -1,4 +1,6 @@
 // --- 1. GET HTML REFERENCES ---
+import { handleEditSchedule } from './edit-schedule.js';
+
 const currentMonthEl = document.getElementById('currentMonth');
 const calendarDatesEl = document.getElementById('calendarDates');
 const prevMonthBtn = document.getElementById('prevMonthBtn');
@@ -60,13 +62,6 @@ function handleViewSchedule(scheduleId) {
  * Handles the click event for the 'Edit' button.
  * @param {string} scheduleId - The ID of the schedule to edit.
  */
-function handleEditSchedule(scheduleId) {
-    const schedule = window.scheds.find(s => s.id == scheduleId);
-    if (schedule) {
-        console.log("Edit clicked:", schedule);
-        // You can later add code here to show an edit form.
-    }
-}
 
 /**
  * Handles the click event for the 'Delete' button.

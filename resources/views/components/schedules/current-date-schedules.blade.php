@@ -31,3 +31,4 @@
         </tbody>
     </table>
 </div>
+@include('components.modals.schedules.edit-activity-modal')

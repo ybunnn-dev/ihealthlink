@@ -189,6 +189,9 @@ Route::middleware([
 
     Route::post('/barangay/add-sched', [ScheduleController::class, 'store']);
 
+    //update the schedule
+    Route::put('/barangay/schedule/edit/{id}', [ScheduleController::class, 'edit']);
+
     Route::get('/midwife/bhw-profile', function () {
         return view('midwife.BHWs-profile');
     })->name('midwife.BHWs-profile');

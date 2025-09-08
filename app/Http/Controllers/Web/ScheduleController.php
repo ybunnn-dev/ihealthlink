@@ -125,5 +125,74 @@ class ScheduleController extends Controller
             ]
         ]);
     }
+    public function edit(Request $request, $id)
+    {
+        // Validate payload
+        $validated = $request->validate([
+            'activity' => 'required|string|max:255',
+            'date' => 'required|string',
+            'time' => 'required|string|max:50',
+            'venue' => 'required|string|max:255',
+            'health_program_id' => 'nullable|exists:health_programs,id',
+            'bhws' => 'nullable|array',
+            'bhws.*.id' => 'required|integer|exists:personnel,id',
+        ]);
+
+        $schedule = Schedules::findOrFail($id);
+        $normalizedDate = Carbon::createFromFormat('m/d/Y', $validated['date'])->format('Y-m-d');
+        $normalizedTime = Carbon::parse($validated['time'])->format('H:i:s');
+        // Normalize date/time
+        $schedule->activity = $validated['activity'];
+        $schedule->date = $normalizedDate;
+        $schedule->time = $normalizedTime;
+        $schedule->venue = $validated['venue'];
+        $schedule->health_program_id = $validated['health_program_id'] ?? null;
+
+        $schedule->save();
+
+        // Sync BHWs with status
+        $newBHWIds = collect($validated['bhws'] ?? [])->pluck('id')->toArray();
+
+        // Get all current assignments
+        $currentAssignments = ScheduleAssignments::where('schedule_id', $schedule->id)->get();
+
+        foreach ($currentAssignments as $assignment) {
+            if (in_array($assignment->personnel_id, $newBHWIds)) {
+                // Previously inactive or active → set active
+                $assignment->status = 'active';
+                $assignment->save();
+
+                // Remove from $newBHWIds so we don’t create duplicate
+                $newBHWIds = array_diff($newBHWIds, [$assignment->personnel_id]);
+            } else {
+                // Not in payload → set inactive
+                $assignment->status = 'inactive';
+                $assignment->save();
+            }
+        }
+
+        // Add remaining new BHWs
+        foreach ($newBHWIds as $bhwId) {
+            ScheduleAssignments::create([
+                'schedule_id' => $schedule->id,
+                'personnel_id' => $bhwId,
+                'status' => 'active'
+            ]);
+        }
+
+        \Log::info('Updated schedule:', [
+            'schedule' => $schedule->toArray(),
+            'bhws' => $validated['bhws'] ?? []
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Schedule updated successfully',
+            'data' => [
+                'schedule' => $schedule,
+                'bhws' => $validated['bhws'] ?? []
+            ]
+        ]);
+    }
 
 }

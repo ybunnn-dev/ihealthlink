@@ -37,6 +37,7 @@ const proceedWithBhwBtn = document.getElementById('proceed-with-bhw');
 
 // --- Health Program Modal Elements ---
 const programChoiceBtns = document.querySelectorAll('.program-choice-btn');
+const bhwStorage = document.getElementById('bhw-storage');
 
 // --- Add Activity Form Inputs ---
 const activityNameInput = document.getElementById('activityNameInput');
@@ -50,7 +51,7 @@ let bhwsAssigned = [];
 let selectedProgramId = null; // Variable to store the selected program ID
 let selectedProgramName = null;
 const programListContainer = document.getElementById('program-list-container');
-
+const programStorage = document.getElementById('program-storage');
 
 const requiredInputs = [
     activityNameInput, 
@@ -150,17 +151,14 @@ programListContainer.addEventListener('click', (event) => {
 // The "Proceed" button listener can stay the same
 proceedBtn.addEventListener('click', () => {
     if (selectedProgramId) {
-        console.log("Proceeding with Health Program ID:", selectedProgramId);
-        console.log("Proceeding with Health Program Name:", selectedProgramName);
-        
         // Your logic here...
-        healthProgramButton.textContent = selectedProgramName; // Update the main form button text
         selectProgramModal.hide();
-        addActivityModal.show();
-
-    } else {
-        alert("Please select a health program to proceed.");
-    }
+        if(programStorage.dataset.selectedProgramId === "add"){
+            healthProgramButton.textContent = selectedProgramName; // Update the main form button text
+            addActivityModal.show();
+        }
+    } 
+    console.log(selectedProgramId);
 });
 
 // **NEW** Add this listener for your main button
@@ -175,6 +173,7 @@ cancelActivityBtn.addEventListener('click', function() {
 
 // Listener to open the "Select Program" modal
 healthProgramButton.addEventListener('click', function() {
+    programStorage.dataset.selectedProgramId = "add";
     fetch('/barangay/fetch/health-programs')
         .then(response => response.json())
         .then(data => {
@@ -192,19 +191,13 @@ healthProgramButton.addEventListener('click', function() {
 });
 
 hideHealthProgramBtn.addEventListener('click', function(){
-    selectedProgramId =  null;
-    healthProgramButton.textContent = 'Select Health Program...'
-    selectProgramModal.hide();
-    addActivityModal.show();
+    if(programStorage.dataset.selectedProgramId === "add"){
+         selectedProgramId =  null;
+        healthProgramButton.textContent = 'Select Health Program...';
+        selectProgramModal.hide();
+        addActivityModal.show();
+    }
 });
-
-// Listener for the "Proceed" button inside the "Select Program" modal
-proceedBtn.addEventListener('click', function() {
-    // Add your logic here for what happens when a program is chosen
-    selectProgramModal.hide();
-    addActivityModal.show(); // Re-opens the main modal
-});
-
 
 function populateBhwModal(container, allBhws, selectedBhws = []) { // Default to empty array
     container.innerHTML = '';
@@ -248,10 +241,11 @@ bhwButton.addEventListener('click', function () {
         })
         .then(data => {
             if (data.success && Array.isArray(data.data)) {
-                // ✅ Success! Call the helper function to populate the modal
+                // Success! Call the helper function to populate the modal
                 populateBhwModal(bhwListContainer, data.data);
                 console.log(data);
                 // Now show the modal
+                bhwStorage.dataset.dataSelectedBhw = "add";
                 addActivityModal.hide();
                 selectBhwModal.show();
 
@@ -270,59 +264,64 @@ bhwButton.addEventListener('click', function () {
 
 cancelBhwSelectionBtn.addEventListener('click', function(){
     selectBhwModal.hide();
-    addActivityModal.show();
+
+    if(bhwStorage.dataset.dataSelectedBhw === "add"){
+        addActivityModal.show();
+    }
 });
 
 proceedWithBhwBtn.addEventListener('click', function() {
-    const checkedCheckboxes = document.querySelectorAll('#bhw-list-container input[name="assigned_bhws"]:checked');
+    if(bhwStorage.dataset.dataSelectedBhw === "add"){    
+        const checkedCheckboxes = document.querySelectorAll('#bhw-list-container input[name="assigned_bhws"]:checked');
 
-    const selectedBhwData = Array.from(checkedCheckboxes).map(checkbox => {
-        return {
-            id: checkbox.value,
-            name: checkbox.dataset.name
-        };
-    });
+        const selectedBhwData = Array.from(checkedCheckboxes).map(checkbox => {
+            return {
+                id: checkbox.value,
+                name: checkbox.dataset.name
+            };
+        });
 
-    if (selectedBhwData.length > 0) {
-        console.log('Chosen BHWs:', selectedBhwData);
+        if (selectedBhwData.length > 0) {
+            console.log('Chosen BHWs:', selectedBhwData);
 
-        // --- START: Logic to update the button text ---
+            // --- START: Logic to update the button text ---
 
-        // 1. Get an array of just the full names.
-        const names = selectedBhwData.map(bhw => bhw.name);
-        
-        // 2. Join the names into a single string.
-        let buttonText = names.join(', ');
+            // 1. Get an array of just the full names.
+            const names = selectedBhwData.map(bhw => bhw.name);
+            
+            // 2. Join the names into a single string.
+            let buttonText = names.join(', ');
 
-        // 3. Initially, set the button's text to the full string.
-        bhwButton.textContent = buttonText;
+            // 3. Initially, set the button's text to the full string.
+            bhwButton.textContent = buttonText;
 
-        // 4. Check if the text overflows the button's visible area.
-        if (bhwButton.scrollWidth > bhwButton.clientWidth) {
-            // Shorten the text until it fits
-            while (bhwButton.scrollWidth > bhwButton.clientWidth && names.length > 0) {
-                names.pop(); // Remove the last name from the array
-                bhwButton.textContent = names.join(', ') + '...';
+            // 4. Check if the text overflows the button's visible area.
+            if (bhwButton.scrollWidth > bhwButton.clientWidth) {
+                // Shorten the text until it fits
+                while (bhwButton.scrollWidth > bhwButton.clientWidth && names.length > 0) {
+                    names.pop(); // Remove the last name from the array
+                    bhwButton.textContent = names.join(', ') + '...';
+                }
             }
+            
+            // --- END: Logic to update the button text ---
+
+            // Store the complete data in your variable for later use
+            bhwsAssigned = selectedBhwData;
+            
+            // Hide the current modal and show the previous one
+            selectBhwModal.hide();
+            addActivityModal.show();
+
+        } else {
+            console.log('No BHWs were chosen.');
+            // If nothing is chosen, you might want to reset the button text
+            bhwButton.textContent = 'Select BHW...';
+            bhwsAssigned = []; // Clear the variable
+
+            selectBhwModal.hide();
+            addActivityModal.show();
         }
-        
-        // --- END: Logic to update the button text ---
-
-        // Store the complete data in your variable for later use
-        bhwsAssigned = selectedBhwData;
-        
-        // Hide the current modal and show the previous one
-        selectBhwModal.hide();
-        addActivityModal.show();
-
-    } else {
-        console.log('No BHWs were chosen.');
-        // If nothing is chosen, you might want to reset the button text
-        bhwButton.textContent = 'Select BHW...';
-        bhwsAssigned = []; // Clear the variable
-
-        selectBhwModal.hide();
-        addActivityModal.show();
     }
 });
 
