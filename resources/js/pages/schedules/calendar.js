@@ -38,25 +38,33 @@ function displayNoScheduleView() {
  */
 function handleViewSchedule(scheduleId) {
     const schedule = window.scheds.find(s => s.id == scheduleId);
-
+    console.log('data', schedule)
     if (schedule) {
-        // NOTE: Assumes your server-side query has joined and added
-        // 'health_program_name' and 'bhw_name' to the schedule object.
         viewActivity.textContent = schedule.activity || 'N/A';
-        viewDate.textContent = new Date(schedule.date + 'T00:00:00').toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+        viewDate.textContent = new Date(schedule.date + 'T00:00:00').toLocaleDateString('en-US', { 
+            year: 'numeric', month: 'long', day: 'numeric' 
+        });
         viewTime.textContent = formatTime(schedule.time);
         viewVenue.textContent = schedule.venue || 'N/A';
-        viewProgram.textContent = schedule.health_program_name || 'N/A';
-        viewBhws.textContent = schedule.bhw_name || 'N/A';
+        viewProgram.textContent = schedule.health_program?.name || 'N/A';
+
+        // Merge BHW names
+        if (Array.isArray(schedule.assigned_b_h_ws) && schedule.assigned_b_h_ws.length > 0) {
+            viewBhws.textContent = schedule.assigned_b_h_ws
+                                      .map(bhw => bhw.name)
+                                      .join(', ');
+        } else {
+            viewBhws.textContent = 'N/A';
+        }
 
         // Show the details view and hide the empty message
         currentActivityDetails.classList.remove('hidden');
         noActivityMessage.classList.add('hidden');
     } else {
-        // If for some reason a schedule isn't found, show the empty state
         displayNoScheduleView();
     }
 }
+
 
 
 /**
