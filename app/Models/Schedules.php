@@ -40,9 +40,11 @@ class Schedules extends Model
         return $this->belongsTo(User::class, 'added_by');
     }
     // Link to assigned BHWs (many-to-many pivot)
-    public function assignedBHWs()
+   public function assignedBHWs()
     {
-        return $this->belongsToMany(BHW::class, 'schedule_assignments', 'schedule_id', 'personnel_id');
+        return $this->belongsToMany(BHW::class, 'schedule_assignments', 'schedule_id', 'personnel_id')
+                    ->wherePivot('status', 'active'); // only active assignments
     }
+
 
 }
