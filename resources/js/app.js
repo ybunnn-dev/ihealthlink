@@ -62,6 +62,9 @@ document.addEventListener('DOMContentLoaded', () => {
     import('./pages/schedules/edit-daily-activity.js').then(module => {
         module.initDailyActivityModal();
     });
+
+  }else if(bodyClass.contains('bhw')) {
+    import('./pages/bhw/add-bhw.js');
   }
 
   else {

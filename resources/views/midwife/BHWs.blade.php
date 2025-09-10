@@ -1,4 +1,5 @@
 @section('title', 'BHWs')
+ @section('page-id', 'bhw')
 <x-app-layout>
     <div class="py-12 px-5">
         <div class="max-w-[90rem] mx-auto sm:px-6 lg:px-8">
@@ -64,9 +65,8 @@
                                     </div>
                                     
                                     <!-- Add BHW Button -->
-                                    <div x-data="{ showBHW: false }" class="w-full xs:w-40 pt-5 xs:pt-0">
-                                        <button @click="showBHW = true" type="button" class="w-full h-[2rem] text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3 focus:outline-none">Add BHW</button>
-                                        @include('components.modals.bhw.add-bhw-modal')
+                                    <div class="w-full xs:w-40 pt-5 xs:pt-0">
+                                        <button id="open-add-bhw-modal" type="button" class="w-full h-[2.35rem] text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3 focus:outline-none">Add BHW</button>
                                     </div>
                                 </div>
                             </div>
@@ -85,7 +85,7 @@
                             <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Last Year</a></li>
                         </ul>
                     </div>
-                    <div class="relative overflow-x-auto p-6 -mt-3">
+                    <div class="relative overflow-x-auto py-6">
                         <table class="w-full text-sm text-left text-main_font bg-col_tab_h">
                             <thead class="text-xs text-main_font uppercase text-center">
                                 <tr>
@@ -136,4 +136,5 @@
             </div>
         </div>
     </div>
+    @include('components.modals.bhw.add-bhw-modal')
 </x-app-layout>
