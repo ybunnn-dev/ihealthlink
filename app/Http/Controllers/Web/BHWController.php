@@ -67,12 +67,6 @@ class BHWController extends Controller
         return view('midwife.BHWs', compact('bhws'));
     }
 
-    /**
-     * Display the specified BHW's profile.
-     *
-     * @param BHW $bhw The BHW instance automatically resolved by Route-Model Binding.
-     * @return View
-     */
     public function show(BHW $bhw): View
     {
         // Eager load the relationships to prevent extra database queries in the view.
