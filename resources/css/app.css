@@ -9,3 +9,9 @@
 }
 
 
+@layer utilities {
+  .scrollbar-hide-arrows::-webkit-scrollbar-button {
+    display: none;
+  }
+}
+

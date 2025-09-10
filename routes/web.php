@@ -8,6 +8,8 @@ use App\Http\Controllers\Web\MidwifeController;
 use App\Http\Controllers\Web\MedicineController;
 use App\Http\Controllers\Web\MedicineInventoryController;
 use App\Http\Controllers\Web\BHWController;
+use App\Http\Controllers\Web\ScheduleController;
+use App\Http\Controllers\Web\HealthProgramController;
 
 Route::get('/', function () {
     return view('auth.login');
@@ -138,9 +140,11 @@ Route::middleware([
         return view('midwife.spec-resident');
     })->name('midwife.spec-resident');
 
-    Route::get('/midwife/schedules', function () {
-        return view('midwife.schedules');
-    })->name('midwife.sched');
+    Route::get('/barangay/schedules', [ScheduleController::class, 'index'])->name('midwife.sched');
+    
+    Route::put('/daily-activity/update', [ScheduleController::class, 'updateDailyActivity']);
+
+    Route::get('/barangay/get-bhws', [BHWController::class, 'getBHWs'])->name('bhws.get');
 
     Route::get('/midwife/reports', function () {
         return view('midwife.reports');
@@ -149,6 +153,12 @@ Route::middleware([
     Route::get('/midwife/health-program', function () {
         return view('midwife.health-program');
     })->name('midwife.health-program');
+
+
+    Route::get('/barangay/fetch/health-programs', [HealthProgramController::class, 'provideData'])->name('health.programs');
+
+    Route::put('/barangay/schedule/delete/{id}', [ScheduleController::class, 'softDelete']);
+
 
     Route::get('/midwife/health-program-profile', function () {
         return view('midwife.health-program-profile');
@@ -174,12 +184,14 @@ Route::middleware([
     Route::put('/midwife/medicine/delete={id}', [MedicineController::class, 'delete']);
 
     // Store new medicine batch
-    Route::post('/midwife/medicines/{id}/inventory', [MedicineInventoryController::class, 'store'])
-        ->name('midwife.medicines.inventory.store');
+    Route::post('/midwife/medicines/{id}/inventory', [MedicineInventoryController::class, 'store'])->name('midwife.medicines.inventory.store');
 
     //bhw routes
     Route::get('/midwife/bhws/', [BHWController::class, 'index'])->name('midwife.bhws');
-    Route::get('/midwife/bhws/{bhw}', [BHWController::class, 'show'])->name('midwife.bhws.show');
+
+    Route::get('/midwife/bhw-profile', function () {
+        return view('midwife.BHWs-profile');
+    })->name('midwife.BHWs-profile');
 
     // Midwife-specific dashboard
     Route::get('/midwife/logs', function () {
