@@ -153,7 +153,7 @@ Route::middleware([
     Route::get('/midwife/health-program', function () {
         return view('midwife.health-program');
     })->name('midwife.health-program');
-
+    Route::get('/midwife/bhws/{bhw}', [BHWController::class, 'show'])->name('midwife.bhws.show');
 
     Route::get('/barangay/fetch/health-programs', [HealthProgramController::class, 'provideData'])->name('health.programs');
 

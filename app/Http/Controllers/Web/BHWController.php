@@ -34,7 +34,7 @@ class BHWController extends Controller
         // 2. Find the midwife's personnel record to get their assigned barangay.
         // It's safer to query the Personnel model directly.
         // Assuming 'role_id' for a midwife is 2.
-        $midwifePersonnel = Personnel::where('user_id', $user->id)
+        $midwifePersonnel = Midwife::where('user_id', $user->id)
             ->where('role_id', 2)
             ->first();
 
