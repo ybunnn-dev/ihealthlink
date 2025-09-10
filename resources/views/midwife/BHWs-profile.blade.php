@@ -3,6 +3,12 @@
     <div class="py-12 px-5">
         <div class="max-w-[90rem] mx-auto sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 gap-4">
+                <a href="{{ route('midwife.bhws') }}">
+                    <div class="flex items-center space-x-2"> 
+                        <svg class="w-5 h-5" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M5 1H4L0 5L4 9H5V6H11C12.6569 6 14 7.34315 14 9C14 10.6569 12.6569 12 11 12H4V14H11C13.7614 14 16 11.7614 16 9C16 6.23858 13.7614 4 11 4H5V1Z" fill="#323643"></path> </g></svg>
+                        <span class="font-semibold">Return</span>
+                    </div>
+                </a>
                  <div class="grid grid-cols-1 xl:grid-cols-3 gap-3">
                     <!-- Left Column (Profile + Scheduled Activity) -->
                     <div class="grid grid-rows-6 gap-2 col-span-1">
@@ -17,8 +23,8 @@
                                     <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="#566A7F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> 
                                 </g>
                             </svg>
-                            <p class="text-main_font font-bold mt-4 text-xl">Ron Peter Mortega</p> 
-                            <p class="text-main_font font-semibold">Household #144</p> 
+                            <p class="text-main_font font-bold mt-4 text-xl">{{ $bhw->name }}</p> 
+                            <p class="text-main_font font-semibold">BHW #{{ $bhw->id }}</p> 
                         </div>
 
                         <!-- Scheduled Activity Card -->
@@ -33,56 +39,57 @@
                     <div class="col-span-1 xl:col-span-2 h-full bg-f7 rounded-lg px-6 sm:px-10 lg:px-12 py-8">
                         <!-- Header -->
                         <div class="flex items-center gap-2 mb-6">
-                            <h2 class="text-xl font-semibold text-main_font">Resident Info</h2>
+                            <h2 class="text-xl font-semibold text-main_font">BHW Info</h2>
                         </div>
 
                         <!-- Info Grid -->
                         <div class="grid grid-cols-1 gap-y-4 text-xs">
                             <div class="grid grid-rows-2 md:grid-cols-3 md:grid-rows-1">
                                 <p class="font-semibold text-main_font">FIRST NAME:</p>
-                                <p class="text-normal_font">Ron Peter</p>
+                                <p class="text-normal_font">{{ $bhw->users->firstName }}</p>
                             </div>
 
                             <div class="grid grid-rows-2 md:grid-cols-3 md:grid-rows-1">
                                 <p class="font-semibold text-main_font">LAST NAME:</p>
-                                <p class="text-normal_font">Mortega</p>
+                                <p class="text-normal_font">{{ $bhw->users->lastName }}</p>
                             </div>
 
                             <div class="grid grid-rows-2 md:grid-cols-3 md:grid-rows-1">
                                 <p class="font-semibold text-main_font">MIDDLE NAME:</p>
-                                <p class="text-normal_font">Jazareno</p>
+                                <p class="text-normal_font">{{ $bhw->users->middleName ?? 'N/A' }}</p>
                             </div>
 
                             <div class="grid grid-rows-2 md:grid-cols-3 md:grid-rows-1">
                                 <p class="font-semibold text-main_font">SUFFIX:</p>
-                                <p class="text-normal_font">III</p>
+                                <p class="text-normal_font">{{ $bhw->users->suffix ?? 'N/A' }}</p>
                             </div>
 
                             <div class="grid grid-rows-2 md:grid-cols-3 md:grid-rows-1">
                                 <p class="font-semibold text-main_font">BIRTHDATE:</p>
-                                <p class="text-normal_font">December 10, 2002 (22 Years old)</p>
+                                {{-- Using Carbon for easy date formatting and age calculation --}}
+                                <p class="text-normal_font">{{ \Carbon\Carbon::parse($bhw->users->birthdate)->format('F d, Y') }} ({{ \Carbon\Carbon::parse($bhw->users->birthdate)->age }} Years old)</p>
                             </div>
 
                             <div class="grid grid-rows-2 md:grid-cols-3 md:grid-rows-1">
-                                <p class="font-semibold text-main_font">ADREESS:</p>
-                                <p class="text-normal_font">Purok 1, Brgy. Ilawod, Daraga, Albay</p>
+                                <p class="font-semibold text-main_font">ADDRESS:</p>
+                                <p class="text-normal_font">Brgy. {{ $bhw->barangays->name }}, Daraga, Albay</p>
                             </div>
 
                             <div class="grid grid-rows-2 md:grid-cols-3 md:grid-rows-1">
                                 <p class="font-semibold text-main_font">SEX:</p>
-                                <p class="text-normal_font">Male</p>
+                                <p class="text-normal_font">{{ $bhw->users->sex }}</p>
                             </div>
 
                             <div class="grid grid-rows-2 md:grid-cols-3 md:grid-rows-1">
                                 <p class="font-semibold text-main_font">MOBILE NUMBER:</p>
-                                <p class="text-normal_font">09134579</p>
+                                <p class="text-normal_font">{{ $bhw->users->contact_no ?? 'N/A' }}</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                {{-- "Ron's Activity Log" label --}}
-                <h2 class="text-2xl font-semibold text-main_font mt-8">Ron's Activity Log</h2>
+                {{-- "bhw Activity Log" label --}}
+                <h2 class="text-2xl font-semibold text-main_font mt-8">{{ $bhw->name }} Activity Log</h2>
 
                 <div class="bg-white p-6 rounded-xl">
                     <div class="flex flex-col slg2:flex-row slg2:items-end gap-4 mb-4">
