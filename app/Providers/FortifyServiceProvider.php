@@ -47,25 +47,28 @@ class FortifyServiceProvider extends ServiceProvider
         });
 
        $this->app->singleton(LoginResponse::class, function (Container $container) {
-    return new class implements LoginResponse {
-        public function toResponse($request)
-        {
-            $user = $request->user();
+        
+            return new class implements LoginResponse {
+                public function toResponse($request)
+                {
+                    $user = $request->user();
 
-            // Log user details
-            \Log::info('LoginResponse triggered', [
-                'user_id' => $user->id,
-                'role_id' => $user->role_id,
-                'email' => $user->email,
-            ]);
+                    // Log user details
+                    \Log::info('LoginResponse triggered', [
+                        'user_id' => $user->id,
+                        'role_id' => $user->role_id,
+                        'email' => $user->email,
+                    ]);
 
-            return match ($user->role_id) {
-                1 => redirect()->intended('/mho/dashboard'),
-                2 => redirect()->intended('/midwife/dashboard'),
+                    return match ($user->role_id) {
+                        1 => redirect()->intended('/mho/dashboard'),
+                        2 => redirect()->intended('/midwife/dashboard'),
+                        4 => redirect()->intended('/bhw/dashboard'),
+                        default => redirect()->intended('/'),
+                    };
+                }
             };
-        }
-    };
-});
+        });
     }
 }
 
