@@ -27,8 +27,18 @@ const religionMenu = document.getElementById('religionMenu');
 const addBhwCloseButton = document.getElementById('addBhwCloseButton');
 const addBhwSubmitButton = document.getElementById('addBhwSubmitButton');
 
+const addBhwConfirmModalEl = document.getElementById('confirm-add-bhw-modal');
+const bhwNameToConfirm = document.getElementById('bhw-name-to-confirm');
+const confirmBhwCheckbox = document.getElementById('confirm-bhw-checkbox');
+
+// The final confirmation button that is initially disabled
+const confirmProceedButton = document.getElementById('confirm-proceed-button');
+const cancelConfirmAddBhwButton = document.getElementById('confirm-add-bhw-cancel');
+
 // --- Modal Initialization (Using Flowbite's JS API) ---
 const addBhwModal = new Modal(addBhwModalEl);
+const addBhwConfirmModal = new Modal(addBhwConfirmModalEl);
+
 const openModalBtn = document.getElementById('open-add-bhw-modal');
 
 // =================================================================
@@ -193,41 +203,6 @@ setupDropdown(religionDropdownButton, religionMenu);
 // FORM SUBMISSION AND MODAL CONTROLS
 // =================================================================
 
-// Form submission handler
-addBhwForm.addEventListener('submit', (event) => {
-  event.preventDefault();
-  
-  // Final validation check
-  validateForm();
-  
-  if (!addBhwSubmitButton.disabled) {
-    console.log('Form is valid and submitted!');
-    
-    // Collect form data
-    const formData = {
-      firstName: firstNameInput.value.trim(),
-      lastName: lastNameInput.value.trim(),
-      middleName: middleNameInput.value.trim(),
-      suffix: suffixDropdownButton.dataset.selectedValue || '',
-      birthdate: birthdateInput.value,
-      age: ageInput.value,
-      sex: sexDropdownButton.dataset.selectedValue,
-      email: emailInput.value.trim(),
-      contactNo: contactNoInput.value.trim(),
-      privilege: privilegeDropdownButton.dataset.selectedValue,
-      civilStatus: civilStatusDropdownButton.dataset.selectedValue,
-      religion: religionDropdownButton.dataset.selectedValue
-    };
-    
-    console.log('Form Data:', formData);
-    
-    // Here you would send data to your server
-    // await submitBhwData(formData);
-    
-    addBhwModal.hide();
-  }
-});
-
 // Modal controls
 openModalBtn.addEventListener('click', () => {
   addBhwModal.show();
@@ -245,12 +220,6 @@ addBhwCloseButton.addEventListener('click', () => {
 // =================================================================
 // INITIALIZATION
 // =================================================================
-
-// Initial validation on page load
-document.addEventListener('DOMContentLoaded', () => {
-  validateForm();
-});
-
 // Optional: Reset form when modal is hidden
 addBhwModalEl.addEventListener('hidden.bs.modal', () => {
   addBhwForm.reset();
@@ -272,5 +241,69 @@ addBhwModalEl.addEventListener('hidden.bs.modal', () => {
   addBhwSubmitButton.classList.add('opacity-50', 'cursor-not-allowed');
 });
 
+addBhwSubmitButton.addEventListener('click', function(){
+  event.preventDefault();
+
+  validateForm();
+  
+  if (!addBhwSubmitButton.disabled) {
+
+    const bhwFullName =
+      firstNameInput.value.trim() + " " +
+      middleNameInput.value.trim() + " " +
+      lastNameInput.value.trim() +
+      (suffixDropdownButton.dataset.selectedValue ? " " + suffixDropdownButton.dataset.selectedValue : "");
+    
+    bhwNameToConfirm.textContent = bhwFullName;
+    
+    addBhwModal.hide();
+    addBhwConfirmModal.show();
+  }
+  
+});
+
+confirmBhwCheckbox.addEventListener('change', function(){
+  confirmProceedButton.disabled = !this.checked;
+});
+
+confirmProceedButton.addEventListener('click', function() {
+    const formData = {
+        firstName: firstNameInput.value.trim(),
+        lastName: lastNameInput.value.trim(),
+        middleName: middleNameInput.value.trim(),
+        suffix: suffixDropdownButton.dataset.selectedValue || '',
+        birthdate: birthdateInput.value,
+        age: ageInput.value,
+        sex: sexDropdownButton.dataset.selectedValue,
+        email: emailInput.value.trim(),
+        contactNo: contactNoInput.value.trim(),
+        privilege: privilegeDropdownButton.dataset.selectedValue,
+        civilStatus: civilStatusDropdownButton.dataset.selectedValue,
+        religion: religionDropdownButton.dataset.selectedValue
+    };
+
+    console.log('Form Data:', formData);
+
+    fetch('/barangay/bhw/add', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+        },
+        body: JSON.stringify(formData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Server Response:', data);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+});
+
+cancelConfirmAddBhwButton.addEventListener('click',function(){
+  addBhwConfirmModal.hide();
+  addBhwModal.show();
+});
 
 validateForm();

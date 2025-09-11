@@ -157,7 +157,7 @@ submitButton.addEventListener('click', function(event) {
 });
 
 confirmMedicineCheckbox.addEventListener('change', function () {
-    confirmAddMedicineBtn .disabled = !this.checked;
+    confirmAddMedicineBtn.disabled = !this.checked;
 });
 
 confirmAddMedicineBtn.addEventListener('click', function() {

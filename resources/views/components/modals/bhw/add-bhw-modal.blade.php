@@ -72,8 +72,8 @@
             <div id="sexDropdownMenu" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-full absolute top-full mt-1">
               <ul class="py-2 text-sm text-gray-700" aria-labelledby="sexDropdownButton">
                 <li data-value=""><a href="#" class="block px-4 py-2 text-gray-500 hover:bg-gray-100">Clear Selection</a></li>
-                <li data-value="male"><a href="#" class="block px-4 py-2 hover:bg-gray-100">Male</a></li>
-                <li data-value="female"><a href="#" class="block px-4 py-2 hover:bg-gray-100">Female</a></li>
+                <li data-value="Male"><a href="#" class="block px-4 py-2 hover:bg-gray-100">Male</a></li>
+                <li data-value="Female"><a href="#" class="block px-4 py-2 hover:bg-gray-100">Female</a></li>
               </ul>
             </div>
           </div>
@@ -88,8 +88,8 @@
             <div id="privilegeDropdownMenu" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-full absolute top-full mt-1">
               <ul class="py-2 text-sm text-gray-700" aria-labelledby="privilegeDropdownButton">
                 <li data-value=""><a href="#" class="block px-4 py-2 text-gray-500 hover:bg-gray-100">Clear Selection</a></li>
-                <li data-value="web_access"><a href="#" class="block px-4 py-2 hover:bg-gray-100">Web Access</a></li>
-                <li data-value="regular_role"><a href="#" class="block px-4 py-2 hover:bg-gray-100">Regular Role</a></li>
+                <li data-value="3"><a href="#" class="block px-4 py-2 hover:bg-gray-100">Regular Access</a></li>
+                <li data-value="4"><a href="#" class="block px-4 py-2 hover:bg-gray-100">Web Access</a></li>
               </ul>
             </div>
           </div>
@@ -107,10 +107,10 @@
             <div id="civilStatusMenu" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-full absolute top-full mt-1">
               <ul class="py-2 text-sm text-gray-700" aria-labelledby="civilStatusDropdownButton">
                 <li data-value=""><a href="#" class="block px-4 py-2 text-gray-500 hover:bg-gray-100">Clear Selection</a></li>
-                <li data-value="single"><a href="#" class="block px-4 py-2 hover:bg-gray-100">Single</a></li>
-                <li data-value="married"><a href="#" class="block px-4 py-2 hover:bg-gray-100">Married</a></li>
-                <li data-value="widowed"><a href="#" class="block px-4 py-2 hover:bg-gray-100">Widowed</a></li>
-                <li data-value="separated"><a href="#" class="block px-4 py-2 hover:bg-gray-100">Separated</a></li>
+                <li data-value="Single"><a href="#" class="block px-4 py-2 hover:bg-gray-100">Single</a></li>
+                <li data-value="Married"><a href="#" class="block px-4 py-2 hover:bg-gray-100">Married</a></li>
+                <li data-value="Widowed"><a href="#" class="block px-4 py-2 hover:bg-gray-100">Widowed</a></li>
+                <li data-value="Separated"><a href="#" class="block px-4 py-2 hover:bg-gray-100">Separated</a></li>
               </ul>
             </div>
           </div>
@@ -125,11 +125,11 @@
             <div id="religionMenu" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-full absolute top-full mt-1">
               <ul class="py-2 text-sm text-gray-700" aria-labelledby="religionDropdownButton">
                 <li data-value=""><a href="#" class="block px-4 py-2 text-gray-500 hover:bg-gray-100">Clear Selection</a></li>
-                <li data-value="roman_catholic"><a href="#" class="block px-4 py-2 hover:bg-gray-100">Roman Catholic</a></li>
-                <li data-value="iglesia_ni_cristo"><a href="#" class="block px-4 py-2 hover:bg-gray-100">Iglesia ni Cristo</a></li>
-                <li data-value="christian"><a href="#" class="block px-4 py-2 hover:bg-gray-100">Christian</a></li>
-                <li data-value="muslim"><a href="#" class="block px-4 py-2 hover:bg-gray-100">Muslim</a></li>
-                <li data-value="others"><a href="#" class="block px-4 py-2 hover:bg-gray-100">Others</a></li>
+                <li data-value="Roman Catholic"><a href="#" class="block px-4 py-2 hover:bg-gray-100">Roman Catholic</a></li>
+                <li data-value="Iglesia ni Cristo"><a href="#" class="block px-4 py-2 hover:bg-gray-100">Iglesia ni Cristo</a></li>
+                <li data-value="Born Again Christian"><a href="#" class="block px-4 py-2 hover:bg-gray-100">Born Again</a></li>
+                <li data-value="Islam"><a href="#" class="block px-4 py-2 hover:bg-gray-100">Islam</a></li>
+                <li data-value="Others"><a href="#" class="block px-4 py-2 hover:bg-gray-100">Others</a></li>
               </ul>
             </div>
           </div>
@@ -166,3 +166,4 @@
     </form>
   </div>
 </div>
+@include('components.modals.bhw.add-bhw-confirmation')

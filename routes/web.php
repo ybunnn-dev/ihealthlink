@@ -146,6 +146,8 @@ Route::middleware([
 
     Route::get('/barangay/get-bhws', [BHWController::class, 'getBHWs'])->name('bhws.get');
 
+    Route::post('/barangay/bhw/add', [BHWController::class, 'store']);
+
     Route::get('/midwife/reports', function () {
         return view('midwife.reports');
     })->name('midwife.reports');

@@ -95,4 +95,14 @@ class BHWController extends Controller
             'data' => $bhws
         ]);
     }
+
+   public function store(Request $request)
+    {
+        \Log::info('BHW Data:', $request->all());
+
+        return response()->json([
+            'message' => 'Data received successfully!',
+            'data' => $request->all()
+        ]);
+    }
 }
