@@ -12,7 +12,6 @@ let editMedPayload = null;
 let listenersAttached = false; // A flag to prevent attaching listeners multiple times
 
 
-
 const successModalEl = document.getElementById('success-modal');
 const successMesageHeader = document.getElementById('success-msg-head');
 const successMessage = document.getElementById('success-message');

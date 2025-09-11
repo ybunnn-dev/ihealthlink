@@ -1,5 +1,9 @@
 @section('title', 'BHWs | #123')
+ @section('page-id', 'spec-bhw')
 <x-app-layout>
+    <script>
+        window.bhwData = @json($bhw);
+    </script>
     <div class="py-12 px-5">
         <div class="max-w-[90rem] mx-auto sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 gap-4">
@@ -30,8 +34,8 @@
                         <!-- Scheduled Activity Card -->
                          <div class="grid grid-cols-1 lg:grid-cols-2 w-full px-0 pb-0 row-span-1 gap-3"> {{-- Removed px and pb as they are no longer needed on this container --}}
                             {{-- Increased py- for taller buttons --}}
-                            <button type="button" class="col-span-1 px-5 py-3 text-sm font-medium text-white bg-mainblue rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300">Edit</button>
-                            <button type="button" class="col-span-1 px-5 py-3 text-sm font-medium text-mainblue bg-white border border-mainblue rounded-lg hover:bg-blue-50 focus:outline-none focus:ring-4 focus:ring-300">Remove</button>
+                            <button id="open-edit-bhw" type="button" class="col-span-1 px-5 py-3 text-sm font-medium text-white bg-mainblue rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300">Edit</button>
+                            <button id="open-remove-bhw" type="button" class="col-span-1 px-5 py-3 text-sm font-medium text-mainblue bg-white border border-mainblue rounded-lg hover:bg-blue-50 focus:outline-none focus:ring-4 focus:ring-300">Remove</button>
                         </div>
                     </div>
 
@@ -203,4 +207,6 @@
             </div>
         </div>
     </div>
+    @include('components.modals.bhw.edit-bhw-modal')
+    @include('components.modals.bhw.remove-bhw')
 </x-app-layout>

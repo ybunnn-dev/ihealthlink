@@ -66,6 +66,10 @@ document.addEventListener('DOMContentLoaded', () => {
   }else if(bodyClass.contains('bhw')) {
     import('./pages/bhw/add-bhw.js');
   }
+  else if(bodyClass.contains('spec-bhw')){
+    import('./pages/bhw/edit-bhw.js');
+    import('./pages/bhw/remove-bhw.js');
+  }
 
   else {
     console.log('Not on reports page - charts not loaded');
