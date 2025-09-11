@@ -108,6 +108,9 @@ class MidwifeController extends Controller
             'email' => $request->email,
             'password' => bcrypt($password),
             'role_id' => 2,
+            'civil_status' => $validated['civilStatus'],
+            'religion' => $validated['religion'],
+            'sex' => $validated['sex'],
         ]);
 
         // Create personnel (midwife) record
@@ -127,7 +130,7 @@ class MidwifeController extends Controller
             'data' => [
                 'user' => $user,
                 'personnel' => $personnel,
-                'password' => $password // optional, remove for production
+                //'password' => $password // optional, remove for production
             ]
         ], 201);
     }

@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\BHWCredentialsMail;
 use App\Mail\MidwifeCredentialsMail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
@@ -96,13 +97,77 @@ class BHWController extends Controller
         ]);
     }
 
-   public function store(Request $request)
+    public function store(Request $request)
     {
-        \Log::info('BHW Data:', $request->all());
+        $validated = $request->validate([
+            'firstName'   => 'required|string|max:50',
+            'lastName'    => 'required|string|max:50',
+            'middleName'  => 'nullable|string|max:50',
+            'suffix'      => 'nullable|string|max:10',
+            'birthdate'   => 'required|date_format:m/d/Y',
+            'age'         => 'required|integer|min:0|max:150',
+            'sex'         => 'required|in:Male,Female,Other',
+            'email'       => 'required|email|max:100',
+            'contactNo'   => 'required|string|min:7|max:20',
+            'privilege'   => 'required|integer|in:3,4',
+            'civilStatus' => 'required|in:Single,Married,Divorced,Widowed,Separated',
+            'religion'    => 'required|string|max:100',
+        ]);
+
+        Log::info('Validated BHW Data:', $validated);
+
+        // get current logged-in midwife
+        $midwifePersonnel = Midwife::where('user_id', Auth::id())
+            ->where('role_id', 2)
+            ->first();
+
+        if (!$midwifePersonnel) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Midwife personnel record not found'
+            ], 404);
+        }
+
+        $password = Str::random(8);
+        $birthdate = Carbon::createFromFormat('m/d/Y', $validated['birthdate'])->format('Y-m-d');
+
+        // create user account for BHW
+        $user = User::create([
+            'firstName'   => $validated['firstName'],
+            'lastName'    => $validated['lastName'],
+            'middleName'  => $validated['middleName'],
+            'suffix'      => $validated['suffix'],
+            'birthdate'   => $birthdate,
+            'contact_no'  => $validated['contactNo'],
+            'email'       => $validated['email'],
+            'password'    => bcrypt($password),
+            'role_id'     => $validated['privilege'],
+            'civil_status' => $validated['civilStatus'],
+            'religion' => $validated['religion'],
+            'sex' => $validated['sex'],
+        ]);
+
+        // create personnel record for BHW
+        $personnel = BHW::create([
+            'user_id' => $user->id,
+            'role_id' => $validated['privilege'],
+            'brgy_id' => $midwifePersonnel->brgy_id, // ✅ fixed
+            'status'  => 'active',
+        ]);
+
+        // send email with credentials
+        Mail::to($user->email)->send(new BHWCredentialsMail($user->email, $password));
 
         return response()->json([
-            'message' => 'Data received successfully!',
-            'data' => $request->all()
-        ]);
+            'success' => true,
+            'message' => 'BHW created successfully and credentials emailed',
+            'data' => [
+                'user'      => $user,
+                'personnel' => $personnel,
+                // 'password' => $password // optional for testing only
+            ]
+        ], 201);
     }
+
+
 }
