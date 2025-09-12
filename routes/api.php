@@ -18,7 +18,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/home', [HomeController::class, 'index']);
 
-    Route::post('/barangay/schedule/get', [ScheduleController::class, 'getSched']); // this api will accept a month and a year
-    // You can keep adding more protected API routes here
-    // e.g. Route::get('/schedules', [ScheduleController::class, 'index']);
+    Route::post('/barangay/schedule/get', [ScheduleController::class, 'getSched']);
+   
 });
