@@ -148,6 +148,11 @@ Route::middleware([
 
     Route::post('/barangay/bhw/add', [BHWController::class, 'store']);
 
+
+    Route::put('/barangay/bhw/{id}/edit', [BHWController::class, 'update']);
+
+    Route::put('/barangay/bhw/{id}/remove', [BhwController::class, 'remove']);
+
     Route::get('/midwife/reports', function () {
         return view('midwife.reports');
     })->name('midwife.reports');

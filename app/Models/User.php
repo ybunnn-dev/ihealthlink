@@ -106,4 +106,11 @@ class User extends Authenticatable
     {
         return $this->hasMany(MedicineDistribution::class, 'distributed_by');
     }
+
+    // inside User.php
+    public function bhw()
+    {
+        return $this->hasOne(BHW::class, 'user_id');
+    }
+
 }

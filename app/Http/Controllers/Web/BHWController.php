@@ -49,13 +49,8 @@ class BHWController extends Controller
         $bhws = BHW::query()
             // Filter BHWs by the midwife's barangay ID.
             ->where('brgy_id', $midwifePersonnel->brgy_id)
-
-            // Eager load the 'users' relationship to prevent N+1 query problems.
-            // This is critical for performance.
+            ->where('status', 'active')
             ->with('users')
-
-            // We can sort the collection after fetching since we need to sort by a computed attribute.
-            // For larger datasets, a JOIN is better, but this is cleaner with accessors.
             ->get() // Get all results first
             ->sortBy('name') // Now sort by the 'name' accessor from your model
             ->values(); // Reset the collection keys
@@ -169,5 +164,74 @@ class BHWController extends Controller
         ], 201);
     }
 
+    public function update(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'firstName'    => 'required|string|max:50',
+            'lastName'     => 'required|string|max:50',
+            'middleName'   => 'nullable|string|max:50',
+            'suffix'       => 'nullable|string|max:10',
+            'birthdate'    => 'nullable|date',
+            'sex'          => 'nullable|string|max:10',
+            'civil_status' => 'nullable|string|max:20',
+            'religion'     => 'nullable|string|max:50',
+            'email'        => 'required|email|unique:users,email,' . $id,
+            'contact_no'   => 'nullable|string|max:20',
+            'role_id'      => 'required|integer',
+        ]);
+        
+        // Log the validated data
+        Log::info('Validated BHW update data:', $validated);
+
+        $user = User::findOrFail($id);
+
+        // Step 3: Update user with validated data
+        $user->update($validated);
+
+        //  Step 4: Return JSON response
+        $bhw = BHW::where('user_id', $user->id)->first();
+
+        if ($bhw) {
+            $bhw->update([
+                'role_id' => $validated['role_id'],
+            ]);
+        }
+            // Don’t update yet, just return it
+        return response()->json([
+            'message' => 'Payload received successfully',
+            //'validated' => $validated
+        ]);
+    }
+
+    public function remove(Request $request, $id)
+    {
+        //  Log incoming data
+        \Log::info("Removing BHW with id you vakla: " . $id);
+
+        // 🔹 Find the user
+        $user = User::findOrFail($id);
+
+        \Log::info('vakla');
+        
+        // Set user inactive
+        $user->update([
+            'status' => 'inactive'
+        ]);
+
+        // 🔹 Find related personnel (BHW) record
+        $bhw = BHW::where('user_id', $user->id)->first();
+
+        if ($bhw) {
+            $bhw->update([
+                'status' => 'inactive'
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'BHW removed successfully (set to inactive)',
+            'user'    => $user,
+            'bhw'     => $bhw
+        ]);
+    }
 
 }

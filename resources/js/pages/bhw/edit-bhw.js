@@ -270,6 +270,69 @@ editBhwTrigger.addEventListener('click', function() {
     }
 });
 
+editBhwSubmitButton.addEventListener('click', function(){
+    event.preventDefault();
+
+    
+    editBhwModal.hide();
+    editBhwNameToConfirm.textContent = bhwData.name;
+    confirmEditBhw.show();
+
+    
+});
+
+confirmEditBhwCheckbox.addEventListener('change', function(){
+    confirmEditProceedButton.disabled = !this.checked;
+});
+
+const successModalEl = document.getElementById('success-modal');
+const successMesageHeader = document.getElementById('success-msg-head');
+const successMessage = document.getElementById('success-message');
+const closeSuccessModalButton = document.getElementById('close-success-modal-button');
+const successModal = new Modal(successModalEl);
+
+confirmEditProceedButton.addEventListener('click', function(){
+     const payLoad = {
+        id: bhwData.users.id,
+        firstName: editBhwFirstNameInput.value,
+        lastName: editBhwLastNameInput.value,
+        middleName: editBhwMiddleNameInput.value,
+        suffix: editSuffixDropdownButton.dataset.selectedValue || '',
+        birthdate: editBhwBirthdateInput.value,
+        sex: editSexDropdownButton.dataset.selectedValue,
+        civil_status: editCivilStatusDropdownButton.dataset.selectedValue,
+        religion: editReligionDropdownButton.dataset.selectedValue,
+        email: editBhwEmailInput.value,
+        contact_no: editBhwContactNoInput.value,
+        role_id: parseInt(editPrivilegeDropdownButton.dataset.selectedValue, 10)
+    };
+
+    fetch(`/barangay/bhw/${payLoad.id}/edit`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify(payLoad)
+    })
+    .then(response => response.json())
+    .then(data => {
+        confirmEditBhw.hide();
+        successMessage.textContent = "Edit Success";
+        successMessage.textContent = "BHW Has been successfully updated";
+        successModal.show();
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+
+
+});
+
+closeSuccessModalButton.addEventListener('click', function(){
+    window.location.reload();
+});
+
 editBhwCloseButton.addEventListener('click', function() {
     editBhwModal.hide();
 });
