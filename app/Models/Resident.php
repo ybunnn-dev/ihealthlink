@@ -1,0 +1,60 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Resident extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'family_id',
+        'added_by',
+        'firstName',
+        'lastName',
+        'middleName',
+        'suffix',
+        'birthdate',
+        'sex',
+        'contact_no',
+        'civil_status',
+        'family_relationship',
+        'is_pwd',
+        'pwd_id',
+        'is_indigenous',
+        'employment_status',
+        'status',
+    ];
+
+    /*
+    |--------------------------------------------------------------------------
+    | Relationships
+    |--------------------------------------------------------------------------
+    */
+
+    // A resident belongs to a family
+    public function family()
+    {
+        return $this->belongsTo(Family::class);
+    }
+
+    // A resident can be head of a household (nullable foreign key)
+    public function householdHead()
+    {
+        return $this->hasOne(Household::class, 'head_id');
+    }
+
+    // A resident can be head of a family (nullable foreign key)
+    public function familyHead()
+    {
+        return $this->hasOne(Family::class, 'head_id');
+    }
+
+    // A resident is added by a user (nullable foreign key)
+    public function addedBy()
+    {
+        return $this->belongsTo(User::class, 'added_by');
+    }
+}

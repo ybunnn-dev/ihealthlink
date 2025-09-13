@@ -112,5 +112,8 @@ class User extends Authenticatable
     {
         return $this->hasOne(BHW::class, 'user_id');
     }
-
+    public function residentsAdded()
+    {
+        return $this->hasMany(Resident::class, 'added_by');
+    }
 }

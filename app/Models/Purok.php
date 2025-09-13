@@ -16,4 +16,8 @@ class Purok extends Model
     {
         return $this->belongsTo(Barangay::class, 'brgy_id');
     }
+    public function households()
+    {
+        return $this->hasMany(Household::class);
+    }
 }

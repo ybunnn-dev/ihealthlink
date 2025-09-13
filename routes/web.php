@@ -10,6 +10,7 @@ use App\Http\Controllers\Web\MedicineInventoryController;
 use App\Http\Controllers\Web\BHWController;
 use App\Http\Controllers\Web\ScheduleController;
 use App\Http\Controllers\Web\HealthProgramController;
+use App\Http\Controllers\Web\HouseholdController;
 
 Route::get('/', function () {
     return view('auth.login');
@@ -115,9 +116,10 @@ Route::middleware([
     })->name('midwife.dashboard');
 
     // Midwife-specific dashboard
-    Route::get('/midwife/households', function () {
-        return view('midwife.household-list');
-    })->name('midwife.households');
+    Route::get('/barangay/households', [HouseholdController::class, 'index'])->name('midwife.households');
+
+    Route::post('/barangays/households/add', [HouseholdController::class, 'store']);
+
 
     Route::get('/midwife/households/num', function () {
         return view('midwife.spec-household');

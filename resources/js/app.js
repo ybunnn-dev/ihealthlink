@@ -70,6 +70,9 @@ document.addEventListener('DOMContentLoaded', () => {
     import('./pages/bhw/edit-bhw.js');
     import('./pages/bhw/remove-bhw.js');
   }
+  else if(bodyClass.contains('households')){
+    import('./pages/household/add-household.js');
+  }
   else if(bodyClass.contains('spec-resident')){
     import('./pages/resident/spec-resident.js');
   }

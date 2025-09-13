@@ -1,9 +1,14 @@
 <x-app-layout>
     @section('title', 'Households')
+    @section('page-id', 'households')
     <div class="py-12 px-6">
         <div class="max-w-[90rem] mx-auto sm:px-6 lg:px-8">
             <h1 class="text-3xl font-semibold text-sub_blue mb-3">Households and Residents</h1>
+            <script>
+                const household = @json($households);
 
+                window.puroks = @json($puroks);
+            </script>
             <div class="mb-3">
                 <x-resident-module-nav></x-resident-module-nav>
             </div>
@@ -52,14 +57,13 @@
                                     </div>
                                     
                                     <!-- Add Household Button -->
-                                    <div class="w-full xs:w-40 pt-5 xs:pt-0" data-modal-target="add-household-modal" data-modal-toggle="add-household-modal">
-                                        <button type="button" class="w-full h-[2.375rem] text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3">Add Households</button>
-                                        
+                                    <div class="w-full xs:w-40 pt-5 xs:pt-0">
+                                        <button type="button" id="open-add-household" class="w-full h-[2.375rem] text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3">Add Households</button>       
                                     </div>
-                                    @include('components.modals.add-household-modal')
+                                    @include('components.modals.household.add-household-modal')
                                     @include('components.modals.existing-member-modal')
                                     @include('components.modals.existing-family-head-modal')
-                                    @include('components.modals.existing-household-head-modal')
+                                    @include('components.modals.household.existing-household-head-modal')
                                     @include('components.modals.new-resident-modal')
                                 </div>
                             </div>
@@ -107,40 +111,53 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr class="bg-white border-b bg-f7 text-normal_font" onclick="window.location='{{ route('midwife.spechouse') }}'">
-                                    <th scope="row" class="pl-6 py-4 font-medium text-normal_font whitespace-nowrap">
-                                        001
-                                    </th>
-                                    <td class="px-6 py-4">
-                                        Juan Dela Cruz
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        Purok 1
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        2023-01-15
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        2023-01-15
-                                    </td>
-                                </tr>
-                                <tr class="bg-white border-b bg-f7 text-normal_font">
-                                    <th scope="row" class="pl-6 py-4 font-medium text-normal_font whitespace-nowrap">
-                                        002
-                                    </th>
-                                    <td class="px-6 py-4">
-                                        Maria Clara
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        Purok 2
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        2023-02-01
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        2023-02-05
-                                    </td>
-                                </tr>
+                                @forelse ($households as $household)
+                                    {{-- This row will be repeated for each household in the collection --}}
+                                    <tr class="bg-white border-b bg-f7 text-normal_font hover:bg-gray-100 cursor-pointer"
+                                        onclick="window.location='{{ route('midwife.spechouse', $household->id) }}'">
+
+                                        {{-- Household # (ID), padded with zeros to make it 3 digits long --}}
+                                        <th scope="row" class="pl-6 py-4 font-medium text-normal_font whitespace-nowrap">
+                                            {{ str_pad($household->id, 3, '0', STR_PAD_LEFT) }}
+                                        </th>
+
+                                        {{-- Household Head (using n/a for now as requested) --}}
+                                        <td class="px-6 py-4">
+                                            n/a
+                                            {{-- When ready, you'd use something like: {{ $household->head->name ?? 'N/A' }} --}}
+                                        </td>
+
+                                        {{-- Purok Name (accessed through the relationship) --}}
+                                        <td class="px-6 py-4">
+                                            {{ $household->purok->name ?? 'No Purok' }}
+                                        </td>
+
+                                        {{-- Date Added (formatted to YYYY-MM-DD) --}}
+                                        <td class="px-6 py-4">
+                                            {{ $household->created_at->format('Y-m-d') }}
+                                        </td>
+
+                                        {{-- Date Updated (formatted to YYYY-MM-DD) --}}
+                                        <td class="px-6 py-4">
+                                            {{ $household->updated_at->format('Y-m-d') }}
+                                        </td>
+                                    </tr>
+                                @empty
+                                    {{-- This row will be displayed if the $households collection is empty --}}
+                                    <tr class="bg-white border-b">
+                                        <td colspan="5" class="px-6 py-4 text-center text-gray-500">
+                                            <div class="text-center py-10">
+                                                <img src="{{ asset('images/illustrations/empty.png') }}" alt="No barangays found" class="mx-auto w-64">
+                                                <p class="mt-5 text-lg font-medium text-gray-700">
+                                                    {{ $message ?? "Oops! You haven't added any household yet." }}
+                                                </p>
+                                                <p class="mt-2 text-sm text-gray-500">
+                                                    Click the "Add Household" button to get started.
+                                                </p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforelse
                             </tbody>
                         </table>
                     </div>
@@ -149,73 +166,4 @@
             </div>
         </div>
     </div>
-    <script>
-        // Get modal DOM elements
-        const modalMember = document.getElementById('existing-member-modal');
-        const modalFamilyHead = document.getElementById('existing-family-head-modal');
-        const modalHouseholdHead = document.getElementById('existing-household-head-modal');
-        const modalNew = document.getElementById('new-resident-modal');
-        const addHouseholdModal = document.getElementById('add-household-modal'); // Get the parent modal element
-
-        // Function to show a modal (adds Tailwind classes)
-        function openModal(id) {
-            const modal = document.getElementById(id);
-            if (modal) { // Add a safety check
-                modal.classList.remove('hidden');
-                modal.classList.add('flex');
-            }
-        }
-
-        // Function to hide a modal (used by "Close" buttons)
-        // The id parameter should be the string ID of the modal to close.
-        function closeModal(id) {
-            // If the modal being closed is NOT the main 'add-household-modal',
-            // reopen the main one. This ensures the parent modal returns after a child closes.
-            if (id !== 'add-household-modal') {
-                openModal('add-household-modal');
-            }
-            
-            const modal = document.getElementById(id);
-            if (modal) { // Add a check to prevent the error if the ID is invalid
-                modal.classList.add('hidden');
-                modal.classList.remove('flex');
-            }
-        }
-
-        // Proceed button logic
-        document.getElementById('proceed-add-household').addEventListener('click', function () {
-            const enteredName = document.getElementById('enterHouseholdHead').value.trim();
-
-            // Pass the string ID to closeModal, NOT the DOM element
-            closeModal('add-household-modal');
-
-            if (!enteredName) {
-                alert("Please enter the household head's name.");
-                return;
-            }
-
-            switch (enteredName.toLowerCase()) {
-                case 'juan dela cruz':
-                    openModal('existing-member-modal');
-                    break;
-                case 'maria clara':
-                    openModal('existing-family-head-modal');
-                    break;
-                case 'pedro penduko':
-                    openModal('existing-household-head-modal');
-                    break;
-                default:
-                    openModal('new-resident-modal');
-            }
-        });
-
-        // Add event listeners for the "Close" buttons in your child modals
-        // This is crucial for the `closeModal` function to work as intended
-        // with your child modals. Without this, they will never be closed
-        // and the parent modal will not return.
-        document.getElementById('close-existing-member').addEventListener('click', function() {
-            closeModal('existing-member-modal');
-        });
-        // Repeat for other modals as needed...
-    </script>
 </x-app-layout>
