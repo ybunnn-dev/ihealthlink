@@ -1,3 +1,4 @@
+@section('page-id', 'spec-resident')
 @section('title', 'Residents | #134')
 <x-app-layout>
     <div class="py-12 px-5">
@@ -714,7 +715,4 @@
                 </div>
             </div>
         </div>
-        @push('scripts')
-            @vite('resources/js/app.js')
-        @endpush
 </x-app-layout>

@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     import('./charts/families-4ps.js');
     import('./charts/small-donuts.js');
     import('./charts/radar.js');
-    import('./resident.js');
+    //import('./resident.js');
     
   } else if(bodyClass.contains('dashboard')){
 
@@ -70,7 +70,9 @@ document.addEventListener('DOMContentLoaded', () => {
     import('./pages/bhw/edit-bhw.js');
     import('./pages/bhw/remove-bhw.js');
   }
-
+  else if(bodyClass.contains('spec-resident')){
+    import('./pages/resident/spec-resident.js');
+  }
   else {
     console.log('Not on reports page - charts not loaded');
   }
