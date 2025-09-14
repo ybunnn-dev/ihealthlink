@@ -91,10 +91,13 @@
                                         Family Head
                                     </th>
                                     <th scope="col" class="px-6 py-3">
-                                        Purok
+                                        Indigent
                                     </th>
                                     <th scope="col" class="px-6 py-3">
                                         4PS Member
+                                    </th>
+                                     <th scope="col" class="px-6 py-3">
+                                        Indigent
                                     </th>
                                     <th scope="col" class="px-6 py-3">
                                         Date Added
@@ -106,25 +109,48 @@
                             </thead>
                             <tbody>
                                 @forelse($families as $family)
-                                    <tr class="bg-white border-b bg-f7 text-normal_font" onclick="window.location='{{ route('midwife.cur-fam') }}'">
+                                    <tr class="bg-white border-b bg-f7 text-normal_font cursor-pointer hover:bg-gray-100"
+                                                onclick="window.location='{{ route('midwife.cur-fam', ['family' => $family->id]) }}'">
                                         <th scope="row" class="pl-6 py-4 font-medium text-normal_font whitespace-nowrap">
-                                            001
+                                            {{ $family->id }}
                                         </th>
                                         <td class="px-6 py-4">
-                                            Juan Dela Cruz
+                                            {{ $family->head ? $family->head->full_name : '—' }}
                                         </td>
                                         <td class="px-6 py-4">
-                                            Purok 1
+                                            {{ $family->household->purok->name }}
+                                        </td>
+                                       <td class="px-6 py-4">
+                                            @if($family->is_4ps)
+                                                <span class="inline-block px-4 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-700">
+                                                    Yes
+                                                </span>
+                                            @else
+                                                <span class="inline-block px-4 py-1 text-xs font-semibold rounded-full bg-orange-100 text-orange-700">
+                                                    No
+                                                </span>
+                                            @endif
+                                        </td>
+
+                                        <td class="px-6 py-4">
+                                            @if($family->is_indigent)
+                                                <span class="inline-block px-4 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-700">
+                                                    Yes
+                                                </span>
+                                            @else
+                                                <span class="inline-block px-4 py-1 text-xs font-semibold rounded-full bg-orange-100 text-orange-700">
+                                                    No
+                                                </span>
+                                            @endif
+                                        </td>
+
+                                        <td class="px-6 py-4">
+                                            {{ $family->created_at->format('M d, Y') }}
                                         </td>
                                         <td class="px-6 py-4">
-                                            Yes
+                                            {{ $family->updated_at->format('M d, Y') }}
                                         </td>
-                                        <td class="px-6 py-4">
-                                            2023-01-15
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            2023-01-15
-                                        </td>
+
                                     </tr>
                                 @empty
                                     <tr class="bg-white border-b">

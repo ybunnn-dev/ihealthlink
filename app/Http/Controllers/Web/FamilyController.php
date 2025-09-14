@@ -26,7 +26,9 @@ class FamilyController extends Controller
 
         //get the families
         $householdIds = $households->pluck('id');
-        $families = Family::whereIn('household_id', $householdIds)->get();  
+         $families = Family::with('household.purok')
+        ->whereIn('household_id', $householdIds)
+        ->get(); 
         
         return view('midwife.families', [
             'families' => $families
@@ -60,6 +62,13 @@ class FamilyController extends Controller
             'status'  => 'success',
             'message' => 'Family successfully added',
             'data'    => $family
+        ]);
+    }
+    public function show(Family $family){
+        \Log::info($family);
+        
+          return view('midwife.spec-family', [
+            'family' => $family
         ]);
     }
 }

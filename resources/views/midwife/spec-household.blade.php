@@ -115,12 +115,30 @@
                                                 <td class="px-6 py-4">
                                                     {{ $family->head ? $family->head->full_name : '—' }}
                                                 </td>
-                                                <td class="px-6 py-4">
-                                                    {{ $family->is_4ps ? 'Yes' : 'No' }}
+                                               <td class="px-6 py-4">
+                                                    @if($family->is_4ps)
+                                                        <span class="inline-block px-4 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-700">
+                                                            Yes
+                                                        </span>
+                                                    @else
+                                                        <span class="inline-block px-4 py-1 text-xs font-semibold rounded-full bg-orange-100 text-orange-700">
+                                                            No
+                                                        </span>
+                                                    @endif
                                                 </td>
+
                                                 <td class="px-6 py-4">
-                                                    {{ $family->is_indigent ? 'Yes' : 'No' }}
+                                                    @if($family->is_indigent)
+                                                        <span class="inline-block px-4 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-700">
+                                                            Yes
+                                                        </span>
+                                                    @else
+                                                        <span class="inline-block px-4 py-1 text-xs font-semibold rounded-full bg-orange-100 text-orange-700">
+                                                            No
+                                                        </span>
+                                                    @endif
                                                 </td>
+
                                                 <td class="px-6 py-4">
                                                     <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded text-xs">
                                                         View

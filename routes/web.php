@@ -136,9 +136,8 @@ Route::middleware([
     })->name('midwife.families');*/
 
 
-    Route::get('/midwife/families/spec', function () {
-        return view('midwife.spec-family');
-    })->name('midwife.cur-fam');
+    Route::get('/midwife/family/{family}', [FamilyController::class, 'show'])
+        ->name('midwife.cur-fam');
 
     Route::get('/midwife/residents/spec-res', function () {
         return view('midwife.spec-resident');
