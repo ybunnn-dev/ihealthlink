@@ -55,4 +55,17 @@ class HouseholdController extends Controller
             'household' => $household,
         ]);
     }
+   public function show(Household $id)
+    {
+        $household = $id;
+
+        // Eager load the purok
+        $household->load('purok');
+
+        return view('midwife.spec-household', [
+            'household' => $household,
+            'purok' => $household->purok, // access the Purok data
+        ]);
+    }
+
 }

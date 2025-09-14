@@ -120,10 +120,11 @@ Route::middleware([
 
     Route::post('/barangays/households/add', [HouseholdController::class, 'store']);
 
+    Route::get('/barangays/households/{id}', [HouseholdController::class, 'show'])->name('midwife.spec-household');
 
-    Route::get('/midwife/households/num', function () {
-        return view('midwife.spec-household');
-    })->name('midwife.spechouse');
+    /*Route::get('/midwife/households/num', function () {
+        
+    })->name('midwife.spechouse');*/
 
     Route::get('/midwife/residents', function () {
         return view('midwife.resident-list');

@@ -114,7 +114,7 @@
                                 @forelse ($households as $household)
                                     {{-- This row will be repeated for each household in the collection --}}
                                     <tr class="bg-white border-b bg-f7 text-normal_font hover:bg-gray-100 cursor-pointer"
-                                        onclick="window.location='{{ route('midwife.spechouse', $household->id) }}'">
+                                        onclick="window.location='{{ route('midwife.spec-household', $household->id) }}'">
 
                                         {{-- Household # (ID), padded with zeros to make it 3 digits long --}}
                                         <th scope="row" class="pl-6 py-4 font-medium text-normal_font whitespace-nowrap">
