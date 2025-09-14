@@ -3,7 +3,7 @@
     @section('page-id', 'family')
     <div class="py-12 px-6">
         <div class="max-w-[90rem] mx-auto sm:px-6 lg:px-8">
-            <h1 class="text-3xl font-semibold text-sub_blue mb-3">Familys and Residents</h1>
+            <h1 class="text-3xl font-semibold text-sub_blue mb-3">Household and Residents</h1>
 
             <div class="mb-3">
                 <x-resident-module-nav></x-resident-module-nav>
@@ -54,8 +54,7 @@
                                     
                                     <!-- Add Family Button -->
                                     <div class="w-full xs:w-40 pt-5 xs:pt-0" data-modal-target="add-family-modal" data-modal-toggle="add-family-modal">
-                                        <button type="button" class="w-full h-[2.375rem] text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3">Add Family</button>
-                                        
+                                        <button id ="add-family-trigger" type="button" class="w-full h-[2.375rem] text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3">Add Family</button>
                                     </div>
                                 </div>
                             </div>

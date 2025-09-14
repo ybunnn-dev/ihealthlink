@@ -22,7 +22,10 @@
     </head>
     <body class="font-sans antialiased bg-white @yield('page-id', 'default-page')" data-theme="light">
         <x-banner />
-
+        <script>
+            window.brgy_id = @json($barangayId);
+            window.brgy_name = @json($barangayName);
+        </script>
         <div class="min-h-screen bg-bg-col flex">
             @auth
                 @if(Auth::user()->role_id == 1)

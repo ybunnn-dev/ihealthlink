@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Household;
 use App\Models\Barangay;
 use App\Models\Family;
+use App\Models\Purok;
 
 class HouseholdController extends Controller
 {
@@ -65,6 +66,59 @@ class HouseholdController extends Controller
             'household' => $household,
             'purok' => $household->purok,
             'families' => $household->families,
+        ]);
+    }
+    public function getHouseholdsJson(Request $request)
+    {
+        $personnel = Auth::user()->midwife;
+
+        // Get barangay with its puroks
+        $barangay = Barangay::with('puroks')->find($personnel->brgy_id);
+        $puroks = $barangay->puroks;
+
+        $purokIds = $puroks->pluck('id'); // gives you an array/collection of purok IDs
+        $query = Household::whereIn('purok_id', $purokIds);
+ 
+        \Log::info(json_encode($query));
+
+
+        // 2. Apply search filter if provided
+        if ($request->filled('search')) {
+            $searchQuery = $request->input('search');
+            $query->where(function ($q) use ($searchQuery) {
+                // Search by household ID number
+                $q->where('id_number', 'like', "%{$searchQuery}%")
+                  // Also search by the household head's name (requires a relationship)
+                  ->orWhereHas('head', function ($subQ) use ($searchQuery) {
+                      $subQ->where(DB::raw("CONCAT(first_name, ' ', last_name)"), 'like', "%{$searchQuery}%");
+                  });
+            });
+        }
+
+        // 3. Apply purok filter if provided
+        if ($request->filled('purok')) {
+            $purokName = $request->input('purok');
+            $query->whereHas('purok', function ($q) use ($purokName) {
+                $q->where('purok_name', $purokName); // Assuming your purok table has a 'purok_name' column
+            });
+        }
+
+        // 4. Eager load relationships to prevent N+1 issues and get necessary data
+        $households = $query->with(['head', 'families', 'purok'])->get();
+
+        // 5. Format the data to match what the frontend expects
+        $formattedHouseholds = $households->map(function ($household) {
+            return [
+                'id'           => $household->id, // The actual ID for the checkbox value
+                'head_name'    => $household->head ? $household->head->first_name . ' ' . $household->head->last_name : 'N/A',
+                'member_count' => $household->families->count(), // Count of families can represent members
+                'purok'        => $household->purok->name,
+            ];
+        });
+
+        // 6. Return the final data as a JSON response
+        return response()->json([
+            'households' => $formattedHouseholds
         ]);
     }
 

@@ -43,8 +43,13 @@ const confirmAddFamilyModal = new Modal(confirmAddFamilyModalEl);
 const switchHouseholdModal = new Modal(switchHouseholdModalEl);
 const successModal = new Modal(successModalEl);
 
+const householdTableBody = document.getElementById('switchHHTableBody'); // Target for rendering rows
+
 let household = window.household;
 let householdHead;
+
+const barangayName = window.barangay_name;
+const barangayId = window.barangay_id;
 
 // NEW: Completed validation function
 function validateForm() {
@@ -67,11 +72,7 @@ proceedAddHouseholdButton.addEventListener('click', function(){
 });
 
 
-addFamilyTriggerBtn.addEventListener('click', function() {
-    selectHouseholdButton.style.backgroundColor = "#EBEBEB";
-    selectHouseholdButton.disabled = true;
-    selectHouseholdButton.textContent = "Household #" + household.id;
-    
+addFamilyTriggerBtn.addEventListener('click', function() {    
     // CHANGED: Ensure the button is disabled when the modal opens
     proceedAddHouseholdButton.disabled = true; 
 
@@ -145,14 +146,117 @@ confirmAddFamilySubmitBtn.addEventListener('click', function () {
     });
 });
 
+let debounceTimer;
+
+function debounce(func, delay) {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(func, delay);
+}
+
+async function fetchHouseholds() {
+    // 1. Get current values from search and filter
+    const searchQuery = householdSearchInput.value.trim();
+    const purokFilter = purokFilterDropdownButton.textContent.trim();
+
+    // 2. Build query params
+    const params = new URLSearchParams();
+    if (searchQuery) {
+        params.append('search', searchQuery);
+    }
+    if (purokFilter && purokFilter !== 'All Puroks') {
+        params.append('purok', purokFilter);
+    }
+
+    // 3. Build full URL
+    const url = `/barangay/households/get?${params.toString()}`;
+
+    try {
+        const response = await fetch(url, {
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        console.log("Fetched households:", data.households);
+
+        renderHouseholds(data.households);
+
+    } catch (error) {
+        console.error("Failed to fetch households:", error);
+        householdTableBody.innerHTML = `
+            <tr>
+                <td colspan="5" class="text-center py-4 text-red-500">
+                    Failed to load data.
+                </td>
+            </tr>`;
+    }
+}
+
+function renderHouseholds(households) {
+    // 1. Clear the existing table body
+    householdTableBody.innerHTML = '';
+
+    // 2. Handle case where no households are found
+    if (!households || households.length === 0) {
+        householdTableBody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-gray-500">No households found.</td></tr>`;
+        return;
+    }
+
+    // 3. Create and append a new row for each household
+    households.forEach((household, index) => {
+        const rowHTML = `
+            <tr class="bg-white border-b hover:bg-gray-50">
+                <td class="w-4 p-4">
+                    <div class="flex items-center">
+                        <input id="checkbox-table-${index}" type="checkbox" value="${household.id}" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
+                        <label for="checkbox-table-${index}" class="sr-only">checkbox</label>
+                    </div>
+                </td>
+                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                    ${household.id}
+                </th>
+                <td class="px-6 py-4">${household.head_name}</td>
+                <td class="px-6 py-4">${household.member_count}</td>
+                <td class="px-6 py-4">${household.purok}</td>
+            </tr>
+        `;
+        householdTableBody.insertAdjacentHTML('beforeend', rowHTML);
+    });
+}
+
+
 closeSuccessModalButton.addEventListener('click', function(){
     window.location.reload();
 });
 
 
-selectHouseholdButton.addEventListener('click', function(){
+// When the "Select Household" button is clicked
+selectHouseholdButton.addEventListener('click', function() {
     addFamilyModal.hide();
     switchHouseholdModal.show();
+    console.log(barangayId);
+    fetchHouseholds(); // Fetch initial list of households
+});
+
+// When the user types in the search bar
+householdSearchInput.addEventListener('input', () => {
+    debounce(fetchHouseholds, 300); // Debounce to wait 300ms after user stops typing
+});
+
+// When a purok filter is selected from the dropdown
+purokFilterDropdownMenu.addEventListener('click', (event) => {
+    // Check if a filter link was clicked
+    if (event.target.tagName === 'A') {
+        const selectedPurok = event.target.textContent;
+        purokFilterDropdownButton.textContent = selectedPurok; // Update button text
+        fetchHouseholds(); // Re-fetch data with the new filter
+    }
 });
 
 closeChooseHousehold.addEventListener('click', function(){

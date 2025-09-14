@@ -22,9 +22,12 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         View::composer('*', function ($view) {
-        if (Auth::check() && Auth::user()->role_id === 2) {
-            $view->with('barangay', Auth::user()->barangay->name);
-        }
-    });
+            if (Auth::check() && Auth::user()->role_id === 2) {
+                $view->with([
+                    'barangayName' => Auth::user()->barangay->name,
+                    'barangayId'   => Auth::user()->barangay->id,
+                ]);
+            }
+        });
     }
 }

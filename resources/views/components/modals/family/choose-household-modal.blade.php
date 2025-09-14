@@ -1,7 +1,7 @@
 <div id="switchHouseholdModal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
     <div class="relative p-4 w-full max-w-6xl max-h-full">
-        <div class="relative bg-white rounded-lg shadow-lg flex flex-col h-[85vh]">
-            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t">
+        <div class="relative bg-white rounded-lg flex flex-col h-[85vh] py-4 px-12">
+            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t mb-4">
                 <div class="text-center w-full">
                     <h3 class="text-2xl font-semibold text-main_font">
                         Switch Household
@@ -10,14 +10,8 @@
                         To continue, please select the household you wish to transfer to.
                     </p>
                 </div>
-                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center absolute top-4 right-4" data-modal-hide="switchHouseholdModal">
-                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                    </svg>
-                    <span class="sr-only">Close modal</span>
-                </button>
             </div>
-            <div class="p-4 md:p-5 space-y-4 flex-grow flex flex-col overflow-hidden">
+            <div class="space-y-4 flex-grow flex flex-col overflow-hidden">
                 <div class="flex flex-col slg2:flex-row slg2:items-end gap-4">
                     <div class="w-full slg2:w-64 slg2:flex-grow slg2:max-w-md">
                         <label for="household-search" class="mb-2 text-sm font-medium text-main_font">Search for household</label>
@@ -39,7 +33,7 @@
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4" />
                             </svg>
                         </button>
-                        <div id="purokFilterDropdownMenu" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
+                        <div id="purokFilterDropdownMenu" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg w-44">
                             <ul class="py-2 text-sm text-gray-700" aria-labelledby="purokFilterDropdownButton">
                                 <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Purok 1</a></li>
                                 <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Purok 2</a></li>
@@ -49,9 +43,9 @@
                     </div>
                 </div>
 
-                <div class="relative overflow-x-auto shadow-md sm:rounded-lg flex-grow overflow-y-auto">
+                <div class="relative overflow-x-auto sm:rounded-lg flex-grow overflow-y-auto">
                     <table class="w-full text-sm text-left rtl:text-right text-gray-500">
-                        <thead class="text-xs text-main_font uppercase bg-gray-50 sticky top-0">
+                        <thead class="text-xs text-main_font uppercase bg-col_tab_h sticky top-0">
                             <tr>
                                 <th scope="col" class="p-4">
                                     </th>
@@ -61,7 +55,7 @@
                                 <th scope="col" class="px-6 py-3">Purok</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="switchHHTableBody">
                             <tr class="bg-white border-b hover:bg-gray-50">
                                 <td class="w-4 p-4">
                                     <div class="flex items-center">

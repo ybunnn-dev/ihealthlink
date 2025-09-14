@@ -31,7 +31,7 @@
         <ul class="flex-1 mt-10 text-sm px-3">
             <!-- Dashboard -->
            <li class="flex items-start group">
-                <a href="{{ route('midwife.dashboard', ['barangay' => $barangay]) }}"
+                <a href="{{ route('midwife.dashboard', ['barangay' => $barangayName]) }}"
                 class="flex items-center w-full py-3 pl-4 hover:bg-white/10 transition-colors rounded-lg"
                 :class="{
                     'bg-nav_active text-f7 font-bold': activeItem === 'dashboard',

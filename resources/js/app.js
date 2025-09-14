@@ -79,6 +79,9 @@ document.addEventListener('DOMContentLoaded', () => {
   else if(bodyClass.contains('spec-resident')){
     import('./pages/resident/spec-resident.js');
   }
+  else if(bodyClass.contains('family')){
+    import('./pages/family/add-family.js');
+  }
   else {
     console.log('Not on reports page - charts not loaded');
   }
