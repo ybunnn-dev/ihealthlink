@@ -105,46 +105,42 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr class="bg-white border-b bg-f7 text-normal_font" onclick="window.location='{{ route('midwife.cur-fam') }}'">
-                                    <th scope="row" class="pl-6 py-4 font-medium text-normal_font whitespace-nowrap">
-                                        001
-                                    </th>
-                                    <td class="px-6 py-4">
-                                        Juan Dela Cruz
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        Purok 1
-                                    </td>
-                                     <td class="px-6 py-4">
-                                        Yes
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        2023-01-15
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        2023-01-15
-                                    </td>
-                                </tr>
-                                <tr class="bg-white border-b bg-f7 text-normal_font">
-                                    <th scope="row" class="pl-6 py-4 font-medium text-normal_font whitespace-nowrap">
-                                        002
-                                    </th>
-                                    <td class="px-6 py-4">
-                                        Maria Clara
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        Purok 2
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        Yes
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        2023-02-01
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        2023-02-05
-                                    </td>
-                                </tr>
+                                @forelse($families as $family)
+                                    <tr class="bg-white border-b bg-f7 text-normal_font" onclick="window.location='{{ route('midwife.cur-fam') }}'">
+                                        <th scope="row" class="pl-6 py-4 font-medium text-normal_font whitespace-nowrap">
+                                            001
+                                        </th>
+                                        <td class="px-6 py-4">
+                                            Juan Dela Cruz
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            Purok 1
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            Yes
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            2023-01-15
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            2023-01-15
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr class="bg-white border-b">
+                                        <td colspan="6" class="px-6 py-4 text-center text-gray-500">
+                                            <div class="text-center py-10">
+                                                <img src="{{ asset('images/illustrations/empty.png') }}" alt="No barangays found" class="mx-auto w-64">
+                                                <p class="mt-5 text-lg font-medium text-gray-700">
+                                                    {{ $message ?? "Oops! You haven't added any household yet." }}
+                                                </p>
+                                                <p class="mt-2 text-sm text-gray-500">
+                                                    Click the "Add Household" button to get started.
+                                                </p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforelse
                             </tbody>
                         </table>
                     </div>

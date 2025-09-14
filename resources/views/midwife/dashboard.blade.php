@@ -84,55 +84,26 @@
 
             <div class="bg-white rounded-xl p-4 h-full">
                 <div class="text-sm font-semibold mb-4 text-sub_blue pt-4">Scheduled Activities</div>
-                <ul class="space-y-2">
-                <li class="bg-bg_col rounded-lg p-3 flex items-start">
-                    <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" class="flex-shrink-0 w-6 h-6 text-gray-500 mr-3 mt-0.5" fill="currentColor">
-                        <g>
-                            <path d="M2 2h16v4H2V2zm0 10V8h4v4H2zm6-2V8h4v2H8zm6 3V8h4v5h-4zm-6 5v-6h4v6H8zm-6 0v-4h4v4H2zm12 0v-3h4v3h-4z"></path>
-                        </g>
-                    </svg>
-                    <div class="flex-grow">
-                        <div class="text-sm font-semibold">Purok 1 Vaccination</div>
-                        <div class="text-xs text-gray-500">May 5, 2025</div>
-                    </div>
-                </li>
 
-                <li class="bg-bg_col rounded-lg p-3 flex items-start">
-                    <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" class="flex-shrink-0 w-6 h-6 text-gray-500 mr-3 mt-0.5" fill="currentColor">
-                        <g>
-                            <path d="M2 2h16v4H2V2zm0 10V8h4v4H2zm6-2V8h4v2H8zm6 3V8h4v5h-4zm-6 5v-6h4v6H8zm-6 0v-4h4v4H2zm12 0v-3h4v3h-4z"></path>
-                        </g>
-                    </svg>
-                    <div class="flex-grow">
-                        <div class="text-sm font-semibold">Profiling</div>
-                        <div class="text-xs text-gray-500">May 6, 2025</div>
-                    </div>
-                </li>
-
-                <li class="bg-bg_col rounded-lg p-3 flex items-start">
-                    <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" class="flex-shrink-0 w-6 h-6 text-gray-500 mr-3 mt-0.5" fill="currentColor">
-                        <g>
-                            <path d="M2 2h16v4H2V2zm0 10V8h4v4H2zm6-2V8h4v2H8zm6 3V8h4v5h-4zm-6 5v-6h4v6H8zm-6 0v-4h4v4H2zm12 0v-3h4v3h-4z"></path>
-                        </g>
-                    </svg>
-                    <div class="flex-grow">
-                        <div class="text-sm font-semibold">Meeting</div>
-                        <div class="text-xs text-gray-500">May 5, 2025</div>
-                    </div>
-                </li>
-
-                <li class="bg-bg_col rounded-lg p-3 flex items-start">
-                    <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" class="flex-shrink-0 w-6 h-6 text-gray-500 mr-3 mt-0.5" fill="currentColor">
-                        <g>
-                            <path d="M2 2h16v4H2V2zm0 10V8h4v4H2zm6-2V8h4v2H8zm6 3V8h4v5h-4zm-6 5v-6h4v6H8zm-6 0v-4h4v4H2zm12 0v-3h4v3h-4z"></path>
-                        </g>
-                    </svg>
-                    <div class="flex-grow">
-                        <div class="text-sm font-semibold">Deworming</div>
-                        <div class="text-xs text-gray-500">May 6, 2025</div>
-                    </div>
-                </li>
-            </ul>
+                <ul class="space-y-2 max-h-80 overflow-y-auto scrollbar-thin scrollbar-gray-200 scrollbar-track-gray-100 pr-2">
+                    @forelse ($scheduledActivities as $activity)
+                        <li class="bg-bg_col rounded-lg p-3 flex items-start">
+                            <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" class="flex-shrink-0 w-6 h-6 text-gray-500 mr-3 mt-0.5" fill="currentColor">
+                                <g>
+                                    <path d="M2 2h16v4H2V2zm0 10V8h4v4H2zm6-2V8h4v2H8zm6 3V8h4v5h-4zm-6 5v-6h4v6H8zm-6 0v-4h4v4H2zm12 0v-3h4v3h-4z"></path>
+                                </g>
+                            </svg>
+                            <div class="flex-grow">
+                                <div class="text-sm font-semibold">{{ $activity->activity }}</div>
+                                <div class="text-xs text-gray-500">{{ \Carbon\Carbon::parse($activity->date)->format('F j, Y') }}</div>
+                            </div>
+                        </li>
+                    @empty
+                        <li class="p-3 text-center text-sm text-gray-500">
+                            No scheduled activities.
+                        </li>
+                    @endforelse
+                </ul>
             </div>
         </div>
 

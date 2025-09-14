@@ -11,10 +11,14 @@ use App\Http\Controllers\Web\BHWController;
 use App\Http\Controllers\Web\ScheduleController;
 use App\Http\Controllers\Web\HealthProgramController;
 use App\Http\Controllers\Web\HouseholdController;
+use App\Http\Controllers\Web\FamilyController;
+use App\Http\Controllers\Web\RedirectBarangayController;
+use App\Http\Controllers\Web\MidwifeDashboardController;
 
 Route::get('/', function () {
     return view('auth.login');
 });
+
 
 // Shared middleware group for authenticated and verified users
 Route::middleware([
@@ -23,14 +27,9 @@ Route::middleware([
     'verified',
 ])->group(function () {
 
-    Route::get('/dashboard', function () {
-        $user = Auth::user();
-        return match ($user->role_id) {
-            1 => redirect()->intended('/mho/dashboard'),
-            2 => redirect()->intended('/midwife/dashboard'),
-        };
-    })->name('dashboard');
 
+    Route::get('/redirect-dashboard', [RedirectBarangayController::class, 'redirect'])
+     ->name('role.redirect');
     /** Municipal Health Office Module **/
 
     // MHO-specific dashboard
@@ -111,9 +110,8 @@ Route::middleware([
     /** Barangay Health Center Modules **/
 
     // Midwife-specific dashboard
-    Route::get('/midwife/dashboard', function () {
-        return view('midwife.dashboard');
-    })->name('midwife.dashboard');
+     Route::get('/midwife/{barangay}/dashboard', [MidwifeDashboardController::class, 'index'])
+             ->name('midwife.dashboard');
 
     // Midwife-specific dashboard
     Route::get('/barangay/households', [HouseholdController::class, 'index'])->name('midwife.households');
@@ -122,6 +120,7 @@ Route::middleware([
 
     Route::get('/barangays/households/{id}', [HouseholdController::class, 'show'])->name('midwife.spec-household');
 
+    Route::get('/barangay/families', [FamilyController::class, 'index'])->name('midwife.families');
     /*Route::get('/midwife/households/num', function () {
         
     })->name('midwife.spechouse');*/
@@ -130,9 +129,9 @@ Route::middleware([
         return view('midwife.resident-list');
     })->name('midwife.residents');
 
-    Route::get('/midwife/families', function () {
-        return view('midwife.families');
-    })->name('midwife.families');
+    /*Route::get('/midwife/families', function () {
+        
+    })->name('midwife.families');*/
 
 
     Route::get('/midwife/families/spec', function () {

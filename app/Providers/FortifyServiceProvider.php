@@ -51,20 +51,24 @@ class FortifyServiceProvider extends ServiceProvider
             return new class implements LoginResponse {
                 public function toResponse($request)
                 {
+                    \Log::info('eyak');
                     $user = $request->user();
-
-                    // Log user details
-                    \Log::info('LoginResponse triggered', [
-                        'user_id' => $user->id,
-                        'role_id' => $user->role_id,
-                        'email' => $user->email,
+                    
+                    \Log::info('Fortify login user:', [
+                        'id' => $user?->id,
+                        'name' => $user?->name,
+                        'email' => $user?->email,
+                        'role_id' => $user?->role_id,
                     ]);
+                    // For midwife and BHW, redirect to your dedicated controller route
+                    if (in_array($user->role_id, [2, 4])) {
+                        return redirect()->route('role.redirect'); // this is your new route
+                    }
 
+                    // For other roles, keep current redirect
                     return match ($user->role_id) {
                         1 => redirect()->intended('/mho/dashboard'),
-                        2 => redirect()->intended('/midwife/dashboard'),
-                        4 => redirect()->intended('/bhw/dashboard'),
-                        default => redirect()->intended('/'),
+                        //default => redirect()->intended('/'),
                     };
                 }
             };
