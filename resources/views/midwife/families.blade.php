@@ -1,5 +1,6 @@
 <x-app-layout>
     @section('title', 'Families')
+    @section('page-id', 'family')
     <div class="py-12 px-6">
         <div class="max-w-[90rem] mx-auto sm:px-6 lg:px-8">
             <h1 class="text-3xl font-semibold text-sub_blue mb-3">Familys and Residents</h1>

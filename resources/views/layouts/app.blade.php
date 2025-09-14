@@ -32,7 +32,7 @@
                 @endif
             @endauth
             <!-- Main Content - Fixed to screen height -->
-            <div class="flex-1 flex flex-col h-screen overflow-hidden pb-4">
+            <div class="flex-1 flex flex-col h-screen overflow-hidden">
                 <!-- Scrollable Page Content -->
                  @livewire('navigation-menu')
                 <main class="flex-1 overflow-y-auto rounded-xl bg-bg_col">

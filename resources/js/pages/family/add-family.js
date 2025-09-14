@@ -27,10 +27,20 @@ const successMesageHeader = document.getElementById('success-msg-head');
 const successMessage = document.getElementById('success-message');
 const closeSuccessModalButton = document.getElementById('close-success-modal-button');
 
+const switchHouseholdModalEl = document.getElementById('switchHouseholdModal');
+
+// The search input field
+const householdSearchInput = document.getElementById('household-search');
+const closeChooseHousehold = document.getElementById('cancelChooseHousehold');
+
+const purokFilterDropdownButton = document.getElementById('purokFilterDropdownButton');
+const purokFilterDropdownMenu = document.getElementById('purokFilterDropdownMenu')
+
 const addFamilyTriggerBtn = document.getElementById('add-family-trigger');
 
 const addFamilyModal = new Modal(addFamilyModalEl);
 const confirmAddFamilyModal = new Modal(confirmAddFamilyModalEl);
+const switchHouseholdModal = new Modal(switchHouseholdModalEl);
 const successModal = new Modal(successModalEl);
 
 let household = window.household;
@@ -137,4 +147,15 @@ confirmAddFamilySubmitBtn.addEventListener('click', function () {
 
 closeSuccessModalButton.addEventListener('click', function(){
     window.location.reload();
+});
+
+
+selectHouseholdButton.addEventListener('click', function(){
+    addFamilyModal.hide();
+    switchHouseholdModal.show();
+});
+
+closeChooseHousehold.addEventListener('click', function(){
+    switchHouseholdModal.hide();
+    addFamilyModal.show();
 });
