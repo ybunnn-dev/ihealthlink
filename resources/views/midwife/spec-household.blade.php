@@ -140,7 +140,7 @@
                                                 </td>
 
                                                 <td class="px-6 py-4">
-                                                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded text-xs">
+                                                    <button onclick="window.location='{{ route('midwife.cur-fam', ['family' => $family->id]) }}'" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded text-xs">
                                                         View
                                                     </button>
                                                 </td>

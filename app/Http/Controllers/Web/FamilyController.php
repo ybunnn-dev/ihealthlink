@@ -26,7 +26,7 @@ class FamilyController extends Controller
 
         //get the families
         $householdIds = $households->pluck('id');
-         $families = Family::with('household.purok')
+        $families = Family::with('household.purok')
         ->whereIn('household_id', $householdIds)
         ->get(); 
         
@@ -64,11 +64,17 @@ class FamilyController extends Controller
             'data'    => $family
         ]);
     }
-    public function show(Family $family){
+   public function show(Family $family)
+    {
+        // Eager load household + purok in one go
+        $family->load('household.purok');
+
         \Log::info($family);
-        
-          return view('midwife.spec-family', [
-            'family' => $family
+
+        return view('midwife.spec-family', [
+            'family' => $family,
+            'purok'  => $family->household->purok, // direct access to purok
         ]);
     }
+
 }

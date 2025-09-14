@@ -5,7 +5,7 @@
             <div class="grid grid-cols-1 gap-4">
                 <a href="{{ route('midwife.households') }}">
                     <div class="flex items-center space-x-2"> <svg class="w-5 h-5" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M5 1H4L0 5L4 9H5V6H11C12.6569 6 14 7.34315 14 9C14 10.6569 12.6569 12 11 12H4V14H11C13.7614 14 16 11.7614 16 9C16 6.23858 13.7614 4 11 4H5V1Z" fill="#323643"></path> </g></svg>
-                        <span>Return</span>
+                        <span class="font-semibold">Return</span>
                     </div>
                 </a>
                 <div class="grid grid-cols-1 slg:grid-cols-3 gap-4">
@@ -22,29 +22,33 @@
                                 </g> 
                             </g>
                         </svg>
-                        <h1 class="text-main_font font-bold mt-3 text-xl">Ron Peter Mortega Family</h1>
-                        <p class="text-main_font font-bold">Family #144</p> 
+                        <h1 class="text-main_font font-bold mt-3 text-xl">{{ $family->head ? $family->head->full_name : 'TBD' }} Family</h1>
+                        <p class="text-main_font font-bold">Family #{{ $family->id }}</p> 
                     </div>
                     <div class="flex-grow h-80 bg-f7 rounded-lg px-12 py-8 col-span-2">
-                        <h2 class="text-xl font-semibold text-main_font mb-6">Household Info</h2>
+                        <h2 class="text-xl font-semibold text-main_font mb-6">Family Info</h2>
                         <div class="grid grid-cols-[auto_1fr] gap-x-24 gap-y-3 text-xs">
                             <p class="font-semibold text-main_font">PUROK NO.</p>
-                            <p class="text-normal_font">1</p>
+                            <p class="text-normal_font">{{ $purok->name }}</p>
 
-                            <p class="font-semibold text-main_font">NUMBER OF FAMILIES:</p>
+                            <p class="font-semibold text-main_font">NUMBER OF RESIDENTS:</p>
                             <p class="text-normal_font">6</p>
 
-                            <p class="font-semibold text-main_font">HOUSEHOLD HEAD:</p>
-                            <p class="text-normal_font">Ron Peter Mortega</p>
+                            <p class="font-semibold text-main_font">FAMILY HEAD:</p>
+                            <p class="text-normal_font">{{ $family->head ? $family->head->full_name : '—' }}</p>
 
-                            <p class="font-semibold text-main_font">SOURCE OF WATER:</p>
-                            <p class="text-normal_font">Deep Well</p>
+                            
+                            <p class="font-semibold text-main_font">HOUSEHOLD NUMBER:</p>
+                            <a href="{{ route('midwife.spec-household', $family->household_id) }}"><u><p class="text-normal_font">Household #{{ $family->household_id }}</p></u></a>
 
-                            <p class="font-semibold text-main_font">HAVE A TOILET:</p>
-                            <p class="text-normal_font">No</p>
+                            <p class="font-semibold text-main_font">4PS MEMBER:</p>
+                            <p class="text-normal_font">{{ $family->is_4ps ? 'Yes' : 'No' }}</p>
+
+                            <p class="font-semibold text-main_font">INDIGENT:</p>
+                            <p class="text-normal_font">{{ $family->is_indigent ? 'Yes' : 'No' }}</p>
 
                             <p class="font-semibold text-main_font">DATE ADDED:</p>
-                            <p class="text-normal_font">March 17, 2024</p>
+                            <p class="text-normal_font">March 17, 2025</p>
 
                             <p class="font-semibold text-main_font">DATE UPDATED:</p>
                             <p class="text-normal_font">March 17, 2025</p>
