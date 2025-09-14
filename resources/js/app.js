@@ -73,6 +73,9 @@ document.addEventListener('DOMContentLoaded', () => {
   else if(bodyClass.contains('households')){
     import('./pages/household/add-household.js');
   }
+  else if(bodyClass.contains('spec-household')){
+    import('./pages/household/add-family.js');
+  }
   else if(bodyClass.contains('spec-resident')){
     import('./pages/resident/spec-resident.js');
   }

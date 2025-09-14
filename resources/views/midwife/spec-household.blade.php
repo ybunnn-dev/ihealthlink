@@ -1,6 +1,10 @@
 @section('title', 'Households | #134')
+@section('page-id', 'spec-household')
 <x-app-layout>
     <div class="py-12 px-5">
+        <script>
+            window.household = @json($household);
+        </script>
         <div class="max-w-[90rem] mx-auto sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 gap-4">
                 <a href="{{ route('midwife.households') }}">
@@ -77,7 +81,7 @@
                                 <div class="flex flex-col slg2:flex-row slg2:items-end gap-4 justify-end">  
                                     <!-- Add Household Button -->
                                     <div class="w-full xs:w-40 pt-5 xs:pt-0">
-                                        <button type="button" class="w-full h-[2rem] text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3">Add Family</button>
+                                        <button id="add-family-trigger" type="button" class="w-full h-[2.375rem] text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3">Add Family</button>
                                     </div>
                                 </div>
                             </div>
@@ -103,26 +107,41 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        
+                                        @forelse($families as $family)
                                         <tr class="bg-white border-b bg-f7 text-normal_font">
-                                            <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
-                                                001
-                                            </th>
-                                            <td class="px-6 py-4">
-                                                Ron Peter Mortega
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                Yes
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                Yes
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded text-xs">
-                                                    View
-                                                </button>
-                                            </td>
-                                        </tr>
+                                                <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
+                                                    {{ $family->id }}
+                                                </th>
+                                                <td class="px-6 py-4">
+                                                    {{ $family->head ? $family->head->full_name : '—' }}
+                                                </td>
+                                                <td class="px-6 py-4">
+                                                    {{ $family->is_4ps ? 'Yes' : 'No' }}
+                                                </td>
+                                                <td class="px-6 py-4">
+                                                    {{ $family->is_indigent ? 'Yes' : 'No' }}
+                                                </td>
+                                                <td class="px-6 py-4">
+                                                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded text-xs">
+                                                        View
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        @empty
+                                            <tr class="bg-white border-b">
+                                                <td colspan="6" class="px-6 py-4 text-center text-gray-500">
+                                                    <div class="text-center py-10">
+                                                        <img src="{{ asset('images/illustrations/empty.png') }}" alt="No barangays found" class="mx-auto w-64">
+                                                        <p class="mt-5 text-lg font-medium text-gray-700">
+                                                            {{ $message ?? "Oops! You haven't added any family yet." }}
+                                                        </p>
+                                                        <p class="mt-2 text-sm text-gray-500">
+                                                            Click the "Add Family" button to get started.
+                                                        </p>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        @endforelse
                                     </tbody>
                                 </table>
                             </div>
@@ -131,5 +150,5 @@
                 </div>
             </div>
         </div>
-        @include('components.modals.add-family-modal')
+         @include('components.modals.family.add-family-modal')
 </x-app-layout>

@@ -44,4 +44,5 @@ class Family extends Model
     {
         return $this->hasManyThrough(Resident::class, Household::class, 'id', 'family_id');
     }
+
 }

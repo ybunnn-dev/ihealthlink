@@ -32,4 +32,34 @@ class FamilyController extends Controller
             'families' => $families
         ]);
     }
+
+    public function store(Request $request)
+    {
+        // Validate inputs
+        $validated = $request->validate([
+            'household_id' => 'required|integer|exists:households,id',
+            'familyHeadId' => 'nullable|integer|exists:residents,id',
+            'is4ps'        => 'required|string|in:Yes,No',
+            'isIndigent'   => 'required|string|in:Yes,No',
+        ]);
+
+        // Convert "Yes"/"No" to booleans
+        $is4ps = $validated['is4ps'] === 'Yes';
+        $isIndigent = $validated['isIndigent'] === 'Yes';
+
+        // Save to database
+        $family = Family::create([
+            'household_id' => $validated['household_id'],
+            'head_id'      => $validated['familyHeadId'],
+            'status'       => 'active',
+            'is_indigent'  => $isIndigent,
+            'is_4ps'       => $is4ps,
+        ]);
+
+        return response()->json([
+            'status'  => 'success',
+            'message' => 'Family successfully added',
+            'data'    => $family
+        ]);
+    }
 }

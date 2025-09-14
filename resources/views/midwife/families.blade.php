@@ -132,10 +132,10 @@
                                             <div class="text-center py-10">
                                                 <img src="{{ asset('images/illustrations/empty.png') }}" alt="No barangays found" class="mx-auto w-64">
                                                 <p class="mt-5 text-lg font-medium text-gray-700">
-                                                    {{ $message ?? "Oops! You haven't added any household yet." }}
+                                                    {{ $message ?? "Oops! You haven't added any family yet." }}
                                                 </p>
                                                 <p class="mt-2 text-sm text-gray-500">
-                                                    Click the "Add Household" button to get started.
+                                                    Click the "Add Family" button to get started.
                                                 </p>
                                             </div>
                                         </td>
@@ -149,5 +149,5 @@
             </div>
         </div>
     </div>
-    @include('components.modals.add-family-modal')
+    @include('components.modals.family.add-family-modal')
 </x-app-layout>

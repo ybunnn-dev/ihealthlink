@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 use App\Models\Household;
 use App\Models\Barangay;
+use App\Models\Family;
 
 class HouseholdController extends Controller
 {
@@ -55,16 +56,15 @@ class HouseholdController extends Controller
             'household' => $household,
         ]);
     }
-   public function show(Household $id)
+
+    public function show(Household $id)
     {
         $household = $id;
-
-        // Eager load the purok
-        $household->load('purok');
-
+        $household->load(['purok', 'families']); // also eager load families
         return view('midwife.spec-household', [
             'household' => $household,
-            'purok' => $household->purok, // access the Purok data
+            'purok' => $household->purok,
+            'families' => $household->families,
         ]);
     }
 
