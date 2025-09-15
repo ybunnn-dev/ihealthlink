@@ -238,6 +238,7 @@ closeSuccessModalButton.addEventListener('click', function(){
 
 // When the "Select Household" button is clicked
 selectHouseholdButton.addEventListener('click', function() {
+    console.log('vakla');
     addFamilyModal.hide();
     switchHouseholdModal.show();
     console.log(barangayId);
