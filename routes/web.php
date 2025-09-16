@@ -219,5 +219,10 @@ Route::middleware([
         return view('midwife.enrolled-resident');
     })->name('midwife.enrolled-resident');
 
-    Route::get('/barangay/reports/print-pdf', [BarangayReportsController::class, 'generateCommunityReport']);
+    Route::get('/barangay/reports/community-report-pdf', [BarangayReportsController::class, 'downloadCommunityReport']);
+    Route::get('/reports/preview-community-report', [BarangayReportsController::class, 'previewCommunityReport']);
+    Route::get('/barangay/reports/export-excel', [BarangayReportsController::class, 'exportCommunityReportExcel']);
+    Route::get('/barangay/reports/export-csv', [BarangayReportsController::class, 'exportCommunityReportCsv']);
+
+
 });

@@ -8,23 +8,18 @@
                 <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Enter resident details to continue</p>
             </div>
 
-            <div class="max-h-[70vh] overflow-y-auto px-4">
+            <div class="max-h-[90vh] px-4">
                 <div class="grid grid-cols-1 md:grid-cols-5 gap-10">
 
-                    <div class="md:col-span-2 flex flex-col h-full">
-                        <div class="flex-grow flex items-center justify-center border-2 border-dashed rounded-lg h-96 md:h-full dark:border-gray-600">
-                             <span class="text-gray-400">Preview Section</span>
-                        </div>
-                        <div class="flex items-center justify-between mt-4">
-                            <button type="button" class="p-2 text-sm font-medium text-gray-600 bg-gray-100 rounded-md hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600">
-                                &lt;
-                            </button>
-                             <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Page 1</span>
-                            <button type="button" class="p-2 text-sm font-medium text-gray-600 bg-gray-100 rounded-md hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600">
-                                &gt;
-                            </button>
+                    <div class="md:col-span-2 flex flex-col">
+                        <div id="preview-container" class="relative flex-grow border-2 min-h-0 h-[60vh] border-dashed rounded-lg overflow-y-auto overflow-x-hidden scrollbar-thin dark:border-gray-600">
+                            <div id="preview-placeholder" class="flex items-center justify-center w-full h-full">
+                                <span class="text-gray-400">Select PDF to preview report</span>
+                            </div>
+                            <div id="pdf-viewer" class="hidden flex flex-col items-center"></div>
                         </div>
                     </div>
+
 
                     <div class="md:col-span-3 space-y-6">
                         <div>

@@ -28,7 +28,7 @@
 ---
 ## Install PDF Printer Dependency First
 composer require barryvdh/laravel-dompdf
-
+composer require phpoffice/phpspreadsheet
 
 ## 🛠 Installation Guide  
 
