@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Only load charts on the reports page
   if (bodyClass.contains('reports')) {
- 
+    import('./pages/reports/export-reports.js');
     import('./charts/per-purok-pie.js');
     import('./charts/age-group-bar.js');
     import('./charts/families-4ps.js');

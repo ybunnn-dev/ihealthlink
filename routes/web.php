@@ -14,6 +14,7 @@ use App\Http\Controllers\Web\HouseholdController;
 use App\Http\Controllers\Web\FamilyController;
 use App\Http\Controllers\Web\RedirectBarangayController;
 use App\Http\Controllers\Web\MidwifeDashboardController;
+use App\Http\Controllers\Web\BarangayReportsController;
 
 Route::get('/', function () {
     return view('auth.login');
@@ -217,4 +218,6 @@ Route::middleware([
     Route::get('/midwife/health-programs/spec', function () {
         return view('midwife.enrolled-resident');
     })->name('midwife.enrolled-resident');
+
+    Route::get('/barangay/reports/print-pdf', [BarangayReportsController::class, 'generateCommunityReport']);
 });
