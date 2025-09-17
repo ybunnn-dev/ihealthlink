@@ -46,20 +46,17 @@ class FortifyServiceProvider extends ServiceProvider
             return Limit::perMinute(5)->by($request->session()->get('login.id'));
         });
 
+        RateLimiter::for('auth-web', function ($request) {
+            return Limit::perMinute(40)->by($request->user()->id);
+        });
+
        $this->app->singleton(LoginResponse::class, function (Container $container) {
         
             return new class implements LoginResponse {
                 public function toResponse($request)
                 {
-                    \Log::info('eyak');
                     $user = $request->user();
                     
-                    \Log::info('Fortify login user:', [
-                        'id' => $user?->id,
-                        'name' => $user?->name,
-                        'email' => $user?->email,
-                        'role_id' => $user?->role_id,
-                    ]);
                     // For midwife and BHW, redirect to your dedicated controller route
                     if (in_array($user->role_id, [2, 4])) {
                         return redirect()->route('role.redirect'); // this is your new route

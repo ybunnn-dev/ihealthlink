@@ -9,10 +9,13 @@ use App\Http\Controllers\Mobile\ScheduleController;
 use App\Http\Controllers\Mobile\MedicineController;
 
 // Public routes
-Route::post('/login', [AuthController::class, 'login']);
+Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:login'); ;
 
 // Protected routes (require Sanctum token)
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['auth:sanctum',
+'verified',
+'throttle:auth-web',]
+)->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
