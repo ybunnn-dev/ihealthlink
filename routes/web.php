@@ -145,6 +145,8 @@ Route::middleware([
         return view('midwife.spec-resident');
     })->name('midwife.spec-resident');
 
+    Route::post('/barangay/add-sched', [ScheduleController::class, 'store']);
+
     Route::get('/barangay/schedules', [ScheduleController::class, 'index'])->name('midwife.sched');
     
     Route::put('/daily-activity/update', [ScheduleController::class, 'updateDailyActivity']);
