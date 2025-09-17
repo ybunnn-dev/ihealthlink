@@ -63,7 +63,7 @@
             <div class="flex items-center border-t border-gray-200 rounded-b dark:border-gray-600 gap-3 justify-end pt-6 mt-4 px-6">
                 <button id="cancelAddFamilyButton" data-modal-hide="add-family-modal" type="button" class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100">Cancel</button>
                 <button 
-                    id="proceedAddHouseholdButton" 
+                    id="proceedAddFamilyButton" 
                     type="button" 
                     class="text-white bg-mainblue hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center disabled:opacity-50 disabled:cursor-not-allowed"
                     disabled>

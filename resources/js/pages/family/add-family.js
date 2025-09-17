@@ -14,7 +14,7 @@ const isIndigentButtonText = document.getElementById('isIndigentButtonText');
 const indigentDropdownMenu = document.getElementById('indigentDropdownMenu');
 
 const cancelAddFamilyButton = document.getElementById('cancelAddFamilyButton');
-const proceedAddHouseholdButton = document.getElementById('proceedAddHouseholdButton');
+const proceedAddFamilyButton = document.getElementById('proceedAddFamilyButton');
 
 // The main confirmation modal element
 const confirmAddFamilyModalEl = document.getElementById('confirm-add-family-modal');
@@ -27,6 +27,7 @@ const successMesageHeader = document.getElementById('success-msg-head');
 const successMessage = document.getElementById('success-message');
 const closeSuccessModalButton = document.getElementById('close-success-modal-button');
 
+const chooseHouseholdCompleteBtn = document.getElementById('choosenHouseholdBtn');
 const switchHouseholdModalEl = document.getElementById('switchHouseholdModal');
 
 // The search input field
@@ -48,6 +49,9 @@ const householdTableBody = document.getElementById('switchHHTableBody'); // Targ
 let household = window.household;
 let householdHead;
 
+
+let currentHouseholdId;
+
 const barangayName = window.barangay_name;
 const barangayId = window.barangay_id;
 
@@ -58,13 +62,13 @@ function validateForm() {
 
     // If both dropdowns have a value, enable the button. Otherwise, disable it.
     if (is4psSelected && isIndigentSelected) {
-        proceedAddHouseholdButton.disabled = false;
+        proceedAddFamilyButton.disabled = false;
     } else {
-        proceedAddHouseholdButton.disabled = true;
+        proceedAddFamilyButton.disabled = true;
     }
 }
 
-proceedAddHouseholdButton.addEventListener('click', function(){
+proceedAddFamilyButton.addEventListener('click', function(){
     event.preventDefault();
 
     addFamilyModal.hide();
@@ -74,7 +78,7 @@ proceedAddHouseholdButton.addEventListener('click', function(){
 
 addFamilyTriggerBtn.addEventListener('click', function() {    
     // CHANGED: Ensure the button is disabled when the modal opens
-    proceedAddHouseholdButton.disabled = true; 
+    proceedAddFamilyButton.disabled = true; 
 
     addFamilyModal.show();
 });
@@ -86,7 +90,7 @@ cancelAddFamilyButton.addEventListener('click', function() {
     is4psButtonText.textContent = "Select";
 
     // CHANGED: Ensure the button is disabled when the form is reset
-    proceedAddHouseholdButton.disabled = true; 
+    proceedAddFamilyButton.disabled = true; 
 
     addFamilyModal.hide();
 });
@@ -117,7 +121,7 @@ confirmFamilyCheckbox.addEventListener('change', function(){
 
 confirmAddFamilySubmitBtn.addEventListener('click', function () {
     const addFamilyPayload = {
-        household_id: household.id,
+        household_id: currentHouseholdId,
         familyHeadId: null,
         is4ps: is4psButtonText.textContent,
         isIndigent: isIndigentButtonText.textContent
@@ -214,8 +218,12 @@ function renderHouseholds(households) {
             <tr class="bg-white border-b hover:bg-gray-50">
                 <td class="w-4 p-4">
                     <div class="flex items-center">
-                        <input id="checkbox-table-${index}" type="checkbox" value="${household.id}" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
-                        <label for="checkbox-table-${index}" class="sr-only">checkbox</label>
+                        <input id="household-radio-${household.id}"
+                            type="radio" 
+                            name="selected_household" 
+                            value="${household.id}"
+                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500">
+                        <label for="household-radio-${household.id}" class="sr-only">radio</label>
                     </div>
                 </td>
                 <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
@@ -230,19 +238,41 @@ function renderHouseholds(households) {
     });
 }
 
+chooseHouseholdCompleteBtn.addEventListener('click', function() {
+    // 1. Find the radio button that is currently checked
+    const selectedRadio = document.querySelector('input[name="selected_household"]:checked');
+
+    // 2. Check if the user actually selected one
+    if (selectedRadio) {
+        // 3. Get the value (which is the household ID)
+        currentHouseholdId = selectedRadio.value;
+        console.log('Chosen Household ID:', currentHouseholdId);
+        selectHouseholdButton.textContent = "Household #"+currentHouseholdId;
+        switchHouseholdModal.hide();
+        addFamilyModal.show();
+        // You can now use 'chosenHouseholdId' for your next steps.
+
+    } else {
+        // Handle the case where the user didn't select anything
+        console.log('No household was selected.');
+        alert('Please select a household first.'); 
+    }
+});
+// When the "Select Household" button is clicked
+selectHouseholdButton.addEventListener('click', function() {
+    addFamilyModal.hide();
+    switchHouseholdModal.show();
+    console.log(barangayId);
+    fetchHouseholds(); // Fetch initial list of households
+});
 
 closeSuccessModalButton.addEventListener('click', function(){
     window.location.reload();
 });
 
-
-// When the "Select Household" button is clicked
-selectHouseholdButton.addEventListener('click', function() {
-    console.log('vakla');
-    addFamilyModal.hide();
-    switchHouseholdModal.show();
-    console.log(barangayId);
-    fetchHouseholds(); // Fetch initial list of households
+closeChooseHousehold.addEventListener('click', function(){
+    switchHouseholdModal.hide();
+    addFamilyModal.show();
 });
 
 // When the user types in the search bar
@@ -260,7 +290,3 @@ purokFilterDropdownMenu.addEventListener('click', (event) => {
     }
 });
 
-closeChooseHousehold.addEventListener('click', function(){
-    switchHouseholdModal.hide();
-    addFamilyModal.show();
-});
