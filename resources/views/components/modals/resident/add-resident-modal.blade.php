@@ -7,8 +7,8 @@
                 </h3>
                 <p class="text-sm text-normal_font -mt-1">Enter resident details to continue</p>
             </div>
-            <div class="p-4 md:p-5 space-y-4 max-h-[70vh] overflow-y-auto w-full">
-                <div class="grid grid-cols-1 gap-3 w-full">
+            <div class="p-4 md:p-5 space-y-4 h-[70vh]overflow-y-auto w-full">
+                <div class="grid grid-cols-1 gap-3 w-full h-full">
                     <ol class="flex items-center w-full text-xs font-medium text-center text-gray-500 dark:text-gray-400 sm:text-xs mb-6 border-b border-gray-200 pb-6">
                         <li id="step-progress-1" class="flex md:w-full items-center after:w-full after:h-1 after:border-b after:border-gray-200 after:border-1 after:hidden sm:after:inline-block after:mx-6 xl:after:mx-10 gap-3">
                             <span class="flex items-center after:content-['/'] sm:after:hidden after:mx-2 after:text-gray-200 dark:after:text-gray-500">
@@ -48,7 +48,7 @@
                         </li>
                     </ol>
 
-                    <div class="flex flex-nowrap w-full overflow-hidden">
+                    <div class="flex flex-nowrap w-full h-[50vh] overflow-auto overflow-x-hidden">
                         <div id="step-1" class="form-step transition-transform duration-500 ease-in-out transform translate-x-0 w-full flex-shrink-0">
                             <x-multi-modal-components.add-resident-1></x-multi-modal-components.add-resident-1>
                         </div>
@@ -74,14 +74,12 @@
             <div class="flex items-center justify-between border-t border-gray-200 rounded-b dark:border-gray-600 gap-3 pt-6 px-10">
                 <!-- Left side: Cancel + Previous -->
                 <div class="flex gap-3">
-                    <button id="cancel-button" data-modal-hide="add-resident-modal" type="button" class="py-2.5 px-5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Cancel</button>
+                    <button id="cancel-button-add-resident" data-modal-hide="add-resident-modal" type="button" class="py-2.5 px-5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Cancel</button>
 
                     <button id="prev-button" type="button" class="hidden py-2.5 px-5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Previous</button>
                 </div>
 
-                <!-- Right side: Skip, Next, Add Resident -->
                 <div class="flex gap-3">
-                    <button id="skip-button" type="button" class="py-2.5 px-5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Skip</button>
 
                     <button id="next-button" type="button" class="text-white bg-mainblue hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 w-full slg:w-[9rem]">Next</button>
 
@@ -92,4 +90,4 @@
         </div>
     </div>
 </div>
-@vite('resources/js/modals/add-resident-modal.js')
+@include('components.modals.resident.add-resident-confirmation')

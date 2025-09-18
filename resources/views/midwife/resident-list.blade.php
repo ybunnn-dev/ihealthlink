@@ -1,4 +1,5 @@
 @section('title', 'Residents')
+@section('page-id', 'residents')
 <x-app-layout>
     <div class="py-12 px-5">
         <div class="max-w-[90rem] mx-auto sm:px-6 lg:px-8">
@@ -47,7 +48,7 @@
                                     </div>
 
                                     <div class="w-full xs:w-40 pt-5 xs:pt-0">
-                                        <button type="button" id="openAddResidentModal" data-modal-target="add-resident-modal" data-modal-toggle="add-resident-modal" class="w-full h-[2.375rem] text-white bg-mainblue hover:bg-blue-700 font-medium rounded-lg text-sm px-3 flex items-center justify-center gap-2">
+                                        <button type="button" id="openAddResidentModal" class="w-full h-[2.375rem] text-white bg-mainblue hover:bg-blue-700 font-medium rounded-lg text-sm px-3 flex items-center justify-center gap-2">
                                             <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                                                 <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
@@ -182,7 +183,7 @@
             </div>
         </div>
     </div>
-    @include('components.modals.add-resident-modal')
+    @include('components.modals.resident.add-resident-modal')
     @include('components.modals.qr-scanner')
     @vite('resources/js/modals/qr-scanner.js')
 </x-app-layout>
