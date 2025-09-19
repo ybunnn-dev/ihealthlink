@@ -15,6 +15,7 @@ use App\Http\Controllers\Web\FamilyController;
 use App\Http\Controllers\Web\RedirectBarangayController;
 use App\Http\Controllers\Web\MidwifeDashboardController;
 use App\Http\Controllers\Web\BarangayReportsController;
+use App\Http\Controllers\Web\ResidentController;
 
 Route::get('/', function () {
     return view('auth.login');
@@ -138,7 +139,8 @@ Route::middleware([
         
     })->name('midwife.families');*/
 
-
+    Route::get('barangay/resident/families/get', [FamilyController::class, 'getFamilies']);
+    
     Route::get('/midwife/family/{family}', [FamilyController::class, 'show'])
         ->name('midwife.cur-fam');
 
@@ -160,6 +162,9 @@ Route::middleware([
     Route::put('/barangay/bhw/{id}/edit', [BHWController::class, 'update']);
 
     Route::put('/barangay/bhw/{id}/remove', [BhwController::class, 'remove']);
+
+
+    Route::post('/barangay/resident/add', [ResidentController::class, 'addResident']);
 
     Route::get('/midwife/reports', function () {
         return view('midwife.reports');

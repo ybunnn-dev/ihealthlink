@@ -8,7 +8,7 @@
             <div class="mb-3">
                 <x-resident-module-nav></x-resident-module-nav>
             </div>
-
+            <button id="click-me">Click me</button>
             <div class="bg-f7 rounded-xl overflow-hidden">
                 <div class="p-6">
                     <div class="grid grid-rows-1 gap-1">

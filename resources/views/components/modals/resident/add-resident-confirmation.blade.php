@@ -13,48 +13,54 @@
             </div>
                 
             <!-- Modal body with scrollable content -->
-            <div class="p-6 md:p-7">
-                <div id="resident-info-review" class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4 max-h-[40vh] overflow-y-auto custom-scrollbar pr-4">
-                    <!-- Dynamically populated content will go here -->
-                    <div class="flex flex-col">
-                        <label class="text-xs font-semibold text-gray-500 uppercase">Full Name</label>
-                        <span id="review-full-name" class="text-base text-gray-800 font-medium">Juan Dela Cruz Jr.</span>
+            <div>
+                <div id="resident-info-review" class="max-h-[40vh] overflow-y-auto custom-scrollbar pr-4 rounded-md bg-bg_col p-6">
+                    <div class="mb-3 flex items-center gap-3">
+                        <p class="text-main_font font-semibold text-lg flex-none">Basic Information</p>
+                        <hr class="border border-main_font flex-1">
                     </div>
-                    <div class="flex flex-col">
-                        <label class="text-xs font-semibold text-gray-500 uppercase">Birthdate & Age</label>
-                        <span id="review-birthdate-age" class="text-base text-gray-800 font-medium">1990-01-15 (35)</span>
-                    </div>
-                     <div class="flex flex-col">
-                        <label class="text-xs font-semibold text-gray-500 uppercase">Sex</label>
-                        <span id="review-sex" class="text-base text-gray-800 font-medium">Male</span>
-                    </div>
-                     <div class="flex flex-col">
-                        <label class="text-xs font-semibold text-gray-500 uppercase">Contact No.</label>
-                        <span id="review-contact" class="text-base text-gray-800 font-medium">09123456789</span>
-                    </div>
-                    <div class="flex flex-col">
-                        <label class="text-xs font-semibold text-gray-500 uppercase">Civil Status</label>
-                        <span id="review-civil-status" class="text-base text-gray-800 font-medium">Married</span>
-                    </div>
-                     <div class="flex flex-col">
-                        <label class="text-xs font-semibold text-gray-500 uppercase">Religion</label>
-                        <span id="review-religion" class="text-base text-gray-800 font-medium">Roman Catholic</span>
-                    </div>
-                    <div class="flex flex-col">
-                        <label class="text-xs font-semibold text-gray-500 uppercase">Household & Purok</label>
-                        <span id="review-household" class="text-base text-gray-800 font-medium">HH-001 / Purok 1</span>
-                    </div>
-                    <div class="flex flex-col">
-                        <label class="text-xs font-semibold text-gray-500 uppercase">Relationship to Head</label>
-                        <span id="review-relationship" class="text-base text-gray-800 font-medium">Head</span>
-                    </div>
-                    <div class="flex flex-col">
-                        <label class="text-xs font-semibold text-gray-500 uppercase">Employment Status</label>
-                        <span id="review-employment" class="text-base text-gray-800 font-medium">Employed</span>
-                    </div>
-                     <div class="flex flex-col">
-                        <label class="text-xs font-semibold text-gray-500 uppercase">Is a PWD?</label>
-                        <span id="review-pwd" class="text-base text-gray-800 font-medium">No</span>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4">
+                        <!-- Dynamically populated content will go here -->
+                        <div class="flex flex-col">
+                            <label class="text-xs font-semibold text-gray-500 uppercase">Full Name</label>
+                            <span id="review-full-name" class="text-base text-gray-800 font-medium">Juan Dela Cruz Jr.</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <label class="text-xs font-semibold text-gray-500 uppercase">Birthdate & Age</label>
+                            <span id="review-birthdate-age" class="text-base text-gray-800 font-medium">1990-01-15 (35)</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <label class="text-xs font-semibold text-gray-500 uppercase">Sex</label>
+                            <span id="review-sex" class="text-base text-gray-800 font-medium">Male</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <label class="text-xs font-semibold text-gray-500 uppercase">Contact No.</label>
+                            <span id="review-contact" class="text-base text-gray-800 font-medium">09123456789</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <label class="text-xs font-semibold text-gray-500 uppercase">Civil Status</label>
+                            <span id="review-civil-status" class="text-base text-gray-800 font-medium">Married</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <label class="text-xs font-semibold text-gray-500 uppercase">Religion</label>
+                            <span id="review-religion" class="text-base text-gray-800 font-medium">Roman Catholic</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <label class="text-xs font-semibold text-gray-500 uppercase">Household & Purok</label>
+                            <span id="review-household" class="text-base text-gray-800 font-medium">HH-001 / Purok 1</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <label class="text-xs font-semibold text-gray-500 uppercase">Relationship to Head</label>
+                            <span id="review-relationship" class="text-base text-gray-800 font-medium">Head</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <label class="text-xs font-semibold text-gray-500 uppercase">Employment Status</label>
+                            <span id="review-employment" class="text-base text-gray-800 font-medium">Employed</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <label class="text-xs font-semibold text-gray-500 uppercase">Is a PWD?</label>
+                            <span id="review-pwd" class="text-base text-gray-800 font-medium">No</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -75,3 +81,4 @@
         </div>
     </div>
 </div>
+@include('components.modals.resident.choose-family')

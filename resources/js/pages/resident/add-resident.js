@@ -13,8 +13,8 @@ const residentBirthdate = document.getElementById('residentBirthdate');
 const residentAge = document.getElementById('residentAge');
 
 // --- Row 3: Household Info ---
-const familyIdHolder = document.getElementById('familyIdHolder'); // Hidden div to store selected family ID
-const familyDropdown = document.getElementById('familyDropdown');
+
+const chooseFamilyBtn= document.getElementById('familyDropdown');
 const relationshipToHead = document.getElementById('relationshipToHead');
 const householdIdDisplay = document.getElementById('householdIdDisplay'); // Disabled display field
 const purokDisplay = document.getElementById('purokDisplay'); // Disabled display field
@@ -120,7 +120,7 @@ const sputumCheckbox = document.getElementById('sputumCheckbox');
 const wheezingCheckbox = document.getElementById('wheezingCheckbox');
 
 
-
+const familyIdStorage = document.getElementById('familyIdStorage');
 // Select all the form steps and progress indicator items
 const formSteps = document.querySelectorAll('.form-step');
 const progressSteps = document.querySelectorAll('ol li');
@@ -147,11 +147,36 @@ const reviewRelationship = document.getElementById('review-relationship');
 const reviewEmployment = document.getElementById('review-employment');
 const reviewPwd = document.getElementById('review-pwd');
 
+const confirmResidentCheckbox = document.getElementById('confirm-resident-checkbox');
 const cancelConfirm = document.getElementById('cancel-add-resident-confirm');
+const confirmAddResidentSubmitBtn = document.getElementById('confirm-resident-proceed-button');
+
 const openAddResidentBtn = document.getElementById('openAddResidentModal');
 
 const confirmResidentModal = new Modal(confirmResidentModalEl);
 const addResidentModal = new Modal(addResidentModalEl);
+
+let currentResidentPayload = null;
+
+let chosenFamily = null;
+let familiesData = [];
+// --- Main Modal Element ---
+const chooseFamilyModalEl = document.getElementById('chooseFamilyModal');
+
+// --- Search and Filter Elements ---
+const familySearchInput = document.getElementById('family-search');
+const purokFilterBtn = document.getElementById('purokFilterDropdownButton');
+const purokFilterMenu = document.getElementById('purokFilterDropdownMenu');
+
+// --- Table Element ---
+const chooseFamilyTableBody = document.getElementById('chooseFamilyTableBody');
+
+// --- Action Buttons ---
+const cancelChooseFamilyBtn = document.getElementById('cancelChooseFamily');
+const confirmChooseFamilyBtn = document.getElementById('confirmChooseFamilyBtn');
+
+
+const chooseFamilyModal = new Modal(chooseFamilyModalEl);
 
 openAddResidentBtn.addEventListener('click', function(){
     addResidentModal.show();
@@ -440,7 +465,120 @@ addResidentButtonSubmit.addEventListener('click', function() {
     reviewEmployment.textContent = employment;
     reviewPwd.textContent = pwdStatus;
     
-    
+
+    currentResidentPayload = {
+        firstName: residentFirstName.value.trim(),
+        lastName: residentLastName.value.trim(),
+        middleName: residentMiddleName.value.trim() ? residentMiddleName.value.trim() : null,
+        suffix: suffixDropdown.value.trim() ? suffixDropdown.value.trim() : null,
+        contactNo: residentContactNo.value.trim(),
+        birthDate: residentBirthdate.value.trim(),
+        familyId: parseInt(familyIdStorage.textContent),
+        familyRelationship: relationshipToHead.value.trim(),
+        civilStatus: civilStatus,
+        religion: religion,
+        ethnicity: ethnicityDropdown.textContent.trim(),
+        employmentStatus: employment,
+        isPWD: pwdStatusDropdown.textContent === "Yes" ? true : false,
+        pwdIdInput: pwdIdInput.value.trim(),
+        isIndegenous: indigenousStatusDropdown.textContent === "Yes" ? true : false,
+        emergencyContactNo: emergencyContactNo.value.trim(),
+
+        redFlags: {
+            hasChestPain: chestPainCheckbox.checked,
+            hasBreathingDifficulty: breathingDifficultyCheckbox.checked,
+            hasLossOfConsciousness: lossOfConsciousnessCheckbox.checked,
+            hasNumbArm: numbArmCheckbox.checked,
+            hasSelfHarm: selfHarmCheckbox.checked,
+            hasAggressiveBehavior: aggressiveBehaviorCheckbox.checked,
+            hasSevereInjuries: severeInjuriesCheckbox.checked,
+            hasSlurredSpeech: slurredSpeechCheckbox.checked,
+            hasFacialAsymmetry: facialAsymmetryCheckbox.checked,
+            hasChestRetractions: chestRetractionsCheckbox.checked,
+            hasSeizure: seizureCheckbox.checked,
+            isDisoriented: disorientedCheckbox.checked,
+            hasEyeInjury: eyeInjuryCheckbox.checked
+        },
+
+        medHistory: {
+            hasHypertension: hypertensionCheckbox.checked,
+            hasHeartDiseases: heartDiseasesCheckbox.checked,
+            hasCopd: copdCheckbox.checked,
+            hasSurgicalHistory: surgicalHistoryCheckbox.checked,
+            hasAllergies: allergiesCheckbox.checked,
+            hasDiabetes: diabetesCheckbox.checked,
+            hasCancer: cancerCheckbox.checked,
+            hasAsthma: asthmaCheckbox.checked,
+            hasKidneyDisorders: kidneyDisordersCheckbox.checked,
+            hasVisionProblems: visionProblemsCheckbox.checked,
+            hasThyroidDisorders: thyroidDisordersCheckbox.checked,
+            hasMentalDisorders: mentalDisordersCheckbox.checked
+        },
+        
+        familyHistory: {
+            hasHypertension: familyHypertensionCheckbox.checked,
+            hasHeartDiseases: familyHeartDiseasesCheckbox.checked,
+            hasCopd: familyCopdCheckbox.checked,
+            hasTuberculosis: familyTuberculosisCheckbox.checked,
+            hasStroke: familyStrokeCheckbox.checked,
+            hasDiabetes: familyDiabetesCheckbox.checked,
+            hasCancer: familyCancerCheckbox.checked,
+            hasAsthma: familyAsthmaCheckbox.checked,
+            hasKidneyDisorders: familyKidneyDisordersCheckbox.checked,
+            hasCoronaryDisease: familyCoronaryDiseaseCheckbox.checked,
+            hasMentalDisorders: familyMentalDisordersCheckbox.checked
+        },
+
+      
+        ncd_factors: {
+            tobaccoUse: tobaccoDropdown.value.trim() ? tobaccoDropdown.value.trim() : null,
+            alcoholConsumption: alcoholDropdown.value.trim() ? alcoholDropdown.value.trim() : null,
+            alcoholFrequency: alcoholNumDropdown.value.trim() ? alcoholNumDropdown.value.trim() : null,
+            caffeineIntake: caffeineDropdown.value.trim() ? caffeineDropdown.value.trim() : null,
+            physicalActivity: physicalActivityInput.value.trim() ? physicalActivityInput.value.trim() : null,
+            weightKg: weightInput.value.trim() ? weightInput.value.trim() : null,
+            heightCm: heightInput.value.trim() ? heightInput.value.trim() : null,
+            bmi: bmiInput.value.trim() ? bmiInput.value.trim() : null,
+            waistCircumferenceCm: waistCircumferenceInput.value.trim() ? waistCircumferenceInput.value.trim() : null,
+            bpSystolic: systolicInput.value.trim() ? systolicInput.value.trim() : null,
+            bpDiastolic: diastolicInput.value.trim() ? diastolicInput.value.trim() : null,
+            eatsHighFatFood: highFatFoodCheckbox.checked,
+            eatsStreetFood: streetFoodCheckbox.checked,
+            eatsHighSugarFood: highSugarFoodCheckbox.checked
+        },
+
+        risk_assessment: {
+            bloodSugar: {
+                fbsResult: fbsResultInput.value.trim() ? fbsResultInput.value.trim() : null,
+                rbsResult: rbsResultInput.value.trim() ? rbsResultInput.value.trim() : null,
+                dateTaken: bloodSugarDate.value.trim() ? bloodSugarDate.value.trim() : null,
+                hasPolyphagia: polyphagiaCheckbox.checked,
+                hasPolydipsia: polydipsiaCheckbox.checked,
+                hasPolyuria: polyuriaCheckbox.checked
+            },
+            lipidProfile: {
+                totalCholesterol: totalCholesterolInput.value.trim() ? totalCholesterolInput.value.trim() : null,
+                hdl: hdlInput.value.trim() ? hdlInput.value.trim() : null,
+                ldl: ldlInput.value.trim() ? ldlInput.value.trim() : null,
+                vldl: vldlInput.value.trim() ? vldlInput.value.trim() : null,
+                triglyceride: triglycerideInput.value.trim() ? triglycerideInput.value.trim() : null,
+                dateTaken: lipidDate.value.trim() ? lipidDate.value.trim() : null
+            },
+            urinalysis: {
+                protein: proteinInput.value.trim() ? proteinInput.value.trim() : null,
+                ketones: ketonesInput.value.trim() ? ketonesInput.value.trim() : null,
+                dateTaken: urinalysisDate.value.trim() ? urinalysisDate.value.trim() : null
+            },
+            copdAssessment: {
+                hasBreathlessness: breathlessnessCheckbox.checked,
+                hasChronicCough: chronicCoughCheckbox.checked,
+                hasSputum: sputumCheckbox.checked,
+                hasWheezing: wheezingCheckbox.checked
+            }
+        }
+    };
+
+    console.log(currentResidentPayload);
     // --- 3. HIDE THE CURRENT MODAL AND SHOW THE CONFIRMATION MODAL ---
     
     addResidentModal.hide(); // Hide the form modal
@@ -452,6 +590,184 @@ cancelConfirm.addEventListener('click', function(){
     addResidentModal.show();
 });
 
+
+confirmResidentCheckbox.addEventListener('change', function(){
+    confirmAddResidentSubmitBtn.disabled = !this.checked;
+});
+
+confirmAddResidentSubmitBtn.addEventListener('click', function () {
+    fetch('/barangay/resident/add', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify(currentResidentPayload)
+    })
+    .then(res => res.json())
+    .then(data => console.log('Response from backend:', data))
+    .catch(err => console.error('Error:', err));
+});
+
 // Initial setup: Call applyStyling() to set the correct state on page load.
 updateButtonState();
 applyStyling();
+
+
+document.getElementById('click-me').addEventListener('click', function(){
+    confirmResidentModal.show();
+})
+
+// Add a single click listener to the entire table body
+chooseFamilyTableBody.addEventListener('click', function(event) {
+    // 1. Check if the clicked element is actually a checkbox
+    if (event.target.type === 'checkbox') {
+        // 2. Get all checkboxes within the table
+        const allCheckboxes = chooseFamilyTableBody.querySelectorAll('input[type="checkbox"]');
+        
+        // 3. Loop through all checkboxes
+        allCheckboxes.forEach(checkbox => {
+            // 4. Uncheck every checkbox except for the one that was just clicked
+            if (checkbox !== event.target) {
+                checkbox.checked = false;
+            }
+        });
+    }
+});
+
+function populateFamilyTable(families) {
+    // Get the table body element
+    const tableBody = document.getElementById('chooseFamilyTableBody');
+
+    // Clear any existing rows to prevent duplicates
+    tableBody.innerHTML = '';
+
+    // Check if the families array is empty
+    if (families.length === 0) {
+        const emptyRow = `
+            <tr class="bg-white border-b">
+                <td colspan="5" class="px-6 py-4 text-center text-gray-500">
+                    No families found.
+                </td>
+            </tr>
+        `;
+        tableBody.innerHTML = emptyRow;
+        return; // Stop the function here
+    }
+
+    // Loop through each family and create a table row
+    families.forEach(family => {
+        // Create a new table row element
+        const row = document.createElement('tr');
+        row.className = 'bg-white border-b hover:bg-gray-50';
+
+        // --- Data Handling ---
+        // Format a display-friendly Family ID
+        const familyIdFormatted = `FAM-${String(family.id).padStart(3, '0')}`;
+        // Handle cases where there is no family head assigned yet
+        const familyHeadName = family.head ? `${family.head.firstName} ${family.head.lastName}` : 'Not Assigned';
+        // Placeholder for member count as it's not in the JSON. You might need to add this to your Laravel query.
+        const memberCount = family.members_count || 'N/A';
+        // Get the purok name safely
+        const purokName = family.household?.purok?.name || 'N/A';
+
+
+        // Use a template literal to build the inner HTML for the row
+        row.innerHTML = `
+            <td class="w-4 p-4">
+                <div class="flex items-center">
+                    <input id="checkbox-family-${family.id}" type="checkbox" data-family-id="${family.id}" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
+                    <label for="checkbox-family-${family.id}" class="sr-only">checkbox</label>
+                </div>
+            </td>
+            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                ${familyIdFormatted}
+            </th>
+            <td class="px-6 py-4">
+                ${familyHeadName}
+            </td>
+            <td class="px-6 py-4">
+                ${memberCount}
+            </td>
+            <td class="px-6 py-4">
+                ${purokName}
+            </td>
+        `;
+
+        // Append the new row to the table body
+        tableBody.appendChild(row);
+    });
+}
+
+chooseFamilyBtn.addEventListener('click', function() {
+    const url = '/barangay/resident/families/get';
+
+    // 1. Get the CSRF token from the meta tag
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+    fetch(url, { // 2. Add a second argument for options
+        method: 'GET', // Explicitly state the method
+        headers: {
+            // 3. Add the token to the headers
+            'X-CSRF-TOKEN': csrfToken,
+            'Accept': 'application/json' // Good practice to specify you want JSON back
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok: ' + response.statusText);
+        }
+        return response.json();
+    })
+    .then(families => {
+        console.log('Successfully fetched families:', families);
+        // TODO: Populate the table with the fetched families
+        familiesData = families;
+        populateFamilyTable(families);
+    })
+    .catch(error => {
+        console.error('There was a problem with the fetch operation:', error);
+    });
+
+    addResidentModal.hide();
+    chooseFamilyModal.show();
+});
+
+// Event listener for the confirmation button
+confirmChooseFamilyBtn.addEventListener('click', function() {
+    // 1. Find the single checked checkbox inside the table body
+    const selectedCheckbox = chooseFamilyTableBody.querySelector('input[type="checkbox"]:checked');
+
+    // 2. Check if a checkbox was actually selected
+    if (selectedCheckbox) {
+        // 3. Get the family ID from the 'data-family-id' attribute
+        const chosenFamilyId = parseInt(selectedCheckbox.dataset.familyId, 10);
+
+        // 4. Find the complete family object from our stored 'familiesData' array
+        chosenFamily = familiesData.find(family => family.id === chosenFamilyId);
+
+        console.log('Selected Family ID:', chosenFamilyId);
+        console.log('Selected Family Object:', chosenFamily);
+
+        // You can now use the 'chosenFamily' object for whatever you need.
+        // For example, updating a hidden input field in your main form.
+        // document.getElementById('family_id_input').value = chosenFamily.id;
+        
+        // Hide the modal after selection
+        chooseFamilyModal.hide();
+        chooseFamilyBtn.textContent = "Family #"+chosenFamily.id;
+        householdIdDisplay.value = "Household #"+chosenFamily.household_id;
+        purokDisplay.value = chosenFamily.household.purok.name;
+        addResidentModal.show();
+
+    } else {
+        // 5. If no checkbox is selected, alert the user.
+        alert('Please select a family first.');
+    }
+});
+
+
+cancelChooseFamilyBtn.addEventListener('click',function(){
+    chooseFamilyModal.hide();
+    addResidentModal.show();
+});
