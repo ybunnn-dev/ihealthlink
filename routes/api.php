@@ -18,6 +18,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/home', [HomeController::class, 'index']);
 
-    Route::post('/barangay/schedule/get', [ScheduleController::class, 'getSched']);
+    Route::get('/schedules', [ScheduleController::class, 'index']);
    
 });
