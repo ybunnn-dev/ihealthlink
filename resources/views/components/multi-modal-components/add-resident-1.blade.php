@@ -26,6 +26,8 @@
                 <li><button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-value="II">II</button></li>
                 <li><button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-value="III">III</button></li>
                 <li><button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-value="IV">IV</button></li>
+                <li><button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-value="Select">Select</button></li>
+                <!--Also add clear-->
             </ul>
         </div>
     </div>

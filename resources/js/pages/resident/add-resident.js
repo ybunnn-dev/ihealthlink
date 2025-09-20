@@ -14,7 +14,7 @@ const residentAge = document.getElementById('residentAge');
 
 // --- Row 3: Household Info ---
 
-const chooseFamilyBtn= document.getElementById('familyDropdown');
+const chooseFamilyBtn = document.getElementById('familyDropdown');
 const relationshipToHead = document.getElementById('relationshipToHead');
 const householdIdDisplay = document.getElementById('householdIdDisplay'); // Disabled display field
 const purokDisplay = document.getElementById('purokDisplay'); // Disabled display field
@@ -178,11 +178,66 @@ const confirmChooseFamilyBtn = document.getElementById('confirmChooseFamilyBtn')
 
 const chooseFamilyModal = new Modal(chooseFamilyModalEl);
 
-openAddResidentBtn.addEventListener('click', function(){
+
+// Select all the option buttons inside the dropdown menu
+const suffixOptions = document.querySelectorAll('#suffixDropdownMenu button');
+
+function initializeDropdown(buttonId) {
+    const dropdownButton = document.getElementById(buttonId);
+    const dropdownMenu = document.getElementById(buttonId + 'Menu');
+
+    // Safety check to ensure the elements exist before proceeding
+    if (!dropdownButton || !dropdownMenu) {
+        console.error('Dropdown elements not found for ID:', buttonId);
+        return;
+    }
+
+    const options = dropdownMenu.querySelectorAll('button');
+
+    options.forEach(option => {
+        option.addEventListener('click', function () {
+            // Get the visible text from the clicked option (e.g., "Yes", "1-5 times a month")
+            const selectedText = this.textContent;
+
+            // Get the main button's first child, which is its text node
+            const buttonTextNode = dropdownButton.childNodes[0];
+
+            // Update the text, adding a space to separate it from the SVG icon
+            buttonTextNode.nodeValue = selectedText.trim() + ' ';
+
+            // Also, store the data-value on the button itself for easy access later
+            dropdownButton.setAttribute('data-selected-value', this.getAttribute('data-value'));
+        });
+    });
+}
+
+// --- Initialize All Your Dropdowns ---
+initializeDropdown('tobaccoDropdown');
+initializeDropdown('alcoholDropdown');
+initializeDropdown('alcoholNumDropdown');
+initializeDropdown('caffeineDropdown');
+
+// Loop through each option button
+suffixOptions.forEach(option => {
+    // Add a click event listener to it
+    option.addEventListener('click', function () {
+        // Get the value from the `data-value` attribute
+        const selectedValue = this.getAttribute('data-value');
+
+        // Get the main button's first child, which is its text node
+        const buttonTextNode = suffixDropdown.childNodes[0];
+
+        // Update the text node's value, preserving the SVG icon
+        // If selectedValue is empty (for a "Clear" button), reset to "Select"
+        buttonTextNode.nodeValue = selectedValue ? selectedValue + ' ' : 'Select ';
+    });
+});
+
+openAddResidentBtn.addEventListener('click', function () {
     addResidentModal.show();
 });
 
-cancelButton.addEventListener('click', function(){
+cancelButton.addEventListener('click', function () {
     addResidentModal.hide();
 });
 // A function to update the UI based on the current step
@@ -425,9 +480,9 @@ residentBirthdate.addEventListener('changeDate', (event) => {
 });
 
 
-addResidentButtonSubmit.addEventListener('click', function() {
+addResidentButtonSubmit.addEventListener('click', function () {
     // --- 1. GATHER DATA FROM THE FORM ---
-    
+
     // Construct the full name, handling optional middle name and suffix
     let fullName = residentLastName.value.trim() + ', ' + residentFirstName.value.trim();
     if (residentMiddleName.value.trim()) {
@@ -436,10 +491,10 @@ addResidentButtonSubmit.addEventListener('click', function() {
     if (suffixDropdown.textContent.trim() !== 'Select') {
         fullName += ' ' + suffixDropdown.textContent.trim();
     }
-    
+
     // Combine birthdate and age
     const birthdateAndAge = `${residentBirthdate.value} (${residentAge.value})`;
-    
+
     // Get values from other fields
     const sex = residentSexDropdown.textContent.trim();
     const contact = residentContactNo.value.trim();
@@ -449,10 +504,10 @@ addResidentButtonSubmit.addEventListener('click', function() {
     const relationship = relationshipToHead.value.trim();
     const employment = employmentStatusDropdown.textContent.trim();
     const pwdStatus = pwdStatusDropdown.textContent.trim();
-    
-    
+
+
     // --- 2. POPULATE THE CONFIRMATION MODAL ---
-    
+
     // Update the review section
     reviewFullName.textContent = fullName;
     reviewBirthdateAge.textContent = birthdateAndAge;
@@ -464,16 +519,17 @@ addResidentButtonSubmit.addEventListener('click', function() {
     reviewRelationship.textContent = relationship;
     reviewEmployment.textContent = employment;
     reviewPwd.textContent = pwdStatus;
-    
+
 
     currentResidentPayload = {
         firstName: residentFirstName.value.trim(),
         lastName: residentLastName.value.trim(),
         middleName: residentMiddleName.value.trim() ? residentMiddleName.value.trim() : null,
-        suffix: suffixDropdown.value.trim() ? suffixDropdown.value.trim() : null,
+        suffix: suffixDropdown.textContent.trim() !== "Select" ? suffixDropdown.textContent.trim() : null,
         contactNo: residentContactNo.value.trim(),
         birthDate: residentBirthdate.value.trim(),
-        familyId: parseInt(familyIdStorage.textContent),
+        sex: residentSexDropdown.textContent.trim(),
+        familyId: chosenFamily.id,
         familyRelationship: relationshipToHead.value.trim(),
         civilStatus: civilStatus,
         religion: religion,
@@ -514,7 +570,7 @@ addResidentButtonSubmit.addEventListener('click', function() {
             hasThyroidDisorders: thyroidDisordersCheckbox.checked,
             hasMentalDisorders: mentalDisordersCheckbox.checked
         },
-        
+
         familyHistory: {
             hasHypertension: familyHypertensionCheckbox.checked,
             hasHeartDiseases: familyHeartDiseasesCheckbox.checked,
@@ -529,7 +585,7 @@ addResidentButtonSubmit.addEventListener('click', function() {
             hasMentalDisorders: familyMentalDisordersCheckbox.checked
         },
 
-      
+
         ncd_factors: {
             tobaccoUse: tobaccoDropdown.value.trim() ? tobaccoDropdown.value.trim() : null,
             alcoholConsumption: alcoholDropdown.value.trim() ? alcoholDropdown.value.trim() : null,
@@ -580,18 +636,18 @@ addResidentButtonSubmit.addEventListener('click', function() {
 
     console.log(currentResidentPayload);
     // --- 3. HIDE THE CURRENT MODAL AND SHOW THE CONFIRMATION MODAL ---
-    
+
     addResidentModal.hide(); // Hide the form modal
     confirmResidentModal.show(); // Show the now-populated confirmation modal
 });
 
-cancelConfirm.addEventListener('click', function(){
+cancelConfirm.addEventListener('click', function () {
     confirmResidentModal.hide();
     addResidentModal.show();
 });
 
 
-confirmResidentCheckbox.addEventListener('change', function(){
+confirmResidentCheckbox.addEventListener('change', function () {
     confirmAddResidentSubmitBtn.disabled = !this.checked;
 });
 
@@ -604,9 +660,16 @@ confirmAddResidentSubmitBtn.addEventListener('click', function () {
         },
         body: JSON.stringify(currentResidentPayload)
     })
-    .then(res => res.json())
-    .then(data => console.log('Response from backend:', data))
-    .catch(err => console.error('Error:', err));
+        .then(async res => {
+            const data = await res.json();
+            if (!res.ok) {
+                // Laravel returned a 422 or other error
+                console.error('Validation failed:', data.errors);
+                return;
+            }
+            console.log('Response from backend:', data);
+        })
+        .catch(err => console.error('Error:', err));
 });
 
 // Initial setup: Call applyStyling() to set the correct state on page load.
@@ -614,17 +677,17 @@ updateButtonState();
 applyStyling();
 
 
-document.getElementById('click-me').addEventListener('click', function(){
+document.getElementById('click-me').addEventListener('click', function () {
     confirmResidentModal.show();
 })
 
 // Add a single click listener to the entire table body
-chooseFamilyTableBody.addEventListener('click', function(event) {
+chooseFamilyTableBody.addEventListener('click', function (event) {
     // 1. Check if the clicked element is actually a checkbox
     if (event.target.type === 'checkbox') {
         // 2. Get all checkboxes within the table
         const allCheckboxes = chooseFamilyTableBody.querySelectorAll('input[type="checkbox"]');
-        
+
         // 3. Loop through all checkboxes
         allCheckboxes.forEach(checkbox => {
             // 4. Uncheck every checkbox except for the one that was just clicked
@@ -699,7 +762,7 @@ function populateFamilyTable(families) {
     });
 }
 
-chooseFamilyBtn.addEventListener('click', function() {
+chooseFamilyBtn.addEventListener('click', function () {
     const url = '/barangay/resident/families/get';
 
     // 1. Get the CSRF token from the meta tag
@@ -713,28 +776,28 @@ chooseFamilyBtn.addEventListener('click', function() {
             'Accept': 'application/json' // Good practice to specify you want JSON back
         }
     })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok: ' + response.statusText);
-        }
-        return response.json();
-    })
-    .then(families => {
-        console.log('Successfully fetched families:', families);
-        // TODO: Populate the table with the fetched families
-        familiesData = families;
-        populateFamilyTable(families);
-    })
-    .catch(error => {
-        console.error('There was a problem with the fetch operation:', error);
-    });
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok: ' + response.statusText);
+            }
+            return response.json();
+        })
+        .then(families => {
+            console.log('Successfully fetched families:', families);
+            // TODO: Populate the table with the fetched families
+            familiesData = families;
+            populateFamilyTable(families);
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
 
     addResidentModal.hide();
     chooseFamilyModal.show();
 });
 
 // Event listener for the confirmation button
-confirmChooseFamilyBtn.addEventListener('click', function() {
+confirmChooseFamilyBtn.addEventListener('click', function () {
     // 1. Find the single checked checkbox inside the table body
     const selectedCheckbox = chooseFamilyTableBody.querySelector('input[type="checkbox"]:checked');
 
@@ -752,11 +815,11 @@ confirmChooseFamilyBtn.addEventListener('click', function() {
         // You can now use the 'chosenFamily' object for whatever you need.
         // For example, updating a hidden input field in your main form.
         // document.getElementById('family_id_input').value = chosenFamily.id;
-        
+
         // Hide the modal after selection
         chooseFamilyModal.hide();
-        chooseFamilyBtn.textContent = "Family #"+chosenFamily.id;
-        householdIdDisplay.value = "Household #"+chosenFamily.household_id;
+        chooseFamilyBtn.textContent = "Family #" + chosenFamily.id;
+        householdIdDisplay.value = "Household #" + chosenFamily.household_id;
         purokDisplay.value = chosenFamily.household.purok.name;
         addResidentModal.show();
 
@@ -767,7 +830,7 @@ confirmChooseFamilyBtn.addEventListener('click', function() {
 });
 
 
-cancelChooseFamilyBtn.addEventListener('click',function(){
+cancelChooseFamilyBtn.addEventListener('click', function () {
     chooseFamilyModal.hide();
     addResidentModal.show();
 });

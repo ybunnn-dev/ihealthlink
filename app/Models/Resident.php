@@ -26,6 +26,9 @@ class Resident extends Model
         'is_indigenous',
         'employment_status',
         'status',
+        'religion',
+        'ethnicity',
+        'emergencyContactNo'
     ];
 
     /*
@@ -57,4 +60,18 @@ class Resident extends Model
     {
         return $this->belongsTo(User::class, 'added_by');
     }
+    public function healthSigns()
+    {
+        return $this->hasOne(HealthSigns::class, 'resident_id');
+    }
+
+    public function medicalHistory()
+    {
+        return $this->hasOne(ResidentMedicalHistory::class, 'resident_id');
+    }
+    public function familyHistory()
+    {
+        return $this->hasOne(ResidentFamilyHistory::class);
+    }
+
 }

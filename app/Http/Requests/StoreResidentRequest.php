@@ -13,7 +13,7 @@ class StoreResidentRequest extends FormRequest
 
     public function rules(): array
     {
-        \Log::info('vakla');
+        \Log::info('this is the only one showing in the log');
         return [
             // Basic info
             'firstName'          => ['required', 'string', 'max:255'],
