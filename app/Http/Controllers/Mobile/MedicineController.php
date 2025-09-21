@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Mobile;
 
+use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -37,4 +38,50 @@ class MedicineController extends Controller
         ]);
     }
 
+    public function store(Request $request)
+    {
+        // 1. Get the authenticated user
+        $user = Auth::user();
+
+        $brgyId = $user->bhw->brgy_id;
+
+        // Abort if the user is not associated with a barangay
+        if (!$brgyId) {
+            return response()->json(['message' => 'User is not associated with a barangay.'], 403); // 403 Forbidden
+        }
+
+        // 3. Merge the user's ID and barangay ID into the request data
+        $request->merge([
+            'added_by' => $user->id,
+            'brgy_id' => $brgyId,
+        ]);
+
+        // 4. Validate the incoming data
+        //    The unique rule now checks that the medicine_name is unique *per barangay*.
+        $validatedData = $request->validate([
+            'medicine_name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('medicines')->where(function ($query) use ($brgyId) {
+                    return $query->where('brgy_id', $brgyId);
+                }),
+            ],
+            'generic_name' => 'nullable|string|max:255',
+            'category' => 'required|string',
+            'form' => 'required|string',
+            'description' => 'nullable|string',
+            'added_by' => 'required|exists:users,id',
+            'brgy_id' => 'required|exists:barangays,id',
+        ]);
+
+        // 5. Create a new Medicine record
+        $medicine = Medicine::create($validatedData);
+
+        // 6. Return a success response as JSON
+        return response()->json([
+            'message' => 'Medicine added successfully!',
+            'medicine' => $medicine
+        ], 201); // 201 Created
+    }
 }
