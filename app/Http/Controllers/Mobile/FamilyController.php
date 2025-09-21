@@ -27,10 +27,12 @@ class FamilyController extends Controller
 
         //get the families
         $householdIds = $households->pluck('id');
-        $families = Family::with('household.purok')
-        ->whereIn('household_id', $householdIds)
-        ->get(); 
-        
+        $families = Family::with('household.purok.barangay')
+            ->whereIn('household_id', $householdIds)
+            ->get();
+
+
+
         return response()->json([
             'familes' => $families,
         ]);

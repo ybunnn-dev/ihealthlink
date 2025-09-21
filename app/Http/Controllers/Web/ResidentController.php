@@ -12,9 +12,43 @@ use App\Models\Resident;
 use App\Models\HealthSigns;
 use App\Models\ResidentMedicalHistory;
 use App\Models\ResidentFamilyHistory;
+use App\Models\Family;
+use App\Models\Household;
+use App\Models\Barangay;
 
 class ResidentController extends Controller
 {
+    public function index(){
+        $personnel = Auth::user()->midwife;
+
+        //find the barangay and the puroks that the user manages
+        $barangay = Barangay::with('puroks')->find($personnel->brgy_id);
+        $puroks = $barangay->puroks;
+
+        //get the households that belongs to the puroks of that barangay
+        $purokIds = $puroks->pluck('id');
+        $households = Household::whereIn('purok_id', $purokIds)->get();
+
+        //get the families
+        $householdIds = $households->pluck('id');
+        $families = Family::with('household.purok')
+        ->whereIn('household_id', $householdIds)
+        ->get(); 
+
+        $familyIds = $families->pluck('id');
+        $residents = Resident::with('family.household.purok')
+            ->whereIn('family_id', $familyIds)
+            ->get();
+
+
+        return view('midwife.resident-list', [
+            'barangay' => $barangay,
+            'puroks' => $puroks,
+            'households' => $households,
+            'families' => $families,
+            'residents' => $residents,
+        ]);
+    }
     public function addResident(Request $request)
     {
         $rules = [
@@ -179,6 +213,63 @@ class ResidentController extends Controller
                 'mental_neurological_substance_abuse_disorders' => $request->familyHistory['hasMentalDisorders'] ?? null,
             ]);
         }
+
+        // --- 5. CREATE NCD RISK FACTOR ---
+        if ($request->has('ncd_factors')) {
+            $ncd = $request->ncd_factors;
+            $resident->ncdRiskFactor()->create([
+                'tobacco_use'     => $this->ynToBoolOrNull($ncd['tobaccoUse'] ?? null),
+                'alcohol_intake'  => $this->ynToBoolOrNull($ncd['alcoholConsumption'] ?? null),
+                'caffeine_intake' => $this->ynToBoolOrNull($ncd['caffeineIntake'] ?? null),
+                'high_fat_high_salt_food_intake' => $ncd['eatsHighFatFood'] ?? false,
+                'street_foods_intake'  => $ncd['eatsStreetFood'] ?? false,
+                'high_sugar_foods_intake' => $ncd['eatsHighSugarFood'] ?? false,
+                'number_of_drinks_last_year' => $ncd['alcoholFrequency'] ?? null,
+                'hours_of_activity_weekly' => $ncd['physicalActivity'] ?? null,
+                'weight'               => $ncd['weightKg'] ?? null,
+                'height'               => $ncd['heightCm'] ?? null,
+                'waist_circumference'  => $ncd['waistCircumferenceCm'] ?? null,
+                'systolic_pressure'    => $ncd['bpSystolic'] ?? null,
+                'diastolic_pressure'   => $ncd['bpDiastolic'] ?? null,
+            ]);
+        }
+
+        if ($request->has('risk_assessment')) {
+            $assessment = $request->risk_assessment;
+            $bloodSugar = $assessment['bloodSugar'] ?? [];
+            $lipid = $assessment['lipidProfile'] ?? [];
+            $urinalysis = $assessment['urinalysis'] ?? [];
+            $copd = $assessment['copdAssessment'] ?? [];
+
+            $resident->riskAssessment()->create([
+                // Blood Sugar Data
+                'fbs_result'             => $bloodSugar['fbsResult'] ?? null,
+                'rbs_result'             => $bloodSugar['rbsResult'] ?? null,
+                'blood_sugar_date_taken' => isset($bloodSugar['dateTaken']) && $bloodSugar['dateTaken'] ? Carbon::createFromFormat('m/d/Y', $bloodSugar['dateTaken'])->format('Y-m-d') : null,
+                'has_polyphagia'         => $bloodSugar['hasPolyphagia'] ?? false,
+                'has_polydipsia'         => $bloodSugar['hasPolydipsia'] ?? false,
+                'has_polyuria'           => $bloodSugar['hasPolyuria'] ?? false,
+
+                // Lipid Profile Data
+                'total_cholesterol'      => $lipid['totalCholesterol'] ?? null,
+                'hdl'                    => $lipid['hdl'] ?? null,
+                'ldl'                    => $lipid['ldl'] ?? null,
+                'vldl'                   => $lipid['vldl'] ?? null,
+                'triglyceride'           => $lipid['triglyceride'] ?? null,
+                'lipid_profile_date_taken' => isset($lipid['dateTaken']) && $lipid['dateTaken'] ? Carbon::createFromFormat('m/d/Y', $lipid['dateTaken'])->format('Y-m-d') : null,
+
+                // Urinalysis Data
+                'protein'                => $urinalysis['protein'] ?? null,
+                'ketones'                => $urinalysis['ketones'] ?? null,
+                'urinalysis_date_taken'  => isset($urinalysis['dateTaken']) && $urinalysis['dateTaken'] ? Carbon::createFromFormat('m/d/Y', $urinalysis['dateTaken'])->format('Y-m-d') : null,
+
+                // COPD Data
+                'has_breathlessness'     => $copd['hasBreathlessness'] ?? false,
+                'has_chronic_cough'      => $copd['hasChronicCough'] ?? false,
+                'has_sputum'             => $copd['hasSputum'] ?? false,
+                'has_wheezing'           => $copd['hasWheezing'] ?? false,
+            ]);
+        }
         // If valid
         return response()->json([
             'status' => 'success',
@@ -186,4 +277,13 @@ class ResidentController extends Controller
             'data' => $validator->validated() // optional: return validated data
         ]);
     }
+    public function ynToBoolOrNull($value)
+    {
+        if ($value === null) {
+            return null; // keep as null
+        }
+
+        return $value === "Yes" ? 1 : 0;
+    }
+
 }

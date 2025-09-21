@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 
 use App\Models\Household;
 use App\Models\Barangay;
@@ -30,6 +31,7 @@ class HouseholdController extends Controller
             'puroks'     => $puroks,
         ]);
     }
+
     public function store(Request $request)
     {
         // Validate input
@@ -42,12 +44,16 @@ class HouseholdController extends Controller
         // Convert sanitary (1 = true, 2 = false)
         $hasToilet = $validated['sanitary'] === '1';
 
+         $encryptedWaterSource = $validated['water_source']
+            ? Crypt::encryptString($validated['water_source'])
+            : null;
+
         // Create household
         $household = Household::create([
             'purok_id'     => $validated['purok_id'],
             'head_id'      => null, // will be set later
             'has_toilet'   => $hasToilet,
-            'water_source' => $validated['water_source'],
+            'water_source' => $encryptedWaterSource,
             'status'       => 'active',
         ]);
 
@@ -60,14 +66,20 @@ class HouseholdController extends Controller
 
     public function show(Household $id)
     {
-        $household = $id;
-        $household->load(['purok', 'families']); // also eager load families
+        $household = $id->load(['purok', 'families']); 
+
+        // decrypt here
+        if ($household->water_source) {
+            $household->water_source = Crypt::decryptString($household->water_source);
+        }
+
         return view('midwife.spec-household', [
             'household' => $household,
-            'purok' => $household->purok,
-            'families' => $household->families,
+            'purok'     => $household->purok,
+            'families'  => $household->families,
         ]);
     }
+    
     public function getHouseholdsJson(Request $request)
     {
         $personnel = Auth::user()->midwife;

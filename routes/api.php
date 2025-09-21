@@ -9,6 +9,7 @@ use App\Http\Controllers\Mobile\ScheduleController;
 use App\Http\Controllers\Mobile\MedicineController;
 use App\Http\Controllers\Mobile\HouseholdController;
 use App\Http\Controllers\Mobile\FamilyController;
+use App\Http\Controllers\Mobile\MedicineInventoryController;
 
 // Public routes
 Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:login'); ;
@@ -33,4 +34,6 @@ Route::middleware(['auth:sanctum',
     Route::get('/barangay/family/load', [FamilyController::class, 'index']);
 
     Route::post('/barangay/medicine/add', [MedicineController::class, 'store']);
+
+    Route::post('/barangay/medicine/batch/add', [MedicineInventoryController::class, 'store']);
 });

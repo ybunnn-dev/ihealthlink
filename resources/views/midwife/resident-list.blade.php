@@ -4,11 +4,16 @@
     <div class="py-12 px-5">
         <div class="max-w-[90rem] mx-auto sm:px-6 lg:px-8">
             <h1 class="text-3xl font-semibold text-sub_blue mb-3">Households and Residents</h1>
-
+            <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                // Your code to interact with the DOM goes here
+                console.log(@json($residents));
+               
+                });
+            </script>
             <div class="mb-3">
                 <x-resident-module-nav></x-resident-module-nav>
             </div>
-            <button id="click-me">Click me</button>
             <div class="bg-f7 rounded-xl overflow-hidden">
                 <div class="p-6">
                     <div class="grid grid-rows-1 gap-1">
@@ -115,67 +120,48 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr class="bg-white border-b bg-f7 text-normal_font" onclick="window.location='{{ route('midwife.spec-resident') }}'">
+                            {{-- Use @forelse to loop and handle the empty case --}}
+                            @forelse ($residents as $resident)
+                                @php
+                                    // Calculate Age
+                                    $birthdate = \Illuminate\Support\Carbon::parse($resident->birthdate);
+                                    $age = $birthdate->age;
+
+                                    // Determine Age Group
+                                    $ageGroup = 'Infant'; // Default
+                                    if ($age >= 60) {
+                                        $ageGroup = 'Senior';
+                                    } elseif ($age >= 18) {
+                                        $ageGroup = 'Adult';
+                                    } elseif ($age >= 13) {
+                                        $ageGroup = 'Teen';
+                                    } elseif ($age >= 3) {
+                                        $ageGroup = 'Child';
+                                    }
+
+                                    // Format the full name
+                                    $fullName = $resident->firstName . ' ' . $resident->middleName . ' ' . $resident->lastName;
+                                @endphp
+
+                                <tr class="bg-white border-b bg-f7 text-normal_font" onclick="window.location='{{ route('midwife.spec-resident', ['id' => $resident->id]) }}'">
                                     <th scope="row" class="px-6 py-4 font-medium text-normal_font whitespace-nowrap">
-                                        R001
+                                        R{{ str_pad($resident->id, 3, '0', STR_PAD_LEFT) }}
                                     </th>
-                                    <td class="px-6 py-4">
-                                        Juan Dela Cruz
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        Purok 1
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        Male
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        35
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        Adult
+                                    <td class="px-6 py-4">{{ $fullName }}</td>
+                                    <td class="px-6 py-4">{{ $resident->family->household->purok->name ?? 'N/A' }}</td>
+                                    <td class="px-6 py-4 capitalize">{{ $resident->sex }}</td>
+                                    <td class="px-6 py-4">{{ $age }}</td>
+                                    <td class="px-6 py-4">{{ $ageGroup }}</td>
+                                </tr>
+                            @empty
+                                {{-- This part is displayed ONLY if $residents is empty --}}
+                                <tr class="bg-white border-b">
+                                    <td colspan="6" class="px-6 py-4 text-center text-gray-500">
+                                        No residents found.
                                     </td>
                                 </tr>
-                                <tr class="bg-white border-b bg-f7 text-normal_font">
-                                    <th scope="row" class="px-6 py-4 font-medium text-normal_font whitespace-nowrap">
-                                        R002
-                                    </th>
-                                    <td class="px-6 py-4">
-                                        Maria Clara
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        Purok 2
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        Female
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        28
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        Adult
-                                    </td>
-                                </tr>
-                                <tr class="bg-white border-b bg-f7 text-normal_font">
-                                    <th scope="row" class="px-6 py-4 font-medium text-normal_font whitespace-nowrap">
-                                        R003
-                                    </th>
-                                    <td class="px-6 py-4">
-                                        Pedro San Jose
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        Purok 1
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        Male
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        10
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        Child
-                                    </td>
-                                </tr>
-                            </tbody>
+                            @endforelse
+                        </tbody>
                         </table>
                     </div>
                 </div>

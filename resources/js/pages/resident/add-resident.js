@@ -179,6 +179,13 @@ const confirmChooseFamilyBtn = document.getElementById('confirmChooseFamilyBtn')
 const chooseFamilyModal = new Modal(chooseFamilyModalEl);
 
 
+const successModalEl = document.getElementById('success-modal');
+const successMesageHeader = document.getElementById('success-msg-head');
+const successMessage = document.getElementById('success-message');
+const closeSuccessModalButton = document.getElementById('close-success-modal-button');
+
+const successModal = new Modal(successModalEl);
+
 // Select all the option buttons inside the dropdown menu
 const suffixOptions = document.querySelectorAll('#suffixDropdownMenu button');
 
@@ -586,11 +593,11 @@ addResidentButtonSubmit.addEventListener('click', function () {
         },
 
 
-        ncd_factors: {
-            tobaccoUse: tobaccoDropdown.value.trim() ? tobaccoDropdown.value.trim() : null,
-            alcoholConsumption: alcoholDropdown.value.trim() ? alcoholDropdown.value.trim() : null,
-            alcoholFrequency: alcoholNumDropdown.value.trim() ? alcoholNumDropdown.value.trim() : null,
-            caffeineIntake: caffeineDropdown.value.trim() ? caffeineDropdown.value.trim() : null,
+       ncd_factors: {
+            tobaccoUse: tobaccoDropdown.textContent.trim() ? tobaccoDropdown.textContent.trim() : null,
+            alcoholConsumption: alcoholDropdown.textContent.trim() ? alcoholDropdown.textContent.trim() : null,
+            alcoholFrequency: alcoholNumDropdown.textContent.trim() ? alcoholNumDropdown.textContent.trim() : null,
+            caffeineIntake: caffeineDropdown.textContent.trim() ? caffeineDropdown.textContent.trim() : null,
             physicalActivity: physicalActivityInput.value.trim() ? physicalActivityInput.value.trim() : null,
             weightKg: weightInput.value.trim() ? weightInput.value.trim() : null,
             heightCm: heightInput.value.trim() ? heightInput.value.trim() : null,
@@ -668,18 +675,32 @@ confirmAddResidentSubmitBtn.addEventListener('click', function () {
                 return;
             }
             console.log('Response from backend:', data);
+
+            if(data.status === 'success'){
+                let fullName = residentLastName.value.trim() + ', ' + residentFirstName.value.trim();
+                if (residentMiddleName.value.trim()) {
+                    fullName += ' ' + residentMiddleName.value.trim();
+                }
+                if (suffixDropdown.textContent.trim() !== 'Select') {
+                    fullName += ' ' + suffixDropdown.textContent.trim();
+                }
+
+                confirmResidentModal.hide();
+                successMesageHeader.textContent = "Resident Added";
+                successMessage.textContent = fullName + " has been addded.";
+                successModal.show();
+            }
         })
         .catch(err => console.error('Error:', err));
+});
+
+closeSuccessModalButton.addEventListener('click', function(){
+    window.location.reload();
 });
 
 // Initial setup: Call applyStyling() to set the correct state on page load.
 updateButtonState();
 applyStyling();
-
-
-document.getElementById('click-me').addEventListener('click', function () {
-    confirmResidentModal.show();
-})
 
 // Add a single click listener to the entire table body
 chooseFamilyTableBody.addEventListener('click', function (event) {
