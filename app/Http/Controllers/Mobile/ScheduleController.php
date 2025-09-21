@@ -11,7 +11,7 @@ use App\Models\BHW;
 
 class ScheduleController extends Controller
 {
-    public function getSched(Request $request)
+    public function index(Request $request)
     {
         $user = $request->user();
 
