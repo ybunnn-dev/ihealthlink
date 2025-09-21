@@ -4,11 +4,16 @@
     <div class="py-12 px-5">
         <div class="max-w-[90rem] mx-auto sm:px-6 lg:px-8">
             <h1 class="text-3xl font-semibold text-sub_blue mb-3">Households and Residents</h1>
-
+            <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                // Your code to interact with the DOM goes here
+                console.log(@json($residents));
+               
+                });
+            </script>
             <div class="mb-3">
                 <x-resident-module-nav></x-resident-module-nav>
             </div>
-            <button id="click-me">Click me</button>
             <div class="bg-f7 rounded-xl overflow-hidden">
                 <div class="p-6">
                     <div class="grid grid-rows-1 gap-1">

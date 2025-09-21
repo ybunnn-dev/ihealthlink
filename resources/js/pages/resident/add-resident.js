@@ -676,11 +676,6 @@ confirmAddResidentSubmitBtn.addEventListener('click', function () {
 updateButtonState();
 applyStyling();
 
-
-document.getElementById('click-me').addEventListener('click', function () {
-    confirmResidentModal.show();
-})
-
 // Add a single click listener to the entire table body
 chooseFamilyTableBody.addEventListener('click', function (event) {
     // 1. Check if the clicked element is actually a checkbox

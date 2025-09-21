@@ -12,9 +12,43 @@ use App\Models\Resident;
 use App\Models\HealthSigns;
 use App\Models\ResidentMedicalHistory;
 use App\Models\ResidentFamilyHistory;
+use App\Models\Family;
+use App\Models\Household;
+use App\Models\Barangay;
 
 class ResidentController extends Controller
 {
+    public function index(){
+        $personnel = Auth::user()->midwife;
+
+        //find the barangay and the puroks that the user manages
+        $barangay = Barangay::with('puroks')->find($personnel->brgy_id);
+        $puroks = $barangay->puroks;
+
+        //get the households that belongs to the puroks of that barangay
+        $purokIds = $puroks->pluck('id');
+        $households = Household::whereIn('purok_id', $purokIds)->get();
+
+        //get the families
+        $householdIds = $households->pluck('id');
+        $families = Family::with('household.purok')
+        ->whereIn('household_id', $householdIds)
+        ->get(); 
+
+        $familyIds = $families->pluck('id');
+        $residents = Resident::with('family.household.purok')
+            ->whereIn('family_id', $familyIds)
+            ->get();
+
+
+        return view('midwife.resident-list', [
+            'barangay' => $barangay,
+            'puroks' => $puroks,
+            'households' => $households,
+            'families' => $families,
+            'residents' => $residents,
+        ]);
+    }
     public function addResident(Request $request)
     {
         $rules = [

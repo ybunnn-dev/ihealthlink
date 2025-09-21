@@ -131,10 +131,11 @@ Route::middleware([
     })->name('midwife.spechouse');*/
     Route::get('/barangay/households/get', [HouseholdController::class, 'getHouseholdsJson'])
                                                                                                 ->name('households.json'); 
-    Route::get('/midwife/residents', function () {
+    /*Route::get('/midwife/residents', function () {
         return view('midwife.resident-list');
-    })->name('midwife.residents');
+    })->name('midwife.residents');*/
 
+    Route::get('/barangay/residents/load', [ResidentController::class, 'index'])->name('midwife.residents');
     /*Route::get('/midwife/families', function () {
         
     })->name('midwife.families');*/
