@@ -22,13 +22,15 @@ class HouseholdController extends Controller
 
         // Get households under those puroks + families
         $purokIds = $puroks->pluck('id');
-        $households = Household::with('families')
+        $households = Household::with([
+                'families',
+                'purok.barangay'
+            ])
             ->whereIn('purok_id', $purokIds)
             ->get();
-
+            
         return response()->json([
             'households' => $households,
-            'puroks'     => $puroks,
         ]);
     }
 }
