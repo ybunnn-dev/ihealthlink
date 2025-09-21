@@ -24,7 +24,7 @@ Route::middleware(['auth:sanctum',
 
     Route::get('/home', [HomeController::class, 'index']);
 
-    Route::get('/barangay/schedule/get', [ScheduleController::class, 'getSched']);
+    Route::get('/schedules', [ScheduleController::class, 'index']);
    
     Route::get('/barangay/medicine/load', [MedicineController::class, 'index']);
 
