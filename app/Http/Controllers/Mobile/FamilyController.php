@@ -13,7 +13,7 @@ use App\Models\Family;
 
 class FamilyController extends Controller
 {
-    public function index(){
+   public function index(){
         //get the current user's personnel info
         $personnel = Auth::user()->bhw;
 
@@ -25,9 +25,11 @@ class FamilyController extends Controller
         $purokIds = $puroks->pluck('id');
         $households = Household::whereIn('purok_id', $purokIds)->get();
 
-        //get the families
+        //get the families + residents count
         $householdIds = $households->pluck('id');
+        
         $families = Family::with('household.purok.barangay')
+            ->withCount('residents') // <-- counts residents for each family
             ->whereIn('household_id', $householdIds)
             ->get();
 
@@ -35,5 +37,4 @@ class FamilyController extends Controller
             'families' => $families,
         ]);
     }
-
 }

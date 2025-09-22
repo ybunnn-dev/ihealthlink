@@ -66,16 +66,18 @@ class FamilyController extends Controller
     }
    public function show(Family $family)
     {
-        // Eager load household + purok in one go
-        $family->load('household.purok');
+        // Eager load household + purok + residents
+        $family->load(['household.purok', 'residents']);
 
-        \Log::info($family);
+        $residentCount = $family->residents->count(); // collection count
 
         return view('midwife.spec-family', [
             'family' => $family,
-            'purok'  => $family->household->purok, // direct access to purok
+            'purok'  => $family->household->purok,
+            'residentCount' => $residentCount,
         ]);
     }
+
 
     //this is the one to use
     public function getFamilies(){

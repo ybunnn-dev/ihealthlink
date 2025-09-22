@@ -32,7 +32,7 @@
                             <p class="text-normal_font">{{ $purok->name }}</p>
 
                             <p class="font-semibold text-main_font">NUMBER OF RESIDENTS:</p>
-                            <p class="text-normal_font">6</p>
+                            <p class="text-normal_font">{{ $residentCount }}</p>
 
                             <p class="font-semibold text-main_font">FAMILY HEAD:</p>
                             <p class="text-normal_font">{{ $family->head ? $family->head->full_name : '—' }}</p>
@@ -90,101 +90,55 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr class="bg-white border-b bg-f7 text-normal_font">
-                                            <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
-                                                001
-                                            </th>
-                                            <td class="px-6 py-4">
-                                                Ron Peter Mortega
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                Family Head
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                Active
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded text-xs">
-                                                    View
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <tr class="bg-white border-b bg-f7 text-normal_font">
-                                            <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
-                                                002
-                                            </th>
-                                            <td class="px-6 py-4">
-                                                Leonard Mortega
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                Wife
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                Active
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded text-xs">
-                                                    View
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <tr class="bg-white border-b bg-f7 text-normal_font">
-                                            <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
-                                                003
-                                            </th>
-                                            <td class="px-6 py-4">
-                                                Fellix Mortega
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                Brother
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                Active
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded text-xs">
-                                                    View
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <tr class="bg-white border-b bg-f7 text-normal_font">
-                                            <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
-                                                004
-                                            </th>
-                                            <td class="px-6 py-4">
-                                                Noli Mortega
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                Daughter
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                Active
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded text-xs">
-                                                    View
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <tr class="bg-white border-b bg-f7 text-normal_font">
-                                            <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
-                                                005
-                                            </th>
-                                            <td class="px-6 py-4">
-                                                Belerick Mortega
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                Son
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                Active
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded text-xs">
-                                                    View
-                                                </button>
-                                            </td>
-                                        </tr>
+                                        @forelse($family->residents as $resident)
+                                            <tr class="bg-white border-b bg-f7 text-normal_font">
+                                                <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
+                                                    001
+                                                </th>
+                                                <td class="px-6 py-4">
+                                                    {{ $resident->firstName }} {{ $resident->middleName }} {{ $resident->lastName }} {{ $resident->suffix ? $resident->suffix : '' }} 
+                                                </td>
+                                                <td class="px-6 py-4">
+                                                    {{ $resident->family_relationship }}
+                                                </td>
+                                                <td class="px-6 py-4 bg-f7">
+                                                    @if($resident->status === 'active')
+                                                        <span class="bg-green-100 border-1 border-green-500 text-green-800 text-xs font-medium px-2 py-1 rounded-full w-32 text-center inline-block">
+                                                            Alive
+                                                        </span>
+                                                    @elseif($resident->status === 'deceased')
+                                                        <span class="bg-yellow-100 border-1 border-yellow-500 text-yellow-800 text-xs font-medium px-2 py-1 rounded-full w-32 text-center inline-block">
+                                                            Deceased
+                                                        </span>
+                                                    @else
+                                                        <span class="bg-yellow-100 border-1 border-yellow-500 text-yellow-800 text-xs font-medium px-2 py-1 rounded-full w-32 text-center inline-block">
+                                                            Migrated
+                                                        </span>
+                                                    @endif
+                                                </td>
+                                                <td class="px-6 py-4">
+
+                                                    <button onclick="window.location='{{ route('midwife.spec-resident', ['resident' => $resident->id]) }}'" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded text-xs">
+                                                        View
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        @empty
+                                        
+                                            <tr class="bg-white border-b">
+                                                <td colspan="6" class="px-6 py-4 text-center text-gray-500">
+                                                    <div class="text-center py-10">
+                                                        <img src="{{ asset('images/illustrations/empty.png') }}" alt="No barangays found" class="mx-auto w-64">
+                                                        <p class="mt-5 text-lg font-medium text-gray-700">
+                                                            {{ $message ?? "Oops! You haven't added any family member yet." }}
+                                                        </p>
+                                                        <p class="mt-2 text-sm text-gray-500">
+                                                            Click the "Add Family" button to get started.
+                                                        </p>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        @endforelse
                                     </tbody>
                                 </table>
                             </div>
