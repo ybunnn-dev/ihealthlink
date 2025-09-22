@@ -4,13 +4,7 @@
     <div class="py-12 px-5">
         <div class="max-w-[90rem] mx-auto sm:px-6 lg:px-8">
             <h1 class="text-3xl font-semibold text-sub_blue mb-3">Households and Residents</h1>
-            <script>
-                document.addEventListener("DOMContentLoaded", function() {
-                // Your code to interact with the DOM goes here
-                console.log(@json($residents));
-               
-                });
-            </script>
+            
             <div class="mb-3">
                 <x-resident-module-nav></x-resident-module-nav>
             </div>
@@ -143,7 +137,7 @@
                                     $fullName = $resident->firstName . ' ' . $resident->middleName . ' ' . $resident->lastName;
                                 @endphp
 
-                                <tr class="bg-white border-b bg-f7 text-normal_font" onclick="window.location='{{ route('midwife.spec-resident', ['id' => $resident->id]) }}'">
+                                <tr class="bg-white border-b bg-f7 text-normal_font" onclick="window.location='{{ route('midwife.spec-resident', ['resident' => $resident->id]) }}'">
                                     <th scope="row" class="px-6 py-4 font-medium text-normal_font whitespace-nowrap">
                                         R{{ str_pad($resident->id, 3, '0', STR_PAD_LEFT) }}
                                     </th>

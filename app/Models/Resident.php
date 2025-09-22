@@ -75,12 +75,12 @@ class Resident extends Model
     }
     public function ncdRiskFactor()
     {
-        return $this->hasMany(NcdRiskFactor::class);
+        return $this->hasOne(NcdRiskFactor::class);
     }
 
     public function riskAssessment()
     {
-        return $this->hasMany(RiskAssessment::class);
+        return $this->hasOne(RiskAssessment::class);
     }
 
 }

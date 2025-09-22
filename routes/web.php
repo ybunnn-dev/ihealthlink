@@ -145,9 +145,11 @@ Route::middleware([
     Route::get('/midwife/family/{family}', [FamilyController::class, 'show'])
         ->name('midwife.cur-fam');
 
+    Route::get('/barangay/residents/{resident}', [ResidentController::class, 'show'])->name('midwife.spec-resident');
+    /*
     Route::get('/midwife/residents/spec-res', function () {
         return view('midwife.spec-resident');
-    })->name('midwife.spec-resident');
+    })->name('midwife.spec-resident');*/
 
     Route::post('/barangay/add-sched', [ScheduleController::class, 'store']);
 

@@ -277,6 +277,23 @@ class ResidentController extends Controller
             'data' => $validator->validated() // optional: return validated data
         ]);
     }
+
+    public function show(Resident $resident){
+
+        $resident->load([
+            'family.household.purok',
+            'healthSigns',
+            'medicalHistory',
+            'familyHistory',
+            'ncdRiskFactor',
+            'riskAssessment',
+        ]);
+
+
+        return view('midwife.spec-resident', [
+            'resident' => $resident,
+        ]);
+    }
     public function ynToBoolOrNull($value)
     {
         if ($value === null) {

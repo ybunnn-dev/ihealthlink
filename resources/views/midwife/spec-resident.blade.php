@@ -1,7 +1,14 @@
 @section('page-id', 'spec-resident')
-@section('title', 'Residents | #134')
+@section('title', 'Residents | #' . $resident->id)
 <x-app-layout>
     <div class="py-12 px-5">
+        <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                // Your code to interact with the DOM goes here
+                console.log(@json($resident));
+               
+                });
+            </script>
         <div class="max-w-[90rem] mx-auto sm:px-6 lg:px-8">
             <div class="grid grid-cols gap-3">
                 <div class="grid grid-cols-2 items-center gap-3">
@@ -35,15 +42,17 @@
                                     <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="#566A7F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> 
                                 </g>
                             </svg>
-                            <p class="text-main_font font-bold mt-4 text-xl">Ron Peter Mortega</p> 
-                            <p class="text-main_font font-semibold">Household #144</p> 
+                            <p class="text-main_font font-bold mt-4 text-xl">
+                                {{ $resident->firstName }} {{ $resident->middleName }} {{ $resident->lastName }}
+                            </p>
+                            <p class="text-main_font font-semibold">Resident #{{ $resident->id }}</p> 
                         </div>
 
                         <!-- Scheduled Activity Card -->
                         <div class="h-56 bg-f7 rounded-lg flex items-center justify-center px-10 py-6">
                             <div class="flex flex-col items-center justify-center text-main_font">
                                 <h1 class="mb-2">Scheduled Activity</h1>
-                                <h2 class="font-semibold text-2xl text-center">3rd Dose Immunization</h2>
+                                <h2 class="font-semibold text-2xl text-center">ChupaFest 2025</h2>
                                 <p class="text-sm">March 17, 2025</p>
                             </div>
                         </div>    
@@ -60,72 +69,89 @@
                         <div class="grid grid-cols-1 gap-y-4 text-xs">
                             <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
                                 <p class="font-semibold text-main_font">FIRST NAME:</p>
-                                <p class="text-normal_font">Ron Peter</p>
+                                <p class="text-normal_font">{{ $resident->firstName }}</p>
                             </div>
 
                             <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
                                 <p class="font-semibold text-main_font">LAST NAME:</p>
-                                <p class="text-normal_font">Mortega</p>
+                                <p class="text-normal_font">{{ $resident->lastName }}</p>
                             </div>
 
                             <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
                                 <p class="font-semibold text-main_font">MIDDLE NAME:</p>
-                                <p class="text-normal_font">Jazareno</p>
+                                <p class="text-normal_font">{{ $resident->middleName }}</p>
                             </div>
 
                             <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
                                 <p class="font-semibold text-main_font">SUFFIX:</p>
-                                <p class="text-normal_font">III</p>
+                                <p class="text-normal_font">{{ $resident->suffix != null ? $resident->suffix : 'N/A' }}</p>
                             </div>
+
+                            @php
+                                $birthdate = \Carbon\Carbon::parse($resident->birthdate);
+                                $age = $birthdate->age; // auto-calculates from current date
+                            @endphp
 
                             <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
                                 <p class="font-semibold text-main_font">BIRTHDATE:</p>
-                                <p class="text-normal_font">December 10, 2002 (22 Years old)</p>
+                                <p class="text-normal_font">
+                                    {{ $birthdate->format('F d, Y') }} ({{ $age }} Years old)
+                                </p>
                             </div>
 
                             <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
                                 <p class="font-semibold text-main_font">AGE GROUP:</p>
-                                <p class="text-normal_font">Adult</p>
+                                <p class="text-normal_font">
+                                    @if ($age < 13)
+                                        Child
+                                    @elseif ($age < 20)
+                                        Teenager
+                                    @elseif ($age < 60)
+                                        Adult
+                                    @else
+                                        Senior
+                                    @endif
+                                </p>
                             </div>
 
                             <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
                                 <p class="font-semibold text-main_font">SEX:</p>
-                                <p class="text-normal_font">Male</p>
+                                <p class="text-normal_font">{{ ucfirst($resident->sex) }}</p>
                             </div>
 
                             <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
                                 <p class="font-semibold text-main_font">MOBILE NUMBER:</p>
-                                <p class="text-normal_font">09134579</p>
+                                <p class="text-normal_font">{{ $resident->contact_no }}</p>
                             </div>
 
                             <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
                                 <p class="font-semibold text-main_font">CIVIL STATUS:</p>
-                                <p class="text-normal_font">Divorced</p>
+                                <p class="text-normal_font">{{ ucfirst($resident->civil_status) }}</p>
                             </div>
 
                             <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
                                 <p class="font-semibold text-main_font">RELIGION:</p>
-                                <p class="text-normal_font">Roman Catholic</p>
+                                <p class="text-normal_font">{{ $resident->religion }}</p>
                             </div>
 
                             <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
                                 <p class="font-semibold text-main_font">EMPLOYMENT STATUS:</p>
-                                <p class="text-normal_font">Unemployed</p>
+                                <p class="text-normal_font">{{ ucfirst($resident->employment_status) }}</p>
                             </div>
 
                             <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
                                 <p class="font-semibold text-main_font">PWD ID:</p>
-                                <p class="text-normal_font">Non-PWD</p>
+                                <p class="text-normal_font">{{ $resident->pwd_id !== null ? $resident->pwd_id : 'Non-PWD' }} </p>
                             </div>
 
                             <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
                                 <p class="font-semibold text-main_font">INDIGENOUS PEOPLE:</p>
-                                <p class="text-normal_font">No</p>
+                                <p class="text-normal_font">{{ $resident->is_indigenous ? 'Yes' : 'No' }}</p>
                             </div>
 
                             <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
                                 <p class="font-semibold text-main_font">ETHNICITY:</p>
-                                <p class="text-normal_font">South African</p>
+                                <p class="text-normal_font">{{ $resident->ethnicity }}</p>
                             </div>
                         </div>
                     </div>
@@ -171,412 +197,17 @@
                     </div>
 
                     <!-- Basic Health Information Card -->
-                    <div class="bg-white rounded-xl py-8 px-6 sm:px-10 xl:px-12">
-                        <h2 class="text-xl font-semibold text-main_font mb-4">Basic Health Information</h2>
-                        <div class="grid grid-cols-1 slg2:grid-cols-2 gap-x-12 gap-y-4 text-xs">
-                            <!-- MINI BLOCK -->
-
-                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                <p class="font-semibold text-main_font">STATUS:</p>
-                                <p class="text-normal_font">Alive</p>
-                            </div>
-
-                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                <p class="font-semibold text-main_font">WAIST CIRCUMFERENCE:</p>
-                                <p class="text-normal_font">1</p>
-                            </div>
-                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                <p class="font-semibold text-main_font">HEIGHT:</p>
-                                <p class="text-normal_font">1</p>
-                            </div>
-
-                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                <p class="font-semibold text-main_font">HEART RATE:</p>
-                                <p class="text-normal_font">No</p>
-                            </div>
-
-                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                <p class="font-semibold text-main_font">WEIGHT:</p>
-                                <p class="text-normal_font">6</p>
-                            </div>
-
-                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                <p class="font-semibold text-main_font">RESPIRATORY RATE:</p>
-                                <p class="text-normal_font">March 17, 2024</p>
-                            </div>
-
-                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                <p class="font-semibold text-main_font">BMI:</p>
-                                <p class="text-normal_font">25 (Normal)</p>
-                            </div>
-
-                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                <p class="font-semibold text-main_font">BLOOD PRESSURE:</p>
-                                <p class="text-normal_font">Deep Well</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="bg-white rounded-xl py-8 px-6 sm:px-10 xl:px-12">
-                        <h2 class="text-xl font-semibold text-main_font mb-4">Medical History</h2>
-                        <div class="grid grid-cols-1 slg2:grid-cols-2 gap-x-12 gap-y-4 text-xs">
-                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                <p class="font-semibold text-main_font">HYPERTENSION:</p>
-                                <p class="text-normal_font">No</p>
-                            </div>
-
-                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                <p class="font-semibold text-main_font">HEART DISEASE:</p>
-                                <p class="text-normal_font">No</p>
-                            </div>
-
-                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                <p class="font-semibold text-main_font">COPD:</p>
-                                <p class="text-normal_font">No</p>
-                            </div>
-
-                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                <p class="font-semibold text-main_font">KIDNEY DISORDERS:</p>
-                                <p class="text-normal_font">No</p>
-                            </div>
-
-                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                <p class="font-semibold text-main_font">VISION PROBLEMS:</p>
-                                <p class="text-normal_font">Yes</p>
-                            </div>
-
-                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                <p class="font-semibold text-main_font">DIABETES:</p>
-                                <p class="text-normal_font">No</p>
-                            </div>
-
-                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                <p class="font-semibold text-main_font">CANCER:</p>
-                                <p class="text-normal_font">Yes</p>
-                            </div>
-
-                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                <p class="font-semibold text-main_font">ASTHMA:</p>
-                                <p class="text-normal_font">No</p>
-                            </div>
-
-                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                <p class="font-semibold text-main_font">ALLERGIES:</p>
-                                <p class="text-normal_font">No</p>
-                            </div>
-
-                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                <p class="font-semibold text-main_font">SURGICAL HISTORY:</p>
-                                <p class="text-normal_font">Yes</p>
-                            </div>
-
-                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                <p class="font-semibold text-main_font">THYROID DISORDERS:</p>
-                                <p class="text-normal_font">No</p>
-                            </div>
-
-                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                <p class="font-semibold text-main_font">
-                                    MENTAL, NEUROLOGICAL,<br class="hidden sm:inline"> AND SUBSTANCE ABUSE DISORDERS:
-                                </p>
-                                <p class="text-normal_font">No</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bg-white rounded-xl py-8 px-6 sm:px-10 xl:px-12">
-                        <h2 class="text-xl font-semibold text-main_font mb-4">Emergency Indicators</h2>
-                        <div class="grid grid-cols-1 slg2:grid-cols-2 gap-x-12 gap-y-4 text-xs">
-                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                <p class="font-semibold text-main_font">CHEST PAIN:</p>
-                                <p class="text-normal_font">No</p>
-                            </div>
-
-                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                <p class="font-semibold text-main_font">BREATHING DIFFICULTY:</p>
-                                <p class="text-normal_font">No</p>
-                            </div>
-
-                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                <p class="font-semibold text-main_font">LOSS OF CONSCIOUSNESS:</p>
-                                <p class="text-normal_font">Yes</p>
-                            </div>
-
-                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                <p class="font-semibold text-main_font">NUMBNESS OF ARM:</p>
-                                <p class="text-normal_font">No</p>
-                            </div>
-
-                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                <p class="font-semibold text-main_font">ACT OF SELF-HARM<br>OR SUICIDE:</p>
-                                <p class="text-normal_font">No</p>
-                            </div>
-
-                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                <p class="font-semibold text-main_font">AGITATED OR AGGRESSIVE<br>BEHAVIOR:</p>
-                                <p class="text-normal_font">No</p>
-                            </div>
-
-                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                <p class="font-semibold text-main_font">SEVERE INJURIES:</p>
-                                <p class="text-normal_font">No</p>
-                            </div>
-
-                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                <p class="font-semibold text-main_font">SLURRED SPEECH:</p>
-                                <p class="text-normal_font">No</p>
-                            </div>
-
-                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                <p class="font-semibold text-main_font">FACIAL ASSYMETRY:</p>
-                                <p class="text-normal_font">Yes</p>
-                            </div>
-
-                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                <p class="font-semibold text-main_font">CHEST RETRACTIONS:</p>
-                                <p class="text-normal_font">No</p>
-                            </div>
-
-                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                <p class="font-semibold text-main_font">SEIZURE OR CONVULSION:</p>
-                                <p class="text-normal_font">Yes</p>
-                            </div>
-
-                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                <p class="font-semibold text-main_font">EYE INJURY:</p>
-                                <p class="text-normal_font">No</p>
-                            </div>
-
-                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                <p class="font-semibold text-main_font">DISORIENTED AS TO TIME,<br>PLACE, OR PERSON:</p>
-                                <p class="text-normal_font">No</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bg-white rounded-xl py-8 px-6 sm:px-10 xl:px-12">
-                        <h2 class="text-xl font-semibold text-main_font mb-4">Family History</h2>
-                        <div class="grid grid-cols-1 slg2:grid-cols-2 gap-x-12 gap-y-4 text-xs">
-                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                <p class="font-semibold text-main_font">HYPERTENSION:</p>
-                                <p class="text-normal_font">No</p>
-                            </div>
-
-                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                <p class="font-semibold text-main_font">HEART DISEASE:</p>
-                                <p class="text-normal_font">No</p>
-                            </div>
-
-                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                <p class="font-semibold text-main_font">COPD:</p>
-                                <p class="text-normal_font">No</p>
-                            </div>
-
-                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                <p class="font-semibold text-main_font">KIDNEY DISORDERS:</p>
-                                <p class="text-normal_font">No</p>
-                            </div>
-
-                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                <p class="font-semibold text-main_font">VISION PROBLEMS:</p>
-                                <p class="text-normal_font">Yes</p>
-                            </div>
-
-                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                <p class="font-semibold text-main_font">DIABETES:</p>
-                                <p class="text-normal_font">No</p>
-                            </div>
-
-                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                <p class="font-semibold text-main_font">CANCER:</p>
-                                <p class="text-normal_font">Yes</p>
-                            </div>
-
-                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                <p class="font-semibold text-main_font">ASTHMA:</p>
-                                <p class="text-normal_font">No</p>
-                            </div>
-
-                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                <p class="font-semibold text-main_font">ALLERGIES:</p>
-                                <p class="text-normal_font">No</p>
-                            </div>
-
-                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                <p class="font-semibold text-main_font">SURGICAL HISTORY:</p>
-                                <p class="text-normal_font">Yes</p>
-                            </div>
-
-                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                <p class="font-semibold text-main_font">THYROID DISORDERS:</p>
-                                <p class="text-normal_font">No</p>
-                            </div>
-
-                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                <p class="font-semibold text-main_font">
-                                    MENTAL, NEUROLOGICAL,<br class="hidden sm:inline"> AND SUBSTANCE ABUSE DISORDERS:
-                                </p>
-                                <p class="text-normal_font">No</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bg-white rounded-xl py-8 px-6 sm:px-10 xl:px-12">
-                        <h2 class="text-xl font-semibold text-main_font mb-4">NCD Risk Factors</h2>
-                        <div class="grid grid-cols-1 slg2:grid-cols-2 gap-x-12 gap-y-6 text-xs">
-                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                <p class="font-semibold text-main_font">TOBACCO USE:</p>
-                                <p class="text-normal_font">Never Used</p>
-                            </div>
-
-                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                <p class="font-semibold text-main_font">STREET FOODS (E.G ISAW, BARBECUE, CHICKEN SKIN) WEEKLY:</p>
-                                <p class="text-normal_font">Yes</p>
-                            </div>
-
-                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                <p class="font-semibold text-main_font">ALCOHOL INTAKE:</p>
-                                <p class="text-normal_font">No</p>
-                            </div>
-
-                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                <p class="font-semibold text-main_font">HIGH FAT AND HIGH SALT FOOD INTAKE WEEKLY:</p>
-                                <p class="text-normal_font">No</p>
-                            </div>
-
-                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                <p class="font-semibold text-main_font">NUMBER OF DRINKS LAST YEAR:</p>
-                                <p class="text-normal_font">No</p>
-                            </div>
-
-                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                <p class="font-semibold text-main_font">HRS OF PHYSICAL ACTIVITY WEEKLY:</p>
-                                <p class="text-normal_font">Yes</p>
-                            </div>
-
-                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                <p class="font-semibold text-main_font">CAFFIENE INTAKE:</p>
-                                <p class="text-normal_font">No</p>
-                            </div>
-
-                        </div>
-                    </div>
-                    <h1 class="text-sub_blue text-xl font-semibold mt-4 mb-2">Risk Assessment</h1>
-                   <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
-                        <div class="bg-white rounded-xl py-8 px-6 sm:px-10 xl:px-12">
-                            <h2 class="text-xl font-semibold text-main_font mb-4">Blood Sugar</h2>
-                            <div class="grid grid-cols-1 slg2:grid-cols-2 gap-x-12 gap-y-6 text-xs">
-                                <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                    <p class="font-semibold text-main_font">FBS RESULT:</p>
-                                    <p class="text-normal_font">Yes</p>
-                                </div>
-
-                                 <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                    <p class="font-semibold text-main_font">POLYDIPSIA:</p>
-                                    <p class="text-normal_font">Yes</p>
-                                </div>
-
-                                <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                    <p class="font-semibold text-main_font">RBS RESULT:</p>
-                                    <p class="text-normal_font">No</p>
-                                </div>
-
-                                <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                    <p class="font-semibold text-main_font">POLYURIA:</p>
-                                    <p class="text-normal_font">No</p>
-                                </div>
-
-                                <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                    <p class="font-semibold text-main_font">POLYPHAGIA:</p>
-                                    <p class="text-normal_font">No</p>
-                                </div>
-                                
-                                <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                    <p class="font-semibold text-main_font">DATE TAKEN:</p>
-                                    <p class="text-normal_font">No</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="bg-white rounded-xl py-8 px-6 sm:px-10 xl:px-12">
-                            <h2 class="text-xl font-semibold text-main_font mb-4">Lipid Profile</h2>
-                            <div class="grid grid-cols-1 slg2:grid-cols-2 gap-x-12 gap-y-6 text-xs">
-
-                                <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                    <p class="font-semibold text-main_font">CHOLESTEROL:</p>
-                                    <p class="text-normal_font">Yes</p>
-                                </div>
-
-                                 <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                    <p class="font-semibold text-main_font">TRIGLYCERIDE:</p>
-                                    <p class="text-normal_font">Yes</p>
-                                </div>
-
-                                <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                    <p class="font-semibold text-main_font">HDL:</p>
-                                    <p class="text-normal_font">No</p>
-                                </div>
-
-                                <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                    <p class="font-semibold text-main_font">POLYURIA:</p>
-                                    <p class="text-normal_font">No</p>
-                                </div>
-
-                                <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                    <p class="font-semibold text-main_font">LDL:</p>
-                                    <p class="text-normal_font">No</p>
-                                </div>
-                                
-                                <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                    <p class="font-semibold text-main_font">DATE TAKEN:</p>
-                                    <p class="text-normal_font">No</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
-                        <div class="bg-white rounded-xl py-8 px-6 sm:px-10 xl:px-12">
-                            <h2 class="text-xl font-semibold text-main_font mb-4">Urinalysis</h2>
-                            <div class="grid grid-cols-1 gap-y-4 text-xs">
-                                <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                    <p class="font-semibold text-main_font">PROTEIN:</p>
-                                    <p class="text-normal_font">--</p>
-                                </div>
-
-                                <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                    <p class="font-semibold text-main_font">KETONES:</p>
-                                    <p class="text-normal_font">--</p>
-                                </div>
-
-                                <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                    <p class="font-semibold text-main_font">DATE TAKEN:</p>
-                                    <p class="text-normal_font">--</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="bg-white rounded-xl py-8 px-6 sm:px-10 xl:px-12">
-                            <h2 class="text-xl font-semibold text-main_font mb-4">Chronic Obstuctive Polmunary Disease</h2>
-                            <div class="grid grid-cols-1 gap-y-4 text-xs">
-                                <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                    <p class="font-semibold text-main_font">BREATHLESSNESS:</p>
-                                    <p class="text-normal_font">Yes</p>
-                                </div>
-
-                                <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                    <p class="font-semibold text-main_font">CHRONIC COUGH:</p>
-                                    <p class="text-normal_font">Yes</p>
-                                </div>
-
-                                <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                    <p class="font-semibold text-main_font">SPUTUM (MUCOUS) PRODUCTION:</p>
-                                    <p class="text-normal_font">Yes</p>
-                                </div>
-
-                                 <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                    <p class="font-semibold text-main_font">WHEEZING:</p>
-                                    <p class="text-normal_font">Yes</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <x-resident.health-info :resident="$resident" />
+
+                    <x-resident.med-history :medicalhistory="$resident->medicalHistory" />
+                    
+                    <x-resident.emergency :emergencyindicator="$resident->healthSigns" />
+                    
+                    <x-resident.family-history :famhistory="$resident->familyHistory" />
+                    
+                    <x-resident.ncd-risk :ncd="$resident->ncdRiskFactor" />
+
+                    <x-resident.risk-assessment :riskassessment="$resident->riskAssessment" />
                 </div>
                 <div id="healthProgramsCard" class="bg-f7 rounded-xl overflow-hidden">
                     <div class="p-6 pt-6">
