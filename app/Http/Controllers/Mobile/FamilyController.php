@@ -31,10 +31,8 @@ class FamilyController extends Controller
             ->whereIn('household_id', $householdIds)
             ->get();
 
-
-
         return response()->json([
-            'familes' => $families,
+            'families' => $families,
         ]);
     }
 
