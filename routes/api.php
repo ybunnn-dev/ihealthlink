@@ -11,6 +11,7 @@ use App\Http\Controllers\Mobile\HouseholdController;
 use App\Http\Controllers\Mobile\FamilyController;
 use App\Http\Controllers\Mobile\MedicineInventoryController;
 use App\Http\Controllers\Mobile\ResidentController;
+use App\Http\Controllers\Mobile\UserManualController;
 
 // Public routes
 Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:login'); ;
@@ -43,5 +44,7 @@ Route::middleware(['auth:sanctum',
     Route::get('/barangay/family/show/{family}', [FamilyController::class, 'show']);
 
     Route::get('/barangay/resident/show/{resident}', [ResidentController::class, 'show']);
-    
+
+    Route::get('/barangay/user-manual', [UserManualController::class, 'index']);
+
 });

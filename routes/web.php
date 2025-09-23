@@ -16,6 +16,7 @@ use App\Http\Controllers\Web\RedirectBarangayController;
 use App\Http\Controllers\Web\MidwifeDashboardController;
 use App\Http\Controllers\Web\BarangayReportsController;
 use App\Http\Controllers\Web\ResidentController;
+use App\Http\Controllers\Web\UserManualController;
 
 Route::get('/', function () {
     return view('auth.login');
@@ -221,11 +222,9 @@ Route::middleware([
         return view('midwife.log-list');
     })->name('midwife.logs');
 
+    Route::get('/barangay/user-manual', [UserManualController::class, 'index'])->name('midwife.faqs');
     // Midwife-specific dashboard
-    Route::get('/midwife/faqs', function () {
-        return view('midwife.faqs');
-    })->name('midwife.faqs');
-
+   
     Route::get('/midwife/health-programs/spec', function () {
         return view('midwife.enrolled-resident');
     })->name('midwife.enrolled-resident');
