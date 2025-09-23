@@ -37,4 +37,18 @@ class FamilyController extends Controller
             'families' => $families,
         ]);
     }
+    public function show(Family $family)
+    {
+        // Eager load household + purok + residents
+        $family->load(['household.purok.barangay', 'residents']);
+
+        $residentCount = $family->residents->count(); // collection count
+
+
+        return response()->json([
+            'family' => $family,
+            'residentCount' => $residentCount,
+        ]);
+    }
+
 }

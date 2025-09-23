@@ -78,7 +78,6 @@ class FamilyController extends Controller
         ]);
     }
 
-
     //this is the one to use
     public function getFamilies(){
         //get the current user's personnel info

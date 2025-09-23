@@ -39,4 +39,6 @@ Route::middleware(['auth:sanctum',
     Route::post('/barangay/medicine/add', [MedicineController::class, 'store']);
 
     Route::post('/barangay/medicine/batch/add', [MedicineInventoryController::class, 'store']);
+
+    Route::get('/barangay/family/show/{family}', [FamilyController::class, 'show']);
 });
