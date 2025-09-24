@@ -84,4 +84,27 @@ class MedicineController extends Controller
             'medicine' => $medicine
         ], 201); // 201 Created
     }
+    public function updateMedicine(Request $request, $id)
+    {
+        // Validate input (optional but good practice)
+        $validated = $request->validate([
+            'medicine_name' => 'required|string|max:255',
+            'generic_name'  => 'nullable|string|max:255',
+            'category'      => 'required|string|max:255',
+            'form'          => 'required|string|max:255',
+            'description'   => 'nullable|string',
+        ]);
+
+        // Find the medicine by ID
+        $medicine = Medicine::findOrFail($id);
+
+        // Update with validated data
+        $medicine->update($validated);
+
+        return response()->json([
+            'result' => 'success',
+            'message'  => 'Medicine updated successfully',
+            'medicine' => $medicine
+        ]);
+    }
 }

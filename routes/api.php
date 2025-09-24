@@ -47,4 +47,6 @@ Route::middleware(['auth:sanctum',
 
     Route::get('/barangay/user-manual', [UserManualController::class, 'index']);
 
+    Route::put('/barangay/update-med/{id}', [MedicineController::class, 'updateMedicine']);
+
 });
