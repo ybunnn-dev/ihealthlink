@@ -41,15 +41,25 @@ Route::middleware([
         return view('mho.dashboard');
     })->name('mho.dashboard');
 
-    //Route for health programs
+    /*
     Route::get('/mho/health-programs', function () {
         return view('mho.health-program-list');
     })->name('mho.health-programs');
+    */
+
+    Route::get('/mho/health-programs', [HealthProgramController::class, 'index'])->name('mho.health-programs');
+
+    Route::get('/mho/health-programs/{healthProgram}', [HealthProgramController::class, 'show'])->name('mho.spec-hprog');
+
+      //Corrected route to go to a specific barangay
+    Route::get('/mho/barangays/{barangay}/{name}', [BarangayController::class, 'show'])
+        ->name('mho.barangays.show')
+        ->where(['barangay' => '[0-9]+', 'name' => '[a-zA-Z0-9-]+']);
 
     //Route for specific health programs
-    Route::get('/mho/health-programs/spec', function () {
-        return view('mho.spec-health-program');
-    })->name('mho.spec-hprog');
+    /*Route::get('/mho/health-programs/spec', function () {
+        
+    })->name('mho.spec-hprog');*/
 
     //Route for barangays
     Route::get('/mho/barangays', [BarangayController::class, 'listView'])->name('mho.barangays');
@@ -72,10 +82,6 @@ Route::middleware([
     //fitler, search, and sort functions for the barangay module
     Route::get('/mho/barangays/search', [BarangayController::class, 'search'])->name('mho.barangays.search');
 
-    //Corrected route to go to a specific barangay
-    Route::get('/mho/barangays/{barangay}/{name}', [BarangayController::class, 'show'])
-        ->name('mho.barangays.show')
-        ->where(['barangay' => '[0-9]+', 'name' => '[a-zA-Z0-9-]+']);
 
     Route::post('/add-purok', [PurokController::class, 'addPurok'])->name('puroks.add');
 

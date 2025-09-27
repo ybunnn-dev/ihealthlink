@@ -16,6 +16,9 @@ class HealthProgram extends Model
     protected $fillable = [
         'name',
         'status',
+        'age_min',
+        'age_max',
+        'category'
     ];
 
     // Casts (useful if you want `status` as string always)

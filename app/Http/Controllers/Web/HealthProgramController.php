@@ -20,4 +20,22 @@ class HealthProgramController extends Controller
             'data' => $programs
         ]);
     }
+    public function index(){
+         $programs = HealthProgram::paginate(10);
+
+        return view('mho.health-program-list', [
+            'healthPrograms' => $programs
+        ]);
+    }
+
+    public function show(HealthProgram $healthProgram)
+    {
+        // If you want to eager-load relationships later:
+        // $healthProgram->load('programFields', 'enrolledResidents');
+
+        return view('mho.spec-health-program', [
+            'healthProgram' => $healthProgram
+        ]);
+    }
+
 }
