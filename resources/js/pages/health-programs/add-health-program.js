@@ -386,8 +386,8 @@ submitBtn.addEventListener('click', function(){
             program_type: programTypeSelect.value, 
             program_mode: programModeSelect.value,
             schedType: scheduleTypeSelect.value,
-            field_num: parseInt(fieldNum.value, 10), //needs parse int
-            interval: parseInt(customIntervalInput.value, 10)//needs parse int
+            field_num: parseInt(fieldNum.value, 10), //fuck u mali kaini
+            interval: parseInt(customIntervalInput.value, 10)
         }
 
     }
@@ -418,7 +418,7 @@ submitBtn.addEventListener('click', function(){
 });
 
 
-// 🔹 FINAL trigger to backend
+// FINAL trigger to backend
 confirmProgramProceedBtn.addEventListener('click', function(){
     console.log("Sending payload to backend:", finalPayload);
 
