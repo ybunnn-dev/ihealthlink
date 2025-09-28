@@ -12,7 +12,7 @@ use App\Http\Controllers\Mobile\FamilyController;
 use App\Http\Controllers\Mobile\MedicineInventoryController;
 use App\Http\Controllers\Mobile\ResidentController;
 use App\Http\Controllers\Mobile\UserManualController;
-
+use App\Http\Controllers\Mobile\ProfileController;
 // Public routes
 Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:login'); ;
 
@@ -49,4 +49,5 @@ Route::middleware(['auth:sanctum',
 
     Route::put('/barangay/update-med/{id}', [MedicineController::class, 'updateMedicine']);
 
+    Route::get('/barangay/profile', [ProfileController::class, 'show']);
 });
