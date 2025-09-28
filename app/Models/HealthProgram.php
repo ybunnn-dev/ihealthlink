@@ -26,4 +26,10 @@ class HealthProgram extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
+
+
+    public function enrolledResidents()
+    {
+        return $this->hasMany(EnrolledResident::class, 'program_id');
+    }
 }

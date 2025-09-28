@@ -82,5 +82,8 @@ class Resident extends Model
     {
         return $this->hasOne(RiskAssessment::class);
     }
+    public function enrolledResidents(){
+        return $this->hasMany(HealthProgram::class);
+    }
 
 }

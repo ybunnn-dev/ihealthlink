@@ -101,11 +101,11 @@
                                             </td>
                                             <td class="px-6 py-4">
                                                 {{-- Make sure this matches your controller variable --}}
-                                                {{ $healthProgram->puroks_count ?? $healthProgram->number_of_puroks }}
+                                                {{ $healthProgram->age_min ? $healthProgram->age_min : 'Undefined'}} - {{ $healthProgram->age_max ? $healthProgram->age_max : 'Undefined' }}
                                             </td>
                                             <td class="px-6 py-4">
                                                 {{-- Make sure this matches your controller variable --}}
-                                                {{ number_format($healthProgram->residents_count ?? $healthProgram->number_of_residents) }}
+                                                {{ number_format($healthProgram->residents_count ?? $healthProgram->residents_count) }}
                                             </td>
                                             <td class="px-6 py-4">
                                                 {{ $healthProgram->created_at->format('M d, Y') }}
@@ -144,4 +144,5 @@
             </div>
         </div>
     </div>
+    @include('components.modals.health-program.add-health-program')
 </x-app-layout>

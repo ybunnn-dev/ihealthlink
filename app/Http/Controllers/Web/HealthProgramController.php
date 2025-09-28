@@ -21,7 +21,8 @@ class HealthProgramController extends Controller
         ]);
     }
     public function index(){
-         $programs = HealthProgram::paginate(10);
+        $programs = HealthProgram::withCount('enrolledResidents')
+        ->paginate(10);
 
         return view('mho.health-program-list', [
             'healthPrograms' => $programs
@@ -30,12 +31,14 @@ class HealthProgramController extends Controller
 
     public function show(HealthProgram $healthProgram)
     {
-        // If you want to eager-load relationships later:
-        // $healthProgram->load('programFields', 'enrolledResidents');
+        // Re-fetch with enrolledResidents count
+        $healthProgram = HealthProgram::withCount('enrolledResidents')
+            ->findOrFail($healthProgram->id);
 
         return view('mho.spec-health-program', [
             'healthProgram' => $healthProgram
         ]);
     }
+
 
 }

@@ -85,9 +85,14 @@ document.addEventListener('DOMContentLoaded', () => {
   else if(bodyClass.contains('family')){
     import('./pages/family/add-family.js');
   }
+  else if(bodyClass.contains('health-programs')){
+    import('./pages/health-programs/add-health-program.js');
+  }
   else {
     console.log('Not on reports page - charts not loaded');
   }
+
+  
 
   // Datepicker styling fix
   document.addEventListener('show.datepicker', () => {
