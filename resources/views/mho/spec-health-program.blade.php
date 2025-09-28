@@ -56,7 +56,7 @@
 
                             <div class="grid grid-rows-2 md:grid-cols-3 md:grid-rows-1">
                                 <p class="font-semibold text-main_font">PROGRAM TYPE:</p>
-                                <p class="text-normal_font">{{ $healthProgram->category ? $healthProgram->category : 'N/A' }}</p>
+                                <p class="text-normal_font">{{ $healthProgram->category ? ucfirst($healthProgram->category) : 'N/A' }}</p>
                             </div>
 
                              <div class="grid grid-rows-2 md:grid-cols-3 md:grid-rows-1">
@@ -71,7 +71,24 @@
 
                             <div class="grid grid-rows-2 md:grid-cols-3 md:grid-rows-1">
                                 <p class="font-semibold text-main_font">NO. OF CONSULTATIONS:</p>
-                                <p class="text-normal_font">{{ $healthProgram->program_mode === 'fixed' ? $healthProgram->total_fields : 'Continuos' }}</p>
+                                <p class="text-normal_font">
+                                    @switch($healthProgram->program_mode)
+                                        @case('fixed')
+                                            {{ $healthProgram->total_fields }}
+                                            @break
+
+                                        @case('continuous')
+                                            Continuous
+                                            @break
+
+                                        @case('custom')
+                                            {{ $healthProgram->total_fields }} (Custom)
+                                            @break
+
+                                        @default
+                                            Unknown
+                                    @endswitch
+                                </p>
                             </div>
                             <div class="grid grid-rows-2 md:grid-cols-3 md:grid-rows-1">
                                 <p class="font-semibold text-main_font">DATE ADDED:</p>
@@ -80,8 +97,11 @@
                         </div>
                     </div>
                 </div>
+                 <x-healthProgram.fields :programfields="$healthProgram->programFields" :name="$healthProgram->name" />
             </div>
         </div>
     </div>
+    
     </div>
+   
 </x-app-layout>

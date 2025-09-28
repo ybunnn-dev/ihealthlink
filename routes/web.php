@@ -194,6 +194,8 @@ Route::middleware([
         return view('midwife.health-program-profile');
     })->name('midwife.health-program-profile');
 
+    Route::post('/barangay/health-programs/add', [HealthProgramController::class, 'store']);
+    
     // Midwife-specific dashboard 
     // Show list
     Route::get('/midwife/medicines', [MedicineController::class, 'index'])

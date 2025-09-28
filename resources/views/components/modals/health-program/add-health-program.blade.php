@@ -40,17 +40,16 @@
                                 <option value="child_healthcare">Child Healthcare</option>
                             </select>
                         </div>
-                        
-                        <div>
-                            <label for="program-mode" class="block mb-2 text-sm font-medium text-main_font dark:text-white">Program Mode</label>
-                            <select id="program-mode" class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                <option selected >Choose a mode</option>
-                                <option value="fixed">Fixed</option>
-                                <option value="continuous">Continuous</option>
-                            </select>
-                        </div>
-                        
                         <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label for="program-mode" class="block mb-2 text-sm font-medium text-main_font dark:text-white">Program Mode</label>
+                                <select id="program-mode" class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                    <option selected >Choose a mode</option>
+                                    <option value="fixed">Fixed</option>
+                                    <option value="continuous">Continuous</option>
+                                    <option value="custom">Custom</option>
+                                </select>
+                            </div>
                             <div>
                                 <label for="schedule-type" class="block mb-2 text-sm font-medium text-main_font dark:text-white">Schedule Type</label>
                                 <select id="schedule-type" disabled class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 disabled:bg-bg_col">
@@ -60,6 +59,12 @@
                                     <option value="annually">Annually</option>
                                     <option value="custom">Custom</option>
                                 </select>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                           <div>
+                                <label for="number-of-fields" class="block mb-2 text-sm font-medium text-main_font dark:text-white">No. of Fields</label>
+                                <input type="text" id="number-of-fields" disabled placeholder="e.g., '4'" class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 disabled:bg-bg_col">
                             </div>
                             <div>
                                 <label for="custom-interval" class="block mb-2 text-sm font-medium text-main_font dark:text-white">Interval (Days)</label>
@@ -101,3 +106,4 @@
         </div>
     </div>
 </div>
+@include('components.modals.health-program.add-health-program-confirmation')

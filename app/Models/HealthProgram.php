@@ -18,7 +18,10 @@ class HealthProgram extends Model
         'status',
         'age_min',
         'age_max',
-        'category'
+        'category', 
+        'total_fields', 
+        'schedule_type',
+        'program_mode',
     ];
 
     // Casts (useful if you want `status` as string always)
@@ -32,4 +35,10 @@ class HealthProgram extends Model
     {
         return $this->hasMany(EnrolledResident::class, 'program_id');
     }
+
+    public function programFields()
+    {
+        return $this->hasMany(ProgramField::class, 'program_id');
+    }
+
 }
