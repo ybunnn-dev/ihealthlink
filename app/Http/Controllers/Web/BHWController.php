@@ -50,7 +50,7 @@ class BHWController extends Controller
             // Filter BHWs by the midwife's barangay ID.
             ->where('brgy_id', $midwifePersonnel->brgy_id)
             ->where('status', 'active')
-            ->with('users')
+            ->with('user')
             ->get() // Get all results first
             ->sortBy('name') // Now sort by the 'name' accessor from your model
             ->values(); // Reset the collection keys

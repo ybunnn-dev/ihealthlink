@@ -14,14 +14,77 @@ const residentCards = document.querySelectorAll('.resident-card'); // This will 
 const enrollResidentCancelBtn = document.getElementById('enrollResidentCancelBtn');
 const enrollResidentProceedBtn = document.getElementById('enrollResidentProceedBtn');
 
+const selectedHighlightClasses = ['bg-sky-100', 'dark:bg-sky-800', 'border-sky-500'];
+
+let selectedResidentId = null;
 
 export const enrollResidentModal = new Modal(enrollResidentModalEl);
 
 const openEnrollModalBtn = document.getElementById('openEnrollModalBtn');
 
-// Function to fetch residents with optional payload
-function fetchResidents(payload = { search: null, purok_id: null }) {
-    const url = '/barangay/resident/enroll'; // your fixed endpoint
+function renderResidents(residents) {
+    // Clear the existing list first
+    enrollResidentListContainer.innerHTML = '';
+
+    if (!residents || residents.length === 0) {
+        enrollResidentListContainer.innerHTML = `<p class="text-center text-gray-500 p-4">No residents found.</p>`;
+        return;
+    }
+
+    // Create a card for each resident and add it to the container
+    residents.forEach(resident => {
+        const residentCardHTML = `
+            <div class="resident-card p-4 border rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer" data-resident-id="${resident.id}" tabindex="0">
+                <p class="font-semibold text-main_font pointer-events-none">${resident.firstName} ${resident.middleName} ${resident.lastName}</p>
+                <p class="text-sm text-normal_font pointer-events-none">${resident.purok.name}</p>
+            </div>
+        `;
+        enrollResidentListContainer.insertAdjacentHTML('beforeend', residentCardHTML);
+    });
+}
+
+// Listen for input in the search field
+enrollResidentSearchInput.addEventListener('keyup', (event) => {
+    const searchQuery = event.target.value;
+    fetchResidents({ search: searchQuery, purok_id: null });
+});
+
+// Listen for changes in the purok filter
+enrollResidentPurokFilter.addEventListener('change', (event) => {
+    const purokId = event.target.value;
+    fetchResidents({ search: null, purok_id: purokId });
+});
+
+enrollResidentListContainer.addEventListener('click', (event) => {
+    const clickedCard = event.target.closest('.resident-card');
+    if (!clickedCard) return;
+
+    // Find the card that is currently selected (if any)
+    const previouslySelected = enrollResidentListContainer.querySelector('.border-sky-500');
+
+    // Always remove the highlight from the previously selected card first
+    if (previouslySelected) {
+        previouslySelected.classList.remove(...selectedHighlightClasses);
+    }
+
+    if (previouslySelected !== clickedCard) {
+        clickedCard.classList.add(...selectedHighlightClasses);
+
+        // Store the ID of the new selection
+        selectedResidentId = clickedCard.dataset.residentId;
+    } else {
+        selectedResidentId = null;
+    }
+
+    console.log('Selected Resident ID:', selectedResidentId);
+});
+
+function fetchResidents(payload = { search: '', purok_id: '' }) {
+    const params = new URLSearchParams();
+    if (payload.search) params.append('search', payload.search);
+    if (payload.purok_id) params.append('purok_id', payload.purok_id);
+
+    const url = `/barangay/resident/enroll?${params.toString()}`;
     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
     fetch(url, {
@@ -31,22 +94,21 @@ function fetchResidents(payload = { search: null, purok_id: null }) {
             'X-Requested-With': 'XMLHttpRequest',
             'Accept': 'application/json'
         },
-        // Send payload as query parameters for GET
     })
     .then(async response => {
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
         const data = await response.json();
         return data.residents;
     })
     .then(residents => {
-        console.log('Successfully fetched residents:', residents);
-        // Optionally render resident cards here
+        // Call the render function with the fetched data
+        renderResidents(residents);
     })
     .catch(error => {
         console.error('There was a problem fetching residents:', error);
+        enrollResidentListContainer.innerHTML = `<p class="text-center text-red-500 p-4">Failed to load residents.</p>`;
     });
 }
-
 // Call it when opening the modal
 openEnrollModalBtn.addEventListener('click', function () {
     enrollResidentModal.show();

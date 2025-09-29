@@ -343,7 +343,8 @@ class ResidentController extends Controller
         });
 
         return response()->json([
-            'residents' => $residents
+            'residents' => $residents,
+            'puroks' => $puroks
         ]);
     }
 }
