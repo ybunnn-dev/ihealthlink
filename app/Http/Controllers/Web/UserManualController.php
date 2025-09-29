@@ -18,4 +18,9 @@ class UserManualController extends Controller
             
         ]);
     }
+
+      public function getResident(Request $request)
+    {
+        return response()->json(['message' => 'Controller works!']);
+    }
 }

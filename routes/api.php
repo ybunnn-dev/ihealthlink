@@ -25,6 +25,8 @@ Route::middleware(['auth:sanctum',
         return $request->user();
     });
 
+    Route::post('/mobile/logout', [AuthController::class, 'logout']);
+
     Route::get('/home', [HomeController::class, 'index']);
 
     Route::get('/schedules', [ScheduleController::class, 'index']);
@@ -50,4 +52,10 @@ Route::middleware(['auth:sanctum',
     Route::put('/barangay/update-med/{id}', [MedicineController::class, 'updateMedicine']);
 
     Route::get('/barangay/profile', [ProfileController::class, 'show']);
+
+    Route::post('/email/change/request', [ProfileController::class, 'requestEmailChange']);
+
+    Route::post('/email/change/verify', [ProfileController::class, 'verifyEmailChange']);
+
+    Route::post('/password/change', [ProfileController::class, 'changePassword']);
 });

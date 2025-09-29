@@ -29,4 +29,21 @@ class AuthController extends Controller
             'role'    => $user->role_id,
         ]);
     }
+    public function logout(Request $request)
+    {
+        // Revoke the current token used in the request
+        $user = $request->user(); // Authenticated user via Sanctum token
+
+        if ($user) {
+            $user->currentAccessToken()->delete(); // deletes only the current token
+            return response()->json([
+                'message' => 'Logged out successfully'
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'No user authenticated'
+        ], 401);
+    }
+
 }

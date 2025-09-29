@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Web\BarangayController;
+use App\Http\Controllers\Web\BarangayHealthProgramController;
 use App\Http\Controllers\Web\PurokController;
 use App\Http\Controllers\Web\MidwifeController;
 use App\Http\Controllers\Web\MedicineController;
@@ -22,6 +23,7 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
+//Route::get('/test-controller-debug', [FamilyController::class, 'getFamilies']); // This one
 
 // Shared middleware group for authenticated and verified users
 Route::middleware([
@@ -176,14 +178,12 @@ Route::middleware([
 
     Route::post('/barangay/resident/add', [ResidentController::class, 'addResident']);
 
+    Route::get('/barangay/resident/enroll', [ResidentController::class, 'getResident']);
+    
     Route::get('/midwife/reports', function () {
         return view('midwife.reports');
     })->name('midwife.reports');
 
-    Route::get('/midwife/health-program', function () {
-        return view('midwife.health-program');
-    })->name('midwife.health-program');
-    Route::get('/midwife/bhws/{bhw}', [BHWController::class, 'show'])->name('midwife.bhws.show');
 
     Route::get('/barangay/fetch/health-programs', [HealthProgramController::class, 'provideData'])->name('health.programs');
 
@@ -230,12 +230,23 @@ Route::middleware([
         return view('midwife.log-list');
     })->name('midwife.logs');
 
+    /*Route::get('/midwife/health-program', function () {
+        
+    })->name('midwife.health-program');*/
+
+
+    Route::get('/midwife/bhws/{bhw}', [BHWController::class, 'show'])->name('midwife.bhws.show');
+
     Route::get('/barangay/user-manual', [UserManualController::class, 'index'])->name('midwife.faqs');
     // Midwife-specific dashboard
    
     Route::get('/midwife/health-programs/spec', function () {
         return view('midwife.enrolled-resident');
     })->name('midwife.enrolled-resident');
+
+    Route::get('/barangay/health-programs/{healthProgram?}', [BarangayHealthProgramController::class, 'index'])
+    ->name('midwife.health-program');
+
 
     Route::get('/barangay/reports/community-report-pdf', [BarangayReportsController::class, 'downloadCommunityReport']);
     Route::get('/reports/preview-community-report', [BarangayReportsController::class, 'previewCommunityReport']);

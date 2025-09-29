@@ -1,6 +1,14 @@
 @section('title', 'Health Programs')
+@section('page-id', 'health-program-brgy')
 <x-app-layout>
     <div class="py-12 px-5">
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                console.log("Health Program:", @json($healthProgram));
+                console.log("Enrolled Residents:", @json($enrolledResidents));
+            });
+        </script>
+
         <div class="max-w-[90rem] mx-auto sm:px-6 lg:px-8">
             <h1 class="text-3xl font-semibold text-sub_blue mb-3">Health Programs</h1>
             <div class="grid grid-cols-1 xl:grid-cols-5 gap-3">
@@ -19,7 +27,7 @@
 
                             <div>
                                 <h1 class="text-2xl font-semibold text-main_font whitespace-normal break-words">
-                                PhilPen Health Data
+                                {{ $healthProgram->name }}
                                 </h1>
                                 <p class="text-xs text-normal_font">Current Health Program</p>
                             </div>
@@ -55,7 +63,7 @@
                     <div class="grid grid-cols-[auto_1fr] gap-x-4 items-center">
                         <svg class="w-10 h-10 text-blue2" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M8 3.5C8 4.88071 6.88071 6 5.5 6C4.11929 6 3 4.88071 3 3.5C3 2.11929 4.11929 1 5.5 1C6.88071 1 8 2.11929 8 3.5Z" fill="currentColor"></path> <path d="M3 8C1.34315 8 0 9.34315 0 11V15H8V8H3Z" fill="currentColor"></path> <path d="M13 8H10V15H16V11C16 9.34315 14.6569 8 13 8Z" fill="currentColor"></path> <path d="M12 6C13.1046 6 14 5.10457 14 4C14 2.89543 13.1046 2 12 2C10.8954 2 10 2.89543 10 4C10 5.10457 10.8954 6 12 6Z" fill="currentColor"></path> </g></svg>
                         <div class="min-w-0">
-                            <h1 class="text-2xl font-semibold -mb-1 break-words whitespace-normal text-main_font">99,9999</h1>
+                            <h1 class="text-2xl font-semibold -mb-1 break-words whitespace-normal text-main_font">{{ $totalEnrolled }}</h1>
                             <p class="text-xs text-normal_font">Total Enrolled</p>
                         </div>
                     </div>
@@ -64,7 +72,7 @@
                     <div class="grid grid-cols-[auto_1fr] gap-x-4 items-center">
                         <svg  class="w-10 h-10 text-indigo1" fill="currentColor" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title></title> <g> <path d="M58.3945,32.1563,42.9961,50.625l-5.3906-6.4629a5.995,5.995,0,1,0-9.211,7.6758l9.9961,12a5.9914,5.9914,0,0,0,9.211.0059l20.0039-24a5.9988,5.9988,0,1,0-9.211-7.6875Z"></path> <path d="M48,0A48,48,0,1,0,96,48,48.0512,48.0512,0,0,0,48,0Zm0,84A36,36,0,1,1,84,48,36.0393,36.0393,0,0,1,48,84Z"></path> </g> </g></svg>
                         <div class="min-w-0">
-                            <h1 class="text-2xl font-semibold -mb-1 break-words whitespace-normal text-main_font">99,9999</h1>
+                            <h1 class="text-2xl font-semibold -mb-1 break-words whitespace-normal text-main_font">{{ $completed }}</h1>
                             <p class="text-xs text-normal_font">Completed</p>
                         </div>
                     </div>
@@ -73,7 +81,7 @@
                     <div class="grid grid-cols-[auto_1fr] gap-x-4 items-center">
                         <svg class="w-10 h-10 items-center text-red1" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="currentColor"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools --> <title>ic_fluent_calendar_overdue_24_filled</title> <desc>Created with Sketch.</desc> <g id="🔍-System-Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="ic_fluent_calendar_overdue_24_filled" fill="currentColor" fill-rule="nonzero"> <path d="M17.5,12 C20.5376,12 23,14.4624 23,17.5 C23,20.5376 20.5376,23 17.5,23 C14.4624,23 12,20.5376 12,17.5 C12,14.4624 14.4624,12 17.5,12 Z M17.5,19.875 C17.1548,19.875 16.875,20.1548 16.875,20.5 C16.875,20.8452 17.1548,21.125 17.5,21.125 C17.8452,21.125 18.125,20.8452 18.125,20.5 C18.125,20.1548 17.8452,19.875 17.5,19.875 Z M21,8.5 L21,12.0218 C19.9897,11.375 18.7886,11 17.5,11 C13.9101,11 11,13.9101 11,17.5 C11,18.6894769 11.3195266,19.8043976 11.8774103,20.7635139 L12.0218,21 L6.25,21 C4.51696414,21 3.10075377,19.6435215 3.00514477,17.9344215 L3,17.75 L3,8.5 L21,8.5 Z M17.5,14 C17.2545778,14 17.0504,14.1769086 17.0080571,14.4101355 L17,14.5 L17,18.5 C17,18.7761 17.2239,19 17.5,19 C17.7454222,19 17.9496,18.8230914 17.9919429,18.5898645 L18,18.5 L18,14.5 C18,14.2239 17.7761,14 17.5,14 Z M17.75,3 C19.4830069,3 20.8992442,4.35645051 20.9948551,6.06557565 L21,6.25 L21,7 L3,7 L3,6.25 C3,4.51696414 4.35645051,3.10075377 6.06557565,3.00514477 L6.25,3 L17.75,3 Z" id="currentColor"> </path> </g> </g> </g></svg>
                         <div class="min-w-0">
-                            <h1 class="text-2xl font-semibold -mb-1 break-words whitespace-normal text-main_font">99,9999</h1>
+                            <h1 class="text-2xl font-semibold -mb-1 break-words whitespace-normal text-main_font">{{ $overdue }}</h1>
                             <p class="text-xs text-normal_font">Overdue</p>
                         </div>
                     </div>
@@ -107,7 +115,7 @@
                                     </button>
                                 </div>
                                 <div class="w-full xs:w-40 pt-5 xs:pt-0">
-                                    <button type="button" id="openEnrollModalBtn" data-modal-target="enroll-resident-modal" data-modal-toggle="enroll-resident-modal" class="w-full h-[2.375rem] text-white bg-mainblue hover:bg-blue-700 font-medium rounded-lg text-sm px-3 flex items-center justify-center gap-2">
+                                    <button type="button" id="openEnrollModalBtn" class="w-full h-[2.375rem] text-white bg-mainblue hover:bg-blue-700 font-medium rounded-lg text-sm px-3 flex items-center justify-center gap-2">
                                         <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                             <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                                             <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
@@ -157,76 +165,29 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr class="bg-white border-b text-normal_font hover:bg-gray-50" onclick="window.location='{{ route('midwife.enrolled-resident') }}'">
-                                    <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">121</th>
-                                    <td class="px-6 py-4">Juan Dela Cruz</td>
-                                    <td class="px-6 py-4">Updated</td>
-                                    <td class="px-6 py-4">2024-05-10</td>
-                                    <td class="px-6 py-4">N/A</td>
+                                @forelse($enrolledResidents as $resident)
+                                    <tr class="bg-white border-b text-normal_font hover:bg-gray-50" onclick="window.location='{{ route('midwife.enrolled-resident') }}'">
+                                        <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">121</th>
+                                        <td class="px-6 py-4">Juan Dela Cruz</td>
+                                        <td class="px-6 py-4">Updated</td>
+                                        <td class="px-6 py-4">2024-05-10</td>
+                                        <td class="px-6 py-4">N/A</td>
+                                    </tr>
+                                @empty
+                                <tr class="border-b bg-f7 text-normal_font">
+                                    <td colspan="5">
+                                        <div class="text-center py-10">
+                                            <img src="{{ asset('images/illustrations/empty.png') }}" alt="No fields found" class="mx-auto w-64">
+                                            <p class="mt-5 text-lg font-medium text-gray-700">
+                                                No Enrolled Residents Yet.
+                                            </p>
+                                            <p class="mt-2 text-sm text-gray-500">
+                                                Click the "Enroll Resident" button to get started.
+                                            </p>
+                                        </div>
+                                    </td>
                                 </tr>
-                                <tr class="bg-white border-b text-normal_font hover:bg-gray-50">
-                                    <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">122</th>
-                                    <td class="px-6 py-4">Maria Santos</td>
-                                    <td class="px-6 py-4">Near Schedule</td>
-                                    <td class="px-6 py-4">2024-06-15</td>
-                                    <td class="px-6 py-4">2025-08-20</td>
-                                </tr>
-                                <tr class="bg-white border-b text-normal_font hover:bg-gray-50">
-                                    <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">123</th>
-                                    <td class="px-6 py-4">Jose Reyes</td>
-                                    <td class="px-6 py-4">Late</td>
-                                    <td class="px-6 py-4">2024-01-22</td>
-                                    <td class="px-6 py-4">2025-08-05</td>
-                                </tr>
-                                <tr class="bg-white border-b text-normal_font hover:bg-gray-50">
-                                    <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">124</th>
-                                    <td class="px-6 py-4">Ana Garcia</td>
-                                    <td class="px-6 py-4">Updated</td>
-                                    <td class="px-6 py-4">2023-11-30</td>
-                                    <td class="px-6 py-4">N/A</td>
-                                </tr>
-                                <tr class="bg-white border-b text-normal_font hover:bg-gray-50">
-                                    <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">125</th>
-                                    <td class="px-6 py-4">Pedro Torres</td>
-                                    <td class="px-6 py-4">Near Schedule</td>
-                                    <td class="px-6 py-4">2024-03-01</td>
-                                    <td class="px-6 py-4">2025-08-18</td>
-                                </tr>
-                                <tr class="bg-white border-b text-normal_font hover:bg-gray-50">
-                                    <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">126</th>
-                                    <td class="px-6 py-4">Sofia Lopez</td>
-                                    <td class="px-6 py-4">Updated</td>
-                                    <td class="px-6 py-4">2024-07-05</td>
-                                    <td class="px-6 py-4">N/A</td>
-                                </tr>
-                                <tr class="bg-white border-b text-normal_font hover:bg-gray-50">
-                                    <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">127</th>
-                                    <td class="px-6 py-4">David Fernandez</td>
-                                    <td class="px-6 py-4">Late</td>
-                                    <td class="px-6 py-4">2024-02-14</td>
-                                    <td class="px-6 py-4">2025-08-10</td>
-                                </tr>
-                                <tr class="bg-white border-b text-normal_font hover:bg-gray-50">
-                                    <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">128</th>
-                                    <td class="px-6 py-4">Isabel Castro</td>
-                                    <td class="px-6 py-4">Updated</td>
-                                    <td class="px-6 py-4">2023-09-20</td>
-                                    <td class="px-6 py-4">N/A</td>
-                                </tr>
-                                <tr class="bg-white border-b text-normal_font hover:bg-gray-50">
-                                    <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">129</th>
-                                    <td class="px-6 py-4">Miguel Lim</td>
-                                    <td class="px-6 py-4">Near Schedule</td>
-                                    <td class="px-6 py-4">2024-04-12</td>
-                                    <td class="px-6 py-4">2025-08-25</td>
-                                </tr>
-                                <tr class="bg-white text-normal_font hover:bg-gray-50">
-                                    <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">130</th>
-                                    <td class="px-6 py-4">Elena Ramirez</td>
-                                    <td class="px-6 py-4">Late</td>
-                                    <td class="px-6 py-4">2024-03-08</td>
-                                    <td class="px-6 py-4">2025-08-08</td>
-                                </tr>
+                                @endforelse
                             </tbody>
                         </table>
                     </div>
@@ -234,9 +195,8 @@
             </div>
         </div>
     </div>
-    @include('components.modals.enroll-resident-modal')
+    @include('components.modals.health-program.enroll-resident-modal')
     @include('components.modals.qr-scanner')
-    @vite('resources/js/modals/enroll-modal.js')
     @vite('resources/js/modals/qr-scanner.js')
 </x-app-layout>
 

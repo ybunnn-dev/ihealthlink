@@ -46,4 +46,9 @@ class EnrolledResident extends Model
     {
         return $this->belongsTo(User::class, 'updated_by');
     }
+    public function consultations()
+    {
+        return $this->hasMany(Consultation::class, 'resident_id', 'resident_id')
+                    ->where('program_id', $this->program_id); //  filter to current program
+    }
 }

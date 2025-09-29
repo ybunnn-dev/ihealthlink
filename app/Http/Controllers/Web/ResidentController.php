@@ -17,7 +17,7 @@ use App\Models\Household;
 use App\Models\Barangay;
 
 class ResidentController extends Controller
-{
+{  
     public function index(){
         $personnel = Auth::user()->midwife;
 
@@ -302,5 +302,48 @@ class ResidentController extends Controller
 
         return $value === "Yes" ? 1 : 0;
     }
+    
+  
+    public function getResident(Request $request)
+    {
+        $personnel = Auth::user()->midwife;
+        $barangay = Barangay::with('puroks')->find($personnel->brgy_id);
+        $puroks = $barangay->puroks;
 
+        $purokIds = $puroks->pluck('id');
+
+        $query = Resident::with('family.household.purok')
+            ->whereHas('family.household', function ($q) use ($purokIds) {
+                $q->whereIn('purok_id', $purokIds);
+            });
+
+        // --- Search parameter ---
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('first_name', 'like', "%{$search}%")
+                ->orWhere('middle_name', 'like', "%{$search}%")
+                ->orWhere('last_name', 'like', "%{$search}%");
+            });
+        }
+
+        // --- Purok filter ---
+        if ($request->filled('purok_id')) {
+            $purokId = $request->input('purok_id');
+            $query->whereHas('family.household', function ($q) use ($purokId) {
+                $q->where('purok_id', $purokId);
+            });
+        }
+
+        $residents = $query->get();
+
+        // Ensure each resident includes their household and purok
+        $residents->each(function($resident) {
+            $resident->purok = $resident->family->household->purok ?? null;
+        });
+
+        return response()->json([
+            'residents' => $residents
+        ]);
+    }
 }

@@ -32,7 +32,7 @@ class HealthProgramController extends Controller
 
     public function show(HealthProgram $healthProgram)
     {
-        // Re-fetch with enrolledResidents count
+        
         $healthProgram = HealthProgram::withCount('enrolledResidents')
             ->with('programFields') 
             ->findOrFail($healthProgram->id);
@@ -57,7 +57,6 @@ class HealthProgramController extends Controller
             'status'        => 'active',
         ]);
 
-        // Step 2: Create program_fields depending on program_mode
         switch ($request->input('program_mode')) {
             case 'fixed':
                 $fieldNum = (int) $request->input('field_num');

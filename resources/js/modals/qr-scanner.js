@@ -1,6 +1,5 @@
 // QR Scanner Logic
 document.addEventListener("DOMContentLoaded", function () {
-    const enrollResidentModal = document.getElementById('enroll-resident-modal');
     const qrScannerModal = document.getElementById('qr-scanner-modal');
     const addHouseholdModal = document.getElementById('add-household-modal');
     const addFamilyModal = document.getElementById('add-family-modal');
@@ -9,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const findEnrolledQrButton = document.getElementById('find-enrolled-qr');
     const findResidentQrButton = document.getElementById('find-resident-qr');
-    const enrollScanQrButton = document.getElementById('enroll-scan-qr');
+    const enrollScanQrButton = document.getElementById('c');
     const addHouseholdQr = document.getElementById('add-household-qr');
     const addFamilyQr = document.getElementById('add-family-qr');
 
@@ -28,9 +27,7 @@ document.addEventListener("DOMContentLoaded", function () {
         switch(moduleName){
             case 'enrollment':
                 currentModal = 'enrollment';
-                enrollResidentModal?.classList.add('hidden');
-                enrollResidentModal?.setAttribute('aria-hidden', 'true');
-                enrollResidentModal?.setAttribute('inert', ''); // This prevents focus from leaving the current modal
+                //
                 break;
             case 'find-household-head':
                 currentModal = 'add-household-head';
