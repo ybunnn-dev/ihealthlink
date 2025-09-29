@@ -253,5 +253,8 @@ Route::middleware([
     Route::get('/barangay/reports/export-excel', [BarangayReportsController::class, 'exportCommunityReportExcel']);
     Route::get('/barangay/reports/export-csv', [BarangayReportsController::class, 'exportCommunityReportCsv']);
 
-
+    Route::post(
+    '/barangay/health-program/{healthProgramId}/enroll/{residentId}',
+        [BarangayHealthProgramController::class, 'enrollResident']
+    )->name('barangay.health-program.enroll');
 });

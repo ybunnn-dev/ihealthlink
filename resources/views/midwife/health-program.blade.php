@@ -164,14 +164,82 @@
                                     <th scope="col" class="px-6 py-3">NEXT SCHEDULE</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                @forelse($enrolledResidents as $resident)
-                                    <tr class="bg-white border-b text-normal_font hover:bg-gray-50" onclick="window.location='{{ route('midwife.enrolled-resident') }}'">
-                                        <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">121</th>
-                                        <td class="px-6 py-4">Juan Dela Cruz</td>
-                                        <td class="px-6 py-4">Updated</td>
-                                        <td class="px-6 py-4">2024-05-10</td>
-                                        <td class="px-6 py-4">N/A</td>
+                            <tbody id="enrolled-residents-tbody">
+                                @forelse($enrolledResidents as $enrollment)
+                                    @php
+
+                                        // Assume today is Sept 30, 2025 for this example, as in your data
+                                        $today = \Carbon\Carbon::today(); 
+
+                                        $pendingConsultations = collect($enrollment->resident->consultations)
+                                            ->where('status', 'pending')
+                                            ->sortBy('consultation_date');
+
+                                        // Default
+                                        $nextScheduleDate = 'N/A';
+                                        $statusText = 'Ongoing';
+                                        $statusColorClass = 'bg-blue-100 text-blue-800';
+
+                                        if ($pendingConsultations->isEmpty()) {
+                                            // Case 1: All consultations are done
+                                            $statusText = 'Completed';
+                                            $statusColorClass = 'bg-green-100 text-green-800';
+                                        } else {
+                                            // Case 2: Get the *first future or today consultation*
+                                            $nextConsultation = $pendingConsultations
+                                                ->first(function ($consultation) use ($today) {
+                                                    return \Carbon\Carbon::parse($consultation->consultation_date)->gte($today);
+                                                });
+
+                                            if (!$nextConsultation) {
+                                                // All pending are in the past → show the last one as overdue
+                                                $lastConsultation = $pendingConsultations->last();
+                                                $nextSchedule = \Carbon\Carbon::parse($lastConsultation->consultation_date);
+                                                $nextScheduleDate = $nextSchedule->format('M d, Y');
+                                                $statusText = 'Late';
+                                                $statusColorClass = 'bg-red-100 text-red-800';
+                                            } else {
+                                                $nextSchedule = \Carbon\Carbon::parse($nextConsultation->consultation_date);
+                                                $nextScheduleDate = $nextSchedule->format('M d, Y');
+
+                                                if ($nextSchedule->isSameDay($today)) {
+                                                    $statusText = 'Today';
+                                                    $statusColorClass = 'bg-yellow-100 text-yellow-800';
+                                                } elseif ($nextSchedule->lt($today)) {
+                                                    $statusText = 'Late';
+                                                    $statusColorClass = 'bg-red-100 text-red-800';
+                                                }
+                                            }
+                                        }
+                                    @endphp
+
+                                    <tr class="bg-white border-b text-normal_font hover:bg-gray-50 cursor-pointer" onclick="window.location='#'">
+                                        {{-- RESIDENT ID --}}
+                                        <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
+                                            {{ $enrollment->resident->id }}
+                                        </th>
+
+                                        {{-- NAME --}}
+                                        <td class="px-6 py-4">
+                                            {{ $enrollment->resident->firstName }} {{ $enrollment->resident->lastName }}
+                                        </td>
+                                        
+                                        {{-- STATUS --}}
+                                        <td class="px-6 py-4">
+                                            <span class="px-2 py-1 font-semibold text-xs rounded-full {{ $statusColorClass }}">
+                                                {{ $statusText }}
+                                            </span>
+                                        </td>
+
+                                        {{-- DATE ENROLLED --}}
+                                        <td class="px-6 py-4">
+                                            {{ \Carbon\Carbon::parse($enrollment->created_at)->format('M d, Y') }}
+                                        </td>
+
+                                        {{-- NEXT SCHEDULE --}}
+                                        <td class="px-6 py-4">
+                                            {{ $nextScheduleDate }}
+                                        </td>
                                     </tr>
                                 @empty
                                 <tr class="border-b bg-f7 text-normal_font">
@@ -195,6 +263,7 @@
             </div>
         </div>
     </div>
+    <div class="hidden" id="hpdata">{{ $healthProgram->id }}</div>
     @include('components.modals.health-program.enroll-resident-modal')
     @include('components.modals.qr-scanner')
     @vite('resources/js/modals/qr-scanner.js')

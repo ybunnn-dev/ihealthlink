@@ -4,9 +4,12 @@ namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
 
-use App\Models\HealthProgram;
+use App\Models\Consultation;
 use App\Models\ProgramField;
+use App\Models\HealthProgram;
 use App\Models\EnrolledResident;
 
 class BarangayHealthProgramController extends Controller
@@ -45,4 +48,89 @@ class BarangayHealthProgramController extends Controller
         ));
     }
 
+    public function enrollResident(Request $request, $healthProgramId, $residentId)
+    {
+        // Validate program and resident existence
+        $validator = Validator::make(
+            ['healthProgramId' => $healthProgramId, 'residentId' => $residentId],
+            [
+                'healthProgramId' => 'required|integer|exists:health_programs,id',
+                'residentId' => 'required|integer|exists:residents,id',
+            ]
+        );
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Invalid input',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        // Check if already enrolled
+        $alreadyEnrolled = EnrolledResident::where('program_id', $healthProgramId)
+            ->where('resident_id', $residentId)
+            ->exists();
+
+        if ($alreadyEnrolled) {
+            return response()->json([
+                'message' => 'Resident is already enrolled in this program',
+            ], 409);
+        }
+
+        // Enroll the resident
+        $enrollment = EnrolledResident::create([
+            'resident_id' => $residentId,
+            'program_id' => $healthProgramId,
+            'enrolled_by' => auth()->id(), // current user, adjust if needed
+            'status' => 'active', // default status
+        ]);
+
+        $this->createConsultationSchedules($residentId, $healthProgramId);
+
+        return response()->json([
+            'message' => 'Resident enrolled successfully',
+            'data' => $enrollment,
+        ], 201);
+    }
+
+    protected function createConsultationSchedules($residentId, $programId)
+    {
+        // Fetch program fields in order
+        $fields = ProgramField::where('program_id', $programId)
+            ->where('status', 'active')
+            ->orderBy('order', 'asc')
+            ->get();
+
+        if ($fields->isEmpty()) {
+            \Log::warning("No program fields found for program {$programId}");
+            return;
+        }
+
+        $consultations = [];
+        $currentDate = Carbon::now(); // start from today, you can adjust
+
+        foreach ($fields as $field) {
+            $currentDate = $currentDate->copy()->addDays($field->interval_days);
+
+            $consultations[] = [
+                'resident_id'        => $residentId,
+                'program_id'         => $programId,
+                'consultation_date'  => $currentDate,
+                'status'             => 'pending',
+                'consultation_title' => $field->title,
+                'remarks'            => null,
+                'updated_by'         => auth()->id(),
+                'created_at'         => now(),
+                'updated_at'         => now(),
+            ];
+        }
+
+        Consultation::insert($consultations);
+
+        \Log::info("Consultation schedules created", [
+            'resident_id' => $residentId,
+            'program_id' => $programId,
+            'count' => count($consultations),
+        ]);
+    }
 }
