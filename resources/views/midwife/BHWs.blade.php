@@ -105,8 +105,8 @@
                                             {{ $bhw->id }}
                                         </th>
 
-                                        <td class="px-6 py-4">
-                                            {{ $bhw->name }}
+                                        <td class="px-6 py-4"> 
+                                            {{ $bhw->user->firstName }} {{ $bhw->user->middleName }} {{ $bhw->user->lastName }}
                                         </td>
 
                                         <td class="px-6 py-4">

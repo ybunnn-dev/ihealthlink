@@ -82,9 +82,11 @@ class Resident extends Model
     {
         return $this->hasOne(RiskAssessment::class);
     }
-    public function enrolledResidents(){
-        return $this->hasMany(HealthProgram::class);
+    public function enrolledResidents()
+    {
+        return $this->hasMany(EnrolledResident::class, 'resident_id');
     }
+
     public function consultations()
     {
         return $this->hasMany(Consultation::class, 'resident_id');

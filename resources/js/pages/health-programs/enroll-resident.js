@@ -121,10 +121,17 @@ function fetchResidents(payload = { search: '', purok_id: '' }) {
     if (payload.search) params.append('search', payload.search);
     if (payload.purok_id) params.append('purok_id', payload.purok_id);
 
-    const url = `/barangay/resident/enroll?${params.toString()}`;
+    const url = `/barangay/resident/enroll?${params.toString()}&healthProgramId=${healthProgramId}`;
+
     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-    fetch(url, { /* ... your fetch headers ... */ })
+    fetch(url, { 
+        method: 'GET', // Explicitly state the method
+        headers: {
+            'X-CSRF-TOKEN': csrfToken,
+            'Accept': 'application/json' 
+        }
+     })
     .then(async response => {
         if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
         return await response.json(); // Return the full JSON object

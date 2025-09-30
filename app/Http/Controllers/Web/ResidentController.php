@@ -15,6 +15,7 @@ use App\Models\ResidentFamilyHistory;
 use App\Models\Family;
 use App\Models\Household;
 use App\Models\Barangay;
+use App\Models\HealthProgram;
 
 class ResidentController extends Controller
 {  
@@ -309,13 +310,26 @@ class ResidentController extends Controller
         $personnel = Auth::user()->midwife;
         $barangay = Barangay::with('puroks')->find($personnel->brgy_id);
         $puroks = $barangay->puroks;
-
         $purokIds = $puroks->pluck('id');
+
+        // --- Get program info ---
+        $programId = $request->input('healthProgramId'); 
+        $program = HealthProgram::findOrFail($programId);
+
+        $today = now()->toDateString();
 
         $query = Resident::with('family.household.purok')
             ->whereHas('family.household', function ($q) use ($purokIds) {
                 $q->whereIn('purok_id', $purokIds);
-            });
+            })
+            // --- Exclude residents already enrolled ---
+            ->whereDoesntHave('enrolledResidents', function ($q) use ($programId) {
+                $q->where('program_id', $programId);
+            })
+            // --- Filter by age ---
+            ->whereRaw("TIMESTAMPDIFF(YEAR, birthdate, ?) BETWEEN ? AND ?", [
+                $today, $program->age_min, $program->age_max
+            ]);
 
         // --- Search parameter ---
         if ($request->filled('search')) {
@@ -337,8 +351,8 @@ class ResidentController extends Controller
 
         $residents = $query->get();
 
-        // Ensure each resident includes their household and purok
-        $residents->each(function($resident) {
+        // Attach purok info
+        $residents->each(function ($resident) {
             $resident->purok = $resident->family->household->purok ?? null;
         });
 
@@ -347,4 +361,5 @@ class ResidentController extends Controller
             'puroks' => $puroks
         ]);
     }
+
 }

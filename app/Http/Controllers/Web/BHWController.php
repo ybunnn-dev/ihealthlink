@@ -32,9 +32,7 @@ class BHWController extends Controller
         // 1. Get the authenticated user (the midwife).
         $user = Auth::user();
 
-        // 2. Find the midwife's personnel record to get their assigned barangay.
-        // It's safer to query the Personnel model directly.
-        // Assuming 'role_id' for a midwife is 2.
+
         $midwifePersonnel = Midwife::where('user_id', $user->id)
             ->where('role_id', 2)
             ->first();
@@ -55,6 +53,7 @@ class BHWController extends Controller
             ->sortBy('name') // Now sort by the 'name' accessor from your model
             ->values(); // Reset the collection keys
 
+        \Log::info($bhws);
         // Note: For pagination with this sorting method, you'd need to manually create a paginator.
         // For simplicity with up to a few hundred BHWs, ->get() is fine.
         // If you expect thousands, we should revert to a database-level sort with a JOIN.
@@ -67,7 +66,7 @@ class BHWController extends Controller
     {
         // Eager load the relationships to prevent extra database queries in the view.
         // Even for a single model, this is a good habit.
-        $bhw->load('users', 'barangays');
+        $bhw->load('user', 'barangays');
 
         // The BHWs-profile.blade.php file you sent has a typo in its name.
         // Make sure the filename is 'BHWs-profile.blade.php'

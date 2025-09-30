@@ -142,8 +142,8 @@ function updateDropdown(buttonElement, value, displayText = null) {
 }
 
 function populateEditForm(bhwData) {
-    const userData = bhwData.users;
-    defBhwData = bhwData.users;
+    const userData = bhwData.user;
+    defBhwData = bhwData.user;
 
     // 1. Populate standard text and hidden inputs
     editBhwIdInput.value = bhwData.id;

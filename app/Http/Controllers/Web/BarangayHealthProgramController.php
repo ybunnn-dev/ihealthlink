@@ -12,24 +12,30 @@ use App\Models\ProgramField;
 use App\Models\HealthProgram;
 use App\Models\EnrolledResident;
 
+use Illuminate\Support\Facades\Auth;
 class BarangayHealthProgramController extends Controller
 {
     public function index(HealthProgram $healthProgram = null)
     {
+        $personnel = Auth::user()->midwife;
+        $barangayId = $personnel->brgy_id; // Midwife’s assigned barangay
+
         if (!$healthProgram) {
             $healthProgram = HealthProgram::latest()->first();
         }
 
-        // Load enrolled residents + their consultations
         $enrolledResidents = EnrolledResident::with(['resident.consultations' => function ($q) use ($healthProgram) {
-            $q->where('program_id', $healthProgram->id);
-        }])
-        ->where('program_id', $healthProgram->id)
-        ->get();
+                $q->where('program_id', $healthProgram->id);
+            }])
+            ->where('program_id', $healthProgram->id)
+            // Only residents from the midwife's barangay
+            ->whereHas('resident.family.household.purok', function ($q) use ($barangayId) {
+                $q->where('brgy_id', $barangayId);
+            })
+            ->get();
 
         $totalEnrolled = $enrolledResidents->count();
 
-        // Completed enrolled residents
         $completed = $enrolledResidents->where('status', 'completed')->count();
 
         $overdue = $enrolledResidents->filter(function ($enrollment) {
@@ -47,6 +53,7 @@ class BarangayHealthProgramController extends Controller
             'overdue'
         ));
     }
+
 
     public function enrollResident(Request $request, $healthProgramId, $residentId)
     {
