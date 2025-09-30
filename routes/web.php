@@ -230,19 +230,15 @@ Route::middleware([
         return view('midwife.log-list');
     })->name('midwife.logs');
 
-    /*Route::get('/midwife/health-program', function () {
-        
-    })->name('midwife.health-program');*/
-
-
+    
     Route::get('/midwife/bhws/{bhw}', [BHWController::class, 'show'])->name('midwife.bhws.show');
 
     Route::get('/barangay/user-manual', [UserManualController::class, 'index'])->name('midwife.faqs');
     // Midwife-specific dashboard
    
-    Route::get('/midwife/health-programs/spec', function () {
-        return view('midwife.enrolled-resident');
-    })->name('midwife.enrolled-resident');
+    Route::get('/barangay/health-programs/enrolled/resident/{enrolledResident}', [BarangayHealthProgramController::class, 'show'])
+    ->name('midwife.enrolled-resident');
+
 
     Route::get('/barangay/health-programs/{healthProgram?}', [BarangayHealthProgramController::class, 'index'])
     ->name('midwife.health-program');
@@ -257,4 +253,8 @@ Route::middleware([
     '/barangay/health-program/{healthProgramId}/enroll/{residentId}',
         [BarangayHealthProgramController::class, 'enrollResident']
     )->name('barangay.health-program.enroll');
+
+
+    Route::get('/barangay/health-program/fetch', [BarangayHealthProgramController::class, 'getAllPrograms'])
+    ->name('barangay.health-program.fetch');
 });

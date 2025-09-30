@@ -91,6 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   else if(bodyClass.contains('health-program-brgy')){
     import('./pages/health-programs/enroll-resident.js');
+    import('./pages/health-programs/change-program.js');
   }
   else {
     console.log('Not on reports page - charts not loaded');

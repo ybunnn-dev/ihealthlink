@@ -41,7 +41,7 @@ class BarangayHealthProgramController extends Controller
         $overdue = $enrolledResidents->filter(function ($enrollment) {
             return $enrollment->resident->consultations->contains(function ($consultation) {
                 return $consultation->status === 'pending'
-                    && $consultation->consultation_date < now();
+                    && \Carbon\Carbon::parse($consultation->consultation_date)->isBefore(\Carbon\Carbon::today());
             });
         })->count();
 
@@ -52,6 +52,37 @@ class BarangayHealthProgramController extends Controller
             'completed',
             'overdue'
         ));
+    }
+    public function show(EnrolledResident $enrolledResident)
+    {
+        return view('midwife.enrolled-resident', compact('enrolledResident'));
+    }
+    public function getAllPrograms(Request $request)
+    {
+        $personnel = Auth::user()->midwife;
+        $barangayId = $personnel->brgy_id;
+
+        $query = HealthProgram::with(['enrolledResidents' => function ($q) use ($barangayId) {
+            $q->whereHas('resident.family.household.purok', function ($sub) use ($barangayId) {
+                $sub->where('brgy_id', $barangayId);
+            });
+        }]);
+
+        // 🔍 Search by program name (optional)
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where('name', 'like', "%{$search}%");
+        }
+
+        // Filter by category (optional)
+        if ($request->filled('category')) {
+            $category = $request->input('category');
+            $query->where('category', $category); // make sure 'category' exists in your DB
+        }
+
+        $programs = $query->get();
+
+        return response()->json($programs);
     }
 
 

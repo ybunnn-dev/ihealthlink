@@ -3,12 +3,9 @@
 <x-app-layout>
     <div class="py-12 px-5">
         <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                console.log("Health Program:", @json($healthProgram));
-                console.log("Enrolled Residents:", @json($enrolledResidents));
-            });
+            const emptyImageUrl = "{{ asset('images/illustrations/empty.png') }}";
+            window.currentProgram = @json($healthProgram->id);
         </script>
-
         <div class="max-w-[90rem] mx-auto sm:px-6 lg:px-8">
             <h1 class="text-3xl font-semibold text-sub_blue mb-3">Health Programs</h1>
             <div class="grid grid-cols-1 xl:grid-cols-5 gap-3">
@@ -33,10 +30,10 @@
                             </div>
                         </div>
                         <!-- Shared Alpine scope: wraps everything -->
-                        <div x-data="{ showModal: false }" class="relative flex flex-col items-center group">
+                        <div class="relative flex flex-col items-center group">
 
                             <!-- SVG Trigger -->
-                            <button @click="showModal = true" class="focus:outline-none">
+                            <button id="open-change-program" class="focus:outline-none">
                                 <svg class="h-5 w-5 text-main_font" fill="currentColor" xmlns="http://www.w3.org/2000/svg"
                                     viewBox="0 0 52 52" enable-background="new 0 0 52 52" xml:space="preserve">
                                     <g id="SVGRepo_iconCarrier">
@@ -55,7 +52,7 @@
                             </div>
 
                             <!-- Modal -->
-                            @include('components.modals.programs-modal')
+                            @include('components.modals.health-program.programs-modal')
                         </div>
                     </div>
                 </div>
@@ -213,7 +210,8 @@
                                         }
                                     @endphp
 
-                                    <tr class="bg-white border-b text-normal_font hover:bg-gray-50 cursor-pointer" onclick="window.location='#'">
+                                    <tr class="bg-white border-b text-normal_font hover:bg-gray-50 cursor-pointer" 
+                                        onclick="window.location='{{ route('midwife.enrolled-resident', $enrollment->id) }}'">
                                         {{-- RESIDENT ID --}}
                                         <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
                                             {{ $enrollment->resident->id }}
