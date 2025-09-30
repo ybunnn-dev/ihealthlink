@@ -293,7 +293,7 @@ const successModal = new Modal(successModalEl);
 
 confirmEditProceedButton.addEventListener('click', function(){
      const payLoad = {
-        id: bhwData.users.id,
+        id: bhwData.user.id,
         firstName: editBhwFirstNameInput.value,
         lastName: editBhwLastNameInput.value,
         middleName: editBhwMiddleNameInput.value,

@@ -1,4 +1,4 @@
-@section('title', 'BHWs | #123')
+@section('title', 'BHWs | #' .$bhw->user->id)
  @section('page-id', 'spec-bhw')
 <x-app-layout>
     <script>
