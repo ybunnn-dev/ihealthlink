@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Resident extends Model
 {
@@ -91,5 +92,44 @@ class Resident extends Model
     {
         return $this->hasMany(Consultation::class, 'resident_id');
     }
+
+    public function getNextConsultationAttribute()
+    {
+        $today = Carbon::now('Asia/Manila')->startOfDay();
+
+        $pending = $this->consultations
+            ->where('status', 'pending')
+            ->sortBy('consultation_date');
+
+        if ($pending->isEmpty()) {
+            return [
+                'status' => 'Completed',
+                'color'  => 'bg-green-100 text-green-800',
+                'date'   => 'N/A',
+            ];
+        }
+
+        // Always get the *first pending* consultation
+        $next = $pending->first();
+        $date = Carbon::parse($next->consultation_date)->startOfDay();
+
+        if ($date->lt($today)) {
+            $status = 'Late';
+            $color  = 'bg-red-100 text-red-800';
+        } elseif ($date->isSameDay($today)) {
+            $status = 'Today';
+            $color  = 'bg-yellow-100 text-yellow-800';
+        } else {
+            $status = 'Upcoming';
+            $color  = 'bg-blue-100 text-blue-800';
+        }
+
+        return [
+            'status' => $status,
+            'color'  => $color,
+            'date'   => $date->format('M d, Y'),
+        ];
+    }
+
 
 }

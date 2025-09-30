@@ -7,11 +7,11 @@
                         <span class="font-semibold">Return</span>
                     </div>
                 </a>
-             <div class="grid grid-cols-1 xl:grid-cols-3 gap-3 mb-4">
+             <div class="grid grid-cols-1 xl:grid-cols-3 gap-3 mb-4 h-full">
                     <!-- Left Column (Profile + Scheduled Activity) -->
-                    <div class="flex flex-col gap-2 col-span-1">
+                    <div class="flex flex-col gap-2 col-span-1 h-full">
                         <!-- Profile Card -->
-                        <div class="h-80 bg-f7 rounded-lg flex flex-col items-center justify-center p-4"> 
+                        <div class="h-full bg-f7 rounded-lg flex flex-col items-center justify-center p-4"> 
                             <svg class="flex-shrink-0 w-32 h-32 lg:w-40 lg:h-40 xl2:w-44 xl2:h-44 text-main_font" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                                 <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
@@ -21,13 +21,13 @@
                                     <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="#566A7F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> 
                                 </g>
                             </svg>
-                            <p class="text-main_font font-bold mt-4 text-xl">Ron Peter Mortega</p> 
-                            <p class="text-main_font font-semibold">Household #144</p> 
+                            <p class="text-main_font font-bold mt-4 text-xl">{{ $enrolledResident->resident->firstName }} {{ $enrolledResident->resident->lastName }}</p> 
+                            <p class="text-main_font font-semibold" style="cursor: pointer" onclick="window.location='{{ route('midwife.spec-resident', ['resident' => $enrolledResident->resident->id]) }}'"><u>Resident #{{ $enrolledResident->resident->id }}</u></p> 
                         </div>
                     </div>
 
                     <!-- Right Column (Resident Info) -->
-                 <div class="col-span-1 xl:col-span-2 h-98 bg-f7 rounded-lg px-6 sm:px-10 lg:px-12 py-8">
+                 <div class="col-span-1 xl:col-span-2 h-full bg-f7 rounded-lg px-6 sm:px-10 lg:px-12 py-8">
                     <!-- Header -->
                     <div class="flex items-center gap-2 mb-6">
                         <h2 class="text-xl font-semibold text-main_font">Resident Info</h2>
@@ -36,24 +36,34 @@
                     <!-- Info Grid -->
                     <div class="grid grid-cols-1 gap-y-4 text-sm">
                         <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                            <p class="font-semibold text-main_font">FIRST NAME:</p>
+                            <p class="text-normal_font">{{ $enrolledResident->resident->firstName }}</p>
+                        </div>
+
+                        <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                            <p class="font-semibold text-main_font">LAST NAME:</p>
+                            <p class="text-normal_font">{{ $enrolledResident->resident->lastName }}</p>
+                        </div>
+
+                        <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                            <p class="font-semibold text-main_font">MIDDLE NAME:</p>
+                            <p class="text-normal_font">{{ $enrolledResident->resident->middleName }}</p>
+                        </div>
+
+                        <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                            <p class="font-semibold text-main_font">SUFFIX:</p>
+                            <p class="text-normal_font">{{ $enrolledResident->resident->suffix ? $enrolledResident->resident->suffix : 'N/A' }}</p>
+                        </div>
+
+                        <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
                             <p class="font-semibold text-main_font">STATUS:</p>
-                            <p class="text-normal_font">Ron Peter</p>
+                            <p class="text-normal_font">{{ ucfirst($enrolledResident->status) }}</p>
                         </div>
 
                         <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
                             <p class="font-semibold text-main_font">ENROLLMENT DATE:</p>
-                            <p class="text-normal_font">Mortega</p>
+                            <p class="text-normal_font">{{ $enrolledResident->created_at->format('F d, Y') }}</p>
                         </div>
-
-                        <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                            <p class="font-semibold text-main_font">COMPLETION DATE:</p>
-                            <p class="text-normal_font">Jazareno</p>
-                        </div>
-
-                        <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                            <p class="font-semibold text-main_font">NEXT ACTIVITY:</p>
-                            <p class="text-normal_font">III</p>
-                         </div>
                     </div>
                 </div>
             </div>
@@ -69,41 +79,71 @@
                                 <th scope="col" class="px-6 py-3">DATE COMPLETED</th>
                                 <th scope="col" class="px-6 py-3">MEDICINE GIVEN</th>
                                 <th scope="col" class="px-6 py-3">STATUS</th>
-                                <th scope="col" class="px-6 py-3">NEXT SCHEDULE</th>
+                                <th scope="col" class="px-6 py-3">EXPECTED SCHEDULE</th>
                                 <th scope="col" class="px-6 py-3">ACTION</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="bg-white border-b text-normal_font hover:bg-gray-50">
-                                <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">2nd Dose</th>
-                                <td class="px-6 py-4">Feb 10, 2025</td>
-                                <td class="px-6 py-4">--</td>
-                                <td class="px-6 py-4">Ongoing</td>
-                                <td class="px-6 py-4">Feb 15, 2025</td>
-                                <td class="px-6 py-4">
-                                    <button class="bg-mainblue text-white px-3 py-1 rounded-md text-xs">UPDATE</button>
-                                </td>
-                            </tr>
-                            <tr class="bg-white border-b text-normal_font hover:bg-gray-50">
-                                <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">3rd Dose</th>
-                                <td class="px-6 py-4">Feb 10, 2025</td>
-                                <td class="px-6 py-4">--</td>
-                                <td class="px-6 py-4">Ongoing</td>
-                                <td class="px-6 py-4">Feb 30, 2025</td>
-                                <td class="px-6 py-4">
-                                    <button class="bg-mainblue text-white px-3 py-1 rounded-md text-xs">UPDATE</button>
-                                </td>
-                            </tr>
-                            <tr class="bg-white border-b text-normal_font hover:bg-gray-50">
-                                <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">1st Dose</th>
-                                <td class="px-6 py-4">Feb 10, 2025</td>
-                                <td class="px-6 py-4">Anti-Polio Vaccine</td>
-                                <td class="px-6 py-4">Completed</td>
-                                <td class="px-6 py-4">Feb 12, 2025</td>
-                                <td class="px-6 py-4">
-                                    <button class="bg-mainblue text-white px-3 py-1 rounded-md text-xs">UPDATE</button>
-                                </td>
-                            </tr>
+                            @foreach($enrolledResident->consultations as $consultation)
+                                @php
+                                    $today = \Carbon\Carbon::now('Asia/Manila')->startOfDay();
+                                    $consultationDate = \Carbon\Carbon::parse($consultation->consultation_date);
+
+                                    $statusText = '';
+                                    $statusColorClass = '';
+
+                                    if ($consultation->status === 'completed') {
+                                        $statusText = 'Completed';
+                                        $statusColorClass = 'bg-green-100 text-green-800';
+                                    } elseif ($consultation->status === 'pending') {
+                                        if ($consultationDate->lt($today)) {
+                                            $statusText = 'Late';
+                                            $statusColorClass = 'bg-red-100 text-red-800';
+                                        } else {
+                                            $statusText = 'Ongoing';
+                                            $statusColorClass = 'bg-blue-100 text-blue-800';
+                                        }
+                                    }
+                                @endphp
+
+                                <tr class="bg-white border-b text-normal_font hover:bg-gray-50">
+                                    {{-- Consultation Title --}}
+                                    <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
+                                        {{ $consultation->consultation_title }}
+                                    </th>
+
+                                    {{-- Completed Date (if applicable) --}}
+                                    <td class="px-6 py-4">
+                                        {{ $consultation->status === 'completed' ? $consultation->updated_at->format('M d, Y') : '--' }}
+                                    </td>
+
+                                    {{-- Placeholder (replace with actual if needed) --}}
+                                    <td class="px-6 py-4">--</td>
+
+                                    {{-- Status --}}
+                                    <td class="px-6 py-4">
+                                        <span class="px-2 py-1 font-semibold text-xs rounded-full {{ $statusColorClass }}">
+                                            {{ $statusText }}
+                                        </span>
+                                    </td>
+
+                                    {{-- Consultation Date --}}
+                                    <td class="px-6 py-4">
+                                        {{ $consultationDate->format('M d, Y') }}
+                                    </td>
+
+                                    {{-- Actions --}}
+                                    <td class="px-6 py-4">
+                                        <button
+                                            class="bg-mainblue text-white px-3 py-1 rounded-md text-xs font-semibold 
+                                            {{ $consultationDate->gt(now()) ? 'opacity-50 cursor-not-allowed' : '' }}"
+                                            {{ $consultationDate->gt(now()) ? 'disabled' : '' }}
+                                        >
+                                            UPDATE
+                                        </button>
+                                    </td>
+                                </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </div>

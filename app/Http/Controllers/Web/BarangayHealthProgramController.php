@@ -53,8 +53,18 @@ class BarangayHealthProgramController extends Controller
             'overdue'
         ));
     }
+
     public function show(EnrolledResident $enrolledResident)
     {
+        $enrolledResident->load([
+            'consultations' => function ($q) use ($enrolledResident) {
+                $q->where('program_id', $enrolledResident->program_id);
+            },
+            'resident'
+        ]);
+
+        
+        \Log::info($enrolledResident);
         return view('midwife.enrolled-resident', compact('enrolledResident'));
     }
     public function getAllPrograms(Request $request)

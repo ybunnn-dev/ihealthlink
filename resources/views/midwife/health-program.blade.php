@@ -163,52 +163,7 @@
                             </thead>
                             <tbody id="enrolled-residents-tbody">
                                 @forelse($enrolledResidents as $enrollment)
-                                    @php
-
-                                        // Assume today is Sept 30, 2025 for this example, as in your data
-                                        $today = \Carbon\Carbon::today(); 
-
-                                        $pendingConsultations = collect($enrollment->resident->consultations)
-                                            ->where('status', 'pending')
-                                            ->sortBy('consultation_date');
-
-                                        // Default
-                                        $nextScheduleDate = 'N/A';
-                                        $statusText = 'Ongoing';
-                                        $statusColorClass = 'bg-blue-100 text-blue-800';
-
-                                        if ($pendingConsultations->isEmpty()) {
-                                            // Case 1: All consultations are done
-                                            $statusText = 'Completed';
-                                            $statusColorClass = 'bg-green-100 text-green-800';
-                                        } else {
-                                            // Case 2: Get the *first future or today consultation*
-                                            $nextConsultation = $pendingConsultations
-                                                ->first(function ($consultation) use ($today) {
-                                                    return \Carbon\Carbon::parse($consultation->consultation_date)->gte($today);
-                                                });
-
-                                            if (!$nextConsultation) {
-                                                // All pending are in the past → show the last one as overdue
-                                                $lastConsultation = $pendingConsultations->last();
-                                                $nextSchedule = \Carbon\Carbon::parse($lastConsultation->consultation_date);
-                                                $nextScheduleDate = $nextSchedule->format('M d, Y');
-                                                $statusText = 'Late';
-                                                $statusColorClass = 'bg-red-100 text-red-800';
-                                            } else {
-                                                $nextSchedule = \Carbon\Carbon::parse($nextConsultation->consultation_date);
-                                                $nextScheduleDate = $nextSchedule->format('M d, Y');
-
-                                                if ($nextSchedule->isSameDay($today)) {
-                                                    $statusText = 'Today';
-                                                    $statusColorClass = 'bg-yellow-100 text-yellow-800';
-                                                } elseif ($nextSchedule->lt($today)) {
-                                                    $statusText = 'Late';
-                                                    $statusColorClass = 'bg-red-100 text-red-800';
-                                                }
-                                            }
-                                        }
-                                    @endphp
+                                    @php $info = $enrollment->resident->next_consultation; @endphp
 
                                     <tr class="bg-white border-b text-normal_font hover:bg-gray-50 cursor-pointer" 
                                         onclick="window.location='{{ route('midwife.enrolled-resident', $enrollment->id) }}'">
@@ -224,8 +179,8 @@
                                         
                                         {{-- STATUS --}}
                                         <td class="px-6 py-4">
-                                            <span class="px-2 py-1 font-semibold text-xs rounded-full {{ $statusColorClass }}">
-                                                {{ $statusText }}
+                                            <span class="px-2 py-1 font-semibold text-xs rounded-full {{ $info['color'] }}">
+                                                {{ $info['status'] }}
                                             </span>
                                         </td>
 
@@ -236,7 +191,7 @@
 
                                         {{-- NEXT SCHEDULE --}}
                                         <td class="px-6 py-4">
-                                            {{ $nextScheduleDate }}
+                                            {{ $info['date'] }}
                                         </td>
                                     </tr>
                                 @empty
