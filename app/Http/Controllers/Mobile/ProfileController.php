@@ -44,7 +44,7 @@ class ProfileController extends Controller
         $hashedCode = Hash::make($plainCode);
 
         EmailChange::where('user_id', $user->id)->delete();
-        
+
         // Save pending change using Eloquent
         $emailChange = EmailChange::updateOrCreate(
             ['user_id' => $user->id],
@@ -90,6 +90,47 @@ class ProfileController extends Controller
         $pending->delete();
 
         return response()->json(['message' => 'Email successfully updated']);
+    }
+
+    public function resendEmailChange(Request $request)
+    {
+        $user = $request->user();
+
+        // Get the latest pending email change for this user
+        $latestRequest = EmailChange::where('user_id', $user->id)
+            ->latest('created_at')
+            ->first();
+
+        if (! $latestRequest) {
+            return response()->json([
+                'message' => 'No pending email change request found.'
+            ], 404);
+        }
+
+        // Delete the previous request
+        $latestRequest->delete();
+
+        // Generate a new verification code
+        $plainCode = mt_rand(100000, 999999);
+        $hashedCode = Hash::make($plainCode);
+
+        // Create a new pending request
+        $newRequest = EmailChange::create([
+            'user_id' => $user->id,
+            'new_email' => $latestRequest->new_email,
+            'verification_code' => $hashedCode,
+            'expires_at' => now()->addMinutes(30)
+        ]);
+
+        // Send the new code to the same email
+        Mail::raw("Your verification code is: $plainCode", function ($message) use ($latestRequest) {
+            $message->to($latestRequest->new_email)
+                    ->subject('Email Change Verification Code');
+        });
+
+        return response()->json([
+            'message' => 'A new verification code has been sent to your email.'
+        ]);
     }
 
     public function changePassword(Request $request)

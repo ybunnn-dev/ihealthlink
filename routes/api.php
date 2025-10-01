@@ -55,6 +55,8 @@ Route::middleware(['auth:sanctum',
 
     Route::post('/email/change/request', [ProfileController::class, 'requestEmailChange']);
 
+    Route::post('/email/change/resend', [ProfileController::class, 'resendEmailChange']); //su link pang resend email
+
     Route::post('/email/change/verify', [ProfileController::class, 'verifyEmailChange']);
 
     Route::post('/password/change', [ProfileController::class, 'changePassword']);
