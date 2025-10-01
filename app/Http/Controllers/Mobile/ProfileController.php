@@ -38,11 +38,13 @@ class ProfileController extends Controller
         }
 
         \Log::info('vakla');
-        
+
         $user = $request->user();
         $plainCode = mt_rand(100000, 999999); // e.g., 123456
         $hashedCode = Hash::make($plainCode);
 
+        EmailChange::where('user_id', $user->id)->delete();
+        
         // Save pending change using Eloquent
         $emailChange = EmailChange::updateOrCreate(
             ['user_id' => $user->id],
