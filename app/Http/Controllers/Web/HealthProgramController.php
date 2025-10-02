@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\HealthProgram;
-use App\Models\ProgramField;
+use App\Models\ProgramSchedule;
 
 class HealthProgramController extends Controller
 {

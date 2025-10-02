@@ -38,7 +38,7 @@ class HealthProgram extends Model
 
     public function programFields()
     {
-        return $this->hasMany(ProgramField::class, 'program_id');
+        return $this->hasMany(ProgramSchedule::class, 'program_id');
     }
 
 }

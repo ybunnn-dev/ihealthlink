@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ProgramField extends Model
+class ProgramSchedule extends Model
 {
     use HasFactory;
 
-    protected $table = 'program_fields';
+    protected $table = 'program_schedules';
 
     protected $fillable = [
         'title',
