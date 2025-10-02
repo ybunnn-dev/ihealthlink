@@ -34,7 +34,7 @@
                     </div>
 
                     <!-- Info Grid -->
-                    <div class="grid grid-cols-1 gap-y-4 text-sm">
+                    <div class="grid grid-cols-1 gap-y-4 text-xs">
                         <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
                             <p class="font-semibold text-main_font">FIRST NAME:</p>
                             <p class="text-normal_font">{{ $enrolledResident->resident->firstName }}</p>
@@ -53,6 +53,32 @@
                         <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
                             <p class="font-semibold text-main_font">SUFFIX:</p>
                             <p class="text-normal_font">{{ $enrolledResident->resident->suffix ? $enrolledResident->resident->suffix : 'N/A' }}</p>
+                        </div>
+
+                        @php
+                            $birthdate = \Carbon\Carbon::parse($enrolledResident->resident->birthdate);
+                            $age = $birthdate->age; // auto-calculates from current date
+                        @endphp
+
+                        <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                            <p class="font-semibold text-main_font">BIRTHDATE:</p>
+                            <p class="text-normal_font">
+                                {{ $birthdate->format('F d, Y') }} ({{ $age }} Years old)
+                            </p>
+                            </div>
+                        <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                            <p class="font-semibold text-main_font">FAMILY #:</p>
+                            <p class="text-normal_font">FAM-{{ str_pad($enrolledResident->resident->family->id, 3, '0', STR_PAD_LEFT) }}</p>
+                        </div>
+
+                        <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                            <p class="font-semibold text-main_font">SOCIO-ECONOMIC STATUS:</p>
+                            <p class="text-normal_font">{{ $enrolledResident->resident->family->household->is_indigent === 1 ? 'NHTS' : 'Non-NHTS' }}</p>
+                        </div>
+
+                        <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                            <p class="font-semibold text-main_font">ADDRESS:</p>
+                            <p class="text-normal_font">Household {{ $enrolledResident->resident->family->household->id }}, {{ $enrolledResident->resident->family->household->purok->name }}, {{ $enrolledResident->resident->family->household->purok->barangay->name }}, Daraga, Albay</p>
                         </div>
 
                         <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">

@@ -1,7 +1,7 @@
 <div id="add-household-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
     <div class="relative p-4 w-full max-w-2xl max-h-full">
         <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700 py-10 px-6 max-w-[90%]">
-            <div class="flex  flex-col items-center justify-center rounded-t mb-6">
+            <div class="flex flex-col items-center justify-center rounded-t mb-6">
                 <h3 class="text-xl font-semibold text-main_font">
                     Add Household
                 </h3>
@@ -11,45 +11,20 @@
                 <div class="grid grid-cols-1 gap-3">
                     <div class="grid grid-cols-1 slg2:grid-cols-2 col-span-1 gap-3">
                         <div class="grid grid-cols-1 gap-1 relative col-span-1">
-                            <label for="purokDropdownBtn" class="text-sm font-medium text-main_font">PUROK/SITIO</label>
-                            <button id="purokDropdownBtn" data-dropdown-toggle="choosePurokMenu"
-                                class="w-full text-main_font bg-white focus:outline-none font-medium border border-gray-300 rounded-lg text-md p-2 text-center inline-flex items-center justify-between"
-                                type="button">
-                                Select
-                                <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                                viewBox="0 0 10 6">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="m1 1 4 4 4-4" />
-                                    </svg>
-                            </button>
-                            <input type="hidden" name="purok_id" id="purokIdInput">
-                            <div id="choosePurokMenu"
-                                class="z-10 hidden bg-f7 divide-y divide-gray-100 rounded-lg shadow w-full absolute mt-1">
-                                <ul class="py-2 text-sm text-gray-700">
-                                    </ul>
-                            </div>
+                            <label for="purokSelect" class="text-sm font-medium text-main_font">PUROK/SITIO</label>
+                            <select id="purokSelect" name="purok_id" class="w-full text-main_font bg-white focus:outline-none font-medium border border-gray-300 rounded-lg text-md p-2">
+                                <option value="" disabled selected>Select</option>
+                                </select>
                         </div>
                         <div class="grid grid-cols-1 gap-1 relative col-span-1">
-                            <label for="chooseWaterSource" class="text-sm font-medium text-main_font">WATER SOURCE</label>
-                            <button id="chooseWaterSourceBtn" data-dropdown-toggle="chooseWaterSourceMenu"
-                                class="w-full text-main_font bg-white focus:outline-none font-medium border border-gray-300 rounded-lg text-md p-2 text-center inline-flex items-center justify-between"
-                                type="button">
-                                Select
-                                <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="m1 1 4 4 4-4" />
-                                </svg>
-                            </button>
-                            <input type="hidden" name="water_source" id="waterSourceInput">
-                            <div id="chooseWaterSourceMenu"
-                                class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-full absolute mt-1">
-                                <ul class="py-2 text-sm text-gray-700">
-                                <li><button type="button" data-value="Pumpwell" class="w-full text-left px-4 py-2 hover:bg-gray-100">Pumpwell</button></li>
-                                <li><button type="button" data-value="Open Well" class="w-full text-left px-4 py-2 hover:bg-gray-100">Open Well</button></li>
-                                <li><button type="button" data-value="Purified" class="w-full text-left px-4 py-2 hover:bg-gray-100">Purified Water</button></li>
-                                <li><button type="button" data-value="Tap" class="w-full text-left px-4 py-2 hover:bg-gray-100">Tap Water</button></li>
-                                </ul>
-                            </div>
+                            <label for="waterSourceSelect" class="text-sm font-medium text-main_font">WATER SOURCE</label>
+                            <select id="waterSourceSelect" name="water_source" class="w-full text-main_font bg-white focus:outline-none font-medium border border-gray-300 rounded-lg text-md p-2">
+                                <option value="" disabled selected>Select</option>
+                                <option value="Pumpwell">Pumpwell</option>
+                                <option value="Open Well">Open Well</option>
+                                <option value="Purified">Purified Water</option>
+                                <option value="Tap">Tap Water</option>
+                            </select>
                         </div>
                     </div>
 
@@ -63,24 +38,34 @@
                         </div>
 
                         <div class="grid grid-cols-1 gap-1 relative col-span-1">
-                            <label for="chooseSanitaryBtn" class="text-sm font-medium text-main_font">SANITARY TOILET</label>
-                            <button id="chooseSanitaryBtn" data-dropdown-toggle="chooseSanitaryMenu"
-                                class="w-full text-main_font bg-white focus:outline-none font-medium border border-gray-300 rounded-lg text-md p-2 text-center inline-flex items-center justify-between"
-                                type="button">
-                                Select
-                                <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="m1 1 4 4 4-4" />
-                                </svg>
-                            </button>
-                            <input type="hidden" name="sanitary_toilet" id="sanitaryInput">
-                            <div id="chooseSanitaryMenu"
-                                class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-full absolute mt-1">
-                                <ul class="py-2 text-sm text-gray-700">
-                                    <li><button type="button" data-value="1" class="w-full text-left px-4 py-2 hover:bg-gray-100">Has Toilet</button></li>
-                                    <li><button type="button" data-value="2" class="w-full text-left px-4 py-2 hover:bg-gray-100">Does not have toilet</button></li>
-                                </ul>
-                            </div>
+                            <label for="indigentSelect" class="text-sm font-medium text-main_font">INDIGENT</label>
+                            <select id="indigentSelect" name="indigent" class="w-full text-main_font bg-white focus:outline-none font-medium border border-gray-300 rounded-lg text-md p-2 ">
+                                <option value="" disabled selected>Select</option>
+                                <option value="1">Yes</option>
+                                <option value="2">No</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 slg2:grid-cols-2 col-span-1 gap-3">
+                        <div class="grid grid-cols-1 gap-1 relative col-span-1">
+                            <label for="wasteDisposalSelect" class="text-sm font-medium text-main_font">WASTE DISPOSAL</label>
+                            <select id="wasteDisposalSelect" name="waste_disposal" class="w-full text-main_font bg-white focus:outline-none font-medium border border-gray-300 rounded-lg text-md p-2 ">
+                                <option value="" disabled selected>Select</option>
+                                <option value="Collected">Garbage Collection</option>
+                                <option value="Burial">Burial</option>
+                                <option value="Burning">Burning</option>
+                                <option value="Composting">Composting</option>
+                            </select>
+                        </div>
+
+                        <div class="grid grid-cols-1 gap-1 relative col-span-1">
+                            <label for="sanitarySelect" class="text-sm font-medium text-main_font">SANITARY TOILET</label>
+                            <select id="sanitarySelect" name="sanitary_toilet" class="w-full text-main_font bg-white focus:outline-none font-medium border border-gray-300 rounded-lg text-md p-2 ">
+                                <option value="" disabled selected>Select</option>
+                                <option value="1">Has Toilet</option>
+                                <option value="2">Does not have toilet</option>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -88,7 +73,7 @@
             <div class="flex items-center border-t border-gray-200 rounded-b dark:border-gray-600 gap-3 justify-end pt-6 px-6">
                 <button id="cancel-add-household" type="button" class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Cancel</button>
                 <button id="proceed-add-household" type="button" 
-                        class="text-white bg-mainblue hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center
+                        class="text-white bg-mainblue hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 
                                disabled:opacity-50 disabled:cursor-not-allowed">
                     Add Household
                 </button>

@@ -60,7 +60,7 @@ class BarangayHealthProgramController extends Controller
             'consultations' => function ($q) use ($enrolledResident) {
                 $q->where('program_id', $enrolledResident->program_id);
             },
-            'resident'
+            'resident.family.household.purok.barangay'
         ]);
 
         
@@ -78,7 +78,7 @@ class BarangayHealthProgramController extends Controller
             });
         }]);
 
-        // 🔍 Search by program name (optional)
+        // Search by program name (optional)
         if ($request->filled('search')) {
             $search = $request->input('search');
             $query->where('name', 'like', "%{$search}%");

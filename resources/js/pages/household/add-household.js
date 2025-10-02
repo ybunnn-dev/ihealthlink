@@ -12,15 +12,11 @@ const addHouseholdModalEl = document.getElementById('add-household-modal');
 
 const findHouseholdTrigger = document.getElementById('selectHouseholdHeadBtn');
 
-const purokDropdownBtn = document.getElementById('purokDropdownBtn');
-const purokIdInput = document.getElementById('purokIdInput');
-const purokMenu = document.getElementById('choosePurokMenu');
-const purokList = purokMenu.querySelector('ul');
+const purokDropdownBtn = document.getElementById('purokSelect');
+
 const allPuroks = window.puroks;
 
-const waterSourceDropdownButton = document.getElementById('chooseWaterSource');
-const waterSourceDropdownMenu = document.getElementById('chooseWaterSourceMenu');
-const waterSourceInput = document.getElementById('waterSourceInput');
+const waterSourceDropdownButton = document.getElementById('waterSourceSelect');
 
 const openAddHouseholdBtn = document.getElementById('open-add-household');
 const confirmAddHouseholdCancel = document.getElementById('confirm-add-household-cancel');
@@ -34,24 +30,34 @@ const successMessage = document.getElementById('success-message');
 const closeSuccessModalButton = document.getElementById('close-success-modal-button');
 
 
-const sanitaryDropdownBtn = document.getElementById('chooseSanitaryBtn');
-const sanitaryInput = document.getElementById('sanitaryInput');
+const sanitaryDropdownBtn = document.getElementById('sanitarySelect');
+const isIndigentDropdownBtn = document.getElementById('indigentSelect');
+const wasteDisposalDropdownBtn = document.getElementById('wasteDisposalSelect');
 
 const successModal = new Modal(successModalEl);
 const addHouseholdModal = new Modal(addHouseholdModalEl);
 const confirmAddHouseholdModal = new Modal(confirmAddHouseholdModalEl);
 
+
+const confirmPurok = document.getElementById('confirm-purok');
+const confirmWaterSource = document.getElementById('confirm-water-source');
+const confirmWasteDisposal = document.getElementById('confirm-waste-disposal');
+const confirmSanitary = document.getElementById('confirm-sanitary');
+const confirmIndigent = document.getElementById('confirm-indigent');
+
+let createdHouseholdId = null;
+
 // Initialize buttons as disabled
 proceedAddHousehold.disabled = true;
 confirmAddHouseholdSubmit.disabled = true;
 
-// --- MODIFICATION 1: Implement the validation function ---
 function validateForms() {
-    const isPurokSelected = purokIdInput.value.trim() !== '';
-    const isWaterSourceSelected = waterSourceInput.value.trim() !== '';
-    const isSanitaryMenuSlected = sanitaryInput.value.trim() !== '';
-    // Enable the 'Proceed' button ONLY if both are selected.
-    proceedAddHousehold.disabled = !(isPurokSelected && isWaterSourceSelected && isSanitaryMenuSlected);
+    const isPurokSelected = purokDropdownBtn.value.trim() !== '';
+    const isWaterSourceSelected = waterSourceDropdownButton.value.trim() !== '';
+    const isSanitaryMenuSlected = sanitaryDropdownBtn.value.trim() !== '';
+    const isWasteDisposalSelected = wasteDisposalDropdownBtn.value.trim() !== '';
+
+    proceedAddHousehold.disabled = !(isPurokSelected && isWaterSourceSelected && isSanitaryMenuSlected && isWasteDisposalSelected);
 }
 
 document.querySelectorAll('#chooseSanitaryMenu button').forEach(btn => {
@@ -68,62 +74,54 @@ document.querySelectorAll('#chooseSanitaryMenu button').forEach(btn => {
 });
 
 function populatePurokList(puroks) {
-    purokList.innerHTML = '';
+    // Clear existing options, but keep the initial "Select" option if it exists
+    // We assume the first option is the disabled placeholder.
+    while (purokSelect.options.length > 1) {
+        purokSelect.remove(1);
+    }
+    
+    // Ensure the 'Select' option is selected initially
+    purokSelect.value = ""; 
 
     puroks.forEach(purok => {
-        const listItem = document.createElement('li');
-        const button = document.createElement('button');
-
-        button.type = 'button';
-        button.textContent = purok.name;
-        button.dataset.purokId = purok.id;
-        button.className = 'w-full text-left px-4 py-2 hover:bg-gray-100';
-
-        listItem.appendChild(button);
-        purokList.appendChild(listItem);
+        const option = document.createElement('option');
+        
+        // The text displayed in the dropdown
+        option.textContent = purok.name; 
+        
+        // The value submitted with the form (the ID)
+        option.value = purok.id; // Purok ID is stored in the value
+        
+        purokSelect.appendChild(option);
     });
 }
 
-
-function handlePurokSelection(event) {
-    if (event.target.tagName !== 'BUTTON') {
-        return;
+function handlePurokSelection() {
+    const selectedPurokId = purokSelect.value;
+    const selectedPurokName = purokSelect.options[purokSelect.selectedIndex].text;
+    if (selectedPurokId) {
+        console.log(`Selected Purok: ${selectedPurokName}, ID: ${selectedPurokId}`);
+        validateForms();
+    } else {
+        console.log("Purok selection cleared.");
     }
-
-    const selectedButton = event.target;
-    const selectedPurokName = selectedButton.textContent;
-    const selectedPurokId = selectedButton.dataset.purokId;
-
-    purokDropdownBtn.textContent = selectedPurokName;
-    purokIdInput.value = selectedPurokId;
-
-    purokMenu.classList.add('hidden');
-
-    console.log(`Selected Purok: ${selectedPurokName}, ID: ${selectedPurokId}`);
-    
-    // --- MODIFICATION 2: Call validation after selecting a Purok ---
-    validateForms();
 }
 
 function initializePurokDropdown() {
-    if (!allPuroks || !purokList) {
-        console.error('Purok data or list element not found.');
-        return;
-    }
-
-    populatePurokList(allPuroks);
-    purokList.addEventListener('click', handlePurokSelection);
+    populatePurokList(allPuroks); 
+    purokSelect.addEventListener('change', handlePurokSelection);
 }
 
-// --- MODIFICATION 3: Call validation after selecting a Water Source ---
-document.querySelectorAll('#chooseWaterSourceMenu button').forEach(btn => {
-    btn.addEventListener('click', () => {
-        document.getElementById('chooseWaterSourceBtn').childNodes[0].textContent = btn.textContent;
-        waterSourceInput.value = btn.dataset.value;
+const dropdowns = [
+    waterSourceDropdownButton,
+    sanitaryDropdownBtn,
+    isIndigentDropdownBtn,
+    wasteDisposalDropdownBtn
+];
 
-        // Call the validation function here as well
-        validateForms();
-    });
+// Loop through each dropdown and add the 'change' event listener
+dropdowns.forEach(dropdown => {
+    dropdown.addEventListener('change', validateForms);
 });
 
 initializePurokDropdown();
@@ -133,7 +131,28 @@ cancelAddHousehold.addEventListener('click', function () {
 });
 
 proceedAddHousehold.addEventListener('click', function () {
+    // Hide the initial modal
     addHouseholdModal.hide();
+
+    confirmPurok.textContent = purokDropdownBtn.options[purokDropdownBtn.selectedIndex].text;
+    confirmWaterSource.textContent = waterSourceDropdownButton.options[waterSourceDropdownButton.selectedIndex].text;
+    confirmWasteDisposal.textContent = wasteDisposalDropdownBtn.options[wasteDisposalDropdownBtn.selectedIndex].text;
+    confirmSanitary.textContent = sanitaryDropdownBtn.options[sanitaryDropdownBtn.selectedIndex].text;
+    
+    // Convert the indigent value (0 or 1) to a more readable format
+    const isIndigentValue = parseInt(isIndigentDropdownBtn.value.trim());
+    confirmIndigent.textContent = isIndigentValue === 1 ? 'Yes' : 'No';
+
+    const householdPayload = {
+        purok_id: parseInt(purokDropdownBtn.value.trim(), 10),
+        water_source: waterSourceDropdownButton.value.trim(),
+        waste_disposal: wasteDisposalDropdownBtn.value.trim(),
+        sanitary: parseInt(sanitaryDropdownBtn.value.trim()),
+        is_indigent: parseInt(isIndigentDropdownBtn.value.trim()),
+    };
+
+    console.log(householdPayload);
+    // Now show the confirmation modal, which is now filled with data
     confirmAddHouseholdModal.show();
 });
 
@@ -143,9 +162,11 @@ confirmAddHouseholdCheckbox.addEventListener('change', function(){
 
 confirmAddHouseholdSubmit.addEventListener('click', function(){
     const householdPayload = {
-        purok_id: parseInt(purokIdInput.value.trim(), 10),
-        water_source: waterSourceInput.value.trim(),
-        sanitary: parseInt(sanitaryInput.value.trim())
+        purok_id: parseInt(purokDropdownBtn.value.trim(), 10),
+        water_source: waterSourceDropdownButton.value.trim(),
+        waste_disposal: wasteDisposalDropdownBtn.value.trim(),
+        sanitary: parseInt(sanitaryDropdownBtn.value.trim()),
+        is_indigent: parseInt(isIndigentDropdownBtn.value.trim()),
     };
 
     console.log('Sending payload:', householdPayload);
@@ -162,6 +183,7 @@ confirmAddHouseholdSubmit.addEventListener('click', function(){
     .then(data => {
         console.log('Backend response:', data);
         if(data.result === 'success'){
+            createdHouseholdId = data.household.id;
             confirmAddHouseholdModal.hide();
             successMesageHeader.textContent = "Household Added";
             successMessage.textContent = "Household has been successfully added";
@@ -174,7 +196,7 @@ confirmAddHouseholdSubmit.addEventListener('click', function(){
 });
 
 closeSuccessModalButton.addEventListener('click', function(){
-    window.location.reload();
+    window.location.href = `/barangays/households/${createdHouseholdId}`;
 });
 
 openAddHouseholdBtn.addEventListener('click', function () {

@@ -39,10 +39,13 @@ class HouseholdController extends Controller
             'purok_id'     => 'required|exists:puroks,id',
             'water_source' => 'nullable|string|max:255',
             'sanitary'     => 'required|in:1,2', // 1 = yes, 2 = no
+            'is_indigent'  => 'required|in:1,2',
+            'waste_disposal' => 'required|string|max:255'
         ]);
 
         // Convert sanitary (1 = true, 2 = false)
-        $hasToilet = $validated['sanitary'] === '1';
+        $hasToilet = $validated['sanitary'] === 1;
+        $isIndigent = $validated['is_indigent'] === 1;
 
          $encryptedWaterSource = $validated['water_source']
             ? Crypt::encryptString($validated['water_source'])
@@ -54,6 +57,8 @@ class HouseholdController extends Controller
             'head_id'      => null, // will be set later
             'has_toilet'   => $hasToilet,
             'water_source' => $encryptedWaterSource,
+            'is_indigent' => $isIndigent,
+            'waste_disposal' => $validated['waste_disposal'],
             'status'       => 'active',
         ]);
 

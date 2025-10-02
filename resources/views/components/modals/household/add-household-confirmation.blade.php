@@ -1,19 +1,41 @@
 <div id="confirm-add-household-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
     <div class="relative p-4 w-full max-w-xl max-h-full">
         <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700 py-10 px-6">
-            <div class="flex flex-col items-center justify-center rounded-t mb-6">
+            <div class="flex flex-col items-center justify-center rounded-t mb-4">
                 <h3 class="text-xl font-semibold text-main_font">
                     Confirm New Household
                 </h3>
                 <p class="text-sm text-normal_font">
-                    Are you sure you want to add this new household?
+                    Please review the details below before proceeding.
                 </p>
             </div>
             
+            <div class="p-4 my-4 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg space-y-3">
+                <div class="flex justify-between items-center">
+                    <span class="font-semibold text-gray-600 dark:text-gray-300">Purok:</span>
+                    <span id="confirm-purok" class="text-main_font font-medium"></span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="font-semibold text-gray-600 dark:text-gray-300">Water Source:</span>
+                    <span id="confirm-water-source" class="text-main_font font-medium"></span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="font-semibold text-gray-600 dark:text-gray-300">Waste Disposal:</span>
+                    <span id="confirm-waste-disposal" class="text-main_font font-medium"></span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="font-semibold text-gray-600 dark:text-gray-300">Sanitary Toilet:</span>
+                    <span id="confirm-sanitary" class="text-main_font font-medium"></span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="font-semibold text-gray-600 dark:text-gray-300">Is Indigent:</span>
+                    <span id="confirm-indigent" class="text-main_font font-medium"></span>
+                </div>
+            </div>
             <div class="p-4 md:p-5">
                 <div class="flex items-center justify-center">
                     <input id="confirm-household-checkbox" type="checkbox" value="" class="w-4 h-4 text-mainblue bg-gray-100 border-gray-300 rounded focus:ring-mainblue">
-                    <label for="confirm-household-checkbox" class="ms-2 text-sm font-medium text-gray-900">I have reviewed the input data.</label>
+                    <label for="confirm-household-checkbox" class="ms-2 text-sm font-medium text-gray-900">I have reviewed and confirmed the input data.</label>
                 </div>
             </div>
 

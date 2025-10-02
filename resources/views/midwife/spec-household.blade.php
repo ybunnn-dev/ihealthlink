@@ -54,8 +54,14 @@
                             <p class="font-semibold text-main_font">HOUSEHOLD HEAD:</p>
                             <p class="text-normal_font">Ron Peter Mortega</p>
 
+                            <p class="font-semibold text-main_font">INDIGENT:</p>
+                            <p class="text-normal_font">{{ $household->is_indigent == 1 ? 'Yes' : 'No' }}</p>
+
                             <p class="font-semibold text-main_font">SOURCE OF WATER:</p>
                             <p class="text-normal_font">{{ $household->water_source }}</p>
+
+                            <p class="font-semibold text-main_font">WASTE DISPOSAL:</p>
+                            <p class="text-normal_font">{{ $household->waste_disposal ?  $household->waste_disposal : '' }}</p>
 
                             <p class="font-semibold text-main_font">HAVE A TOILET:</p>
                             <p class="text-normal_font">{{ $household->has_toilet == 1 ? 'Yes' : 'No' }}</p>
