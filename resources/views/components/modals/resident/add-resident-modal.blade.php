@@ -7,7 +7,7 @@
                 </h3>
                 <p class="text-sm text-normal_font -mt-1">Enter resident details to continue</p>
             </div>
-            <div class="p-4 md:p-5 space-y-4 h-[70vh]overflow-y-auto w-full">
+            <div class="p-4 md:p-5 space-y-4 h-[70vh] overflow-y-auto w-full">
                 <div class="grid grid-cols-1 gap-3 w-full h-full">
                     <ol class="flex items-center w-full text-xs font-medium text-center text-gray-500 dark:text-gray-400 sm:text-xs mb-6 border-b border-gray-200 pb-6">
                         <li id="step-progress-1" class="flex md:w-full items-center after:w-full after:h-1 after:border-b after:border-gray-200 after:border-1 after:hidden sm:after:inline-block after:mx-6 xl:after:mx-10 gap-3">

@@ -362,4 +362,61 @@ class ResidentController extends Controller
         ]);
     }
 
-}
+    public function getWRA(Request $request)
+    {
+        $personnel = Auth::user()->midwife;
+        $barangay = Barangay::with('puroks')->find($personnel->brgy_id);
+        $puroks = $barangay->puroks;
+        $purokIds = $puroks->pluck('id');
+
+        $programId = $request->input('healthProgramId'); 
+        $program = HealthProgram::findOrFail($programId);
+
+        $today = now()->toDateString();
+
+        $query = Resident::with('family.household.purok')
+            ->whereHas('family.household', function ($q) use ($purokIds) {
+                $q->whereIn('purok_id', $purokIds);
+            })
+            // --- Exclude residents already enrolled ---
+            ->whereDoesntHave('enrolledResidents', function ($q) use ($programId) {
+                $q->where('program_id', $programId);
+            })
+            // --- Female only ---
+            ->where('sex', 'female')
+            // --- Age strictly 10–49 years old ---
+            ->whereRaw("TIMESTAMPDIFF(YEAR, birthdate, ?) BETWEEN ? AND ?", [
+                $today, $program->age_min, $program->age_max
+            ]);
+        // --- Search parameter ---
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('first_name', 'like', "%{$search}%")
+                ->orWhere('middle_name', 'like', "%{$search}%")
+                ->orWhere('last_name', 'like', "%{$search}%");
+            });
+        }
+
+        // --- Purok filter ---
+        if ($request->filled('purok_id')) {
+            $purokId = $request->input('purok_id');
+            $query->whereHas('family.household', function ($q) use ($purokId) {
+                $q->where('purok_id', $purokId);
+            });
+        }
+
+        $residents = $query->get();
+
+        // Attach purok info
+        $residents->each(function ($resident) {
+            $resident->purok = $resident->family->household->purok ?? null;
+        });
+
+        return response()->json([
+            'residents' => $residents,
+            'puroks' => $puroks
+        ]);
+    }
+
+}   

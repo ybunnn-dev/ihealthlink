@@ -121,19 +121,13 @@ const wheezingCheckbox = document.getElementById('wheezingCheckbox');
 
 
 const familyIdStorage = document.getElementById('familyIdStorage');
-// Select all the form steps and progress indicator items
 const formSteps = document.querySelectorAll('.form-step');
 const progressSteps = document.querySelectorAll('ol li');
-
-// Select the navigation buttons
 const cancelButton = document.getElementById('cancel-button-add-resident');
 const prevButton = document.getElementById('prev-button');
 const nextButton = document.getElementById('next-button');
 const addResidentButtonSubmit = document.getElementById('add-resident-button');
-
-// Initialize the current step
 let currentStep = 0;
-
 const confirmResidentModalEl = document.getElementById('confirm-add-resident-modal');
 const residentInfoReviewContainer = document.getElementById('resident-info-review');
 const reviewFullName = document.getElementById('review-full-name');
@@ -146,11 +140,9 @@ const reviewHousehold = document.getElementById('review-household');
 const reviewRelationship = document.getElementById('review-relationship');
 const reviewEmployment = document.getElementById('review-employment');
 const reviewPwd = document.getElementById('review-pwd');
-
 const confirmResidentCheckbox = document.getElementById('confirm-resident-checkbox');
 const cancelConfirm = document.getElementById('cancel-add-resident-confirm');
 const confirmAddResidentSubmitBtn = document.getElementById('confirm-resident-proceed-button');
-
 const openAddResidentBtn = document.getElementById('openAddResidentModal');
 
 const confirmResidentModal = new Modal(confirmResidentModalEl);
@@ -653,7 +645,6 @@ cancelConfirm.addEventListener('click', function () {
     addResidentModal.show();
 });
 
-
 confirmResidentCheckbox.addEventListener('change', function () {
     confirmAddResidentSubmitBtn.disabled = !this.checked;
 });
@@ -698,7 +689,7 @@ closeSuccessModalButton.addEventListener('click', function(){
     window.location.reload();
 });
 
-// Initial setup: Call applyStyling() to set the correct state on page load.
+
 updateButtonState();
 applyStyling();
 

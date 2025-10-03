@@ -107,4 +107,13 @@ class MedicineController extends Controller
             'medicine' => $medicine
         ]);
     }
+    public function show($id) 
+    {
+        $medicine = Medicine::with(['inventories.addedBy'])->findOrFail($id);
+
+        return response()->json([
+            'medicine'    => $medicine,
+            'inventories' => $medicine->inventories
+        ]);
+    }
 }

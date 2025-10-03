@@ -60,4 +60,6 @@ Route::middleware(['auth:sanctum',
     Route::post('/email/change/verify', [ProfileController::class, 'verifyEmailChange']);
 
     Route::post('/password/change', [ProfileController::class, 'changePassword']);
+
+    Route::get('/barangay/medicine/show/{id}', [MedicineController::class, 'show']);
 });

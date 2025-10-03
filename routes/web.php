@@ -180,6 +180,8 @@ Route::middleware([
 
     Route::get('/barangay/resident/enroll', [ResidentController::class, 'getResident']);
     
+    Route::get('/barangay/maternity/resident/enroll', [ResidentController::class, 'getWRA']);
+
     Route::get('/midwife/reports', function () {
         return view('midwife.reports');
     })->name('midwife.reports');
@@ -198,7 +200,7 @@ Route::middleware([
     
     // Midwife-specific dashboard 
     // Show list
-    Route::get('/midwife/medicines', [MedicineController::class, 'index'])
+    Route::get('/barangay/medicines', [MedicineController::class, 'index'])
         ->name('midwife.medicines');
 
     // Store new medicine
@@ -209,7 +211,7 @@ Route::middleware([
     // Midwife-specific dashboard 
 
     //inside view 
-    Route::get('/midwife/medicines/{id}', [MedicineController::class, 'show'])->name('midwife.medicines.show');
+    Route::get('/barangay/medicines/{id}', [MedicineController::class, 'show'])->name('midwife.medicines.show');
 
 
     //delete a medicine

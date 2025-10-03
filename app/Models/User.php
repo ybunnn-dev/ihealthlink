@@ -123,10 +123,12 @@ class User extends Authenticatable
             return $this->midwife->belongsTo(Barangay::class, 'brgy_id');
         }
 
-        if ($this->role_id === 4) {
+        if ($this->role_id === 3) {
             return $this->bhw->belongsTo(Barangay::class, 'brgy_id');
         }
 
-        return null;
+        if ($this->role_id === 4) {
+            return $this->bhw->belongsTo(Barangay::class, 'brgy_id');
+        }
     }
 }
