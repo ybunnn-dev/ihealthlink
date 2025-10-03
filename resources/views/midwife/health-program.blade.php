@@ -8,8 +8,8 @@
         </script>
         <div class="max-w-[90rem] mx-auto sm:px-6 lg:px-8">
             <h1 class="text-3xl font-semibold text-sub_blue mb-3">Health Programs</h1>
-            <div class="grid grid-cols-1 xl:grid-cols-5 gap-3">
-                <div class="bg-white rounded-xl p-6 px-10 mb-3 col-span-1 slg2:col-span-2">
+            <div class="grid grid-cols-1 lg2:grid-cols-5 gap-3">
+                <div class="bg-white rounded-xl p-6 px-10 mb-3 col-span-1 lg2:col-span-2">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center gap-x-3">
                             <svg class="w-10 h-10 text-maingreen"
@@ -112,17 +112,42 @@
                                     </button>
                                 </div>
                                 <div class="w-full xs:w-40 pt-5 xs:pt-0">
-                                    <button type="button" id="openEnrollModalBtn" class="w-full h-[2.375rem] text-white bg-mainblue hover:bg-blue-700 font-medium rounded-lg text-sm px-3 flex items-center justify-center gap-2">
-                                        <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                                            <g id="SVGRepo_iconCarrier">
-                                                <path id="secondary" d="M19,20a1,1,0,0,1-1-1V18H17a1,1,0,0,1,0-2h1V15a1,1,0,0,1,2,0v1h1a1,1,0,0,1,0,2H20v1A1,1,0,0,1,19,20Z" style="fill: currentColor;"></path>
-                                                <path id="primary" d="M15,17a4,4,0,0,1,2.63-3.74,6,6,0,0,0-2.31-1.11,6,6,0,1,0-8.64,0A6,6,0,0,0,2,18v1a1,1,0,0,0,.29.71C2.53,19.94,4.77,22,11,22a17.17,17.17,0,0,0,6.88-1.18A4,4,0,0,1,15,17Z" style="fill: currentColor;"></path>
-                                            </g>
-                                        </svg>
-                                        Enroll Resident
-                                    </button>                                   
+                                    @if ($healthProgram->category === 'maternal_health_tcl')
+                                        
+                                        {{-- Show only the Maternity button --}}
+                                        <button type="button" id="openEnrollMaternityModalBtn" class="w-full h-[2.375rem] text-white bg-mainblue hover:bg-blue-700 font-medium rounded-lg text-sm px-3 flex items-center justify-center gap-2">
+                                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" ...>
+                                                {{-- SVG paths for maternity icon --}}
+                                                <path d="M19,20a1,1,0,0,1-1-1V18H17a1,1,0,0,1,0-2h1V15a1,1,0,0,1,2,0v1h1a1,1,0,0,1,0,2H20v1A1,1,0,0,1,19,20Z"></path>
+                                                <path d="M15,17a4,4,0,0,1,2.63-3.74,6,6,0,0,0-2.31-1.11,6,6,0,1,0-8.64,0A6,6,0,0,0,2,18v1a1,1,0,0,0,.29.71C2.53,19.94,4.77,22,11,22a17.17,17.17,0,0,0,6.88-1.18A4,4,0,0,1,15,17Z"></path>
+                                            </svg>
+                                            Enroll Resident
+                                        </button>
+
+                                    @elseif ($healthProgram->category === 'child_healthcare_tcl')
+
+                                        {{-- Show only the Child Healthcare button --}}
+                                        <button type="button" id="openEnrollChildHealthcareModalBtn" class="w-full h-[2.375rem] text-white bg-mainblue hover:bg-blue-700 font-medium rounded-lg text-sm px-3 flex items-center justify-center gap-2">
+                                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" ...>
+                                                {{-- SVG paths for child healthcare icon --}}
+                                                <path d="M19,20a1,1,0,0,1-1-1V18H17a1,1,0,0,1,0-2h1V15a1,1,0,0,1,2,0v1h1a1,1,0,0,1,0,2H20v1A1,1,0,0,1,19,20Z"></path>
+                                                <path d="M15,17a4,4,0,0,1,2.63-3.74,6,6,0,0,0-2.31-1.11,6,6,0,1,0-8.64,0A6,6,0,0,0,2,18v1a1,1,0,0,0,.29.71C2.53,19.94,4.77,22,11,22a17.17,17.17,0,0,0,6.88-1.18A4,4,0,0,1,15,17Z"></path>
+                                            </svg>
+                                            Enroll Resident
+                                        </button>
+
+                                    @else
+                                        {{-- Show the default enroll button for all other cases --}}
+                                        <button type="button" id="openEnrollModalBtn" class="w-full h-[2.375rem] text-white bg-mainblue hover:bg-blue-700 font-medium rounded-lg text-sm px-3 flex items-center justify-center gap-2">
+                                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" ...>
+                                                {{-- SVG paths for general enroll icon --}}
+                                                <path d="M19,20a1,1,0,0,1-1-1V18H17a1,1,0,0,1,0-2h1V15a1,1,0,0,1,2,0v1h1a1,1,0,0,1,0,2H20v1A1,1,0,0,1,19,20Z"></path>
+                                                <path d="M15,17a4,4,0,0,1,2.63-3.74,6,6,0,0,0-2.31-1.11,6,6,0,1,0-8.64,0A6,6,0,0,0,2,18v1a1,1,0,0,0,.29.71C2.53,19.94,4.77,22,11,22a17.17,17.17,0,0,0,6.88-1.18A4,4,0,0,1,15,17Z"></path>
+                                            </svg>
+                                            Enroll Resident
+                                        </button>
+                                        
+                                    @endif
                                 </div>
                                 <div class="w-full xs:w-40 pt-5 xs:pt-0">
                                     <button id="find-enrolled-qr" type="button" class="w-full h-[2.375rem] text-mainblue bg-white border border-mainblue hover:bg-gray-200 font-medium rounded-lg text-sm px-3 flex items-center justify-center gap-2">
@@ -216,9 +241,11 @@
             </div>
         </div>
     </div>
+    <div id="program_type_content" class="hidden">{{ $healthProgram->category }}</div>
     <div class="hidden" id="hpdata">{{ $healthProgram->id }}</div>
     @include('components.modals.health-program.enroll-resident-modal')
     @include('components.modals.qr-scanner')
+    @include('components.modals.health-program.tcl-programs.enroll-maternity')
     @vite('resources/js/modals/qr-scanner.js')
 </x-app-layout>
 

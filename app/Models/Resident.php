@@ -130,6 +130,9 @@ class Resident extends Model
             'date'   => $date->format('M d, Y'),
         ];
     }
-
+    public function maternalRecords()
+    {
+        return $this->hasMany(BasicMaternalRecord::class, 'resident_id');
+    }
 
 }

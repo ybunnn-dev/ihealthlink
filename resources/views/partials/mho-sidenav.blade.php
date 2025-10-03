@@ -31,10 +31,10 @@
         </div>
 
         {{-- Navigation --}}
-        <ul class="flex-1 mt-10 2xl:mt-10 lg:mt-2">
+        <ul class="flex-1 mt-10 text-sm px-3">
             <li class="flex items-center group">
                 <a href="{{ route('mho.dashboard') }}"
-                class="flex items-center w-full py-3 pl-6 hover:bg-white/10 transition-colors"
+                class="flex items-center w-full py-3 pl-4 rounded-lg hover:bg-white/10 transition-colors"
                 :class="{
                     'bg-nav_active text-f7 font-bold': activeItem === 'dashboard',
                     'text-mainblue': activeItem !== 'dashboard'
@@ -77,7 +77,7 @@
             <!-- Health Programs -->
             <li class="flex items-center group">
                 <a href="{{ route('mho.health-programs') }}"
-                class="flex items-center w-full py-3 pl-6 hover:bg-white/10 transition-colors"
+                class="flex items-center w-full py-3 pl-4 rounded-lg hover:bg-white/10 transition-colors"
                 :class="{
                     'bg-nav_active text-f7 font-bold': activeItem === 'health-programs',
                     'text-white': activeItem !== 'health-programs'
@@ -114,7 +114,7 @@
             <!-- Barangays -->
             <li class="flex items-center group">
                 <a href="{{ route('mho.barangays') }}"
-                class="flex items-center w-full py-3 pl-6 hover:bg-white/10 transition-colors"
+                class="flex items-center w-full py-3 pl-4 rounded-lg hover:bg-white/10 transition-colors"
                 :class="{
                     'bg-nav_active text-f7 font-bold': activeItem === 'barangays',
                     'text-white': activeItem !== 'barangays'
@@ -149,7 +149,7 @@
             <!-- Midwives-->
             <li class="flex items-center group">
                 <a href="{{ route('mho.midwives') }}"
-                class="flex items-center w-full py-3 pl-6 hover:bg-white/10 transition-colors"
+                class="flex items-center w-full py-3 pl-4 rounded-lg hover:bg-white/10 transition-colors"
                 :class="{
                     'bg-nav_active text-f7 font-bold': activeItem === 'midwives',
                     'text-white': activeItem !== 'midwives'
@@ -187,7 +187,7 @@
              <!-- Reports -->
             <li class="flex items-center group">
                 <a href="{{ route('mho.reports') }}"
-                class="flex items-center w-full py-3 pl-6 hover:bg-white/10 transition-colors"
+                class="flex items-center w-full py-3 pl-4 rounded-lg hover:bg-white/10 transition-colors"
                 :class="{
                     'bg-nav_active text-f7 font-bold': activeItem === 'reports',
                     'text-white': activeItem !== 'reports'
@@ -224,7 +224,7 @@
             <!-- Logs -->
             <li class="flex items-center group">
                 <a href="{{ route('mho.logs') }}"
-                class="flex items-center w-full py-3 pl-6 hover:bg-white/10 transition-colors"
+                class="flex items-center w-full py-3 pl-4 rounded-lg hover:bg-white/10 transition-colors"
                 :class="{
                     'bg-nav_active text-f7 font-bold': activeItem === 'logs',
                     'text-white': activeItem !== 'logs'
@@ -260,7 +260,7 @@
             <!-- FAQs -->
             <li class="flex items-center group">
                 <a href="{{ route('mho.faq') }}"
-                class="flex items-center w-full py-3 pl-6 hover:bg-white/10 transition-colors"
+                class="flex items-center w-full py-3 pl-4 rounded-lg hover:bg-white/10 transition-colors"
                 :class="{
                     'bg-nav_active text-f7 font-bold': activeItem === 'faqs',
                     'text-white': activeItem !== 'faqs'

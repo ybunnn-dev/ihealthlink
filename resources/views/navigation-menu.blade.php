@@ -1,6 +1,6 @@
 <nav x-data="{ open: false }" class="bg-f7">
     <!-- Primary Navigation Menu -->
-    <div class="max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="w-full mx-auto px-4 sm:px-6 lg:px-8 py-1">
         <div class="flex justify-between h-16">
           <div class="flex items-center gap-2 text-gray-600 dark:text-gray-300">
             <!-- Calendar Icon -->
@@ -19,12 +19,9 @@
             <!-- Date/Time Display -->
             <span id="currentDateTime" class="text-sm font-medium text-main_font"></span>
             </div>
-            <div>
-                
-            </div>
             <div class="hidden sm:flex sm:items-center sm:ms-6">
                 <!-- Notification Button -->
-                <div class="ms-3 pr-4 relative">
+                <div class="ms-3 relative">
                     <x-dropdown align="right" width="48">
                         <x-slot name="trigger">
                             <button class="relative inline-flex items-center p-2 text-gray-400 bg-white hover:text-gray-500 focus:outline-none focus:text-gray-500 transition duration-150 ease-in-out">
@@ -97,12 +94,12 @@
                                             </svg>
                                             <div class="flex flex-col items-start justify-start">
                                                 <div class="flex items-center gap-6">
-                                                    <p class="font-semibold text-main_font">{{ Auth::user()->firstName }}</p>
+                                                    <p class="font-semibold text-main_font">{{ Auth::user()->firstName }} {{ Auth::user()->lastName }}</p>
                                                     <svg class="ms-2 -me-0.5 size-4 ml-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                                         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                                                     </svg>
                                                 </div>
-                                                <span class="text-xs font-normal mt-0.5 text-normal_font">MHO Admin</span>
+                                                <span class="text-xs font-normal mt-0.5 text-normal_font">{{ $barangayName }}</span>
                                             </div>
                                         </div>
                                     </button>
@@ -177,7 +174,7 @@
                 </div>
             </div>
 
-            <div class="mt-3 space-y-1">
+            <div class="mt-4 space-y-1">
                 <!-- Notifications for mobile -->
                 <x-responsive-nav-link href="#" class="flex items-center justify-between">
                     <div class="flex items-center">

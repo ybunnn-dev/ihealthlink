@@ -32,12 +32,9 @@
                             <label for="program-type" class="block mb-2 text-sm font-medium text-main_font dark:text-white">Program Type</label>
                             <select id="program-type" class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                 <option selected>Choose a program type</option>
-                                <option value="vaccines">Vaccines</option>
-                                <option value="maternal">Maternal</option>
+                                <option value="vaccines">Vaccination Drive</option>
                                 <option value="senior_citizen">Senior Citizen</option>
                                 <option value="general_consultation">General Consultation</option>
-                                <option value="vaccination_drive">Vaccination Drive</option>
-                                <option value="child_healthcare">Child Healthcare</option>
                             </select>
                         </div>
                         <div class="grid grid-cols-2 gap-4">

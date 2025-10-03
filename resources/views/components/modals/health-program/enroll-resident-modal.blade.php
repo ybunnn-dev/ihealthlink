@@ -23,23 +23,8 @@
                     </div>
                 </div>
 
-                <div id="enrollResidentListContainer" class="space-y-3 max-h-64 overflow-y-auto border rounded-lg p-3">
-                    <div class="resident-card p-4 border rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer" data-resident-id="res-001" tabindex="0">
-                        <p class="font-semibold text-main_font pointer-events-none">Juan Dela Cruz</p>
-                        <p class="text-sm text-normal_font pointer-events-none">Purok 1</p>
-                    </div>
-                    <div class="resident-card p-4 border rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer" data-resident-id="res-002" tabindex="0">
-                        <p class="font-semibold text-main_font pointer-events-none">Maria Clara</p>
-                        <p class="text-sm text-normal_font pointer-events-none">Purok 2</p>
-                    </div>
-                    <div class="resident-card p-4 border rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer" data-resident-id="res-003" tabindex="0">
-                        <p class="font-semibold text-main_font pointer-events-none">Jose Rizal</p>
-                        <p class="text-sm text-normal_font pointer-events-none">Purok 1</p>
-                    </div>
-                    <div class="resident-card p-4 border rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer" data-resident-id="res-004" tabindex="0">
-                        <p class="font-semibold text-main_font pointer-events-none">Andres Bonifacio</p>
-                        <p class="text-sm text-normal_font pointer-events-none">Purok 3</p>
-                    </div>
+                <div id="enrollResidentListContainer" class="space-y-3 h-full max-h-80 overflow-y-auto border rounded-lg p-3">
+                    
                 </div>
             </div>
             <div class="flex items-center border-t border-gray-200 rounded-b dark:border-gray-600 gap-3 justify-end pt-6 px-6">

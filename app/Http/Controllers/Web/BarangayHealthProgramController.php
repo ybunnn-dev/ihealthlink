@@ -60,7 +60,8 @@ class BarangayHealthProgramController extends Controller
             'consultations' => function ($q) use ($enrolledResident) {
                 $q->where('program_id', $enrolledResident->program_id);
             },
-            'resident.family.household.purok.barangay'
+            'resident.family.household.purok.barangay',
+            'program'
         ]);
 
         
@@ -87,7 +88,7 @@ class BarangayHealthProgramController extends Controller
         // Filter by category (optional)
         if ($request->filled('category')) {
             $category = $request->input('category');
-            $query->where('category', $category); // make sure 'category' exists in your DB
+            $query->where('category', $category);
         }
 
         $programs = $query->get();

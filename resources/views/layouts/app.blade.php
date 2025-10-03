@@ -32,7 +32,7 @@
         <div class="min-h-screen bg-bg-col flex">
             @auth
                 @if(Auth::user()->role_id == 1)
-                    @include('partials.sidenav') <!-- Admin sidebar -->
+                    @include('partials.mho-sidenav') <!-- Admin sidebar -->
                 @else
                     @include('partials.bhc-sidenav') <!-- Non-admin sidebar -->
                 @endif

@@ -40,13 +40,24 @@
                             placeholder="your@email.com" />
                     </div>
 
-                    <div>
-                        <label for="password" class="block font-medium text-gray-700 mb-1 xs:mb-2 text-fluid-sm md:text-fluid-sm slg:text-xs lg2:text-xs lg3:text-sm">Password</label>
-                        <input id="password" name="password" type="password" required autocomplete="current-password"
-                            class="w-full px-3 xs:px-4 py-1 xs:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-mainblue focus:border-mainblue text-gray-900 placeholder-gray-400 text-fluid-sm md:text-fluid-sm slg:text-xs lg2:text-xs lg3:text-sm"
-                            placeholder="••••••••" />
+                  <div class="relative">
+                        <label for="password" class="block font-medium text-gray-700 mb-1 ...">Password</label>
+                        <input id="password" name="password" type="password" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-mainblue focus:border-mainblue text-gray-900 placeholder-gray-400 text-fluid-sm md:text-fluid-sm slg:text-xs lg2:text-xs lg3:text-sm" placeholder="••••••••" />
+                        
+                        <div class="absolute inset-y-0 right-0 top-7 pr-3 flex items-center">
+                            <input type="checkbox" id="togglePassword" class="hidden"/>
+                            <label for="togglePassword" class="cursor-pointer">
+                                <svg id="eye-open" class="w-6 h-6 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
+                                    <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/>
+                                </svg>
+                               <svg id="eye-slashed" class="w-6 h-6 text-gray-500 hidden" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7.029 7.029 0 0 0 2.79-.588zM5.21 3.088A7.028 7.028 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474L5.21 3.089z"/>
+                                    <path d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829l-2.83-2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12-.708.708z"/>
+                                </svg>
+                            </label>
+                        </div>
                     </div>
-
                    <div class="flex flex-col xs:flex-row xs:items-center xs:justify-between gap-2 lg:flex-col lg:items-start lg2:flex-col lg2:items-start lg3:flex-row lg3:items-center ">
                         <label for="remember_me" class="flex items-center">
                             <input id="remember_me" name="remember" type="checkbox"
@@ -94,4 +105,24 @@
             </div>
         </div>
     </div>
+    <script>
+        const passwordInput = document.getElementById('password');
+        const togglePasswordCheckbox = document.getElementById('togglePassword');
+        const eyeOpen = document.getElementById('eye-open');
+        const eyeSlashed = document.getElementById('eye-slashed');
+
+        togglePasswordCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                // Show password
+                passwordInput.type = 'text';
+                eyeOpen.classList.add('hidden');
+                eyeSlashed.classList.remove('hidden');
+            } else {
+                // Hide password
+                passwordInput.type = 'password';
+                eyeOpen.classList.remove('hidden');
+                eyeSlashed.classList.add('hidden');
+            }
+        });
+    </script>
 </x-guest-layout>
