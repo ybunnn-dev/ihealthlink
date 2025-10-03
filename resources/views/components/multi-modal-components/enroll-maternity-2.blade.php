@@ -20,7 +20,7 @@
         <!-- Expected Date of Confinement (EDC) -->
         <div>
             <label for="expected_date_of_confinement" class="block mb-2 text-sm font-medium text-main_font">Expected Date of Confinement (EDC)</label>
-            <input type="date" name="expected_date_of_confinement" id="expected_date_of_confinement" 
+            <input type="date" name="expected_date_of_confinement" disabled id="expected_date_of_confinement" 
                    class="border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
         </div>
 

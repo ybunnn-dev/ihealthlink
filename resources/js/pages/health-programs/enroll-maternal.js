@@ -34,7 +34,22 @@ const edcInput = document.getElementById('expected_date_of_confinement');
 const gravidaInput = document.getElementById('gravida');
 const paraInput = document.getElementById('para');
 
+const confirmMaternityModalEl = document.getElementById('enroll-maternity-confirmation-modal');
+
+// Detail display elements
+const confirmResidentName = document.getElementById('maternity-resident-name-confirm');
+const confirmLmp = document.getElementById('maternity-lmp-confirm');
+const confirmEdc = document.getElementById('maternity-edc-confirm');
+const confirmGravida = document.getElementById('maternity-gravida-confirm');
+const confirmPara = document.getElementById('maternity-para-confirm');
+
+// Action elements
+const confirmCheckbox = document.getElementById('confirm-maternity-enrollment-checkbox');
+const confirmCancelBtn = document.getElementById('enroll-maternity-confirmation-cancel-btn');
+const confirmProceedBtn = document.getElementById('enroll-maternity-confirmation-proceed-btn');
+
 const maternityModal = new Modal(maternityModalEl);
+const confirmMaternityModal = new Modal(confirmMaternityModalEl);
 
 // === Modal Elements ===
 const steps = [
@@ -85,20 +100,37 @@ const updateButtonsAndText = () => {
     }
 };
 
-// Event Listeners
+function formatDate(dateStr) {
+    if (!dateStr) return "";
+    const date = new Date(dateStr);
+    return date.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric"
+    });
+}
+
 maternityNextBtn.addEventListener('click', () => {
     if (currentStep < totalSteps - 1) {
         goToStep(currentStep + 1);
-        
+        maternityResidentNameInput.value = chosenResidentName;
         maternityNextBtn.disabled = true;
     } else {
-        alert('Enrolling resident...');
+        maternityModal.hide();
+        confirmResidentName.textContent = chosenResidentName;
+        confirmLmp.textContent = formatDate(lmpInput.value.trim());
+        confirmEdc.textContent = formatDate(edcInput.value.trim());
+        confirmGravida.textContent = gravidaInput.value.trim();
+        confirmPara.textContent = paraInput.value.trim();
+        confirmMaternityModal.show();
     }
 });
+
 
 maternityBackBtn.addEventListener('click', () => {
     if (currentStep > 0) {
         goToStep(currentStep - 1);
+        maternityNextBtn.disabled = false;
     }
 });
 
@@ -131,7 +163,7 @@ residentListContainer.addEventListener('click', (event) => {
     if (!clickedCard) return;
 
     // Find the card that is currently selected (if any)
-    const previouslySelected = enrollResidentListContainer.querySelector('.border-sky-500');
+    const previouslySelected = residentListContainer.querySelector('.border-sky-500');
 
     // Always remove the highlight from the previously selected card first
     if (previouslySelected) {
@@ -158,16 +190,17 @@ residentListContainer.addEventListener('click', (event) => {
 
 
 function populatePurokFilter(puroks) {
-    if (isPurokFilterPopulated || !puroks) return; // Exit if already populated or no puroks
+    if (isPurokFilterPopulated || !puroks) return;
 
+    console.log(puroks);
     puroks.forEach(purok => {
         const option = document.createElement('option');
         option.value = purok.id;
-        option.textContent = purok.name; // Assuming 'purok_name' from your backend
-        enrollResidentPurokFilter.appendChild(option);
+        option.textContent = purok.name;
+        purokFilterSelect.appendChild(option);
     });
 
-    isPurokFilterPopulated = true; // Set flag to true after populating
+    isPurokFilterPopulated = true;
 }
 
 function resetModalState() {
@@ -182,7 +215,7 @@ function resetModalState() {
     residentListContainer.innerHTML = `<p class="text-center text-gray-500 p-4">Loading residents...</p>`;
 }
 
-function fetchResidents(payload = { search: '', purok_id: '' }) {
+function fetchResidents(payload) {
     const params = new URLSearchParams();
     if (payload.search) params.append('search', payload.search);
     if (payload.purok_id) params.append('purok_id', payload.purok_id);
@@ -206,7 +239,6 @@ function fetchResidents(payload = { search: '', purok_id: '' }) {
         // Populate the purok filter (will only run once)
         populatePurokFilter(data.puroks);
 
-        // Render the resident cards
         renderResidents(data.residents);
     })
     .catch(error => {
@@ -216,8 +248,96 @@ function fetchResidents(payload = { search: '', purok_id: '' }) {
 }
 
 openMaternityModalBtn.addEventListener('click', function(){
+    const payload = { search: null, purok_id: null }
     resetModalState();
-    fetchResidents(); 
+    fetchResidents(payload); 
     maternityModal.show();
 });
 
+
+function validateForm() {
+    const areTextInputsValid =
+    lmpInput.value.trim() !== "" && 
+    paraInput.value.trim() !== "" &&
+    gravidaInput.value.trim() !== "";
+
+    console.log(areTextInputsValid);
+
+    return areTextInputsValid;
+}
+
+function updateButtonState() {
+    if (validateForm()) {
+        // If the form is valid, enable the button and remove disabled styles
+        maternityNextBtn.disabled = false;
+    } else {
+        // If the form is invalid, disable the button and add disabled styles
+        maternityNextBtn.disabled = true;
+    }
+}
+
+paraInput.addEventListener('input', function(){
+    validateForm();
+    updateButtonState()
+});
+
+gravidaInput.addEventListener('input', function(){
+    validateForm();
+    updateButtonState()
+});
+
+lmpInput.addEventListener('change', function () {
+    if (!lmpInput.value) return;
+
+    let lmpDate = new Date(lmpInput.value);
+
+    // Apply Naegele’s Rule
+    let edcDate = new Date(lmpDate);
+    edcDate.setFullYear(edcDate.getFullYear() + 1);
+    edcDate.setMonth(edcDate.getMonth() - 3);
+    edcDate.setDate(edcDate.getDate() + 7);
+
+    // Format to YYYY-MM-DD (for input type="date")
+    let yyyy = edcDate.getFullYear();
+    let mm = String(edcDate.getMonth() + 1).padStart(2, '0');
+    let dd = String(edcDate.getDate()).padStart(2, '0');
+
+    edcInput.value = `${yyyy}-${mm}-${dd}`;
+
+    validateForm();
+    updateButtonState()
+});
+
+
+confirmCheckbox.addEventListener('change', function(){
+    confirmProceedBtn.disabled = !this.checked;
+});
+
+confirmProceedBtn.addEventListener('click', function(){
+    const payload = {
+        health_program_id: parseInt(healthProgramId, 10),
+        resident_id: parseInt(selectedResidentId, 10),
+        last_menstrual_period: lmpInput.value,
+        expected_date_of_confinement: edcInput.value,
+        gravida: parseInt(gravidaInput.value, 10),
+        para: parseInt(paraInput.value, 10)
+    };
+
+    console.log(payload);
+    const residentId = parseInt(selectedResidentId);
+
+    const url = `/barangay/health-program/maternity/enroll/`;
+
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify(payload)
+    })
+    .then(res => res.json())
+    .then(data => console.log(data))
+    .catch(err => console.error(err));
+});

@@ -18,7 +18,8 @@ class Consultation extends Model
         'program_id',
         'consultation_date',
         'status',
-        'med_dis_id',
+        'med_dis_id', //null this
+        'schedule_extension_days',
         'consultation_title',
         'remarks',
         'updated_by',

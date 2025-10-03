@@ -135,22 +135,26 @@
                         <tbody>
                             @foreach($enrolledResident->consultations as $consultation)
                                 @php
-                                    $today = \Carbon\Carbon::now('Asia/Manila')->startOfDay();
-                                    $consultationDate = \Carbon\Carbon::parse($consultation->consultation_date);
+                                    $consultationDate = null;
 
-                                    $statusText = '';
-                                    $statusColorClass = '';
+                                    if($consultation->consultation_date){
+                                        $today = \Carbon\Carbon::now('Asia/Manila')->startOfDay();
+                                        $consultationDate = \Carbon\Carbon::parse($consultation->consultation_date);
 
-                                    if ($consultation->status === 'completed') {
-                                        $statusText = 'Completed';
-                                        $statusColorClass = 'bg-green-100 text-green-800';
-                                    } elseif ($consultation->status === 'pending') {
-                                        if ($consultationDate->lt($today)) {
-                                            $statusText = 'Late';
-                                            $statusColorClass = 'bg-red-100 text-red-800';
-                                        } else {
-                                            $statusText = 'Ongoing';
-                                            $statusColorClass = 'bg-blue-100 text-blue-800';
+                                        $statusText = '';
+                                        $statusColorClass = '';
+
+                                        if ($consultation->status === 'completed') {
+                                            $statusText = 'Completed';
+                                            $statusColorClass = 'bg-green-100 text-green-800';
+                                        } elseif ($consultation->status === 'pending') {
+                                            if ($consultationDate->lt($today)) {
+                                                $statusText = 'Late';
+                                                $statusColorClass = 'bg-red-100 text-red-800';
+                                            } else {
+                                                $statusText = 'Ongoing';
+                                                $statusColorClass = 'bg-blue-100 text-blue-800';
+                                            }
                                         }
                                     }
                                 @endphp
@@ -178,15 +182,13 @@
 
                                     {{-- Consultation Date --}}
                                     <td class="px-6 py-4">
-                                        {{ $consultationDate->format('M d, Y') }}
+                                        {{ $consultationDate ? $consultationDate->format('M d, Y') : '--' }}
                                     </td>
 
                                     {{-- Actions --}}
                                     <td class="px-6 py-4">
                                         <button
-                                            class="bg-mainblue text-white px-3 py-1 rounded-md text-xs font-semibold 
-                                            {{ $consultationDate->gt(now()) ? 'opacity-50 cursor-not-allowed' : '' }}"
-                                            {{ $consultationDate->gt(now()) ? 'disabled' : '' }}
+                                            class="bg-mainblue text-white px-3 py-1 rounded-md text-xs font-semibold"
                                         >
                                             UPDATE
                                         </button>

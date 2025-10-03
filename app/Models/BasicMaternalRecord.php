@@ -13,7 +13,7 @@ class BasicMaternalRecord extends Model
     protected $table = 'basic_maternal_records';
 
     protected $fillable = [
-        'resident_id',
+        'enrolled_resident_id',
         'last_menstrual_period',
         'gravida',
         'para',
@@ -23,22 +23,12 @@ class BasicMaternalRecord extends Model
     /**
      * Relationship: belongs to a resident
      */
-    public function resident()
+    public function enrolledResident()
     {
-        return $this->belongsTo(Resident::class, 'resident_id');
+        return $this->belongsTo(EnrolledResident::class, 'enrolled_resident_id');
     }
 
     /**
      * Mutator: Auto-compute EDC when LMP is set
      */
-    public function setLastMenstrualPeriodAttribute($value)
-    {
-        $this->attributes['last_menstrual_period'] = $value;
-
-        // Compute EDC using Naegele’s Rule
-        $lmp = Carbon::parse($value);
-        $edc = $lmp->copy()->addYear()->subMonths(3)->addDays(7);
-
-        $this->attributes['expected_date_of_confinement'] = $edc->toDateString();
-    }
 }

@@ -18,6 +18,7 @@ use App\Http\Controllers\Web\MidwifeDashboardController;
 use App\Http\Controllers\Web\BarangayReportsController;
 use App\Http\Controllers\Web\ResidentController;
 use App\Http\Controllers\Web\UserManualController;
+use App\Http\Controllers\Web\MaternalController;
 
 Route::get('/', function () {
     return view('auth.login');
@@ -213,6 +214,7 @@ Route::middleware([
     //inside view 
     Route::get('/barangay/medicines/{id}', [MedicineController::class, 'show'])->name('midwife.medicines.show');
 
+    
 
     //delete a medicine
     Route::put('/midwife/medicine/delete={id}', [MedicineController::class, 'delete']);
@@ -255,7 +257,8 @@ Route::middleware([
     '/barangay/health-program/{healthProgramId}/enroll/{residentId}',
         [BarangayHealthProgramController::class, 'enrollResident']
     )->name('barangay.health-program.enroll');
-
+    
+    Route::post('/barangay/health-program/maternity/enroll/',[MaternalController::class, 'enroll']);
 
     Route::get('/barangay/health-program/fetch', [BarangayHealthProgramController::class, 'getAllPrograms'])
     ->name('barangay.health-program.fetch');
