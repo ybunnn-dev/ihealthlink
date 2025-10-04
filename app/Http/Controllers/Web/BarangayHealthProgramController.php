@@ -25,7 +25,7 @@ class BarangayHealthProgramController extends Controller
         }
 
         $enrolledResidents = EnrolledResident::with(['resident.consultations' => function ($q) use ($healthProgram) {
-                $q->where('program_id', $healthProgram->id);
+            $q->where('program_id', $healthProgram->id);
             }])
             ->where('program_id', $healthProgram->id)
             // Only residents from the midwife's barangay

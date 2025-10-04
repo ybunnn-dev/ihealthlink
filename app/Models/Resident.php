@@ -97,8 +97,20 @@ class Resident extends Model
     {
         $today = Carbon::now('Asia/Manila')->startOfDay();
 
+        // ✅ If the enrollment itself is already done/terminated, stop here
+        if (in_array($this->status, ['completed', 'terminated'])) {
+            return [
+                'status' => ucfirst($this->status), // "Completed" or "Terminated"
+                'color'  => $this->status === 'completed'
+                    ? 'bg-green-100 text-green-800'
+                    : 'bg-gray-100 text-gray-800',
+                'date'   => 'N/A',
+            ];
+        }
+
         $pending = $this->consultations
             ->where('status', 'pending')
+            ->whereNotNull('consultation_date')
             ->sortBy('consultation_date');
 
         if ($pending->isEmpty()) {
@@ -130,6 +142,7 @@ class Resident extends Model
             'date'   => $date->format('M d, Y'),
         ];
     }
+
     public function maternalRecords()
     {
         return $this->hasMany(BasicMaternalRecord::class, 'resident_id');

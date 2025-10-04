@@ -17,17 +17,11 @@ return new class extends Migration
             // Resident who is receiving the consultation
             $table->unsignedBigInteger('resident_id');
 
-            // Program (nullable for walk-ins)
-            $table->unsignedBigInteger('program_id')->nullable();
-
             // The date of the consultation (scheduled or walk-in)
             $table->dateTime('consultation_date')->nullable();
 
             // Status: pending, completed, etc.
             $table->enum('status', ['pending', 'completed'])->default('pending');
-
-            // Medical disposition ID (placeholder, no FK for now)
-            $table->unsignedBigInteger('med_dis_id')->nullable();
 
             // Extra details
             $table->string('consultation_title')->nullable();
@@ -42,10 +36,6 @@ return new class extends Migration
             $table->foreign('resident_id')
                   ->references('id')->on('residents')
                   ->onDelete('cascade');
-
-            $table->foreign('program_id')
-                  ->references('id')->on('health_programs')
-                  ->onDelete('set null'); // if program is deleted, keep record but nullify program_id
         });
     }
 

@@ -15,15 +15,6 @@ return new class extends Migration
         Schema::table('program_fields', function (Blueprint $table) {
             $table->string('title')->after('id');
         });
-
-        // Add foreign key constraint for med_dis_id in consultations
-        Schema::table('consultations', function (Blueprint $table) {
-            $table->unsignedBigInteger('med_dis_id')->nullable()->change();
-            $table->foreign('med_dis_id')
-                  ->references('id')
-                  ->on('medicine_distributions')
-                  ->onDelete('set null');
-        });
     }
 
     /**
