@@ -1,5 +1,5 @@
 <div id="add-health-program-modal" tabindex="-1" aria-hidden="true" class="hidden fixed inset-0 z-50 flex justify-center items-center w-full h-full">
-    <div class="relative p-4 w-full max-w-4xl max-h-full">
+    <div class="relative p-4 w-full max-w-5xl max-h-full">
         <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-800 py-8 px-10">
             <div class="flex flex-col items-center justify-center rounded-t mb-6 border-b border-gray-200 dark:border-gray-600 pb-6">
                 <h3 class="text-xl font-semibold text-main_font dark:text-white">
@@ -27,17 +27,16 @@
                                 <input type="number" id="max-age" class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="e.g., 65">
                             </div>
                         </div>
-
-                        <div>
-                            <label for="program-type" class="block mb-2 text-sm font-medium text-main_font dark:text-white">Program Type</label>
-                            <select id="program-type" class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                <option selected>Choose a program type</option>
-                                <option value="vaccines">Vaccination Drive</option>
-                                <option value="senior_citizen">Senior Citizen</option>
-                                <option value="general_consultation">General Consultation</option>
-                            </select>
-                        </div>
                         <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label for="program-type" class="block mb-2 text-sm font-medium text-main_font dark:text-white">Program Type</label>
+                                <select id="program-type" class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                    <option selected>Choose a program type</option>
+                                    <option value="vaccines">Vaccination Drive</option>
+                                    <option value="senior_citizen">Senior Citizen</option>
+                                    <option value="general_consultation">General Consultation</option>
+                                </select>
+                            </div>
                             <div>
                                 <label for="program-mode" class="block mb-2 text-sm font-medium text-main_font dark:text-white">Program Mode</label>
                                 <select id="program-mode" class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
@@ -47,6 +46,10 @@
                                     <option value="custom">Custom</option>
                                 </select>
                             </div>
+                            
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4"> 
                             <div>
                                 <label for="schedule-type" class="block mb-2 text-sm font-medium text-main_font dark:text-white">Schedule Type</label>
                                 <select id="schedule-type" disabled class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 disabled:bg-bg_col">
@@ -57,33 +60,41 @@
                                     <option value="custom">Custom</option>
                                 </select>
                             </div>
-                        </div>
-                        <div class="grid grid-cols-2 gap-4">
-                           <div>
+                             <div>
                                 <label for="number-of-fields" class="block mb-2 text-sm font-medium text-main_font dark:text-white">No. of Fields</label>
                                 <input type="text" id="number-of-fields" disabled placeholder="e.g., '4'" class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 disabled:bg-bg_col">
                             </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
                             <div>
                                 <label for="custom-interval" class="block mb-2 text-sm font-medium text-main_font dark:text-white">Interval (Days)</label>
-                                <input type="text" id="custom-interval" disabled placeholder="e.g., '3 days'" class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 disabled:bg-bg_col">
+                                <input type="number" id="custom-interval" disabled placeholder="e.g., '3 days'" class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 disabled:bg-bg_col">
+                            </div>
+                              <div>
+                                <label for="extension-days" class="block mb-2 text-sm font-medium text-main_font dark:text-white">Extension(Days)</label>
+                                <input type="number" id="extension-days" placeholder="e.g., '3'" class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 disabled:bg-bg_col">
                             </div>
                         </div>
                     </div>
 
                     <div class="space-y-4">
+                        <div>
+                            <label for="schedule-name" class="block mb-2 text-sm font-medium text-main_font dark:text-white">Schedule Name</label>
+                            <input type="text" disabled  id="schedule-name" class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 disabled:bg-bg_col" placeholder="e.g., '1st Dose'">
+                        </div>
                         <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label for="schedule-name" class="block mb-2 text-sm font-medium text-main_font dark:text-white">Schedule Name</label>
-                                <input type="text" disabled  id="schedule-name" class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 disabled:bg-bg_col" placeholder="e.g., '1st Dose'">
-                            </div>
                             <div>
                                 <label for="schedule-interval" class="block mb-2 text-sm font-medium text-main_font dark:text-white">Interval (Days)</label>
                                 <input type="number" disabled id="schedule-interval" class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 disabled:bg-bg_col" placeholder="e.g., 6">
                             </div>
+                            <div>
+                                <label for="custom-extension" class="block mb-2 text-sm font-medium text-main_font dark:text-white">Extension (Days)</label>
+                                <input type="number" disabled id="custom-extension" class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 disabled:bg-bg_col" placeholder="e.g., 6">
+                            </div>
                         </div>
                         <button id="add-sched-btn" type="button" disabled class="w-full text-white bg-mainblue hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-mainblue dark:focus:ring-blue-800 disabled:opacity-50 disabled:cursor-not-allowed">Add Schedule</button>
                         
-                        <div class="border-2 border-dashed rounded-lg h-64 overflow-y-auto p-4 dark:border-gray-600">
+                        <div class="border-2 border-dashed rounded-lg h-44 overflow-y-auto p-4 dark:border-gray-600">
                             <div class="flex items-center justify-center h-full">
                                 <p class="text-gray-400">Added schedules will appear here</p>
                             </div>

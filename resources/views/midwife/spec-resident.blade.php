@@ -46,7 +46,7 @@
                         <div class="h-56 bg-f7 rounded-lg flex items-center justify-center px-10 py-6">
                             <div class="flex flex-col items-center justify-center text-main_font">
                                 <h1 class="mb-2">Scheduled Activity</h1>
-                                <h2 class="font-semibold text-2xl text-center">ChupaFest 2025</h2>
+                                <h2 class="font-semibold text-2xl text-center">National Immunization Program 2025</h2>
                                 <p class="text-sm">March 17, 2025</p>
                             </div>
                         </div>    

@@ -15,10 +15,9 @@ class Consultation extends Model
     // Mass assignable attributes
     protected $fillable = [
         'resident_id',
-        'program_id',
+        'enrolled_resident_id',
         'consultation_date',
         'status',
-        'med_dis_id', //null this
         'schedule_extension_days',
         'consultation_title',
         'remarks',

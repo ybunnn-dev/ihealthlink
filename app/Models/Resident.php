@@ -92,60 +92,12 @@ class Resident extends Model
     {
         return $this->hasMany(Consultation::class, 'resident_id');
     }
-
-    public function getNextConsultationAttribute()
-    {
-        $today = Carbon::now('Asia/Manila')->startOfDay();
-
-        // ✅ If the enrollment itself is already done/terminated, stop here
-        if (in_array($this->status, ['completed', 'terminated'])) {
-            return [
-                'status' => ucfirst($this->status), // "Completed" or "Terminated"
-                'color'  => $this->status === 'completed'
-                    ? 'bg-green-100 text-green-800'
-                    : 'bg-gray-100 text-gray-800',
-                'date'   => 'N/A',
-            ];
-        }
-
-        $pending = $this->consultations
-            ->where('status', 'pending')
-            ->whereNotNull('consultation_date')
-            ->sortBy('consultation_date');
-
-        if ($pending->isEmpty()) {
-            return [
-                'status' => 'Completed',
-                'color'  => 'bg-green-100 text-green-800',
-                'date'   => 'N/A',
-            ];
-        }
-
-        // Always get the *first pending* consultation
-        $next = $pending->first();
-        $date = Carbon::parse($next->consultation_date)->startOfDay();
-
-        if ($date->lt($today)) {
-            $status = 'Late';
-            $color  = 'bg-red-100 text-red-800';
-        } elseif ($date->isSameDay($today)) {
-            $status = 'Today';
-            $color  = 'bg-yellow-100 text-yellow-800';
-        } else {
-            $status = 'Upcoming';
-            $color  = 'bg-blue-100 text-blue-800';
-        }
-
-        return [
-            'status' => $status,
-            'color'  => $color,
-            'date'   => $date->format('M d, Y'),
-        ];
-    }
-
     public function maternalRecords()
     {
         return $this->hasMany(BasicMaternalRecord::class, 'resident_id');
     }
-
+    public function basicHealthRecord()
+    {
+        return $this->hasOne(BasicHealthRecord::class);
+    }
 }

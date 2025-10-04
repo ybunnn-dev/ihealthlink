@@ -188,7 +188,9 @@
                             </thead>
                             <tbody id="enrolled-residents-tbody">
                                 @forelse($enrolledResidents as $enrollment)
-                                    @php $info = $enrollment->resident->next_consultation; @endphp
+                                   @php
+                                        $info = $enrollment->getNextConsultationAttribute($enrollment->id);
+                                    @endphp
 
                                     <tr class="bg-white border-b text-normal_font hover:bg-gray-50 cursor-pointer" 
                                         onclick="window.location='{{ route('midwife.enrolled-resident', $enrollment->id) }}'">

@@ -22,7 +22,7 @@
                                 </g>
                              </svg>   
                             <div class="flex flex-col">
-                                <h1 class="text-sub_blue text-lg slg3:text-xl xl:text-xl 2xl:text-2xl font-bold mt-2">5,201</h1>
+                                <h1 class="text-sub_blue text-lg slg3:text-xl xl:text-xl 2xl:text-2xl font-bold mt-2">{{ $totalResidents }}</h1>
                                 <p class="text-sub_blue text-xs -mt-1 slg3:text-fluid-xxs xl:text-xs 2xl:text-xs">Residents</p>
                             </div>
                         </div>
@@ -37,7 +37,7 @@
                                 </g>
                             </svg> 
                             <div class="flex flex-col">
-                                <h1 class="text-maingreen text-2xl font-bold mt-2">5,201</h1>
+                                <h1 class="text-maingreen text-2xl font-bold mt-2">{{ $under5 }}</h1>
                                 <p class="text-maingreen text-xs -mt-1 ">Early Childhood</p>
                             </div>
                         </div>
@@ -57,7 +57,7 @@
                                 </g>
                             </svg> 
                             <div class="flex flex-col">
-                                <h1 class="text-col_orange text-2xl font-bold mt-2">5,201</h1>
+                                <h1 class="text-col_orange text-2xl font-bold mt-2">{{ $sixtyUp }}</h1>
                                 <p class="text-col_orange text-xs -mt-1 ">Senior Citizen</p>
                             </div>
                         </div>
@@ -130,33 +130,10 @@
         </div>
 
         <!-- Bottom Cards -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
+        <div class="grid grid-cols-1 ">
             <div class="bg-white rounded-xl p-10">
                 <div class="text-sm font-semibold mb-4 text-sub_blue -pt-12">Medicine Stocks</div>
                 <div class="space-y-2" id="medicineStocksChartContainer"></div>
-            </div>
-            <div class="bg-white rounded-xl p-6 shadow">
-                <div class="text-sub_blue font-medium mb-2">Residents with Delayed Consultations</div>
-               <table class="w-full text-sm mt-3">
-                    <thead>
-                        <tr class="text-left text-normal_font bg-gray-100">
-                            <th class="p-2">Name</th>          <th class="p-2">Program</th>       <th class="p-2">Expected Date</th> </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="p-2">Ron Peter Mortega</td> <td class="p-2">Deworming</td>       <td class="p-2">Feb 10, 2025</td>    </tr>
-                        <tr>
-                            <td class="p-2">Ron Peter Mortega</td>
-                            <td class="p-2">Deworming</td>
-                            <td class="p-2">Feb 10, 2025</td>
-                        </tr>
-                        <tr>
-                            <td class="p-2">Ron Peter Mortega</td>
-                            <td class="p-2">Deworming</td>
-                            <td class="p-2">Feb 10, 2025</td>
-                        </tr>
-                    </tbody>
-                </table>
             </div>
         </div>
     </div>

@@ -286,6 +286,7 @@ class ResidentController extends Controller
             'healthSigns',
             'medicalHistory',
             'familyHistory',
+            'basicHealthRecord',
             'ncdRiskFactor',
             'riskAssessment',
         ]);
@@ -380,7 +381,8 @@ class ResidentController extends Controller
             })
             // --- Exclude residents already enrolled ---
             ->whereDoesntHave('enrolledResidents', function ($q) use ($programId) {
-                $q->where('program_id', $programId);
+                $q->where('program_id', $programId)
+                ->where('status', 'active'); // only exclude active enrollments
             })
             // --- Female only ---
             ->where('sex', 'female')

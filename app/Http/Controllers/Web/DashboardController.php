@@ -8,8 +8,9 @@ use Illuminate\Http\Request;
 use App\Models\DailyActivities;
 use App\Models\Schedules;
 use App\Models\Midwife;
+use App\Models\Resident;
 
-class MidwifeDashboardController extends Controller
+class DashboardController extends Controller
 {
     // Method to show the dashboard
     public function index($barangay)
@@ -26,11 +27,24 @@ class MidwifeDashboardController extends Controller
                                             ->with('assignedBHWs', 'healthProgram', 'barangay')
                                             ->get();
 
-        // You can pass the barangay name/id to the view if needed
+        // Resident statistics
+        $residents = Resident::whereHas('family.household.purok', function($q) use ($midwife) {
+                                $q->where('brgy_id', $midwife->brgy_id);
+                            });
+
+        $totalResidents = $residents->count();
+
+        $under5 = (clone $residents)->whereRaw("TIMESTAMPDIFF(YEAR, birthdate, CURDATE()) < 5")->count();
+
+        $sixtyUp = (clone $residents)->whereRaw("TIMESTAMPDIFF(YEAR, birthdate, CURDATE()) >= 60")->count();
+
           return view('midwife.dashboard', [
             'barangay' => $barangay,
             'dailyActivities' => $dailyActivities,
-            'scheduledActivities' => $schedules
+            'scheduledActivities' => $schedules,
+            'totalResidents' => $totalResidents,
+            'under5' => $under5,
+            'sixtyUp' => $sixtyUp,
         ]);
     }
 }

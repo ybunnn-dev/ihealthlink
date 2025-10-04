@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 
 use App\Models\Consultation;
-use App\Models\ProgramField;
+use App\Models\ProgramSchedule;
 use App\Models\HealthProgram;
 use App\Models\EnrolledResident;
 
@@ -24,15 +24,21 @@ class BarangayHealthProgramController extends Controller
             $healthProgram = HealthProgram::latest()->first();
         }
 
-        $enrolledResidents = EnrolledResident::with(['resident.consultations' => function ($q) use ($healthProgram) {
-            $q->where('program_id', $healthProgram->id);
+        // Get enrolled residents for this health program and midwife's barangay
+        $enrolledResidents = EnrolledResident::with(['consultations' => function ($q) {
+                $q->orderBy('consultation_date'); // optional: sort consultations
             }])
             ->where('program_id', $healthProgram->id)
-            // Only residents from the midwife's barangay
             ->whereHas('resident.family.household.purok', function ($q) use ($barangayId) {
                 $q->where('brgy_id', $barangayId);
             })
             ->get();
+
+        // Filter consultations to only those matching the enrolled resident
+        $enrolledResidents->each(function ($enrollment) {
+            $enrollment->consultations = $enrollment->consultations
+                ->where('enrolled_resident_id', $enrollment->id);
+        });
 
         $totalEnrolled = $enrolledResidents->count();
 
@@ -58,16 +64,24 @@ class BarangayHealthProgramController extends Controller
     {
         $enrolledResident->load([
             'consultations' => function ($q) use ($enrolledResident) {
-                $q->where('program_id', $enrolledResident->program_id);
+                $q->where('enrolled_resident_id', $enrolledResident->id);
             },
             'resident.family.household.purok.barangay',
+            'resident.basicHealthRecord',
             'program'
         ]);
 
-        
+        // Conditionally load maternalRecord if program category matches
+        if ($enrolledResident->program && $enrolledResident->program->category === 'maternal_health_tcl') {
+            $enrolledResident->load('maternalRecord');
+        }
+
         \Log::info($enrolledResident);
+
         return view('midwife.enrolled-resident', compact('enrolledResident'));
     }
+
+
     public function getAllPrograms(Request $request)
     {
         $personnel = Auth::user()->midwife;
@@ -134,7 +148,7 @@ class BarangayHealthProgramController extends Controller
             'status' => 'active', // default status
         ]);
 
-        $this->createConsultationSchedules($residentId, $healthProgramId);
+        $this->createConsultationSchedules($residentId, $healthProgramId, $enrollment->id);
 
         return response()->json([
             'message' => 'Resident enrolled successfully',
@@ -142,10 +156,10 @@ class BarangayHealthProgramController extends Controller
         ], 201);
     }
 
-    protected function createConsultationSchedules($residentId, $programId)
+    protected function createConsultationSchedules($residentId, $programId, $enrolledResident)
     {
         // Fetch program fields in order
-        $fields = ProgramField::where('program_id', $programId)
+        $fields = ProgramSchedule::where('program_id', $programId)
             ->where('status', 'active')
             ->orderBy('order', 'asc')
             ->get();
@@ -162,11 +176,12 @@ class BarangayHealthProgramController extends Controller
             $currentDate = $currentDate->copy()->addDays($field->interval_days);
 
             $consultations[] = [
-                'resident_id'        => $residentId,
-                'program_id'         => $programId,
+                'resident_id' => $residentId,
+                'enrolled_resident_id'    => $enrolledResident,
                 'consultation_date'  => $currentDate,
                 'status'             => 'pending',
                 'consultation_title' => $field->title,
+                'schedule_extension_days' => $field->extension_days,
                 'remarks'            => null,
                 'updated_by'         => auth()->id(),
                 'created_at'         => now(),

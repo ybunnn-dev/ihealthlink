@@ -93,8 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
     import('./pages/health-programs/change-program.js');
     
     const programTypeDefine = document.getElementById('program_type_content').textContent;
-    
-    console.log(programTypeDefine);
+ 
     if(programTypeDefine === 'maternal_health_tcl'){
       import('./pages/health-programs/enroll-maternal.js');
     }else if(programTypeDefine === 'child_healthcare_tcl'){
@@ -102,6 +101,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }else{
       import('./pages/health-programs/enroll-resident.js');
     } 
+  }
+  else if(bodyClass.contains('spec-enrolled')){
+    const programTypeDefine = document.getElementById('program_type_content').textContent;
+
+    if(programTypeDefine === 'maternal_health_tcl'){
+      import('./pages/health-programs/update-maternity.js');
+    }else if(programTypeDefine === 'child_healthcare_tcl'){
+      console.log('hello');
+    }else{
+      console.log('hello 2');
+    }
+    import('./pages/health-programs/update-consultation.js');
   }
   else {
     console.log('Not on reports page - charts not loaded');

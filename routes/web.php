@@ -14,7 +14,7 @@ use App\Http\Controllers\Web\HealthProgramController;
 use App\Http\Controllers\Web\HouseholdController;
 use App\Http\Controllers\Web\FamilyController;
 use App\Http\Controllers\Web\RedirectBarangayController;
-use App\Http\Controllers\Web\MidwifeDashboardController;
+use App\Http\Controllers\Web\DashboardController;
 use App\Http\Controllers\Web\BarangayReportsController;
 use App\Http\Controllers\Web\ResidentController;
 use App\Http\Controllers\Web\UserManualController;
@@ -123,7 +123,7 @@ Route::middleware([
     /** Barangay Health Center Modules **/
 
     // Midwife-specific dashboard
-     Route::get('/midwife/{barangay}/dashboard', [MidwifeDashboardController::class, 'index'])
+     Route::get('/midwife/{barangay}/dashboard', [DashboardController::class, 'index'])
              ->name('midwife.dashboard');
 
     // Midwife-specific dashboard

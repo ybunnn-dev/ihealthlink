@@ -55,19 +55,21 @@ class HealthProgramController extends Controller
             'schedule_type' => $request->input('schedType', null),
             'total_fields'  => $request->input('field_num', null),
             'status'        => 'active',
+            
         ]);
 
         switch ($request->input('program_mode')) {
             case 'fixed':
                 $fieldNum = (int) $request->input('field_num');
                 $interval = (int) $request->input('interval');
-
+                $extension = (int) $request->input('extension_days');
                 for ($i = 1; $i <= $fieldNum; $i++) {
-                    ProgramField::create([
+                    ProgramSchedule::create([
                         'title'        => "Field $i",
                         'program_id'   => $program->id,
                         'interval_days'=> $interval,
                         'order'        => $i,
+                        'extension_days' => $extension,
                         'status'       => 'active',
                     ]);
                 }
@@ -76,23 +78,26 @@ class HealthProgramController extends Controller
             case 'custom':
                 $schedules = $request->input('fixedSched', []);
                 foreach ($schedules as $sched) {
-                    ProgramField::create([
+                    ProgramSchedule::create([
                         'title'        => $sched['schedTitle'],
                         'program_id'   => $program->id,
                         'interval_days'=> (int) $sched['intervalDays'],
                         'order'        => (int) $sched['position'],
+                        'extension_days' => (int) $sched['extension_days'],
                         'status'       => 'active',
                     ]);
                 }
                 break;
 
             case 'continuous':
-                ProgramField::create([
+                $extension = (int) $request->input('extension_days');
+                ProgramSchedule::create([
                     'title'        => "Continuous Field",
                     'program_id'   => $program->id,
                     'interval_days'=> (int) $request->input('interval', 0),
                     'order'        => 1,
                     'status'       => 'active',
+                    'extension_days' => $extension,
                 ]);
                 break;
         }

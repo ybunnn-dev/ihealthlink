@@ -18,6 +18,9 @@ const cancelBtn = document.getElementById('cancel-add-health-program');
 const submitBtn = document.getElementById('add-health-program-submit');
 const openAddHpButton = document.getElementById('page-add-healthProgram-button');
 const fieldNum = document.getElementById('number-of-fields');
+const extensionDays = document.getElementById('extension-days');
+const customExtension = document.getElementById('custom-extension');
+
 // --- Modal & Containers ---
 const confirmProgramModalEl = document.getElementById('confirm-add-program-modal');
 const programInfoReviewDiv = document.getElementById('program-info-review');
@@ -62,13 +65,13 @@ function validateForm() {
     switch (mode) {
         case 'fixed':
             // Rule 2: For 'fixed' mode, these fields must not be empty
-            if (!scheduleTypeSelect.value || !fieldNum.value || !customIntervalInput.value) {
+            if (!scheduleTypeSelect.value || !fieldNum.value || !customIntervalInput.value || !extensionDays.value.trim()) {
                 return false;
             }
             break;
 
         case 'continuous':
-            if (!scheduleTypeSelect.value || !customIntervalInput.value.trim()) {
+            if (!scheduleTypeSelect.value || !customIntervalInput.value.trim() || !extensionDays.value.trim()) {
                 return false;
             }
             break;
@@ -97,7 +100,7 @@ function handleFormChanges() {
 
 const fieldsToWatch = [
     programNameInput, minAgeInput, maxAgeInput, 
-    fieldNum, customIntervalInput
+    fieldNum, customIntervalInput, extensionDays
 ];
 
 // Listen for typing in text/number fields
@@ -133,6 +136,8 @@ programModeSelect.addEventListener('change', function () {
         scheduleIntervalInput.disabled = true;
         scheduleIntervalInput.value = null;
         fieldNum.disabled = false;
+        extensionDays.disabled = false;
+        customExtension.disabled = true;
     } 
     else if (selectedMode === 'continuous') {
         scheduleTypeSelect.disabled = false;
@@ -141,6 +146,8 @@ programModeSelect.addEventListener('change', function () {
         scheduleIntervalInput.disabled = true;
         scheduleIntervalInput.value = null;
         fieldNum.disabled = true;
+        extensionDays.disabled = false;
+        customExtension.disabled = true;
         fieldNum.value = null;
 
     } else if (selectedMode === 'custom') {
@@ -149,12 +156,12 @@ programModeSelect.addEventListener('change', function () {
         customIntervalInput.disabled = true
         scheduleTypeSelect.value = 'reset';
         customIntervalInput.value = null;
-
+        extensionDays.disabled = true;
         scheduleNameInput.disabled = false;
         scheduleIntervalInput.value = 0;
         fieldNum.disabled = true;
-        fieldNum.value = null;
-        
+        fieldNum.value = null; 
+        customExtension.disabled = false;
     }
 });
 
@@ -169,19 +176,19 @@ scheduleTypeSelect.addEventListener('change', function(){
 
      switch(selectSched){
         case 'weekly':
-            customIntervalInput.disabled = true
+            customIntervalInput.disabled = true;
             customIntervalInput.value = 7;
             break;
         case 'monthly':
-            customIntervalInput.disabled = true
+            customIntervalInput.disabled = true;
             customIntervalInput.value = 30;
             break;
         case 'annually':
-            customIntervalInput.disabled = true
+            customIntervalInput.disabled = true;
             customIntervalInput.value = 365;
             break;
         case 'custom':
-             customIntervalInput.disabled = false;
+             customIntervalInput.disabled = false; 
              break;
         default:
             customIntervalInput.disabled = true
@@ -194,8 +201,9 @@ function checkCustomFields() {
     // Get the trimmed values from the input fields.
     const nameValue = scheduleNameInput.value.trim();
     const intervalValue = scheduleIntervalInput.value.trim();
-
-    addScheduleBtn.disabled = !(nameValue && intervalValue);
+    const extensionValue = customExtension.value.trim();
+    
+    addScheduleBtn.disabled = !(nameValue && intervalValue && extensionValue);
 }
 
 // --- Event Listeners ---
@@ -216,11 +224,13 @@ function updateScheduleSection() {
     }
 
     fixedScheds.forEach(sched => {
+        console.log(sched.extension);
         const scheduleItemHTML = `
             <div class="flex justify-between items-center bg-gray-100 dark:bg-gray-700 p-3 rounded-lg mb-2" data-position="${sched.position}">
                 <div>
                     <p class="font-semibold text-gray-800 dark:text-white">${sched.schedTitle}</p>
                     <p class="text-sm text-gray-500 dark:text-gray-400">${sched.intervalDays} Days Interval</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">${sched.extension_days} Days Extension</p>
                 </div>
                 <div class="flex items-center space-x-3">
                     <div class="flex flex-col">
@@ -276,6 +286,7 @@ addScheduleBtn.addEventListener('click', function () {
     const fixedSched = {
         schedTitle: scheduleNameInput.value.trim(),
         intervalDays: parseInt(scheduleIntervalInput.value, 10) || 0,
+        extension_days: parseInt(customExtension.value, 10),
         position: currentPosition,
     };
     
@@ -386,8 +397,9 @@ submitBtn.addEventListener('click', function(){
             program_type: programTypeSelect.value, 
             program_mode: programModeSelect.value,
             schedType: scheduleTypeSelect.value,
-            field_num: parseInt(fieldNum.value, 10), //fuck u mali kaini
-            interval: parseInt(customIntervalInput.value, 10)
+            field_num: parseInt(fieldNum.value, 10), 
+            interval: parseInt(customIntervalInput.value, 10),
+            extension_days: parseInt(extensionDays.value, 10)
         }
 
     }
@@ -400,7 +412,8 @@ submitBtn.addEventListener('click', function(){
             program_mode: programModeSelect.value,
             schedType: scheduleTypeSelect.value,
             field_num: null,
-            interval: parseInt(customIntervalInput.value)
+            interval: parseInt(customIntervalInput.value),
+            extension_days: parseInt(extensionDays.value, 10)
         }
     }
     else if(programModeSelect.value === 'custom'){

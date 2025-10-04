@@ -11,21 +11,23 @@
     <div class="bg-white p-6 rounded-xl">
         <div class="relative overflow-x-auto rounded-lg">
             <table class="w-full text-sm text-left text-main_font">
-                <thead class="text-xs text-main_font uppercase bg-col_tab_h text-center">
+                <thead class="text-xs text-main_font uppercase bg-col_tab_h">
                     <tr>
                         <th scope="col" class="px-6 py-3">Order</th>
                         <th scope="col" class="px-6 py-3">Title</th>
                         <th scope="col" class="px-6 py-3">Interval</th>
+                        <th scope="col" class="px-6 py-3">Extension</th>
                         <th scope="col" class="px-6 py-3">Status</th>
                         <th scope="col" class="px-6 py-3">Actions</th>
                     </tr>
                 </thead>
-                <tbody class="text-center">
+                <tbody>
                     @forelse ($programfields as $field)
                         <tr class="bg-white border-b text-normal_font hover:bg-gray-50">
                             <td class="px-6 py-4 font-medium">{{ $field->order }}</td>
                             <td class="px-6 py-4">{{ $field->title }}</td>
                             <td class="px-6 py-4">{{ $field->interval_days }} Days</td>
+                            <td class="px-6 py-4">{{ $field->extension_days }} Days</td>
                             <td class="px-6 py-4">
                                 {{-- Example of displaying status with a badge --}}
                                 <span class="px-2 py-1 font-semibold leading-tight rounded-full {{ $field->status === 'active' ? 'text-green-700 bg-green-100' : 'text-gray-700 bg-gray-100' }}">
@@ -33,7 +35,7 @@
                                 </span>
                             </td>
                             <td class="px-6 py-4">
-                                <div class="flex justify-center items-center space-x-4">
+                                <div class="flex justify-start items-start space-x-4">
                                     <button type="button" 
                                             class="js-edit-field-btn text-mainblue hover:text-blue-900" 
                                             data-field-id="{{ $field->id }}" 
@@ -59,7 +61,7 @@
                         <tr class="border-b bg-f7 text-normal_font">
                             <td colspan="5">
                                 <div class="text-center py-10">
-                                    <img src="{{ asset('images/illustrations/empty.png') }}" alt="No fields found" class="mx-auto w-64">
+                                    <img src="{{ asset('images/illustrations/empty.png') }}" alt="No fields found" class="w-64">
                                     <p class="mt-5 text-lg font-medium text-gray-700">
                                         No Program Fields Added Yet.
                                     </p>
