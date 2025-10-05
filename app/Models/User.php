@@ -112,6 +112,10 @@ class User extends Authenticatable
     {
         return $this->hasOne(BHW::class, 'user_id');
     }
+
+    public function bhwWeb(){
+        return $this->hasOne(BHW::class, 'user_id'); //the role_id should be 4
+    }
     public function residentsAdded()
     {
         return $this->hasMany(Resident::class, 'added_by');
