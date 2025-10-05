@@ -25,7 +25,7 @@
         </div>
         <div class="bg-white rounded-xl shadow-sm p-6 px-10 h-80">
             <h3 class="text-lg font-semibold text-main_font">Enrolled v Non-Enrolled</h3>
-            <div class="flex items-center justify-center h-full">
+            <div class="flex items-center justify-center h-full pb-10">
                 <canvas id="famPlan" class="w-full h-full"></canvas>
             </div>
         </div>

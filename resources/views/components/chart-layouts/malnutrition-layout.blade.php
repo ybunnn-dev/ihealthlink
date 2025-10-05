@@ -26,7 +26,7 @@
         <div class="bg-white rounded-xl shadow-sm p-6 px-10 h-80">
             <h3 class="text-lg font-semibold text-main_font">Weighted Children</h3>
             <div class="flex items-center justify-center h-full">
-                <canvas id="childWeight" class="w-full h-full"></canvas>
+                <canvas id="childWeight" class="w-full h-full max-h-32"></canvas>
             </div>
         </div>
          <div class="bg-white rounded-xl shadow-sm p-6 h-96 overflow-y-auto">

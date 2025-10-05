@@ -9,9 +9,9 @@
             </div>
 
             <div class="max-h-[90vh] px-4">
-                <div class="grid grid-cols-1 md:grid-cols-5 gap-10">
+                <div class="grid grid-cols-1 md:grid-cols-6 gap-10">
 
-                    <div class="md:col-span-2 flex flex-col">
+                    <div class="md:col-span-3 flex flex-col">
                         <div id="preview-container" class="relative flex-grow border-2 min-h-0 h-[60vh] border-dashed rounded-lg overflow-y-auto overflow-x-hidden scrollbar-thin dark:border-gray-600">
                             <div id="preview-placeholder" class="flex items-center justify-center w-full h-full">
                                 <span class="text-gray-400">Select PDF to preview report</span>
@@ -40,18 +40,10 @@
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label for="coverage" class="block mb-2 text-sm font-medium text-main_font dark:text-white">Coverage</label>
-                                <select id="coverage" class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                    <option>Year 2022</option>
-                                    <option>Year 2023</option>
-                                    <option>Year 2024</option>
-                                </select>
-                            </div>
+                        <div class="grid grid-cols-1 gap-4">
                              <div>
                                 <label for="report-source" class="block mb-2 text-sm font-medium text-main_font dark:text-white">Report Source</label>
-                                <input type="text" id="report-source" placeholder="Choose..." class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                <input type="text" disabled id="report-source" placeholder="Choose..." class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                             </div>
                         </div>
 
@@ -63,33 +55,6 @@
                              <div>
                                 <label for="to-date" class="block mb-2 text-sm font-medium text-main_font dark:text-white">To</label>
                                 <input type="date" id="to-date" class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                            </div>
-                        </div>
-
-                        <div>
-                            <label for="color-selection" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Color Selection</label>
-                            <div id="color-selection" class="grid w-full h-auto grid-cols-8 gap-3 p-4 bg-gray-50 border border-gray-300 rounded-lg md:grid-cols-10 place-items-center dark:bg-gray-700 dark:border-gray-600">
-                                
-                                <button aria-label="Select color slate" class="w-8 h-8 transition-transform transform bg-slate-300 rounded-full cursor-pointer hover:scale-110 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 dark:focus:ring-offset-gray-700"></button>
-                                <button aria-label="Select color stone" class="w-8 h-8 transition-transform transform bg-stone-300 rounded-full cursor-pointer hover:scale-110 focus:outline-none focus:ring-2 focus:ring-stone-500 focus:ring-offset-2 dark:focus:ring-offset-gray-700"></button>
-                                <button aria-label="Select color red" class="w-8 h-8 transition-transform transform bg-red-300 rounded-full cursor-pointer hover:scale-110 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:focus:ring-offset-gray-700"></button>
-                                <button aria-label="Select color orange" class="w-8 h-8 transition-transform transform bg-orange-300 rounded-full cursor-pointer hover:scale-110 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 dark:focus:ring-offset-gray-700"></button>
-                                <button aria-label="Select color amber" class="w-8 h-8 transition-transform transform bg-amber-300 rounded-full cursor-pointer hover:scale-110 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 dark:focus:ring-offset-gray-700"></button>
-                                <button aria-label="Select color yellow" class="w-8 h-8 transition-transform transform bg-yellow-300 rounded-full cursor-pointer hover:scale-110 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 dark:focus:ring-offset-gray-700"></button>
-                                <button aria-label="Select color lime" class="w-8 h-8 transition-transform transform bg-lime-300 rounded-full cursor-pointer hover:scale-110 focus:outline-none focus:ring-2 focus:ring-lime-500 focus:ring-offset-2 dark:focus:ring-offset-gray-700"></button>
-                                <button aria-label="Select color green" class="w-8 h-8 transition-transform transform bg-green-300 rounded-full cursor-pointer hover:scale-110 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 dark:focus:ring-offset-gray-700"></button>
-                                <button aria-label="Select color emerald" class="w-8 h-8 transition-transform transform bg-emerald-300 rounded-full cursor-pointer hover:scale-110 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 dark:focus:ring-offset-gray-700"></button>
-                                <button aria-label="Select color teal" class="w-8 h-8 transition-transform transform bg-teal-300 rounded-full cursor-pointer hover:scale-110 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 dark:focus:ring-offset-gray-700"></button>
-                                <button aria-label="Select color cyan" class="w-8 h-8 transition-transform transform bg-cyan-300 rounded-full cursor-pointer hover:scale-110 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 dark:focus:ring-offset-gray-700"></button>
-                                <button aria-label="Select color sky" class="w-8 h-8 transition-transform transform bg-sky-300 rounded-full cursor-pointer hover:scale-110 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 dark:focus:ring-offset-gray-700"></button>
-                                <button aria-label="Select color blue" class="w-8 h-8 transition-transform transform bg-blue-300 rounded-full cursor-pointer hover:scale-110 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-700"></button>
-                                <button aria-label="Select color indigo" class="w-8 h-8 transition-transform transform bg-indigo-300 rounded-full cursor-pointer hover:scale-110 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-700"></button>
-                                <button aria-label="Select color violet" class="w-8 h-8 transition-transform transform bg-violet-300 rounded-full cursor-pointer hover:scale-110 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 dark:focus:ring-offset-gray-700"></button>
-                                <button aria-label="Select color purple" class="w-8 h-8 transition-transform transform bg-purple-300 rounded-full cursor-pointer hover:scale-110 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 dark:focus:ring-offset-gray-700"></button>
-                                <button aria-label="Select color fuchsia" class="w-8 h-8 transition-transform transform bg-fuchsia-300 rounded-full cursor-pointer hover:scale-110 focus:outline-none focus:ring-2 focus:ring-fuchsia-500 focus:ring-offset-2 dark:focus:ring-offset-gray-700"></button>
-                                <button aria-label="Select color pink" class="w-8 h-8 transition-transform transform bg-pink-300 rounded-full cursor-pointer hover:scale-110 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2 dark:focus:ring-offset-gray-700"></button>
-                                <button aria-label="Select color rose" class="w-8 h-8 transition-transform transform bg-rose-300 rounded-full cursor-pointer hover:scale-110 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2 dark:focus:ring-offset-gray-700"></button>
-                                <button aria-label="Select color white" class="w-8 h-8 transition-transform transform bg-white border rounded-full cursor-pointer hover:scale-110 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 dark:focus:ring-offset-gray-700"></button>
                             </div>
                         </div>
                     </div>

@@ -1,5 +1,5 @@
 pdfjsLib.GlobalWorkerOptions.workerSrc =
-    "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+"https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
 // --- 1. ELEMENT SELECTORS ---
 const exportBtn = document.getElementById('export-button');
 const allRadioButtons = document.querySelectorAll('input[name="export_as"]');
@@ -14,21 +14,19 @@ const pdfViewer = document.getElementById('pdf-viewer');
 
 // All other form inputs
 const allFilterInputs = [
-    document.getElementById('coverage'),
     document.getElementById('report-source'),
     document.getElementById('from-date'),
     document.getElementById('to-date')
 ];
 
+
 let pdfDoc = null;
 let currentPageNum = 1;
 let pageIsRendering = false;
 let pageNumIsPending = null;
-let selectedColor = '';
 const renderScale = 1.5;
 
-
-const colorSelectionContainer = document.getElementById('color-selection');
+const currentProgram = window.programId;
 
 // --- 3. PDF RENDERING LOGIC ---
 
@@ -59,6 +57,13 @@ const renderPage = num => {
     });
 };
 
+function checkIfNull(){
+    if(programId === null){
+        document.getElementById('report-source').value = "Demographic Data";
+    }
+}
+
+checkIfNull();
 /**
  * Fetches and loads the PDF document from the server.
  */
@@ -66,15 +71,14 @@ const updatePdfPreview = () => {
     if (!pdfRadio.checked) return;
 
     // Get all current form values
-    const coverage = document.getElementById('coverage').value;
-    const reportSource = document.getElementById('report-source').value;
+    const reportSource = parseInt(document.getElementById('report-source').value);
     const fromDate = document.getElementById('from-date').value;
     const toDate = document.getElementById('to-date').value;
 
     // Build the URL for the preview route
     const baseUrl = '/reports/preview-community-report';
     const queryParams = new URLSearchParams({
-        coverage, report_source: reportSource, from_date: fromDate, to_date: toDate, color: selectedColor
+         programId: programId, startDate: fromDate, endDate: toDate
     }).toString();
     const fullUrl = `${baseUrl}?${queryParams}`;
 
@@ -146,15 +150,6 @@ allRadioButtons.forEach(radio => {
 // Listen for changes on filters to auto-update the preview
 allFilterInputs.forEach(input => input.addEventListener('change', updatePdfPreview));
 
-// Listen for color selection
-colorSelectionContainer.querySelectorAll('button').forEach(button => {
-    button.addEventListener('click', () => {
-        selectedColor = button.getAttribute('aria-label').replace('Select color ', '');
-        colorSelectionContainer.querySelectorAll('button').forEach(btn => btn.style.border = 'none');
-        button.style.border = '3px solid #3b82f6';
-        updatePdfPreview();
-    });
-});
 // Final Export button logic
 exportBtn.addEventListener('click', () => {
     const selectedFormat = document.querySelector('input[name="export_as"]:checked')?.value;
@@ -163,7 +158,6 @@ exportBtn.addEventListener('click', () => {
         return;
     }
 
-    const coverage = document.getElementById('coverage').value;
     const reportSource = document.getElementById('report-source').value;
     const fromDate = document.getElementById('from-date').value;
     const toDate = document.getElementById('to-date').value;
@@ -176,8 +170,9 @@ exportBtn.addEventListener('click', () => {
     }
 
     const queryParams = new URLSearchParams({
-        coverage, report_source: reportSource, from_date: fromDate, to_date: toDate, color: selectedColor
+        programId: programId, startDate: fromDate, endDate: toDate
     }).toString();
 
-    window.open(`${baseUrl}`, '_blank');
+    window.open(`${baseUrl}?${queryParams}`, '_blank');
+
 });

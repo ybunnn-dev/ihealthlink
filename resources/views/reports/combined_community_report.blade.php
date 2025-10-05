@@ -140,6 +140,40 @@
             display: block;
         }
         .signatures .title { font-style: italic; }
+
+        /* This block contains all the styling for your table */
+        .p3-table {
+            width: auto; /* Let the table size itself based on content */
+            min-width: 50%; /* Prevents the table from becoming too narrow */
+            margin-left: auto; /* These two margin properties center the table */
+            margin-right: auto;
+            border-collapse: collapse; /* This makes the borders look clean and single-lined */
+            font-family: sans-serif; /* Optional: for a cleaner font */
+        }
+
+        /* This applies styling to all header (th) and data (td) cells */
+        .p3-table th, .p3-table td {
+            border: 1px solid #ccc; /* Adds a light grey border to every cell */
+            padding: 8px; /* Adds some space inside the cells */
+            text-align: center; /* Centers the text in all cells */
+        }
+
+        /* This specifically targets the first column (Age) to fix the width */
+        .p3-table th:first-child, .p3-table td:first-child {
+            width: 80px; /* Sets a fixed width for the 'Age' column */
+            text-align: left; /* Aligns the text in the 'Age' column to the left */
+        }
+
+        /* Bolds the header text */
+        .p3-table th {
+            font-weight: bold;
+            background-color: #f2f2f2; /* Adds a light grey background to the header row */
+        }
+
+        /* Targets the final 'Total' column */
+        .p3-table .total-column {
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -257,16 +291,16 @@
 
     <div class="p2-body">
         <div class="header">
-            <h1>DEMOGRAPHIC DATA</h1>
+            <h1>DEMOGRAPHIC DATA BY AGE GROUP</h1>
             <h2>YEAR 2025</h2>
         </div>
         <table class="p2-table">
-            <thead>
+           <thead>
                 <tr>
                     <th>Barangay TAGAS</th>
-                    @for ($i = 1; $i <= 10; $i++)
-                    <th>{{ $i }}</th>
-                    @endfor
+                    @foreach($data['puroks'] as $purokName)
+                        <th>{{ $purokName }}</th>
+                    @endforeach
                     <th>TOTAL</th>
                 </tr>
             </thead>
@@ -335,5 +369,108 @@
             </tr>
         </table>
     </div>
+    <div class="page-break"></div>
+    <div class="p3-body">
+        <div class="header">
+            <h1>DEMOGRAPHIC DATA BY AGE</h1>
+            <h2>YEAR 2025</h2>
+        </div>
+
+        <table class="p3-table">
+            <thead>
+                <tr>
+                    <th>Age</th>
+                    @foreach($data['page3']['puroks'] as $purokName)
+                        <th>{{ $purokName }}</th>
+                    @endforeach
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                @php
+                    $purokTotals = array_fill_keys($data['page3']['puroks'], 0);
+                    $grandTotal = 0;
+                    $maleGrandTotal = 0;
+                    $femaleGrandTotal = 0;
+                @endphp
+                @foreach($data['page3']['ages'] as $age)
+                    <tr class="age-row">
+                        <td>{{ $age }}</td>
+
+                        @php $rowTotal = 0; @endphp
+
+                        @foreach($data['page3']['puroks'] as $purokName)
+                            @php
+                                $maleCount = $data['page3']['malePerPurok'][$purokName][$age] ?? 0;
+                                $femaleCount = $data['page3']['femalePerPurok'][$purokName][$age] ?? 0;
+                                $totalCount = $maleCount + $femaleCount;
+
+                                // Accumulate totals
+                                $rowTotal += $totalCount;
+                                $purokTotals[$purokName] += $totalCount;
+                                $maleGrandTotal += $maleCount;
+                                $femaleGrandTotal += $femaleCount;
+                            @endphp
+                            <td>{{ $totalCount }}</td>
+                        @endforeach
+
+                        <td class="total-column">{{ $rowTotal }}</td>
+                        @php $grandTotal += $rowTotal; @endphp
+                    </tr>
+                @endforeach
+
+                <tr class="category-row">
+                    <td><strong>TOTAL POPULATION</strong></td>
+                    @foreach($data['page3']['puroks'] as $purokName)
+                        <td><strong>{{ $purokTotals[$purokName] }}</strong></td>
+                    @endforeach
+                    <td class="total-column"><strong>{{ $grandTotal }}</strong></td>
+                </tr>
+                <tr class="category-row">
+                    <td><strong>Male Total</strong></td>
+                    <td colspan="{{ count($data['page3']['puroks']) }}" style="text-align: right;"></td>
+                    <td class="total-column"><strong>{{ $maleGrandTotal }}</strong></td>
+                </tr>
+                <tr class="category-row">
+                    <td><strong>Female Total</strong></td>
+                    <td colspan="{{ count($data['page3']['puroks']) }}" style="text-align: right;"></td>
+                    <td class="total-column"><strong>{{ $femaleGrandTotal }}</strong></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table class="signatures">
+             <tr>
+                <td>Consolidated By:</td>
+                <td></td>
+                <td>Date Consolidated:</td>
+            </tr>
+            <tr>
+                <td>
+                    <span class="name">_________________________</span>
+                    <span class="title">Barangay Health Aide</span>
+                </td>
+                <td></td>
+                <td>
+                    <span class="name">_________________________</span>
+                    <span class="title">Date</span>
+                </td>
+            </tr>
+            <tr>
+                <td>Noted By:</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <span class="name">_________________________</span>
+                    <span class="title">DOH NDP / Nurse</span>
+                </td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
+    </div>
+
 </body>
 </html>

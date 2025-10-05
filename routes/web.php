@@ -19,6 +19,7 @@ use App\Http\Controllers\Web\BarangayReportsController;
 use App\Http\Controllers\Web\ResidentController;
 use App\Http\Controllers\Web\UserManualController;
 use App\Http\Controllers\Web\MaternalController;
+use App\Http\Controllers\Web\BarangayExportData;
 
 Route::get('/', function () {
     return view('auth.login');
@@ -249,10 +250,10 @@ Route::middleware([
     ->name('midwife.health-program');
 
 
-    Route::get('/barangay/reports/community-report-pdf', [BarangayReportsController::class, 'downloadCommunityReport']);
-    Route::get('/reports/preview-community-report', [BarangayReportsController::class, 'previewCommunityReport']);
-    Route::get('/barangay/reports/export-excel', [BarangayReportsController::class, 'exportCommunityReportExcel']);
-    Route::get('/barangay/reports/export-csv', [BarangayReportsController::class, 'exportCommunityReportCsv']);
+    Route::get('/barangay/reports/community-report-pdf', [BarangayExportData::class, 'downloadCommunityReport']);
+    Route::get('/reports/preview-community-report', [BarangayExportData::class, 'previewCommunityReport']);
+    Route::get('/barangay/reports/export-excel', [BarangayExportData::class, 'exportCommunityReportExcel']);
+    Route::get('/barangay/reports/export-csv', [BarangayExportData::class, 'exportCommunityReportCsv']);
 
     Route::post(
     '/barangay/health-program/{healthProgramId}/enroll/{residentId}',
