@@ -124,8 +124,6 @@ dropdowns.forEach(dropdown => {
     dropdown.addEventListener('change', validateForms);
 });
 
-initializePurokDropdown();
-
 cancelAddHousehold.addEventListener('click', function () {
     addHouseholdModal.hide();
 });
@@ -200,6 +198,7 @@ closeSuccessModalButton.addEventListener('click', function(){
 });
 
 openAddHouseholdBtn.addEventListener('click', function () {
+    initializePurokDropdown();
     addHouseholdModal.show();
 });
 

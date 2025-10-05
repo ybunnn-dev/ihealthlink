@@ -183,10 +183,11 @@ Route::middleware([
     
     Route::get('/barangay/maternity/resident/enroll', [ResidentController::class, 'getWRA']);
 
-    Route::get('/midwife/reports', function () {
-        return view('midwife.reports');
-    })->name('midwife.reports');
+    /*Route::get('/midwife/reports', function () {
+        
+    })->name('midwife.reports');*/
 
+    Route::get('/barangay/reports',[BarangayReportsController::class, 'index'])->name('midwife.reports');
 
     Route::get('/barangay/fetch/health-programs', [HealthProgramController::class, 'provideData'])->name('health.programs');
 

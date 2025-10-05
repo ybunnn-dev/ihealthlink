@@ -12,7 +12,7 @@
             <thead class="bg-gray-100">
                 {{ $thead }}
             </thead>
-            <tbody>
+            <tbody">
                 {{ $tbody }}
             </tbody>
         </table>

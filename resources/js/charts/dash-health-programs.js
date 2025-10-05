@@ -171,7 +171,6 @@ if (!dewormingChartCtx) {
     };
 
     new Chart(dewormingChartCtx.getContext('2d'), dewormingConfig);
-    console.log('✅ Deworming chart created');
 }
 
 // Chart 4: PhilPEN Metrics Chart

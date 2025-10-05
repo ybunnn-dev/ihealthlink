@@ -46,17 +46,14 @@ class HouseholdController extends Controller
         // Convert sanitary (1 = true, 2 = false)
         $hasToilet = $validated['sanitary'] === 1;
         $isIndigent = $validated['is_indigent'] === 1;
-
-         $encryptedWaterSource = $validated['water_source']
-            ? Crypt::encryptString($validated['water_source'])
-            : null;
+        
 
         // Create household
         $household = Household::create([
             'purok_id'     => $validated['purok_id'],
             'head_id'      => null, // will be set later
             'has_toilet'   => $hasToilet,
-            'water_source' => $encryptedWaterSource,
+            'water_source' => $validated['water_source'],
             'is_indigent' => $isIndigent,
             'waste_disposal' => $validated['waste_disposal'],
             'status'       => 'active',
@@ -75,7 +72,7 @@ class HouseholdController extends Controller
 
         // decrypt here
         if ($household->water_source) {
-            $household->water_source = Crypt::decryptString($household->water_source);
+            $household->water_source = $household->water_source;
         }
 
         return view('midwife.spec-household', [

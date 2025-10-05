@@ -12,9 +12,220 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 use Barryvdh\DomPDF\Facade\Pdf;
 
+use App\Models\Midwife;
+use App\Models\Resident;
+use App\Models\Household;
+use App\Models\Family;
+use App\Models\Purok;
 
 class BarangayReportsController extends Controller
-{
+{   
+    public function index(Request $request)
+    {
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+        $reportType = $request->input('report_type');
+
+        // if no report type -> default to demographic
+        if (empty($reportType)) {
+            return $this->returnDemographic($startDate, $endDate);
+        }
+
+        // You can extend later for other report types here
+        switch ($reportType) {
+            case 'demographic':
+                return $this->returnDemographic($startDate, $endDate);
+            // case 'prenatal': return $this->returnPrenatalReport($startDate, $endDate);
+            default:
+                return $this->returnDemographic($startDate, $endDate);
+        }
+    }
+    public function returnDemographic($startDate = null, $endDate = null)
+    {
+        $user = auth()->user();
+
+        // Determine if user is Midwife or BHW with granted access
+        if ($user->bhwWeb && $user->bhwWeb->role_id == 4) {
+            $personnel = $user->bhwWeb;
+        } else {
+            $personnel = Midwife::where('user_id', $user->id)->first();
+        }
+
+        if (!$personnel) {
+            abort(403, 'Unauthorized access.');
+        }
+
+        $brgyId = $personnel->brgy_id;
+
+        /**
+         * FILTER CONDITIONS
+         */
+        $residentFilter = function ($query) use ($startDate, $endDate) {
+            $query->where('status', 'active');
+
+            if ($endDate) {
+                $query->whereDate('created_at', '<=', $endDate);
+            }
+        };
+
+        $generalFilter = function ($query) use ($startDate, $endDate) {
+            $query->where('status', 'active');
+            if ($endDate) {
+                $query->whereDate('created_at', '<=', $endDate);
+            }
+        };
+
+        /**
+         * RESIDENT STATISTICS
+         */
+        $residents = Resident::whereHas('family.household.purok', function ($q) use ($brgyId) {
+            $q->where('brgy_id', $brgyId);
+        })
+        ->where($residentFilter);
+
+        $totalResidents = $residents->count();
+
+        /**
+         * HOUSEHOLDS AND FAMILIES COUNT (TOTAL)
+         */
+        $households = Household::whereHas('purok', function ($q) use ($brgyId) {
+            $q->where('brgy_id', $brgyId);
+        })->where($generalFilter)->count();
+
+        $households4sanitary = Household::whereHas('purok', function ($q) use ($brgyId) {
+            $q->where('brgy_id', $brgyId);
+        })->where($generalFilter)->get(); // <-- get() returns a collection
+
+        $families = Family::whereHas('household.purok', function ($q) use ($brgyId) {
+            $q->where('brgy_id', $brgyId);
+        })->where($generalFilter)->count();
+
+        /**
+         * PER PUROK DATA
+         */
+     // Now use them
+        $puroks = Purok::where('brgy_id', $brgyId)->with([
+            'households' => function ($h) use ($generalFilter, $residentFilter) {
+                $h->where($generalFilter)->with([
+                    'families' => function ($f) use ($generalFilter, $residentFilter) {
+                        $f->where($generalFilter)->with([
+                            'residents' => function ($r) use ($residentFilter) {
+                                $r->where($residentFilter);
+                            }
+                        ]);
+                    }
+                ]);
+            }
+        ])->get();
+
+        $residentsPerPurok = [];
+        $householdsPerPurok = [];
+        $familiesPerPurok = [];
+        $families4PsPerPurok = [];
+        $familiesIndigentPerPurok = [];
+        $malesPerPurok = [];
+        $femalesPerPurok = [];
+
+        foreach ($puroks as $purok) {
+            $purokName = $purok->name;
+
+            $householdsCount = $purok->households->count();
+            $householdsPerPurok[$purokName] = $householdsCount;
+
+            $residentsCollection = $purok->households->flatMap(fn($h) =>
+                $h->families->flatMap->residents
+            );
+
+            $residentsPerPurok[$purokName] = $residentsCollection->count();
+
+            $familiesCollection = $purok->households->flatMap->families;
+            $familiesPerPurok[$purokName] = $familiesCollection->count();
+
+            $families4PsPerPurok[$purokName] = $familiesCollection->where('is_4ps', true)->count();
+            $familiesIndigentPerPurok[$purokName] = $familiesCollection->where('is_indigent', true)->count();
+
+            $malesPerPurok[$purokName] = $residentsCollection->where('sex', 'male')->count();
+            $femalesPerPurok[$purokName] = $residentsCollection->where('sex', 'female')->count();
+
+            $pwdsPerPurok[$purokName] = $residentsCollection->where('is_pwd', true)->count();
+            $nonPwdsPerPurok[$purokName] = $residentsCollection->where('is_pwd', false)->count();
+
+            $malePwdsPerPurok[$purokName] = $residentsCollection
+                ->where('sex', 'male')
+                ->where('is_pwd', true)
+                ->count();
+
+            $femalePwdsPerPurok[$purokName] = $residentsCollection
+                ->where('sex', 'female')
+                ->where('is_pwd', true)
+                ->count();
+                }
+
+        /**
+         * AGE GROUPS
+         */
+        $ageGroups = [
+            '0-4', '5-9', '10-14', '15-19', '20-24', '25-29', '30-34', '35-39',
+            '40-44', '45-49', '50-54', '55-59', '60-64', '65-69', '70-74', '75-79',
+            '80-84', '85+'
+        ];
+
+        $maleData = [];
+        $femaleData = [];
+
+        foreach ($ageGroups as $range) {
+            [$min, $max] = explode('-', str_replace('+', '', $range)) + [null, null];
+
+            $query = (clone $residents)->whereRaw("
+                TIMESTAMPDIFF(YEAR, birthdate, CURDATE()) >= ?
+                " . ($max ? "AND TIMESTAMPDIFF(YEAR, birthdate, CURDATE()) <= ?" : ""),
+                $max ? [$min, $max] : [$min]
+            );
+
+            $maleCount = (clone $query)->where('sex', 'Male')->count();
+            $femaleCount = (clone $query)->where('sex', 'Female')->count();
+
+            $maleData[] = $maleCount;
+            $femaleData[] = $femaleCount;
+        }
+
+        $wasteDisposalData = $households4sanitary->groupBy('waste_disposal')->map->count()->toArray();
+        $waterSourceData = $households4sanitary->groupBy('water_source')->map->count()->toArray();
+        
+        $sanitaryData = [
+            'with_sanitary_toilet' => $households4sanitary->filter(fn($h) => $h->sanitary_toilet === 'with_sanitary_toilet')->count(),
+            'with_unsanitary_toilet' => $households4sanitary->filter(fn($h) => $h->sanitary_toilet === 'with_unsanitary_toilet')->count(),
+            'without_toilet' => $households4sanitary->filter(fn($h) => $h->sanitary_toilet === 'without_toilet')->count(),
+        ];
+
+
+        return view('midwife.reports', [
+            'residents' => $totalResidents,
+            'families' => $families,
+            'households' => $households,
+
+            'residentsPerPurok' => $residentsPerPurok,
+            'householdsPerPurok' => $householdsPerPurok,
+            'familiesPerPurok' => $familiesPerPurok,
+            'families4PsPerPurok' => $families4PsPerPurok,
+            'familiesIndigentPerPurok' => $familiesIndigentPerPurok,
+            'malesPerPurok' => $malesPerPurok,
+            'femalesPerPurok' => $femalesPerPurok,
+            'pwdsPerPurok' => $pwdsPerPurok,
+            'nonPwdsPerPurok' => $nonPwdsPerPurok,
+            'malePwdsPerPurok' => $malePwdsPerPurok,
+            'femalePwdsPerPurok' => $femalePwdsPerPurok,
+
+            'ageGroups' => $ageGroups,
+            'maleData' => $maleData,
+            'femaleData' => $femaleData,
+
+            'wasteDisposal' => $wasteDisposalData,
+            'waterSource' => $waterSourceData,
+            'sanitaryData' => $sanitaryData
+        ]);
+    }
+
     public function previewCommunityReport(Request $request)
     {
         // You can fetch data based on the request parameters if needed

@@ -2,6 +2,33 @@
 @section('title', 'Reports')
 <x-app-layout>
     <div class="py-12 px-5">
+        <script>
+            // Expose PHP variables to JS
+            window.residents = @json($residents);
+            window.families = @json($families);
+            window.households = @json($households);
+            // Per purok data
+            window.residentsPerPurok = @json($residentsPerPurok);
+            window.householdsPerPurok = @json($householdsPerPurok);
+            window.familiesPerPurok = @json($familiesPerPurok);
+            window.families4PsPerPurok = @json($families4PsPerPurok);
+            window.familiesIndigentPerPurok = @json($familiesIndigentPerPurok);
+
+            //  Age group data
+            window.ageGroups = @json($ageGroups);
+            window.maleData = @json($maleData);
+            window.femaleData = @json($femaleData);
+
+            window.malesPerPurok = @json($malesPerPurok);
+            window.femalesPerPurok = @json($femalesPerPurok);
+
+            window.pwdsPerPurok = @json($pwdsPerPurok);
+            window.nonPwdsPerPurok = @json($nonPwdsPerPurok);
+
+            window.waterSource = @json($waterSource);
+            window.wasteDisposal = @json($wasteDisposal);
+            window.sanitaryData = @json($sanitaryData);
+        </script>
         <div class="max-w-[90rem] mx-auto sm:px-6 lg:px-8">
             <!-- Title -->
             <h1 class="text-3xl font-semibold text-sub_blue mb-3">Reports</h1>
@@ -81,8 +108,29 @@
             <div class="mb-3">
                 <x-reports-tab></x-reports-tab>
             </div>
-            <div>
-                <x-report-blades.demographical-data></x-report-blades.demographical-data>
+           <div>
+                <x-report-blades.demographical-data 
+                    :residents="$residents"
+                    :households="$households"
+                    :families="$families"
+                    :residents-per-purok="$residentsPerPurok"
+                    :households-per-purok="$householdsPerPurok"
+                    :families-per-purok="$familiesPerPurok"
+                    :families4-ps-per-purok="$families4PsPerPurok"
+                    :families-indigent-per-purok="$familiesIndigentPerPurok"
+                    :age-groups="$ageGroups"
+                    :male-data="$maleData"
+                    :female-data="$femaleData"
+                    :males-per-purok="$malesPerPurok"
+                    :females-per-purok="$femalesPerPurok"
+                    :pwds-per-purok="$pwdsPerPurok"
+                    :non-pwds-per-purok="$nonPwdsPerPurok"
+                    :male-pwds-per-purok="$malePwdsPerPurok"
+                    :female-pwds-per-purok="$femalePwdsPerPurok"
+                    :waste-disposal="$wasteDisposal"
+                    :water-source="$waterSource"
+                    :sanitary-data="$sanitaryData"
+                />
             </div>
         </div>
     </div>

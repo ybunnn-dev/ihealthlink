@@ -3,9 +3,9 @@
     <table class="min-w-full divide-y divide-gray-100 text-sm text-center text-normal_font">
         <thead class="bg-gray-100 text-main_font">
             <tr>
-                <th class="px-6 py-3 text-left font-semibold">Category</th>
+                {{-- The loop now handles ALL headers, including 'Category' --}}
                 @foreach ($headers as $header)
-                    <th class="px-6 py-3 {{ $loop->last ? 'font-semibold' : '' }}">{{ $header }}</th>
+                    <th class="px-6 py-3 {{ $loop->first ? 'text-left' : '' }} font-semibold">{{ $header }}</th>
                 @endforeach
             </tr>
         </thead>

@@ -1,4 +1,4 @@
-<div class="grid grid-cols-span-1 xl:grid-cols-6 gap-3 mb-3">
+<div class="grid grid-cols-1 xl:grid-cols-6 gap-3 mb-3">
     <div class="flex flex-col gap-3 gap-3 col-span-2">
         <div class="bg-white rounded-xl shadow-sm px-6 py-8">
             <div class="flex items-center justify-center xl:justify-start gap-8 xl:gap-8 pl-4">

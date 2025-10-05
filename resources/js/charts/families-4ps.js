@@ -1,19 +1,10 @@
 
     const ctx2 = document.getElementById('familyBar').getContext('2d');
 
-    // Purok Labels
-    const purokLabels = [
-    'Purok 1', 'Purok 2', 'Purok 3', 'Purok 4', 'Purok 5',
-    'Purok 6', 'Purok 7', 'Purok 8', 'Purok 9', 'Purok 10'
-    ];
-
-    // Sample total family data per purok
-    const totalFamilies = [100, 80, 120, 90, 70, 110, 85, 95, 105, 75];
-
-    // Sample 4Ps member families per purok
-    const fourPsFamilies = [40, 30, 50, 20, 25, 45, 35, 30, 60, 20];
-
-    // Calculate non-4Ps families (total - 4Ps)
+    const purokLabels = Object.keys(window.familiesPerPurok); // e.g. ['Purok 1', 'Purok 2', ...]
+    const totalFamilies = Object.values(window.familiesPerPurok);
+    const fourPsFamilies = Object.values(window.families4PsPerPurok);
+    const indigentFamilies = Object.values(window.familiesIndigentPerPurok);
     const nonFourPsFamilies = totalFamilies.map((total, i) => total - fourPsFamilies[i]);
 
     const chart = new Chart(ctx2, {

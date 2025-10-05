@@ -12,7 +12,7 @@ class Household extends Model
     protected $fillable = [
         'purok_id',
         'head_id',
-        'has_toilet',
+        'sanitary_toilet',
         'water_source',
         'waste_disposal',
         'is_indigent',
