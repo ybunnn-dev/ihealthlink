@@ -23,15 +23,17 @@ class BasicHealthRecord extends Model
         'waist_circumference',
         'systolic_pressure',
         'diastolic_pressure',
+        'is_pregnant',
+        'is_lactating',
+        'weight_grams',
     ];
 
-    /**
-     * Cast attributes to native types.
-     */
     protected $casts = [
-        'weight' => 'decimal:2',
-        'height' => 'decimal:2',
-        'waist_circumference' => 'decimal:2',
+        'is_pregnant' => 'boolean',
+        'is_lactating' => 'boolean',
+        'weight' => 'float',
+        'height' => 'float',
+        'weight_grams' => 'integer',
         'systolic_pressure' => 'integer',
         'diastolic_pressure' => 'integer',
     ];
