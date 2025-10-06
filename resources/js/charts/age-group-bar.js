@@ -26,15 +26,16 @@ if (!ctx) {
                 {
                     label: 'Male',
                     data: maleData,
-                    backgroundColor: 'lightcoral',
-                    borderColor: 'lightcoral',
+                    backgroundColor: 'deepskyblue',
+                    borderColor: 'deepskyblue',
+                   
                     borderWidth: 1
                 },
                 {
                     label: 'Female',
                     data: femaleData,
-                    backgroundColor: 'deepskyblue',
-                    borderColor: 'deepskyblue',
+                    backgroundColor: 'lightcoral',
+                    borderColor: 'lightcoral',
                     borderWidth: 1
                 },
             ],
