@@ -112,6 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }else{
       console.log('hello 2');
     }
+    import('./pages/health-programs/view-consultation.js');
     import('./pages/health-programs/update-consultation.js');
   }
   else {

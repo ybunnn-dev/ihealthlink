@@ -6,11 +6,14 @@
 <x-app-layout>
     <div class="py-12 px-5">
         <div class="max-w-[90rem] mx-auto sm:px-6 lg:px-8">
-             <a href="{{ route('midwife.health-program') }}">
-                    <div class="flex items-center space-x-2 mb-3"> <svg class="w-5 h-5" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M5 1H4L0 5L4 9H5V6H11C12.6569 6 14 7.34315 14 9C14 10.6569 12.6569 12 11 12H4V14H11C13.7614 14 16 11.7614 16 9C16 6.23858 13.7614 4 11 4H5V1Z" fill="#323643"></path> </g></svg>
-                        <span class="font-semibold">Return</span>
-                    </div>
-                </a>
+             <a href="{{ route('midwife.health-program', $enrolledResident->program->id) }}">
+                <div class="flex items-center space-x-2 mb-3">
+                    <svg class="w-5 h-5" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5 1H4L0 5L4 9H5V6H11C12.6569 6 14 7.34315 14 9C14 10.6569 12.6569 12 11 12H4V14H11C13.7614 14 16 11.7614 16 9C16 6.23858 13.7614 4 11 4H5V1Z" fill="#323643"/>
+                    </svg>
+                    <span class="font-semibold">Return</span>
+                </div>
+            </a>
 
             <!-- START: Corrected Layout Structure -->
             <div class="grid grid-cols-1 xl:grid-cols-3 gap-3 mb-4">
@@ -218,5 +221,6 @@
         @include('components.modals.health-program.tcl-programs.update-maternity-record')
     @endif
     @include('components.modals.consultation.create-consultation')
+    @include('components.modals.consultation.view-consultation')
     @include('components.modals.consultation.distribute-medicine')
 </x-app-layout>

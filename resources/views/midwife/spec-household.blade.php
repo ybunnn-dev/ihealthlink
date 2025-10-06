@@ -64,7 +64,11 @@
                             <p class="text-normal_font">{{ $household->waste_disposal ?  $household->waste_disposal : '' }}</p>
 
                             <p class="font-semibold text-main_font">HAVE A TOILET:</p>
-                            <p class="text-normal_font">{{ $household->has_toilet == 1 ? 'Yes' : 'No' }}</p>
+                            <p class="text-normal_font">
+                                {{ $household->sanitary_toilet 
+                                    ? ucwords(str_replace('_', ' ', $household->sanitary_toilet)) 
+                                    : '' }}
+                            </p>
 
                             <p class="font-semibold text-main_font">DATE ADDED:</p>
                                 <p class="text-normal_font">

@@ -21,6 +21,14 @@ const bpSystolic = document.getElementById('bp_systolic');
 const bpDiastolic = document.getElementById('bp_diastolic');
 const isPhilhealth = document.getElementById('is_philhealth'); 
 
+const successModalEl = document.getElementById('success-modal');
+const successMesageHeader = document.getElementById('success-msg-head');
+const successMessage = document.getElementById('success-message');
+const closeSuccessModalButton = document.getElementById('close-success-modal-button');
+
+
+const successModal = new Modal(successModalEl, {backdrop: 'static',closable: true,});
+
 let currentConsultation = null;
 
 let payload = null;
@@ -450,7 +458,21 @@ confirmConsultationProceedBtn.addEventListener('click', async function() {
         const data = await response.json();
         console.log('Server response:', data);
 
+        successMesageHeader.textContent = "Consultation Updated";
+        successMessage.textContent = "You have succeessfully updated consultation";
+        confirmAddConsultationModal.hide();
+        successModal.show();
+
     } catch (error) {
         console.error('Error submitting consultation:', error);
     }
+});
+
+confirmAddConsultationCancelBtn.addEventListener('click', function(){
+    confirmAddConsultationModal.hide();
+    createConsultationModal.show();
+});
+
+closeSuccessModalButton.addEventListener('click', function(){
+    window.location.reload();
 });

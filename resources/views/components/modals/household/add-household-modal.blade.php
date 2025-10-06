@@ -9,12 +9,23 @@
             </div>
             <div class="p-4 md:p-5 space-y-4">
                 <div class="grid grid-cols-1 gap-3">
-                    <div class="grid grid-cols-1 slg2:grid-cols-2 col-span-1 gap-3">
+                    <div class="grid grid-cols-1 col-span-1 gap-3">
                         <div class="grid grid-cols-1 gap-1 relative col-span-1">
                             <label for="purokSelect" class="text-sm font-medium text-main_font">PUROK/SITIO</label>
                             <select id="purokSelect" name="purok_id" class="w-full text-main_font bg-white focus:outline-none font-medium border border-gray-300 rounded-lg text-md p-2">
                                 <option value="" disabled selected>Select</option>
                                 </select>
+                        </div>
+                        
+                    </div>
+
+                    <div class="grid grid-cols-1 slg2:grid-cols-2 col-span-1 gap-3">
+                        <div class="grid grid-cols-1 gap-1 relative col-span-1">
+                            <label for="selectHouseholdHeadBtn" class="text-sm font-medium text-main_font">HOUSEHOLD HEAD</label>
+                            <button type="button" id="selectHouseholdHeadBtn" class="w-full bg-white border border-gray-300 text-gray-700 rounded-lg p-2 text-left hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-mainblue">
+                                Select Household Head
+                            </button>
+                            <input type="hidden" name="household_head_id" id="householdHeadInput">
                         </div>
                         <div class="grid grid-cols-1 gap-1 relative col-span-1">
                             <label for="waterSourceSelect" class="text-sm font-medium text-main_font">WATER SOURCE</label>
@@ -26,25 +37,7 @@
                                 <option value="Tap">Tap Water</option>
                             </select>
                         </div>
-                    </div>
 
-                    <div class="grid grid-cols-1 slg2:grid-cols-2 col-span-1 gap-3">
-                        <div class="grid grid-cols-1 gap-1 relative col-span-1">
-                            <label for="selectHouseholdHeadBtn" class="text-sm font-medium text-main_font">HOUSEHOLD HEAD</label>
-                            <button type="button" id="selectHouseholdHeadBtn" class="w-full bg-white border border-gray-300 text-gray-700 rounded-lg p-2 text-left hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-mainblue">
-                                Select Household Head
-                            </button>
-                            <input type="hidden" name="household_head_id" id="householdHeadInput">
-                        </div>
-
-                        <div class="grid grid-cols-1 gap-1 relative col-span-1">
-                            <label for="indigentSelect" class="text-sm font-medium text-main_font">INDIGENT</label>
-                            <select id="indigentSelect" name="indigent" class="w-full text-main_font bg-white focus:outline-none font-medium border border-gray-300 rounded-lg text-md p-2 ">
-                                <option value="" disabled selected>Select</option>
-                                <option value="1">Yes</option>
-                                <option value="2">No</option>
-                            </select>
-                        </div>
                     </div>
                     
                     <div class="grid grid-cols-1 slg2:grid-cols-2 col-span-1 gap-3">
@@ -63,8 +56,9 @@
                             <label for="sanitarySelect" class="text-sm font-medium text-main_font">SANITARY TOILET</label>
                             <select id="sanitarySelect" name="sanitary_toilet" class="w-full text-main_font bg-white focus:outline-none font-medium border border-gray-300 rounded-lg text-md p-2 ">
                                 <option value="" disabled selected>Select</option>
-                                <option value="1">Has Toilet</option>
-                                <option value="2">Does not have toilet</option>
+                                <option value="with_sanitary_toilet">With Sanitary Toilet</option>
+                                <option value="with_unsanitary_toilet">With Unsanitary Toilet</option>
+                                <option value="without_toilet">Without Toilet</option>
                             </select>
                         </div>
                     </div>

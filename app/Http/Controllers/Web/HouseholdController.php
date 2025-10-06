@@ -38,23 +38,18 @@ class HouseholdController extends Controller
         $validated = $request->validate([
             'purok_id'     => 'required|exists:puroks,id',
             'water_source' => 'nullable|string|max:255',
-            'sanitary'     => 'required|in:1,2', // 1 = yes, 2 = no
-            'is_indigent'  => 'required|in:1,2',
+            'sanitary'     => 'required|string|max:255', // 1 = yes, 2 = no
             'waste_disposal' => 'required|string|max:255'
         ]);
 
-        // Convert sanitary (1 = true, 2 = false)
-        $hasToilet = $validated['sanitary'] === 1;
-        $isIndigent = $validated['is_indigent'] === 1;
-        
+      
 
         // Create household
         $household = Household::create([
             'purok_id'     => $validated['purok_id'],
             'head_id'      => null, // will be set later
-            'has_toilet'   => $hasToilet,
+            'sanitary_toilet'   => $validated['sanitary'],
             'water_source' => $validated['water_source'],
-            'is_indigent' => $isIndigent,
             'waste_disposal' => $validated['waste_disposal'],
             'status'       => 'active',
         ]);

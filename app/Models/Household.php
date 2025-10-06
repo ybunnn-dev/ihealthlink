@@ -15,7 +15,6 @@ class Household extends Model
         'sanitary_toilet',
         'water_source',
         'waste_disposal',
-        'is_indigent',
         'status',
     ];
 

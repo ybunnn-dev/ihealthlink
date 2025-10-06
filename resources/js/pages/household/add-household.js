@@ -31,7 +31,6 @@ const closeSuccessModalButton = document.getElementById('close-success-modal-but
 
 
 const sanitaryDropdownBtn = document.getElementById('sanitarySelect');
-const isIndigentDropdownBtn = document.getElementById('indigentSelect');
 const wasteDisposalDropdownBtn = document.getElementById('wasteDisposalSelect');
 
 const successModal = new Modal(successModalEl);
@@ -43,8 +42,6 @@ const confirmPurok = document.getElementById('confirm-purok');
 const confirmWaterSource = document.getElementById('confirm-water-source');
 const confirmWasteDisposal = document.getElementById('confirm-waste-disposal');
 const confirmSanitary = document.getElementById('confirm-sanitary');
-const confirmIndigent = document.getElementById('confirm-indigent');
-
 let createdHouseholdId = null;
 
 // Initialize buttons as disabled
@@ -115,8 +112,7 @@ function initializePurokDropdown() {
 const dropdowns = [
     waterSourceDropdownButton,
     sanitaryDropdownBtn,
-    isIndigentDropdownBtn,
-    wasteDisposalDropdownBtn
+    wasteDisposalDropdownBtn,
 ];
 
 // Loop through each dropdown and add the 'change' event listener
@@ -137,16 +133,11 @@ proceedAddHousehold.addEventListener('click', function () {
     confirmWasteDisposal.textContent = wasteDisposalDropdownBtn.options[wasteDisposalDropdownBtn.selectedIndex].text;
     confirmSanitary.textContent = sanitaryDropdownBtn.options[sanitaryDropdownBtn.selectedIndex].text;
     
-    // Convert the indigent value (0 or 1) to a more readable format
-    const isIndigentValue = parseInt(isIndigentDropdownBtn.value.trim());
-    confirmIndigent.textContent = isIndigentValue === 1 ? 'Yes' : 'No';
-
     const householdPayload = {
         purok_id: parseInt(purokDropdownBtn.value.trim(), 10),
         water_source: waterSourceDropdownButton.value.trim(),
         waste_disposal: wasteDisposalDropdownBtn.value.trim(),
         sanitary: parseInt(sanitaryDropdownBtn.value.trim()),
-        is_indigent: parseInt(isIndigentDropdownBtn.value.trim()),
     };
 
     console.log(householdPayload);
@@ -163,8 +154,7 @@ confirmAddHouseholdSubmit.addEventListener('click', function(){
         purok_id: parseInt(purokDropdownBtn.value.trim(), 10),
         water_source: waterSourceDropdownButton.value.trim(),
         waste_disposal: wasteDisposalDropdownBtn.value.trim(),
-        sanitary: parseInt(sanitaryDropdownBtn.value.trim()),
-        is_indigent: parseInt(isIndigentDropdownBtn.value.trim()),
+        sanitary: sanitaryDropdownBtn.value.trim(),
     };
 
     console.log('Sending payload:', householdPayload);

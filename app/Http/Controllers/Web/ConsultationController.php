@@ -16,10 +16,20 @@ use Carbon\Carbon;
 
 class ConsultationController extends Controller
 {
-    public function getConsultation($id)
+     public function getConsultation($id)
     {
-        $consultation = Consultation::with(['consultationData', 'medicineDistribution'])
-            ->findOrFail($id);
+        $consultation = Consultation::with([
+            'consultationData',
+            'medicineDistribution.medicine.medicine',
+            'updatedBy:id,firstName,middleName,lastName,suffix', 
+        ])->findOrFail($id);
+
+        // Combine full name for logging or return
+        if ($consultation->updatedBy) {
+            $updatedBy = $consultation->updatedBy;
+            $fullName = trim("{$updatedBy->firstName} {$updatedBy->middleName} {$updatedBy->lastName} {$updatedBy->suffix}");
+            $consultation->updatedBy->full_name = preg_replace('/\s+/', ' ', $fullName); // clean extra spaces
+        }
 
         \Log::info('Consultation fetched with relationships:', $consultation->toArray());
 

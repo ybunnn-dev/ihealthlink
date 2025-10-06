@@ -80,7 +80,7 @@
                         </div>
                         <div class="relative overflow-x-auto">
                             <table class="w-full text-sm text-left text-main_font bg-col_tab_h">
-                                <thead class="text-xs text-main_font uppercase text-center" >
+                                <thead class="text-xs text-main_font uppercase" >
                                     <tr>
                                         <th scope="col" class="px-6 py-3">
                                             MEDICINE #
@@ -104,7 +104,7 @@
                                 </thead>
                                 <tbody>
                                     @forelse($medicines as $medicine)
-                                        <tr class="bg-white border-b bg-f7 text-normal_font text-center" onclick="window.location='{{ route('midwife.medicines.show', $medicine->id) }}'" class="cursor-pointer hover:bg-gray-100">
+                                        <tr class="bg-white border-b bg-f7 text-normal_font" onclick="window.location='{{ route('midwife.medicines.show', $medicine->id) }}'" class="cursor-pointer hover:bg-gray-100">
                                             <th scope="row" class="px-6 py-4 font-medium text-normal_font whitespace-nowrap">
                                                 {{ $medicine->id }}
                                             </th>
