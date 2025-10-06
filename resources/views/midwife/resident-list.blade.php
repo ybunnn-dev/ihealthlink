@@ -21,14 +21,20 @@
                                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                                             </svg>
                                         </div>
-                                        <input type="search" id="default-search" class="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500" placeholder="Search by name or resident #"/>
+                                        <input type="search" id="default-search" 
+                                            x-bind:disabled="!showPrivacy" 
+                                            x-bind:title="!showPrivacy ? 'Enable privacy view to use search' : ''"
+                                            class="block disabled:bg-gray-200 w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500" placeholder="Search by name or resident #"/>
                                     </div>
                                 </div>
 
                                 <div class="flex flex-col xs:flex-row gap-4 slg2:items-end flex-none">
                                     <div class="w-full xs:w-48">
                                         <label for="purokDropdown" class="mb-2 text-sm font-medium text-main_font">Filter by Purok</label>
-                                        <button id="purokDropdown" data-dropdown-toggle="purokDropdownMenu" class="w-full text-main_font bg-f7 focus:outline-none font-medium border border-navboard rounded-lg text-sm px-4 py-2 text-center inline-flex items-center justify-between h-[2.375rem]" type="button">
+                                        <button id="purokDropdown" 
+                                        x-bind:disabled="!showPrivacy" 
+                                        x-bind:title="!showPrivacy ? 'Enable privacy view to use dropdown' : ''"
+                                        data-dropdown-toggle="purokDropdownMenu" class="w-full disabled:bg-gray-200 text-main_font bg-f7 focus:outline-none font-medium border border-navboard rounded-lg text-sm px-4 py-2 text-center inline-flex items-center justify-between h-[2.375rem]" type="button">
                                         All Purok
                                         <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
@@ -38,7 +44,10 @@
 
                                     <div class="w-full xs:w-48">
                                         <label for="ageGroupDropdown" class="mb-2 text-sm font-medium text-main_font">Filter by Age Group</label>
-                                        <button id="ageGroupDropdown" data-dropdown-toggle="ageGroupDropdownMenu" class="w-full text-main_font bg-f7 focus:outline-none font-medium border border-navboard rounded-lg text-sm px-4 py-2 text-center inline-flex items-center justify-between h-[2.375rem]" type="button">
+                                        <button id="ageGroupDropdown" 
+                                        x-bind:disabled="!showPrivacy" 
+                                        x-bind:title="!showPrivacy ? 'Enable privacy view to use dropdown' : ''"
+                                        data-dropdown-toggle="ageGroupDropdownMenu" class="w-full text-main_font bg-f7 disabled:bg-gray-200 focus:outline-none font-medium border border-navboard rounded-lg text-sm px-4 py-2 text-center inline-flex items-center justify-between h-[2.375rem]" type="button">
                                         All Age Groups
                                         <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>

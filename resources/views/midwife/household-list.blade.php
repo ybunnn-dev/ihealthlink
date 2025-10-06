@@ -28,7 +28,10 @@
                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                                     </svg>
                                     </div>
-                                    <input type="search" id="default-search" class="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500" placeholder="Search..."/>
+                                    <input type="search" 
+                                    x-bind:disabled="!showPrivacy" 
+                                    x-bind:title="!showPrivacy ? 'Enable privacy view to use search' : ''"
+                                    id="default-search" class="disabled:bg-gray-200 block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500" placeholder="Search..."/>
                                 </div>
                                 </div>
                                 
@@ -37,7 +40,10 @@
                                     <!-- Purok Filter -->
                                     <div class="w-full xs:w-48">
                                         <label for="purokDropdown" class="mb-2 text-sm font-medium text-main_font">Filter by Purok</label> 
-                                        <button id="purokDropdown" data-dropdown-toggle="purokDropdownMenu" class="w-full text-main_font bg-f7 focus:outline-none font-medium border border-navboard rounded-lg text-sm px-4 py-2 text-center inline-flex items-center justify-between h-[2.375rem]" type="button">
+                                        <button id="purokDropdown"
+                                        x-bind:disabled="!showPrivacy" 
+                                        x-bind:title="!showPrivacy ? 'Enable privacy view to use dropdown' : ''" 
+                                        data-dropdown-toggle="purokDropdownMenu" class="disabled:bg-gray-200 w-full text-main_font bg-f7 focus:outline-none font-medium border border-navboard rounded-lg text-sm px-4 py-2 text-center inline-flex items-center justify-between h-[2.375rem]" type="button">
                                         All Purok
                                         <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
@@ -48,7 +54,10 @@
                                     <!-- Date Filter -->
                                     <div class="w-full xs:w-48">
                                         <label for="dateDropdown" class="mb-2 text-sm font-medium text-main_font">Sort By Date</label> 
-                                        <button id="dateDropdown" data-dropdown-toggle="dateDropdownMenu" class="w-full text-main_font bg-f7 focus:outline-none font-medium border border-navboard rounded-lg text-sm px-4 py-2 text-center inline-flex items-center justify-between h-[2.375rem]" type="button">
+                                        <button id="dateDropdown" 
+                                        x-bind:disabled="!showPrivacy" 
+                                        x-bind:title="!showPrivacy ? 'Enable privacy view to use dropdown' : ''"
+                                        data-dropdown-toggle="dateDropdownMenu" class="disabled:bg-gray-200 w-full text-main_font bg-f7 focus:outline-none font-medium border border-navboard rounded-lg text-sm px-4 py-2 text-center inline-flex items-center justify-between h-[2.375rem]" type="button">
                                         Date
                                         <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
@@ -113,34 +122,45 @@
                             </thead>
                             <tbody>
                                 @forelse ($households as $household)
-                                    {{-- This row will be repeated for each household in the collection --}}
+                                    @php
+                                        // Prepare the variables for easier use inside the template
+                                        $householdIdString = str_pad($household->id, 3, '0', STR_PAD_LEFT);
+                                        $householdHead = 'n/a'; // Placeholder as in your original code
+                                        $purokName = $household->purok->name ?? 'No Purok';
+                                        $dateAdded = $household->created_at->format('M d, Y');
+                                        $dateUpdated = $household->updated_at->format('M d, Y');
+                                    @endphp
                                     <tr class="bg-white border-b bg-f7 text-normal_font hover:bg-gray-100 cursor-pointer"
                                         onclick="window.location='{{ route('midwife.spec-household', $household->id) }}'">
 
-                                        {{-- Household # (ID), padded with zeros to make it 3 digits long --}}
-                                        <th scope="row" class="pl-6 py-4 font-medium text-normal_font whitespace-nowrap">
-                                            {{ str_pad($household->id, 3, '0', STR_PAD_LEFT) }}
+                                        {{-- Household # (ID) is now also conditional --}}
+                                        <th scope="row" class="pl-6 py-4 font-medium text-normal_font whitespace-nowrap ">
+                                            <span x-show="showPrivacy">{{ $householdIdString }}</span>
+                                            <span x-show="!showPrivacy">{{ str_repeat('*', strlen($householdIdString)) }}</span>
                                         </th>
 
-                                        {{-- Household Head (using n/a for now as requested) --}}
-                                        <td class="px-6 py-4">
-                                            n/a
-                                            {{-- When ready, you'd use something like: {{ $household->head->name ?? 'N/A' }} --}}
+                                        {{-- Household Head (Conditional) --}}
+                                        <td class="px-6 py-4 ">
+                                            <span x-show="showPrivacy">{{ $householdHead }}</span>
+                                            <span x-show="!showPrivacy">{{ str_repeat('*', strlen($householdHead)) }}</span>
                                         </td>
 
-                                        {{-- Purok Name (accessed through the relationship) --}}
-                                        <td class="px-6 py-4">
-                                            {{ $household->purok->name ?? 'No Purok' }}
+                                        {{-- Purok Name (Conditional) --}}
+                                        <td class="px-6 py-4 ">
+                                            <span x-show="showPrivacy">{{ $purokName }}</span>
+                                            <span x-show="!showPrivacy">{{ str_repeat('*', strlen($purokName)) }}</span>
                                         </td>
 
-                                        {{-- Date Added (formatted to YYYY-MM-DD) --}}
-                                        <td class="px-6 py-4">
-                                            {{ $household->created_at->format('Y-m-d') }}
+                                        {{-- Date Added (Conditional) --}}
+                                        <td class="px-6 py-4 ">
+                                            <span x-show="showPrivacy">{{ $dateAdded }}</span>
+                                            <span x-show="!showPrivacy">{{ str_repeat('*', strlen($dateAdded)) }}</span>
                                         </td>
 
-                                        {{-- Date Updated (formatted to YYYY-MM-DD) --}}
-                                        <td class="px-6 py-4">
-                                            {{ $household->updated_at->format('Y-m-d') }}
+                                        {{-- Date Updated (Conditional) --}}
+                                        <td class="px-6 py-4 ">
+                                            <span x-show="showPrivacy">{{ $dateUpdated }}</span>
+                                            <span x-show="!showPrivacy">{{ str_repeat('*', strlen($dateUpdated)) }}</span>
                                         </td>
                                     </tr>
                                 @empty

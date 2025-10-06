@@ -1,7 +1,7 @@
 <x-app-layout>
     @section('title', 'Families')
     @section('page-id', 'family')
-    <div class="py-12 px-6">
+    <div class="py-12 px-6" x-data="{ showPrivacy: false }">
         <div class="max-w-[90rem] mx-auto sm:px-6 lg:px-8">
             <h1 class="text-3xl font-semibold text-sub_blue mb-3">Household and Residents</h1>
 
@@ -56,6 +56,7 @@
                                     <div class="w-full xs:w-40 pt-5 xs:pt-0" data-modal-target="add-family-modal" data-modal-toggle="add-family-modal">
                                         <button id ="add-family-trigger" type="button" class="w-full h-[2.375rem] text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3">Add Family</button>
                                     </div>
+                                    <x-hide-button />
                                 </div>
                             </div>
                         </div>
@@ -109,48 +110,77 @@
                             </thead>
                             <tbody>
                                 @forelse($families as $family)
+                                    @php
+                                        // Prepare variables for display and masking
+                                        $familyIdString = (string)$family->id;
+                                        $familyHead = $family->head ? $family->head->full_name : '—';
+                                        $purokName = $family->household->purok->name;
+                                        $is4psText = $family->is_4ps ? 'Yes' : 'No';
+                                        $isIndigentText = $family->is_indigent ? 'Yes' : 'No';
+                                        $dateAdded = $family->created_at->format('M d, Y');
+                                        $dateUpdated = $family->updated_at->format('M d, Y');
+                                    @endphp
                                     <tr class="bg-white border-b bg-f7 text-normal_font cursor-pointer hover:bg-gray-100"
-                                                onclick="window.location='{{ route('midwife.cur-fam', ['family' => $family->id]) }}'">
-                                        <th scope="row" class="pl-6 py-4 font-medium text-normal_font whitespace-nowrap">
-                                            {{ $family->id }}
+                                        onclick="window.location='{{ route('midwife.cur-fam', ['family' => $family->id]) }}'">
+                                        
+                                        <th scope="row" class="pl-6 py-4 font-medium text-normal_font whitespace-nowrap ">
+                                            <span x-show="showPrivacy">{{ $familyIdString }}</span>
+                                            <span x-show="!showPrivacy">{{ str_repeat('*', strlen($familyIdString)) }}</span>
                                         </th>
-                                        <td class="px-6 py-4">
-                                            {{ $family->head ? $family->head->full_name : '—' }}
+
+                                        <td class="px-6 py-4 ">
+                                            <span x-show="showPrivacy">{{ $familyHead }}</span>
+                                            <span x-show="!showPrivacy">{{ str_repeat('*', strlen($familyHead)) }}</span>
                                         </td>
-                                        <td class="px-6 py-4">
-                                            {{ $family->household->purok->name }}
-                                        </td>
-                                       <td class="px-6 py-4">
-                                            @if($family->is_4ps)
-                                                <span class="inline-block px-4 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-700">
-                                                    Yes
-                                                </span>
-                                            @else
-                                                <span class="inline-block px-4 py-1 text-xs font-semibold rounded-full bg-orange-100 text-orange-700">
-                                                    No
-                                                </span>
-                                            @endif
+
+                                        <td class="px-6 py-4 ">
+                                            <span x-show="showPrivacy">{{ $purokName }}</span>
+                                            <span x-show="!showPrivacy">{{ str_repeat('*', strlen($purokName)) }}</span>
                                         </td>
 
                                         <td class="px-6 py-4">
-                                            @if($family->is_indigent)
-                                                <span class="inline-block px-4 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-700">
-                                                    Yes
-                                                </span>
-                                            @else
-                                                <span class="inline-block px-4 py-1 text-xs font-semibold rounded-full bg-orange-100 text-orange-700">
-                                                    No
-                                                </span>
-                                            @endif
+                                            <span x-show="showPrivacy">
+                                                @if($family->is_4ps)
+                                                    <span class="inline-block px-4 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-700">
+                                                        {{ $is4psText }}
+                                                    </span>
+                                                @else
+                                                    <span class="inline-block px-4 py-1 text-xs font-semibold rounded-full bg-orange-100 text-orange-700">
+                                                        {{ $is4psText }}
+                                                    </span>
+                                                @endif
+                                            </span>
+                                            <span x-show="!showPrivacy" class="">
+                                                {{ str_repeat('*', strlen($is4psText)) }}
+                                            </span>
                                         </td>
 
                                         <td class="px-6 py-4">
-                                            {{ $family->created_at->format('M d, Y') }}
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            {{ $family->updated_at->format('M d, Y') }}
+                                            <span x-show="showPrivacy">
+                                                @if($family->is_indigent)
+                                                    <span class="inline-block px-4 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-700">
+                                                        {{ $isIndigentText }}
+                                                    </span>
+                                                @else
+                                                    <span class="inline-block px-4 py-1 text-xs font-semibold rounded-full bg-orange-100 text-orange-700">
+                                                        {{ $isIndigentText }}
+                                                    </span>
+                                                @endif
+                                            </span>
+                                            <span x-show="!showPrivacy" class="">
+                                                {{ str_repeat('*', strlen($isIndigentText)) }}
+                                            </span>
                                         </td>
 
+                                        <td class="px-6 py-4 ">
+                                            <span x-show="showPrivacy">{{ $dateAdded }}</span>
+                                            <span x-show="!showPrivacy">{{ str_repeat('*', strlen($dateAdded)) }}</span>
+                                        </td>
+                                        
+                                        <td class="px-6 py-4 ">
+                                            <span x-show="showPrivacy">{{ $dateUpdated }}</span>
+                                            <span x-show="!showPrivacy">{{ str_repeat('*', strlen($dateUpdated)) }}</span>
+                                        </td>
                                     </tr>
                                 @empty
                                     <tr class="bg-white border-b">

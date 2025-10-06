@@ -1,7 +1,7 @@
 @section('title', 'Health Programs')
 @section('page-id', 'health-program-brgy')
 <x-app-layout>
-    <div class="py-12 px-5">
+    <div class="py-12 px-5" x-data="{ showPrivacy: false }">
         <script>
             const emptyImageUrl = "{{ asset('images/illustrations/empty.png') }}";
             window.currentProgram = @json($healthProgram->id);
@@ -188,37 +188,54 @@
                             </thead>
                             <tbody id="enrolled-residents-tbody">
                                 @forelse($enrolledResidents as $enrollment)
-                                   @php
+                                    @php
+                                        // Prepare variables for display and masking
                                         $info = $enrollment->getNextConsultationAttribute($enrollment->id);
+                                        $residentIdString = (string)$enrollment->resident->id;
+                                        $residentName = $enrollment->resident->firstName . ' ' . $enrollment->resident->lastName;
+                                        $statusText = $info['status'];
+                                        $statusColor = $info['color'];
+                                        $dateEnrolled = \Carbon\Carbon::parse($enrollment->created_at)->format('M d, Y');
+                                        $nextSchedule = $info['date'];
                                     @endphp
 
                                     <tr class="bg-white border-b text-normal_font hover:bg-gray-50 cursor-pointer" 
                                         onclick="window.location='{{ route('midwife.enrolled-resident', $enrollment->id) }}'">
+                                        
                                         {{-- RESIDENT ID --}}
-                                        <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
-                                            {{ $enrollment->resident->id }}
+                                        <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap ">
+                                            <span x-show="showPrivacy">{{ $residentIdString }}</span>
+                                            <span x-show="!showPrivacy">{{ str_repeat('*', strlen($residentIdString)) }}</span>
                                         </th>
 
                                         {{-- NAME --}}
-                                        <td class="px-6 py-4">
-                                            {{ $enrollment->resident->firstName }} {{ $enrollment->resident->lastName }}
+                                        <td class="px-6 py-4 ">
+                                            <span x-show="showPrivacy">{{ $residentName }}</span>
+                                            <span x-show="!showPrivacy">{{ str_repeat('*', strlen($residentName)) }}</span>
                                         </td>
                                         
                                         {{-- STATUS --}}
                                         <td class="px-6 py-4">
-                                            <span class="px-2 py-1 font-semibold text-xs rounded-full {{ $info['color'] }}">
-                                                {{ $info['status'] }}
+                                            <span x-show="showPrivacy">
+                                                <span class="px-2 py-1 font-semibold text-xs rounded-full {{ $statusColor }}">
+                                                    {{ $statusText }}
+                                                </span>
+                                            </span>
+                                            <span x-show="!showPrivacy" class="">
+                                                {{ str_repeat('*', strlen($statusText)) }}
                                             </span>
                                         </td>
 
                                         {{-- DATE ENROLLED --}}
-                                        <td class="px-6 py-4">
-                                            {{ \Carbon\Carbon::parse($enrollment->created_at)->format('M d, Y') }}
+                                        <td class="px-6 py-4 ">
+                                            <span x-show="showPrivacy">{{ $dateEnrolled }}</span>
+                                            <span x-show="!showPrivacy">{{ str_repeat('*', strlen($dateEnrolled)) }}</span>
                                         </td>
 
                                         {{-- NEXT SCHEDULE --}}
-                                        <td class="px-6 py-4">
-                                            {{ $info['date'] }}
+                                        <td class="px-6 py-4 ">
+                                            <span x-show="showPrivacy">{{ $nextSchedule }}</span>
+                                            <span x-show="!showPrivacy">{{ str_repeat('*', strlen($nextSchedule)) }}</span>
                                         </td>
                                     </tr>
                                 @empty
