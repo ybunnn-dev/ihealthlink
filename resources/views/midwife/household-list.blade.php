@@ -1,7 +1,7 @@
 <x-app-layout>
     @section('title', 'Households')
     @section('page-id', 'households')
-    <div class="py-12 px-6">
+    <div class="py-12 px-6" x-data="{ showPrivacy: false }">
         <div class="max-w-[90rem] mx-auto sm:px-6 lg:px-8">
             <h1 class="text-3xl font-semibold text-sub_blue mb-3">Households and Residents</h1>
             <script>
@@ -60,6 +60,7 @@
                                     <div class="w-full xs:w-40 pt-5 xs:pt-0">
                                         <button type="button" id="open-add-household" class="w-full h-[2.375rem] text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3">Add Households</button>       
                                     </div>
+                                    <x-hide-button />
                                     @include('components.modals.household.add-household-modal')
                                     @include('components.modals.existing-member-modal')
                                     @include('components.modals.existing-family-head-modal')

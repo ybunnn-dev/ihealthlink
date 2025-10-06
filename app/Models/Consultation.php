@@ -51,11 +51,13 @@ class Consultation extends Model
         return $this->belongsTo(User::class, 'updated_by');
     }
 
-    public function consultationData(){
-        return $this->hasOne(ConsultationData::class);
+    public function consultationData()
+    {
+        return $this->hasOne(ConsultationData::class, 'consultation_id');
     }
 
-    public function medicineDistribution(){
-        return $this->hasOne(MedicineDistribution::class);
+    public function medicineDistribution()
+    {
+        return $this->hasMany(MedicineDistribution::class, 'consultation_id');
     }
 }

@@ -1,7 +1,7 @@
 @section('title', 'Residents')
 @section('page-id', 'residents')
 <x-app-layout>
-    <div class="py-12 px-5">
+    <div class="py-12 px-5" x-data="{ showPrivacy: false }">
         <div class="max-w-[90rem] mx-auto sm:px-6 lg:px-8">
             <h1 class="text-3xl font-semibold text-sub_blue mb-3">Households and Residents</h1>
             
@@ -114,47 +114,62 @@
                                 </tr>
                             </thead>
                             <tbody>
-                            {{-- Use @forelse to loop and handle the empty case --}}
-                            @forelse ($residents as $resident)
-                                @php
-                                    // Calculate Age
-                                    $birthdate = \Illuminate\Support\Carbon::parse($resident->birthdate);
-                                    $age = $birthdate->age;
+                                @forelse ($residents as $resident)
+                                    @php
+                                        $birthdate = \Illuminate\Support\Carbon::parse($resident->birthdate);
+                                        $age = $birthdate->age;
+                                        $ageGroup = 'Infant';
+                                        if ($age >= 60) { $ageGroup = 'Senior'; } 
+                                        elseif ($age >= 18) { $ageGroup = 'Adult'; } 
+                                        elseif ($age >= 13) { $ageGroup = 'Teen'; } 
+                                        elseif ($age >= 2) { $ageGroup = 'Child'; }
+                                        $fullName = $resident->firstName . ' ' . $resident->middleName . ' ' . $resident->lastName;
+                                        $purokName = $resident->family->household->purok->name ?? 'N/A';
+                                    @endphp
 
-                                    // Determine Age Group
-                                    $ageGroup = 'Infant'; // Default
-                                    if ($age >= 60) {
-                                        $ageGroup = 'Senior';
-                                    } elseif ($age >= 18) {
-                                        $ageGroup = 'Adult';
-                                    } elseif ($age >= 13) {
-                                        $ageGroup = 'Teen';
-                                    } elseif ($age >= 3) {
-                                        $ageGroup = 'Child';
-                                    }
+                                    <tr class="bg-white border-b bg-f7 text-normal_font" onclick="window.location='{{ route('midwife.spec-resident', ['resident' => $resident->id]) }}'">
+                                        <!-- Resident # is always visible -->
+                                        <th scope="row" class="px-6 py-4 font-medium text-normal_font whitespace-nowrap">
+                                            <span x-show="showPrivacy">R-{{ str_pad($resident->id, 3, '0', STR_PAD_LEFT) }}</span>
+                                            <span x-show="!showPrivacy">{{ 'R-' . str_repeat('*', strlen(str_pad($resident->id, 3, '0', STR_PAD_LEFT))) }}</span>
+                                        </th>
+                                        <!-- Name (Conditional) -->
+                                        <td class="px-6 py-4 ">
+                                            <span x-show="showPrivacy">{{ $fullName }}</span>
+                                            <span x-show="!showPrivacy">{{ str_repeat('*', strlen($fullName)) }}</span>
+                                        </td>
 
-                                    // Format the full name
-                                    $fullName = $resident->firstName . ' ' . $resident->middleName . ' ' . $resident->lastName;
-                                @endphp
+                                        <!-- Purok (Conditional) -->
+                                        <td class="px-6 py-4 ">
+                                            <span x-show="showPrivacy">{{ $purokName }}</span>
+                                            <span x-show="!showPrivacy">{{ str_repeat('*', strlen($purokName)) }}</span>
+                                        </td>
 
-                                <tr class="bg-white border-b bg-f7 text-normal_font" onclick="window.location='{{ route('midwife.spec-resident', ['resident' => $resident->id]) }}'">
-                                    <th scope="row" class="px-6 py-4 font-medium text-normal_font whitespace-nowrap">
-                                        R{{ str_pad($resident->id, 3, '0', STR_PAD_LEFT) }}
-                                    </th>
-                                    <td class="px-6 py-4">{{ $fullName }}</td>
-                                    <td class="px-6 py-4">{{ $resident->family->household->purok->name ?? 'N/A' }}</td>
-                                    <td class="px-6 py-4 capitalize">{{ $resident->sex }}</td>
-                                    <td class="px-6 py-4">{{ $age }}</td>
-                                    <td class="px-6 py-4">{{ $ageGroup }}</td>
-                                </tr>
-                            @empty
-                                {{-- This part is displayed ONLY if $residents is empty --}}
-                                <tr class="bg-white border-b">
-                                    <td colspan="6" class="px-6 py-4 text-center text-gray-500">
-                                        No residents found.
-                                    </td>
-                                </tr>
-                            @endforelse
+                                        <!-- Sex (Conditional) -->
+                                        <td class="px-6 py-4 capitalize ">
+                                            <span x-show="showPrivacy">{{ $resident->sex }}</span>
+                                            <span x-show="!showPrivacy">{{ str_repeat('*', strlen($resident->sex)) }}</span>
+                                        </td>
+
+                                        <!-- Age (Conditional) -->
+                                        <td class="px-6 py-4 ">
+                                            <span x-show="showPrivacy">{{ $age }}</span>
+                                            <span x-show="!showPrivacy">{{ str_repeat('*', strlen((string)$age)) }}</span>
+                                        </td>
+
+                                        <!-- Age Group (Conditional) -->
+                                        <td class="px-6 py-4 ">
+                                            <span x-show="showPrivacy">{{ $ageGroup }}</span>
+                                            <span x-show="!showPrivacy">{{ str_repeat('*', strlen($ageGroup)) }}</span>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr class="bg-white border-b">
+                                        <td colspan="6" class="px-6 py-4 text-center text-gray-500">
+                                            No residents found.
+                                        </td>
+                                    </tr>
+                                @endforelse
                         </tbody>
                         </table>
                     </div>

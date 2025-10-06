@@ -51,34 +51,34 @@
                         <div class="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-4 md:col-span-2">
                             <div>
                                 <label for="weight" class="block mb-2 text-sm font-medium text-main_font">Weight (kg)</label>
-                                <input type="number" step="0.1" name="weight" id="weight" class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="5.5">
+                                <input type="number" step="0.1" name="weight" id="weight" class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                             </div>
                             <div>
                                 <label for="height" class="block mb-2 text-sm font-medium text-main_font">Height (cm)</label>
-                                <input type="number" step="0.1" name="height" id="height" class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="50">
+                                <input type="number" step="0.1" name="height" id="height" class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                             </div>
                             <div>
                                 <label for="temperature" class="block mb-2 text-sm font-medium text-main_font">Temp (°C)</label>
-                                <input type="number" step="0.1" name="temperature" id="temperature" class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="37.5">
+                                <input type="number" step="0.1" name="temperature" id="temperature" class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                             </div>
                             <div>
                                 <label for="pr" class="block mb-2 text-sm font-medium text-main_font">Pulse Rate</label>
-                                <input type="number" name="pr" id="pr" class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="80">
+                                <input type="number" name="pr" id="pr" class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                             </div>
                              <div>
                                 <label for="rr" class="block mb-2 text-sm font-medium text-main_font">Resp. Rate</label>
-                                <input type="number" name="rr" id="rr" class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="20">
+                                <input type="number" name="rr" id="rr" class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                             </div>
                             <div>
                                 <label for="birthweight" class="block mb-2 text-sm font-medium text-main_font">Birth Weight (kg)</label>
-                                <input type="number" step="0.1" name="birthweight" id="birthweight" class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="3.2">
+                                <input type="number" step="0.1" name="birthweight" id="birthweight" class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                             </div>
                             <div class="col-span-2">
                                 <label class="block mb-2 text-sm font-medium text-main_font">Blood Pressure</label>
                                 <div class="flex items-center gap-2">
-                                    <input type="number" name="bp_systolic" id="bp_systolic" class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="120">
+                                    <input type="number" name="bp_systolic" id="bp_systolic" class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                                     <span class="text-gray-500">/</span>
-                                    <input type="number" name="bp_diastolic" id="bp_diastolic" class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="80">
+                                    <input type="number" name="bp_diastolic" id="bp_diastolic" class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                                 </div>
                             </div>
                         </div>

@@ -10,14 +10,19 @@ use App\Models\ConsultationData;
 use App\Models\EnrolledResident;
 use App\Models\MedicineDistribution;
 use App\Models\MedicineInventory;
+use App\Models\BasicHealthRecord;
 
 use Carbon\Carbon;
 
 class ConsultationController extends Controller
 {
-    public function getConsultation(Consultation $consultation)
+    public function getConsultation($id)
     {
-        $consultation->load(['consultationData', 'medicineDistribution']);
+        $consultation = Consultation::with(['consultationData', 'medicineDistribution'])
+            ->findOrFail($id);
+
+        \Log::info('Consultation fetched with relationships:', $consultation->toArray());
+
         return response()->json($consultation);
     }
 
@@ -98,6 +103,25 @@ class ConsultationController extends Controller
 
         if ($allCompleted) {
             $enrolledResident->update(['status' => 'completed']);
+        }
+
+        $basicHR = BasicHealthRecord::firstOrCreate([
+            'resident_id' => $consultation->resident_id,
+        ]);
+
+       // Prepare update data — only include non-null values
+        $updateData = array_filter([
+            'weight' => $payload['weight'] ?? null,
+            'height' => $payload['height'] ?? null,
+            'systolic_pressure' => $payload['bp_systolic'] ?? null,
+            'diastolic_pressure' => $payload['bp_diastolic'] ?? null,
+            'is_pregnant' => $payload['is_pregnant'] ?? null,
+            'is_lactating' => $payload['is_lactating'] ?? null,
+        ], fn($value) => !is_null($value));
+
+        // Update only if there’s something to update
+        if (!empty($updateData)) {
+            $basicHR->update($updateData);
         }
 
         return response()->json(['message' => 'Consultation updated successfully']);
