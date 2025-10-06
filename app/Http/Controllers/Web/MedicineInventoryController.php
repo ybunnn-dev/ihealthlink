@@ -42,4 +42,5 @@ class MedicineInventoryController extends Controller
             ->route('midwife.medicines.show', $medicine->id)
             ->with('success', 'New batch added successfully.');
     }
+
 }

@@ -26,6 +26,10 @@
 @endphp
 
 <div class="bg-white rounded-xl py-8 px-6 sm:px-10 xl:px-12">
+     @php
+        use Carbon\Carbon;
+        $age = Carbon::parse($resident->birthdate)->age;
+    @endphp
     <h2 class="text-xl font-semibold text-main_font mb-4">Basic Health Information</h2>
     <div class="grid grid-cols-1 slg2:grid-cols-2 gap-x-12 gap-y-4 text-xs">
         <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
@@ -48,9 +52,14 @@
             <p class="text-normal_font">{{ $basicHR->weight ?? 'N/A' }} kg</p>
         </div>
 
+        @if($age < 1)
+            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+            <p class="font-semibold text-main_font">WEIGHT:</p>
+            <p class="text-normal_font">{{ $basicHR->weight_grams ?? 'N/A' }} grams</p>
+        </div>
+        @endif
         <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
             <p class="font-semibold text-main_font">BMI:</p>
-            {{-- This now displays the calculated values from the @php block --}}
             <p class="text-normal_font">{{ $bmi }} ({{ $bmiClassification }})</p>
         </div>
 
@@ -60,5 +69,19 @@
                 {{ ($basicHR->systolic_pressure ?? 'N/A') . '/' . ($basicHR->diastolic_pressure ?? 'N/A') }} mmHg
             </p>
         </div>
+        @if($resident->sex === 'female' && ($age > 9 && $age < 50))
+            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                <p class="font-semibold text-main_font">Pregnant:</p>
+                <p class="text-normal_font">
+                    {{ ($basicHR->is_pregnant ? 'Yes' : 'No') }}
+                </p>
+            </div>
+            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                <p class="font-semibold text-main_font">Lactating:</p>
+                <p class="text-normal_font">
+                    {{ ($basicHR->is_lactating ? 'Yes' : 'No') }}
+                </p>
+            </div>
+        @endif
     </div>
 </div>

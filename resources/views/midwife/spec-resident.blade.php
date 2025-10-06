@@ -83,24 +83,34 @@
 
                             @php
                                 $birthdate = \Carbon\Carbon::parse($resident->birthdate);
-                                $age = $birthdate->age; // auto-calculates from current date
+                                $ageYears = $birthdate->age;
+                                $ageMonths = round($birthdate->diffInMonths(now()));
                             @endphp
 
                             <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
                                 <p class="font-semibold text-main_font">BIRTHDATE:</p>
                                 <p class="text-normal_font">
-                                    {{ $birthdate->format('F d, Y') }} ({{ $age }} Years old)
+                                    {{ $birthdate->format('F d, Y') }}
+                                    (
+                                    @if ($ageYears < 1)
+                                        {{ $ageMonths }} {{ \Illuminate\Support\Str::plural('month', $ageMonths) }} old
+                                    @else
+                                        {{ $ageYears }} {{ \Illuminate\Support\Str::plural('year', $ageYears) }} old
+                                    @endif
+                                    )
                                 </p>
                             </div>
 
                             <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
                                 <p class="font-semibold text-main_font">AGE GROUP:</p>
                                 <p class="text-normal_font">
-                                    @if ($age < 13)
+                                    @if ($ageYears < 1)
+                                        Infant
+                                    @elseif ($ageYears < 13)
                                         Child
-                                    @elseif ($age < 20)
+                                    @elseif ($ageYears < 20)
                                         Teenager
-                                    @elseif ($age < 60)
+                                    @elseif ($ageYears < 60)
                                         Adult
                                     @else
                                         Senior
@@ -174,22 +184,7 @@
                 </div>
 
                 <div id="medRecContent" class="grid grid-col gap-3">
-                    <div class="bg-white rounded-xl p-6 px-6 sm:px-10">
-                        <div class="grid grid-cols-1 sm:grid-cols-2 items-center gap-y-4">
-                            <!-- Left Side: Last Updated -->
-                            <div class="text-main_font">
-                                <p class="text-xs">Last Updated:</p>
-                                <h1 class="text-xl font-semibold">March 17, 2024</h1>
-                            </div>
-
-                            <!-- Right Side: Action Buttons -->
-                            <div class="flex flex-wrap justify-start sm:justify-end gap-3">
-                                <button class="w-full sm:w-32 h-9 bg-mainblue rounded-md text-xs font-semibold text-f7 px-6">Update Data</button>
-                                <button class="w-full sm:w-40 h-9 bg-mainblue rounded-md text-xs font-semibold text-f7 px-6">Print PhilPen Data</button>
-                            </div>
-                        </div>
-                    </div>
-
+                    
                     <!-- Basic Health Information Card -->
                     <x-resident.health-info :resident="$resident" />
 
@@ -218,9 +213,6 @@
                                             </div>
                                             <input type="search" id="default-search" class="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500" placeholder="Search..."/>
                                         </div>
-                                    </div>
-                                    <div class="w-full xs:w-40 pt-5 xs:pt-0">
-                                        <button type="button" class="w-full h-[2.375rem] text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3">Enroll</button>
                                     </div>
                                 </div>
                             </div>

@@ -10,18 +10,30 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 use App\Models\Medicine;
-
+use App\Models\Midwife;
 
 class MedicineController extends Controller
 {
     // Show all medicines
     public function index()
     {
-        $midwife = Auth::user()->midwife;
+        $user = auth()->user();
 
-        // Get medicines only for the midwife's barangay
+        // Determine if user is Midwife or BHW with granted access
+        if ($user->bhwWeb && $user->bhwWeb->role_id == 4) {
+            $personnel = $user->bhwWeb;
+        } else {
+            $personnel = $user->midwife;
+        }
+
+        if (!$personnel) {
+            abort(403, 'Unauthorized access.');
+        }
+
+        $brgyId = $personnel->brgy_id;
+        
         $medicines = Medicine::with(['inventories'])
-            ->where('brgy_id', $midwife->brgy_id)
+            ->where('brgy_id', $brgyId)
             ->where('status', 'active')
             ->orderBy('id', 'asc')
             ->get();
@@ -54,12 +66,20 @@ class MedicineController extends Controller
     // Store a new medicine
     public function store(Request $request)
     {
-        // 1. Get the authenticated user
-        $user = Auth::user();
+        $user = auth()->user();
 
-        // 2. Find the user's barangay ID through their midwife profile
-        //    We use optional() to prevent errors if the relationships don't exist.
-        $brgyId = $user->midwife->brgy_id;
+        // Determine if user is Midwife or BHW with granted access
+        if ($user->bhwWeb && $user->bhwWeb->role_id == 4) {
+            $personnel = $user->bhwWeb;
+        } else {
+            $personnel = $user->midwife;
+        }
+
+        if (!$personnel) {
+            abort(403, 'Unauthorized access.');
+        }
+
+        $brgyId = $personnel->brgy_id;
 
         // Abort if the user is not associated with a barangay
         if (!$brgyId) {
@@ -144,4 +164,61 @@ class MedicineController extends Controller
             'id' => $medicine->id
         ]);
     }
+
+
+    public function getMedicines()
+    {
+        $user = auth()->user();
+
+        // Determine personnel (Midwife or BHW)
+        $personnel = $user->bhwWeb && $user->bhwWeb->role_id == 4
+            ? $user->bhwWeb
+            : $user->midwife;
+
+        if (!$personnel) {
+            abort(403, 'Unauthorized access.');
+        }
+
+        $brgyId = $personnel->brgy_id;
+
+        if (!$brgyId) {
+            return response()->json(['message' => 'User is not associated with a barangay.'], 403);
+        }
+
+        // Fetch medicines only for this barangay
+        $medicines = Medicine::with(['inventories'])
+            ->where('brgy_id', $brgyId)
+            ->where('status', 'active')
+            ->orderBy('id', 'asc')
+            ->get();
+
+        // Set threshold (2 months from now)
+        $thresholdDate = Carbon::now()->addMonths(2);
+
+        $medicinesWithStock = $medicines->map(function ($medicine) use ($thresholdDate) {
+            $remainingStock = $medicine->inventories
+                ->filter(function ($inventory) use ($thresholdDate) {
+                    // Only include stocks expiring more than 2 months from now
+                    return Carbon::parse($inventory->expiry_date)->greaterThan($thresholdDate);
+                })
+                ->sum('stock');
+
+            // Add computed stock count
+            $medicine->remaining_stock = $remainingStock;
+
+            // Remove inventories to reduce payload
+            unset($medicine->inventories);
+
+            return $medicine;
+        })
+        // Only include medicines that still have stock
+        ->filter(function ($medicine) {
+            return $medicine->remaining_stock > 0;
+        })
+        // Reset array keys
+        ->values();
+
+        return response()->json($medicinesWithStock);
+    }
+
 }

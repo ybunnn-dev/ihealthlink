@@ -18,7 +18,7 @@ class BarangayHealthProgramController extends Controller
     public function index(HealthProgram $healthProgram = null)
     {
         $personnel = Auth::user()->midwife;
-        $barangayId = $personnel->brgy_id; // Midwife’s assigned barangay
+        $barangayId = $personnel->brgy_id; 
 
         if (!$healthProgram) {
             $healthProgram = HealthProgram::latest()->first();
@@ -64,19 +64,18 @@ class BarangayHealthProgramController extends Controller
     {
         $enrolledResident->load([
             'consultations' => function ($q) use ($enrolledResident) {
-                $q->where('enrolled_resident_id', $enrolledResident->id);
+                $q->where('enrolled_resident_id', $enrolledResident->id)
+                ->with('consultationData');;
             },
             'resident.family.household.purok.barangay',
             'resident.basicHealthRecord',
             'program'
         ]);
 
-        // Conditionally load maternalRecord if program category matches
         if ($enrolledResident->program && $enrolledResident->program->category === 'maternal_health_tcl') {
             $enrolledResident->load('maternalRecord');
         }
 
-        \Log::info($enrolledResident);
 
         return view('midwife.enrolled-resident', compact('enrolledResident'));
     }

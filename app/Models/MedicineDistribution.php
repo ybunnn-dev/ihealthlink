@@ -14,22 +14,17 @@ class MedicineDistribution extends Model
     public $timestamps = false; // Since we only have distributed_at
 
     protected $fillable = [
-        'batch_id',
+        'medicine_id',
         'distributed_by',
-        'amount',
-        'distributed_at',
+        'consultation_id',
+        'quantity',
     ];
-
-    protected $casts = [
-        'distributed_at' => 'datetime',
-    ];
-
     /**
      * Get the inventory batch this distribution belongs to
      */
-    public function batch(): BelongsTo
+    public function medicine(): BelongsTo
     {
-        return $this->belongsTo(MedicineInventory::class, 'batch_id');
+        return $this->belongsTo(MedicineInventory::class, 'medicine_id');
     }
 
     /**
@@ -40,25 +35,11 @@ class MedicineDistribution extends Model
         return $this->belongsTo(User::class, 'distributed_by');
     }
 
-    /**
-     * Get the medicine through the batch relationship
-     */
-    public function medicine()
-    {
-        return $this->batch->medicine();
+    public function consultation(){
+        return $this->belongsTo(Consultation::class, 'consultation_id');
     }
-
     /**
      * Automatically set distributed_at when creating
      */
-    protected static function boot()
-    {
-        parent::boot();
-        
-        static::creating(function ($distribution) {
-            if (!$distribution->distributed_at) {
-                $distribution->distributed_at = now();
-            }
-        });
-    }
+
 }

@@ -20,6 +20,7 @@ use App\Http\Controllers\Web\ResidentController;
 use App\Http\Controllers\Web\UserManualController;
 use App\Http\Controllers\Web\MaternalController;
 use App\Http\Controllers\Web\BarangayExportData;
+use App\Http\Controllers\Web\ConsultationController;
 
 Route::get('/', function () {
     return view('auth.login');
@@ -264,4 +265,10 @@ Route::middleware([
 
     Route::get('/barangay/health-program/fetch', [BarangayHealthProgramController::class, 'getAllPrograms'])
     ->name('barangay.health-program.fetch');
+
+    Route::get('/barangay/consultation/{id}', [ConsultationController::class, 'getConsultation']);
+
+    Route::get('/barangay/get-medicines', [MedicineController::class, 'getMedicines']);
+
+    Route::post('/barangay/consultation/store', [ConsultationController::class, 'store']);
 });

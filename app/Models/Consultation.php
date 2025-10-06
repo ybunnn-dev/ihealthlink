@@ -20,7 +20,7 @@ class Consultation extends Model
         'status',
         'schedule_extension_days',
         'consultation_title',
-        'remarks',
+        'remarks', //ignore this
         'updated_by',
     ];
 
@@ -45,15 +45,17 @@ class Consultation extends Model
         return $this->belongsTo(HealthProgram::class, 'program_id');
     }
 
-    // Consultation belongs to a medicine/distribution (?) table
-    public function medDis()
-    {
-        return $this->belongsTo(MedDis::class, 'med_dis_id');
-    }
-
     // Consultation updated by a user (e.g., midwife, admin)
     public function updatedBy()
     {
         return $this->belongsTo(User::class, 'updated_by');
+    }
+
+    public function consultationData(){
+        return $this->hasOne(ConsultationData::class);
+    }
+
+    public function medicineDistribution(){
+        return $this->hasOne(MedicineDistribution::class);
     }
 }
