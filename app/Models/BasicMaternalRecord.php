@@ -28,6 +28,16 @@ class BasicMaternalRecord extends Model
         return $this->belongsTo(EnrolledResident::class, 'enrolled_resident_id');
     }
 
+    public function maternityScreening()
+    {
+        return $this->hasOne(MaternityScreening::class, 'maternal_record_id');
+    }
+
+    public function pregnancyOutcome()
+    {
+        return $this->hasOne(PregnancyOutcome::class, 'basic_maternal_record_id');
+    }
+
     /**
      * Mutator: Auto-compute EDC when LMP is set
      */

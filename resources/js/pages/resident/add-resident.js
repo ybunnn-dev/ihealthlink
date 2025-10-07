@@ -145,8 +145,8 @@ const cancelConfirm = document.getElementById('cancel-add-resident-confirm');
 const confirmAddResidentSubmitBtn = document.getElementById('confirm-resident-proceed-button');
 const openAddResidentBtn = document.getElementById('openAddResidentModal');
 
-const confirmResidentModal = new Modal(confirmResidentModalEl);
-const addResidentModal = new Modal(addResidentModalEl);
+const confirmResidentModal = new Modal(confirmResidentModalEl,{backdrop: 'static',closable: true,});
+const addResidentModal = new Modal(addResidentModalEl,{backdrop: 'static',closable: true,});
 
 let currentResidentPayload = null;
 
@@ -176,7 +176,7 @@ const successMesageHeader = document.getElementById('success-msg-head');
 const successMessage = document.getElementById('success-message');
 const closeSuccessModalButton = document.getElementById('close-success-modal-button');
 
-const successModal = new Modal(successModalEl);
+const successModal = new Modal(successModalEl,{backdrop: 'static',closable: true,});
 
 // Select all the option buttons inside the dropdown menu
 const suffixOptions = document.querySelectorAll('#suffixDropdownMenu button');

@@ -35,9 +35,30 @@
                             <input type="hidden" name="category" id="edit-category-value">
                             <div id="edit-category-dropdown-menu" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-full absolute top-full mt-1">
                                 <ul class="py-2 text-sm text-gray-700" aria-labelledby="edit-category-dropdown-btn">
-                                    <li><button type="button" data-value="Medicine" class="w-full text-left px-4 py-2 hover:bg-gray-100">Medicine</button></li>
-                                    <li><button type="button" data-value="Medical Supplies" class="w-full text-left px-4 py-2 hover:bg-gray-100">Medical Supplies</button></li>
-                                    <li><button type="button" data-value="Equipment" class="w-full text-left px-4 py-2 hover:bg-gray-100">Equipment</button></li>
+                                        <li>
+                                        <button type="button" data-value="" class="w-full text-left px-4 py-2 hover:bg-gray-100">Select Category</button>
+                                    </li>
+                                    <li>
+                                        <button type="button" data-value="Medical Supplies" class="w-full text-left px-4 py-2 hover:bg-gray-100">Regular Medicine</button>
+                                    </li>
+                                    <li>
+                                        <button type="button" data-value="Deworming Tablet" class="w-full text-left px-4 py-2 hover:bg-gray-100">Deworming Tablet</button>
+                                    </li>
+                                     <li>
+                                        <button type="button" data-value="Iron With Folic Acid" class="w-full text-left px-4 py-2 hover:bg-gray-100">Iron with Folic Acid</button>
+                                    </li>
+                                    <li>
+                                        <button type="button" data-value="Iron sulfate With Folic Acid" class="w-full text-left px-4 py-2 hover:bg-gray-100">Iron sulfate with Folic Acid</button>
+                                    </li>
+                                     <li>
+                                        <button type="button" data-value="Vitamin A" class="w-full text-left px-4 py-2 hover:bg-gray-100">Vitamin A</button>
+                                    </li>
+                                    <li>
+                                        <button type="button" data-value="Calium Carbonate" class="w-full text-left px-4 py-2 hover:bg-gray-100">Calcium Carbonate</button>
+                                    </li>
+                                    <li>
+                                        <button type="button" data-value="Iodine" class="w-full text-left px-4 py-2 hover:bg-gray-100">Iodine Capsule</button>
+                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -53,10 +74,24 @@
                             <input type="hidden" name="form" id="edit-form-value">
                             <div id="edit-form-dropdown-menu" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-full absolute top-full mt-1">
                                 <ul class="py-2 text-sm text-gray-700" aria-labelledby="edit-form-dropdown-btn">
-                                    <li><button type="button" data-value="Tablet" class="w-full text-left px-4 py-2 hover:bg-gray-100">Tablet</button></li>
-                                    <li><button type="button" data-value="Capsule" class="w-full text-left px-4 py-2 hover:bg-gray-100">Capsule</button></li>
-                                    <li><button type="button" data-value="Syrup" class="w-full text-left px-4 py-2 hover:bg-gray-100">Syrup</button></li>
-                                    <li><button type="button" data-value="Injection" class="w-full text-left px-4 py-2 hover:bg-gray-100">Injection</button></li>
+                                    <li>
+                                        <button type="button" data-value="" class="w-full text-left px-4 py-2 hover:bg-gray-100">Select Form</button>
+                                    </li>
+                                    <li>
+                                        <button type="button" data-value="Tablet" class="w-full text-left px-4 py-2 hover:bg-gray-100">Tablet</button>
+                                    </li>
+                                    <li>
+                                        <button type="button" data-value="Capsule" class="w-full text-left px-4 py-2 hover:bg-gray-100">Capsule</button>
+                                    </li>
+                                    <li>
+                                        <button type="button" data-value="Syrup" class="w-full text-left px-4 py-2 hover:bg-gray-100">Syrup</button>
+                                    </li>
+                                    <li>
+                                        <button type="button" data-value="Vaccine" class="w-full text-left px-4 py-2 hover:bg-gray-100">Vaccine</button>
+                                    </li>
+                                    <li>
+                                        <button type="button" data-value="Vaccine" class="w-full text-left px-4 py-2 hover:bg-gray-100">Non-Medicine</button>
+                                    </li>
                                 </ul>
                             </div>
                         </div>

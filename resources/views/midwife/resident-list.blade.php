@@ -8,7 +8,7 @@
             <div class="mb-3">
                 <x-resident-module-nav></x-resident-module-nav>
             </div>
-            <div class="bg-f7 rounded-xl overflow-hidden">
+            <div class="bg-f7 rounded-xl overflow-hidden h-[70vh]">
                 <div class="p-6">
                     <div class="grid grid-rows-1 gap-1">
                         <div class="pb-6">
@@ -185,7 +185,11 @@
                         </tbody>
                         </table>
                     </div>
+                     
                 </div>
+                <div class="mt-6 text-main_font">
+                        {{ $residents->links() }}
+                    </div>
                 </div>
             </div>
         </div>

@@ -15,6 +15,7 @@ class Resident extends Model
         'added_by',
         'firstName',
         'lastName',
+        'purok_id',
         'middleName',
         'suffix',
         'birthdate',
@@ -96,8 +97,12 @@ class Resident extends Model
     {
         return $this->hasMany(BasicMaternalRecord::class, 'resident_id');
     }
+    public function residenceHistory(){
+        return $this->hasMany(ResidenceHistory::class, 'resident_id');
+    }
     public function basicHealthRecord()
     {
         return $this->hasOne(BasicHealthRecord::class);
     }
+    
 }

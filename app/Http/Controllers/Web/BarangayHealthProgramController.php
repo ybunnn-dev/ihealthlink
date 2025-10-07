@@ -11,6 +11,8 @@ use App\Models\Consultation;
 use App\Models\ProgramSchedule;
 use App\Models\HealthProgram;
 use App\Models\EnrolledResident;
+use App\Models\BasicHealthRecord;
+
 
 use Illuminate\Support\Facades\Auth;
 class BarangayHealthProgramController extends Controller
@@ -62,20 +64,39 @@ class BarangayHealthProgramController extends Controller
 
     public function show(EnrolledResident $enrolledResident)
     {
+        // Load main enrolled resident relationships
         $enrolledResident->load([
             'consultations' => function ($q) use ($enrolledResident) {
                 $q->where('enrolled_resident_id', $enrolledResident->id)
-                ->with('consultationData');;
+                ->with('consultationData')
+                ->with('medicineDistributions.medicine');
             },
             'resident.family.household.purok.barangay',
             'resident.basicHealthRecord',
             'program'
         ]);
 
+        // If the current program is maternal health TCL
         if ($enrolledResident->program && $enrolledResident->program->category === 'maternal_health_tcl') {
-            $enrolledResident->load('maternalRecord');
-        }
 
+            // Load maternal record details
+            $enrolledResident->load('maternalRecord', 'maternalRecord.maternityScreening', 'maternalRecord.pregnancyOutcome');
+
+            $antiTetanusEnrollment = EnrolledResident::where('resident_id', $enrolledResident->resident_id)
+            ->whereHas('program', function ($q) {
+                $q->where('name', 'Anti-Tetanus Vaccination');
+            })
+            ->with([
+                'consultations' => function ($q) {
+                    $q->with('consultationData');
+                },
+                'program'
+            ])
+            ->first();
+
+            // Attach to current enrolled resident instance
+            $enrolledResident->setRelation('antiTetanusEnrollment', $antiTetanusEnrollment);
+        }
 
         return view('midwife.enrolled-resident', compact('enrolledResident'));
     }

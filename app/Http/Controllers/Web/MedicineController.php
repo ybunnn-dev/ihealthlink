@@ -19,7 +19,7 @@ class MedicineController extends Controller
     {
         $user = auth()->user();
 
-        // Determine if user is Midwife or BHW with granted access
+        // Determine personnel: BHW with role 4 or Midwife
         if ($user->bhwWeb && $user->bhwWeb->role_id == 4) {
             $personnel = $user->bhwWeb;
         } else {
@@ -31,25 +31,22 @@ class MedicineController extends Controller
         }
 
         $brgyId = $personnel->brgy_id;
-        
-        $medicines = Medicine::with(['inventories'])
+        $perPage = 8; // Items per page
+
+        // Fetch medicines with remaining non-expired stock calculated in the query
+        $medicines = Medicine::with(['inventories' => function($q) {
+                $q->where('expiry_date', '>', now());
+            }])
             ->where('brgy_id', $brgyId)
             ->where('status', 'active')
+            ->withSum(['inventories as remaining_stock' => function($q){
+                $q->where('expiry_date', '>', now());
+            }], 'stock')
             ->orderBy('id', 'asc')
-            ->get();
-
-        // Map each medicine to include remaining non-expired stock
-        $medicinesWithStock = $medicines->map(function ($medicine) {
-            $remainingStock = $medicine->inventories
-                ->filter(fn($inventory) => Carbon::parse($inventory->expiry_date)->isFuture())
-                ->sum('stock');
-
-            $medicine->remaining_stock = $remainingStock;
-            return $medicine;
-        });
+            ->paginate($perPage);
 
         return view('midwife.medicine-list', [
-            'medicines' => $medicinesWithStock
+            'medicines' => $medicines
         ]);
     }
 

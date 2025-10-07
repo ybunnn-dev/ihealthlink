@@ -56,7 +56,7 @@ class Consultation extends Model
         return $this->hasOne(ConsultationData::class, 'consultation_id');
     }
 
-    public function medicineDistribution()
+    public function medicineDistributions()
     {
         return $this->hasMany(MedicineDistribution::class, 'consultation_id');
     }

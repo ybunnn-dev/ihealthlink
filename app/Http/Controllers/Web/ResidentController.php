@@ -16,6 +16,7 @@ use App\Models\Family;
 use App\Models\Household;
 use App\Models\Barangay;
 use App\Models\HealthProgram;
+use App\Models\BasicHealthRecord;
 
 class ResidentController extends Controller
 {  
@@ -38,8 +39,8 @@ class ResidentController extends Controller
 
         $familyIds = $families->pluck('id');
         $residents = Resident::with('family.household.purok')
-            ->whereIn('family_id', $familyIds)
-            ->get();
+        ->whereIn('family_id', $familyIds)
+        ->paginate(7);
 
 
         return view('midwife.resident-list', [
@@ -233,8 +234,21 @@ class ResidentController extends Controller
                 'systolic_pressure'    => $ncd['bpSystolic'] ?? null,
                 'diastolic_pressure'   => $ncd['bpDiastolic'] ?? null,
             ]);
+
+            $resident->basicHealthRecord()->create([
+                'weight' => $ncd['weightKg'] ?? null,
+                'height' => $ncd['heightCm'] ?? null,
+                'systolic_pressure'    => $ncd['bpSystolic'] ?? null,
+                'diastolic_pressure'   => $ncd['bpDiastolic'] ?? null,
+                'waist_circumference'  => $ncd['waistCircumferenceCm'] ?? null,
+                'is_pregnant' => false,
+                'is_lactating' => false,
+                'weight_grams' => null,
+                'status' => 'alive',
+            ]);
         }
 
+        
         if ($request->has('risk_assessment')) {
             $assessment = $request->risk_assessment;
             $bloodSugar = $assessment['bloodSugar'] ?? [];

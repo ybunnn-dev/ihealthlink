@@ -16,11 +16,11 @@ use Carbon\Carbon;
 
 class ConsultationController extends Controller
 {
-     public function getConsultation($id)
+    public function getConsultation($id)
     {
         $consultation = Consultation::with([
             'consultationData',
-            'medicineDistribution.medicine.medicine',
+            'medicineDistributions.medicine',
             'updatedBy:id,firstName,middleName,lastName,suffix', 
         ])->findOrFail($id);
 

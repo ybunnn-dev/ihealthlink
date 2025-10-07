@@ -41,11 +41,6 @@ const formatDate = (dateString) => {
     return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 };
 
-/**
- * Determines the status text and color class based on the consultation data.
- * @param {object} consultation The consultation object from the API.
- * @returns {object} An object with statusText and statusColorClass.
- */
 const getStatusInfo = (consultation) => {
     let statusText = 'Unknown';
     let statusColorClass = 'bg-gray-100 text-gray-800'; // Default color
@@ -79,8 +74,9 @@ const getStatusInfo = (consultation) => {
 };
 
 const populateModal = (data) => {
-    const { consultation_data, medicine_distribution, updated_by } = data;
-
+    const { consultation_data, medicine_distributions, updated_by } = data;
+    console.log(data);
+    
     // Populate header
     consultationTitleEl.textContent = data.consultation_title || 'Consultation Details';
     consultationScheduleEl.textContent = `Scheduled for: ${formatDate(data.consultation_date)}`;
@@ -110,11 +106,11 @@ const populateModal = (data) => {
 
     // Populate medicines
     medicineListEl.innerHTML = ''; // Clear previous list
-    if (medicine_distribution && medicine_distribution.length > 0) {
-        medicine_distribution.forEach(med => {
+    if (medicine_distributions && medicine_distributions.length > 0) {
+        medicine_distributions.forEach(med => {
             // Safely access nested medicine information
-            if (med.medicine && med.medicine.medicine) {
-                const medicineInfo = med.medicine.medicine;
+            if (med.medicine) {
+                const medicineInfo = med.medicine;
                 const medCard = document.createElement('div');
                 medCard.className = 'p-3 bg-white rounded-lg border border-gray-200';
                 medCard.innerHTML = `
@@ -149,7 +145,7 @@ document.body.addEventListener('click', async (event) => {
         try {
             viewModal.show();
             consultationTitleEl.textContent = 'Loading...';
-            consultationScheduleEl.textContent = ''; // Clear subtitle while loading
+            consultationScheduleEl.textContent = ''; 
 
             const response = await fetch(`/barangay/consultation/${consultationId}`);
             if (!response.ok) throw new Error('Network response was not ok');

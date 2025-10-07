@@ -110,6 +110,7 @@
                                 <input type="date" id="td5" class="bg-gray-100 border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5 cursor-not-allowed" disabled>
                             </div>
                         </div>
+                        <p id="no-tetanus" class="text-red-500 hidden text-xs text-center mt-3">Resident has no anti-tetanus data</p>
                     </fieldset>
 
                     <fieldset class="slg2:col-span-3 border p-4 rounded-lg">
@@ -150,26 +151,26 @@
                                 <div class="grid grid-cols-2 gap-2 text-main_font">
                                     <label class="text-sm">2nd Visit Amount/Date</label>
                                     <div class="flex gap-2">
-                                        <input type="text" id="calcium-carbonate-amount-2" class="bg-white border border-gray-300 text-sm w-1/2 p-2 rounded-lg" disabled><input type="date" id="calcium-carbonate-date-2" class="bg-white border border-gray-300 text-sm w-1/2 p-2 rounded-lg text-main_font" disabled>
+                                        <input type="text" id="calcium-carbonate-amount-2" class="border bg-gray-100 border-gray-300 text-sm w-1/2 p-2 rounded-lg" disabled><input type="date" id="calcium-carbonate-date-2" class="bg-gray-100 border border-gray-300 text-sm w-1/2 p-2 rounded-lg text-main_font" disabled>
                                     </div>
                                 </div>
                                 <div class="grid grid-cols-2 gap-2 text-main_font">
                                     <label class="text-sm">3rd Visit Amount/Date</label>
                                     <div class="flex gap-2">
-                                        <input type="text" id="calcium-carbonate-amount-3" class="bg-white border border-gray-300 text-sm w-1/2 p-2 rounded-lg" disabled><input type="date" id="calcium-carbonate-date-3" class="bg-white border border-gray-300 text-sm w-1/2 p-2 text-main_font rounded-lg" disabled>
+                                        <input type="text" id="calcium-carbonate-amount-3" class="bg-gray-100 border border-gray-300 text-sm w-1/2 p-2 rounded-lg" disabled><input type="date" id="calcium-carbonate-date-3" class="bg-gray-100 border border-gray-300 text-sm w-1/2 p-2 text-main_font rounded-lg" disabled>
                                     </div>
                                 </div>
                                 <div class="grid grid-cols-2 gap-2 text-main_font">
                                     <label class="text-sm">4th Visit Amount/Date</label>
                                     <div class="flex gap-2">
-                                        <input type="text" id="calcium-carbonate-amount-4" class="bg-white border border-gray-300 text-sm w-1/2 p-2 rounded-lg" disabled><input type="date" id="calcium-carbonate-date-4" class="bg-white border border-gray-300 text-sm w-1/2 p-2 text-main_font rounded-lg" disabled>
+                                        <input type="text" id="calcium-carbonate-amount-4" class="bg-gray-100 border border-gray-300 text-sm w-1/2 p-2 rounded-lg" disabled><input type="date" id="calcium-carbonate-date-4" class="bg-gray-100 border border-gray-300 text-sm w-1/2 p-2 text-main_font rounded-lg" disabled>
                                     </div>
                                 </div>
                                 <h4 class="font-medium pt-4 text-main_font">Iodine Capsule</h4>
                                 <div class="grid grid-cols-2 gap-2 text-main_font">
                                     <label class="text-sm">1st Visit Amount/Date</label>
                                     <div class="flex gap-2">
-                                        <input type="text" id="iodine-capsule-amount-1" class="bg-white border border-gray-300 text-sm w-1/2 p-2 rounded-lg" disabled><input type="date" id="iodine-capsule-date-1" class="bg-white border border-gray-300 text-main_font text-sm w-1/2 p-2 rounded-lg" disabled>
+                                        <input type="text" id="iodine-capsule-amount-1" class="bg-gray-100 border border-gray-300 text-sm w-1/2 p-2 rounded-lg" disabled><input type="date" id="iodine-capsule-date-1" class="bg-gray-100 border border-gray-300 text-main_font text-sm w-1/2 p-2 rounded-lg" disabled>
                                     </div>
                                 </div>
                             </div>
@@ -177,9 +178,12 @@
                     </fieldset>
                     
                     <div>
-                        <label for="fim-status" class="block mb-2 text-sm font-medium text-main_font">FIM Status</label>
+                        <label for="fim-status" class="block mb-2 text-sm font-medium text-main_font">FULLY IMMUNED STATUS</label>
                         <select id="fim-status" class="bg-gray-100 border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5 cursor-not-allowed" disabled>
                             <option selected>Choose status</option>
+                            <option value="fully-immuned">Fully Immuned</option>
+                            <option value="partially-immuned">Paritally Immuned</option>
+                            <option value="no-data">No Immunization Data</option>
                         </select>
                     </div>
 
@@ -432,10 +436,14 @@
             </div>
             
             <!-- Modal footer -->
-            <div class="flex items-center justify-between border-t border-gray-200 rounded-b dark:border-gray-600 gap-3 pt-6 px-4 mb-3">
-                <button data-modal-hide="update-maternity-modal" type="button" class="py-2.5 px-5 text-sm font-medium text-main_font focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100">Cancel</button>
-                <button type="button" class="text-white bg-mainblue hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center w-full sm:w-auto">Update Details</button>
+          <div class="flex items-center justify-between border-t border-gray-200 rounded-b dark:border-gray-600 gap-3 pt-6 px-4 mb-3">
+            <button id="cancel-update-maternity" type="button" class="py-2.5 px-5 text-sm font-medium text-main_font focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100">Cancel</button>
+
+            <div class="flex items-center gap-3">
+                <button id="print-maternity-btn" type="button" class="text-white bg-maingreen hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center w-full sm:w-auto">Print Details</button>
+                <button id="update-maternity-btn" type="button" class="text-white bg-mainblue hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center w-full sm:w-auto">Update Details</button>
             </div>
+        </div>
 
         </div>
     </div>

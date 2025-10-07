@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\BasicMaternalRecord;
 use App\Models\EnrolledResident;
 use App\Models\Consultation;
+use App\Models\BasicHealthRecord;
 
 class MaternalController extends Controller
 {
@@ -41,9 +42,15 @@ class MaternalController extends Controller
 
         $this->createConsultationSchedules(
             $validated['resident_id'],
-            $validated['health_program_id'],
+            $enrollment->id,
             $validated['last_menstrual_period']
         );
+
+        $basicHealthRecord = BasicHealthRecord::where('resident_id', $validated['resident_id'])->first();
+
+         if ($basicHealthRecord) {
+            $basicHealthRecord->update(['is_pregnant' => true]);
+        }
 
         return response()->json([
             'message' => 'Maternal record enrolled successfully',
@@ -51,7 +58,7 @@ class MaternalController extends Controller
             'maternal_record' => $record,
         ]);
     }
-    protected function createConsultationSchedules($residentId, $programId, $lmp)
+    protected function createConsultationSchedules($residentId, $enrollId, $lmp)
     {
         $lmp = \Carbon\Carbon::parse($lmp);
 
@@ -59,10 +66,9 @@ class MaternalController extends Controller
             // Trimester schedules
             [
                 'resident_id' => $residentId,
-                'program_id' => $programId,
+                'enrolled_resident_id' => $enrollId,
                 'consultation_date' => $lmp->copy()->addWeeks(12),
                 'status' => 'pending',
-                'med_dis_id' => null,
                 'schedule_extension_days' => 0,
                 'consultation_title' => 'Trimester 1',
                 'remarks' => null,
@@ -70,10 +76,9 @@ class MaternalController extends Controller
             ],
             [
                 'resident_id' => $residentId,
-                'program_id' => $programId,
+                'enrolled_resident_id' => $enrollId,
                 'consultation_date' => $lmp->copy()->addWeeks(24),
                 'status' => 'pending',
-                'med_dis_id' => null,
                 'schedule_extension_days' => 0,
                 'consultation_title' => 'Trimester 2',
                 'remarks' => null,
@@ -81,10 +86,9 @@ class MaternalController extends Controller
             ],
             [
                 'resident_id' => $residentId,
-                'program_id' => $programId,
+                'enrolled_resident_id' => $enrollId,
                 'consultation_date' => $lmp->copy()->addWeeks(32),
                 'status' => 'pending',
-                'med_dis_id' => null,
                 'schedule_extension_days' => 0,
                 'consultation_title' => 'Trimester 3 (1)',
                 'remarks' => null,
@@ -92,10 +96,9 @@ class MaternalController extends Controller
             ],
             [
                 'resident_id' => $residentId,
-                'program_id' => $programId,
+                'enrolled_resident_id' => $enrollId,
                 'consultation_date' => $lmp->copy()->addWeeks(36),
                 'status' => 'pending',
-                'med_dis_id' => null,
                 'schedule_extension_days' => 0,
                 'consultation_title' => 'Trimester 3 (2)',
                 'remarks' => null,
@@ -105,10 +108,9 @@ class MaternalController extends Controller
             // Postpartum schedules (consultation_date = null)
             [
                 'resident_id' => $residentId,
-                'program_id' => $programId,
+                'enrolled_resident_id' => $enrollId,
                 'consultation_date' => null,
                 'status' => 'pending',
-                'med_dis_id' => null,
                 'schedule_extension_days' => 0,
                 'consultation_title' => 'Postpartum (within 24h)',
                 'remarks' => null,
@@ -116,10 +118,9 @@ class MaternalController extends Controller
             ],
             [
                 'resident_id' => $residentId,
-                'program_id' => $programId,
+                'enrolled_resident_id' => $enrollId,
                 'consultation_date' => null,
                 'status' => 'pending',
-                'med_dis_id' => null,
                 'schedule_extension_days' => 0,
                 'consultation_title' => 'Postpartum (within 7 days)',
                 'remarks' => null,
@@ -127,10 +128,9 @@ class MaternalController extends Controller
             ],
             [
                 'resident_id' => $residentId,
-                'program_id' => $programId,
+                'enrolled_resident_id' => $enrollId,
                 'consultation_date' => null,
                 'status' => 'pending',
-                'med_dis_id' => null,
                 'schedule_extension_days' => 0,
                 'consultation_title' => 'Postpartum (1 month)',
                 'remarks' => null,
@@ -138,10 +138,9 @@ class MaternalController extends Controller
             ],
             [
                 'resident_id' => $residentId,
-                'program_id' => $programId,
+                'enrolled_resident_id' => $enrollId,
                 'consultation_date' => null,
                 'status' => 'pending',
-                'med_dis_id' => null,
                 'schedule_extension_days' => 0,
                 'consultation_title' => 'Postpartum (2 months)',
                 'remarks' => null,
@@ -149,10 +148,9 @@ class MaternalController extends Controller
             ],
             [
                 'resident_id' => $residentId,
-                'program_id' => $programId,
+                'enrolled_resident_id' => $enrollId,
                 'consultation_date' => null,
                 'status' => 'pending',
-                'med_dis_id' => null,
                 'schedule_extension_days' => 0,
                 'consultation_title' => 'Postpartum (3 months)',
                 'remarks' => null,

@@ -22,10 +22,11 @@ class MedicineDistribution extends Model
     /**
      * Get the inventory batch this distribution belongs to
      */
-    public function medicine(): BelongsTo
+    public function medicine()
     {
-        return $this->belongsTo(MedicineInventory::class, 'medicine_id');
+        return $this->belongsTo(Medicine::class, 'medicine_id');
     }
+
 
     /**
      * Get the user who distributed this medicine

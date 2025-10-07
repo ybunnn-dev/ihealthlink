@@ -21,6 +21,7 @@ use App\Http\Controllers\Web\UserManualController;
 use App\Http\Controllers\Web\MaternalController;
 use App\Http\Controllers\Web\BarangayExportData;
 use App\Http\Controllers\Web\ConsultationController;
+use App\Http\Controllers\Web\MaternalExport;
 
 Route::get('/', function () {
     return view('auth.login');
@@ -271,4 +272,6 @@ Route::middleware([
     Route::get('/barangay/get-medicines', [MedicineController::class, 'getMedicines']);
 
     Route::post('/barangay/consultation/store', [ConsultationController::class, 'store']);
+
+    Route::post('/barangay/export-maternal', [MaternalExport::class, 'exportIndividual']);
 });
