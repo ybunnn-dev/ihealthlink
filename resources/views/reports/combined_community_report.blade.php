@@ -8,7 +8,7 @@
         body {
             font-family: 'Helvetica', 'Arial', sans-serif;
             color: #333;
-            font-size: 12px; /* Set a base font size */
+            font-size: 12px;
         }
         hr {
             border: 0;
@@ -29,6 +29,7 @@
             margin: 0;
             padding: 0;
             font-size: 18px;
+            color: #279EFF; /* CHANGED */
         }
         .header h2 {
             margin: 5px 0;
@@ -54,7 +55,8 @@
             margin-top: 15px;
             margin-bottom: 8px;
             padding-bottom: 3px;
-            border-bottom: 1px solid #555;
+            border-bottom: 2px solid #279EFF; /* CHANGED */
+            color: #279EFF; /* ADDED */
         }
         .section-title:first-child { margin-top: 0; }
         .data-list {
@@ -79,13 +81,13 @@
             text-align: left;
         }
         .p1-table th {
-            background-color: #f2f2f2;
+            background-color: #DFEEFF; /* CHANGED */
             font-weight: bold;
         }
         .p1-table td:nth-child(2), .p1-table td:nth-child(3) { text-align: center; }
         .total-row {
             font-weight: bold;
-            background-color: #f2f2f2;
+            background-color: #DFEEFF; /* CHANGED */
         }
 
         /* --- Page 2: Demographic Data Styles --- */
@@ -99,7 +101,7 @@
             text-align: center;
         }
         .p2-table th {
-            background-color: #e0e0e0;
+            background-color: #DFEEFF; /* CHANGED */
             font-weight: bold;
         }
         .p2-table td:first-child {
@@ -107,18 +109,19 @@
             font-weight: normal;
         }
         .section-header td {
-            background-color: #c0c0c0;
+            background-color: #279EFF; /* CHANGED */
+            color: #FFFFFF; /* ADDED for contrast */
             font-weight: bold;
             text-align: center !important;
         }
         .category-row td {
-            background-color: #f0f0f0;
+            background-color: #DFEEFF; /* CHANGED */
             font-weight: bold;
         }
         .p2-table .sub-item td:first-child { padding-left: 15px; }
         .total-column {
             font-weight: bold;
-            background-color: #e0e0e0;
+            background-color: #DFEEFF; /* CHANGED */
         }
         .projection {
             font-weight: bold;
@@ -141,38 +144,33 @@
         }
         .signatures .title { font-style: italic; }
 
-        /* This block contains all the styling for your table */
+        /* --- Page 3: Demographic Data by Age Styles --- */
         .p3-table {
-            width: auto; /* Let the table size itself based on content */
-            min-width: 50%; /* Prevents the table from becoming too narrow */
-            margin-left: auto; /* These two margin properties center the table */
+            width: auto;
+            min-width: 50%;
+            margin-left: auto;
             margin-right: auto;
-            border-collapse: collapse; /* This makes the borders look clean and single-lined */
-            font-family: sans-serif; /* Optional: for a cleaner font */
+            border-collapse: collapse;
+            font-family: sans-serif;
         }
-
-        /* This applies styling to all header (th) and data (td) cells */
         .p3-table th, .p3-table td {
-            border: 1px solid #ccc; /* Adds a light grey border to every cell */
-            padding: 8px; /* Adds some space inside the cells */
-            text-align: center; /* Centers the text in all cells */
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: center;
         }
-
-        /* This specifically targets the first column (Age) to fix the width */
         .p3-table th:first-child, .p3-table td:first-child {
-            width: 80px; /* Sets a fixed width for the 'Age' column */
-            text-align: left; /* Aligns the text in the 'Age' column to the left */
+            width: 80px;
+            text-align: left;
         }
-
-        /* Bolds the header text */
         .p3-table th {
             font-weight: bold;
-            background-color: #f2f2f2; /* Adds a light grey background to the header row */
+            background-color: #DFEEFF; /* CHANGED */
         }
-
-        /* Targets the final 'Total' column */
-        .p3-table .total-column {
+        /* Targets the final 'Total' column and specific total rows on page 3 */
+        .p3-table .total-column,
+        .p3-table .category-row td {
             font-weight: bold;
+            background-color: #DFEEFF; /* ADDED */
         }
     </style>
 </head>
