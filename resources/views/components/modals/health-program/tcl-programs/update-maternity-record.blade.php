@@ -385,11 +385,11 @@
                         <div class="grid grid-cols-1 slg2:grid-cols-2 gap-4 mt-2">
                            <div>
                                 <label for="postpartum-checkup-24h" class="block mb-2 text-sm font-medium text-main_font">Within 24 hours (Date)</label>
-                                <input type="date" id="postpartum-checkup-24h" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg w-full p-2.5">
+                                <input type="date" disabled id="postpartum-checkup-24h" class="bg-gray-100 border border-gray-300 text-main_font text-sm rounded-lg w-full p-2.5">
                            </div>
                            <div>
                                 <label for="postpartum-checkup-7d" class="block mb-2 text-sm font-medium text-main_font">Within 7 days (Date)</label>
-                                <input type="date" id="postpartum-checkup-7d" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg w-full p-2.5">
+                                <input type="date" id="postpartum-checkup-7d" disabled class="bg-gray-100 border border-gray-300 text-main_font text-sm rounded-lg w-full p-2.5">
                            </div>
                         </div>
                     </fieldset>
@@ -402,19 +402,19 @@
                                 <div class="grid grid-cols-2 gap-2">
                                     <label class="text-sm">1st Month Amount/Date</label>
                                     <div class="flex gap-2">
-                                        <input type="text" id="postpartum-iron-amount-1" class="bg-white border border-gray-300 text-sm w-1/2 p-2 rounded-lg"><input type="date" id="postpartum-iron-date-1" class="bg-white border border-gray-300 text-sm w-1/2 p-2 rounded-lg">
+                                        <input type="text" id="postpartum-iron-amount-1" disabled class="bg-gray-100 border border-gray-300 text-sm w-1/2 p-2 rounded-lg"><input type="date" disabled id="postpartum-iron-date-1" class="bg-gray-100 border border-gray-300 text-sm w-1/2 p-2 rounded-lg">
                                     </div>
                                 </div>
                                 <div class="grid grid-cols-2 gap-2">
                                     <label class="text-sm">2nd Month Amount/Date</label>
                                     <div class="flex gap-2">
-                                        <input type="text" id="postpartum-iron-amount-2" class="bg-white border border-gray-300 text-sm w-1/2 p-2 rounded-lg"><input type="date" id="postpartum-iron-date-2" class="bg-white border border-gray-300 text-sm w-1/2 p-2 rounded-lg">
+                                        <input type="text" id="postpartum-iron-amount-2" disabled class="bg-white border border-gray-300 text-sm w-1/2 p-2 rounded-lg"><input type="date" id="postpartum-iron-date-2" disabled class="bg-gray-100 border border-gray-300 text-sm w-1/2 p-2 rounded-lg">
                                     </div>
                                 </div>
                                 <div class="grid grid-cols-2 gap-2">
                                     <label class="text-sm">3rd Month Amount/Date</label>
                                     <div class="flex gap-2">
-                                        <input type="text" id="postpartum-iron-amount-3" class="bg-white border border-gray-300 text-sm w-1/2 p-2 rounded-lg"><input type="date" id="postpartum-iron-date-3" class="bg-white border border-gray-300 text-sm w-1/2 p-2 rounded-lg">
+                                        <input type="text" id="postpartum-iron-amount-3" disabled class="bg-white border border-gray-300 text-sm w-1/2 p-2 rounded-lg"><input type="date" id="postpartum-iron-date-3" disabled class="bg-gray-100 border border-gray-300 text-sm w-1/2 p-2 rounded-lg">
                                     </div>
                                 </div>
                             </div>
@@ -423,7 +423,7 @@
                                  <div class="grid grid-cols-2 gap-2">
                                     <label class="text-sm">Amount / Date Given</label>
                                     <div class="flex gap-2">
-                                        <input type="text" id="postpartum-vitamin-a-amount" class="bg-white border border-gray-300 text-sm w-1/2 p-2 rounded-lg"><input type="date" id="postpartum-vitamin-a-date" class="bg-white border border-gray-300 text-sm w-1/2 p-2 rounded-lg">
+                                        <input type="text" id="postpartum-vitamin-a-amount" disabled class="bg-gray-100 border border-gray-300 text-sm w-1/2 p-2 rounded-lg"><input type="date" disabled id="postpartum-vitamin-a-date" class="bg-gray-100 border border-gray-300 text-sm w-1/2 p-2 rounded-lg">
                                     </div>
                                 </div>
                             </div>

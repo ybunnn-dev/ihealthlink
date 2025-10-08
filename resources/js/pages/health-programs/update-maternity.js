@@ -134,6 +134,7 @@ const confirmUpdateMaternityModal = new Modal(confirmUpdateMaternityModalEl, mod
 const updateMaternityBtn = document.getElementById('update-maternity-btn');
 const printMaternityBtn = document.getElementById('print-maternity-btn');
 
+console.log(dconsultations);
 
 function updateMaternityMeds(consultationTitle, medicineCategory, amountElement, dateElement) {
     const consultation = dconsultations.find(c => c.consultation_title === consultationTitle);
@@ -396,6 +397,66 @@ openUpdateMaternityModalBtn.addEventListener('click', function(){
             deliveryTimeInput.value = '';
         }
     }
+
+    postpartumCheckup24hInput.value = getConsultationDate("Postpartum (within 24h)");
+    postpartumCheckup7dInput.value = getConsultationDate("Postpartum (within 7 days)");
+
+    updateMaternityMeds(
+        'Postpartum (1 month)',
+        'Iron With Folic Acid',
+        postpartumIronAmount1,
+        postpartumIronDate1
+    );
+
+     updateMaternityMeds(
+        'Postpartum (2 months)',
+        'Iron With Folic Acid',
+        postpartumIronAmount2,
+        postpartumIronDate2
+    );
+
+     updateMaternityMeds(
+        'Postpartum (3 months)',
+        'Iron With Folic Acid',
+        postpartumIronAmount3,
+        postpartumIronDate3
+    );
+
+    const vitaminAConsultations = dconsultations.filter(consultation =>
+        consultation.medicine_distributions &&
+        consultation.medicine_distributions.some(dist => dist.medicine && dist.medicine.category === 'Vitamin A')
+    );
+
+    // 2. Check if any Vitamin A consultations were found.
+    if (vitaminAConsultations.length > 0) {
+        // Sort the consultations to find the most recent one (newest first).
+        vitaminAConsultations.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
+
+        // Get the most recent consultation object.
+        const mostRecentConsultation = vitaminAConsultations[0];
+
+        // Find the specific Vitamin A distribution within that consultation.
+        const vitaminADistribution = mostRecentConsultation.medicine_distributions.find(
+            dist => dist.medicine && dist.medicine.category === 'Vitamin A'
+        );
+
+        // Extract the date and format it to YYYY-MM-DD.
+        const dateOnly = mostRecentConsultation.updated_at.split('T')[0];
+
+        // Get the amount. Assumes the property is named 'quantity'. Change if needed.
+        const amount = vitaminADistribution ? vitaminADistribution.quantity : '';
+
+        // Update the input fields with the correct values.
+        postpartumVitaminADate.value = dateOnly;
+        postpartumVitaminAAmount.value = amount;
+
+    } else {
+        // If no Vitamin A consultations were found, clear the input fields.
+        postpartumVitaminADate.value = '';
+        postpartumVitaminAAmount.value = '';
+    }
+    
+    generalRemarksTextarea.value = maternityRecord.remarks;
     updateMaternityModal.show();
 });
 

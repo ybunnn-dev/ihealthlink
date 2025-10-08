@@ -61,6 +61,8 @@ Follow these steps to set up the project:
     npm install
     npm install flowbite flowbite-datepicker
     npm install tailwind-scrollbar@3
+    composer require barryvdh/laravel-dompdf
+
 
 #### 4. Set Up Environment Variables: Create a .env file by copying the example  
 

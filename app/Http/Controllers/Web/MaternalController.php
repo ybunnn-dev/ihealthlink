@@ -84,6 +84,15 @@ class MaternalController extends Controller
 
             $maternityScreening->save();
 
+           
+            $maternalRecord = BasicMaternalRecord::firstOrNew([
+                'id' => $maternalRecordId,
+            ]);
+
+            \Log::info($data['remarks']);
+            $maternalRecord->remarks = $data['remarks']['general'] ?? null;
+
+            $maternalRecord->save();
             /*
             |--------------------------------------------------------------------------
             | Return Successful Response
