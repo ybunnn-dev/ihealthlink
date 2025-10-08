@@ -27,7 +27,7 @@ class BarangayReportsController extends Controller
         return view('midwife.reports', $reportData);
     }
     
-    public function returnDemographic($startDate = null, $endDate = null)
+    public function returnDemographic($startDate = null, $endDate = null, $brgyId = null)
     {
         $user = auth()->user();
 

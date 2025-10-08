@@ -7,7 +7,7 @@
                 </h3>
                 <p class="text-sm text-normal_font">Please select a resident to proceed.</p>
             </div>
-            <div class="p-4 md:p-5 space-y-4">
+            <div class="p-4 md:p-5 space-y-4 h-[60vh]">
                 <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4">
                     <div class="md:col-span-3">
                         <label for="enrollResidentSearchInput" class="sr-only">Search Resident</label>
@@ -23,7 +23,7 @@
                     </div>
                 </div>
 
-                <div id="enrollResidentListContainer" class="space-y-3 h-full max-h-80 overflow-y-auto border rounded-lg p-3">
+                <div id="enrollResidentListContainer" class="space-y-3 h-[40vh] overflow-y-auto border rounded-lg p-3">
                     
                 </div>
             </div>

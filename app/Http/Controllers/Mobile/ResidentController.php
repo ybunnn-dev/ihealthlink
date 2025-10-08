@@ -21,7 +21,7 @@ class ResidentController extends Controller
 {
     public function index()
     {
-        $personnel = Auth::user()->midwife;
+        $personnel = Auth::user()->bhw;
 
         // Find the barangay and the puroks that the user manages
         $barangay = Barangay::with('puroks')->find($personnel->brgy_id);

@@ -1,152 +1,63 @@
+// --- Main Modal Container ---
 const addResidentModalEl = document.getElementById('add-resident-modal');
-//form 1 inputs
-// --- Row 1: Name ---
+
+// --- Section 1: Name ---
 const residentFirstName = document.getElementById('residentFirstName');
 const residentLastName = document.getElementById('residentLastName');
 const residentMiddleName = document.getElementById('residentMiddleName');
-const suffixDropdown = document.getElementById('suffixDropdown');
+const suffix = document.getElementById('suffix');
 
-// --- Row 2: Contact Info & Demographics ---
+// --- Section 2: Contact & Demographics ---
 const residentContactNo = document.getElementById('residentContactNo');
-const residentSexDropdown = document.getElementById('residentSexDropdown');
+const residentSex = document.getElementById('residentSex');
 const residentBirthdate = document.getElementById('residentBirthdate');
 const residentAge = document.getElementById('residentAge');
 
-// --- Row 3: Household Info ---
-
-const chooseFamilyBtn = document.getElementById('familyDropdown');
+// --- Section 3: Household & Family ---
+const familyIdHolder = document.getElementById('familyIdHolder');
+const chooseFamilyBtn = document.getElementById('familyDropdown'); // This is the 'Choose Family' button
+const familyIdStorage = document.getElementById('familyIdStorage'); // Hidden div for the selected family's ID
 const relationshipToHead = document.getElementById('relationshipToHead');
-const householdIdDisplay = document.getElementById('householdIdDisplay'); // Disabled display field
-const purokDisplay = document.getElementById('purokDisplay'); // Disabled display field
+const householdIdDisplay = document.getElementById('householdIdDisplay');
+const purokDisplay = document.getElementById('purokDisplay');
 
-// --- Row 4: Other Demographics ---
-const civilStatusDropdown = document.getElementById('civilStatusDropdown');
-const religionDropdown = document.getElementById('religionDropdown');
-const ethnicityDropdown = document.getElementById('ethnicityDropdown');
-const employmentStatusDropdown = document.getElementById('employmentStatusDropdown');
+// --- Section 4: Address & Residency ---
+const completeAddress = document.getElementById('completeAddress');
+const yearsOfResidency = document.getElementById('yearsOfResidency');
 
-// --- Row 5: Special Status ---
-const pwdStatusDropdown = document.getElementById('pwdStatusDropdown');
+// --- Section 5: Socio-Economic Status ---
+const civilStatus = document.getElementById('civilStatus');
+const religion = document.getElementById('religion');
+const ethnicity = document.getElementById('ethnicity');
+const employmentStatus = document.getElementById('employmentStatus');
+
+// --- Section 6: Special Statuses & Emergency Contact ---
+const pwdStatus = document.getElementById('pwdStatus');
 const pwdIdInput = document.getElementById('pwdIdInput');
-const indigenousStatusDropdown = document.getElementById('indigenousStatusDropdown');
+const indigenousStatus = document.getElementById('indigenousStatus');
+const soloParentStatus = document.getElementById('soloParentStatus');
+const philhealthStatus = document.getElementById('philhealthStatus');
 const emergencyContactNo = document.getElementById('emergencyContactNo');
 
-//form 2 input fields
-const chestPainCheckbox = document.getElementById('checkbox-chest-pain');
-const breathingDifficultyCheckbox = document.getElementById('checkbox-breathing-difficulty');
-const lossOfConsciousnessCheckbox = document.getElementById('checkbox-loss-of-consciousness');
-const numbArmCheckbox = document.getElementById('checkbox-numb-arm');
-const selfHarmCheckbox = document.getElementById('checkbox-self-harm');
-const aggressiveBehaviorCheckbox = document.getElementById('checkbox-aggressive-behavior');
-const severeInjuriesCheckbox = document.getElementById('checkbox-severe-injuries');
-const slurredSpeechCheckbox = document.getElementById('checkbox-slurred-speech');
-const facialAsymmetryCheckbox = document.getElementById('checkbox-facial-asymmetry');
-const chestRetractionsCheckbox = document.getElementById('checkbox-chest-retractions');
-const seizureCheckbox = document.getElementById('checkbox-seizure');
-const disorientedCheckbox = document.getElementById('checkbox-disoriented');
-const eyeInjuryCheckbox = document.getElementById('checkbox-eye-injury');
+let isPurokFilterPopulated = false;
 
-//form 3 input fields
-const hypertensionCheckbox = document.getElementById('medical-history-hypertension');
-const heartDiseasesCheckbox = document.getElementById('medical-history-heart-diseases');
-const copdCheckbox = document.getElementById('medical-history-copd');
-const surgicalHistoryCheckbox = document.getElementById('medical-history-surgical');
-const allergiesCheckbox = document.getElementById('medical-history-allergies');
-const diabetesCheckbox = document.getElementById('medical-history-diabetes');
-const cancerCheckbox = document.getElementById('medical-history-cancer');
-const asthmaCheckbox = document.getElementById('medical-history-asthma');
-const kidneyDisordersCheckbox = document.getElementById('medical-history-kidney-disorders');
-const visionProblemsCheckbox = document.getElementById('medical-history-vision-problems');
-const thyroidDisordersCheckbox = document.getElementById('medical-history-thyroid-disorders');
-const mentalDisordersCheckbox = document.getElementById('medical-history-mental-disorders');
-
-//form 4 input fields
-const familyHypertensionCheckbox = document.getElementById('family-history-hypertension');
-const familyHeartDiseasesCheckbox = document.getElementById('family-history-heart-diseases');
-const familyCopdCheckbox = document.getElementById('family-history-copd');
-const familyTuberculosisCheckbox = document.getElementById('family-history-tuberculosis');
-const familyStrokeCheckbox = document.getElementById('family-history-stroke');
-const familyDiabetesCheckbox = document.getElementById('family-history-diabetes');
-const familyCancerCheckbox = document.getElementById('family-history-cancer');
-const familyAsthmaCheckbox = document.getElementById('family-history-asthma');
-const familyKidneyDisordersCheckbox = document.getElementById('family-history-kidney-disorders');
-const familyCoronaryDiseaseCheckbox = document.getElementById('family-history-coronary-disease');
-const familyMentalDisordersCheckbox = document.getElementById('family-history-mental-disorders');
+// --- Footer Action Buttons ---
+const modalOptions = {
+    placement: 'center-center',
+    backdrop: 'static',
+    closable: false,
+};
 
 
-//form 5 input fields
-const tobaccoDropdown = document.getElementById('tobaccoDropdown');
-const alcoholDropdown = document.getElementById('alcoholDropdown');
-const alcoholNumDropdown = document.getElementById('alcoholNumDropdown');
-const caffeineDropdown = document.getElementById('caffeineDropdown');
-const physicalActivityInput = document.getElementById('physicalActivityInput');
-const weightInput = document.getElementById('weightInput');
-const heightInput = document.getElementById('heightInput');
-const bmiInput = document.getElementById('bmiInput');
-const waistCircumferenceInput = document.getElementById('waistCircumferenceInput');
-const systolicInput = document.getElementById('systolicInput');
-const diastolicInput = document.getElementById('diastolicInput');
-const highFatFoodCheckbox = document.getElementById('highFatFoodCheckbox');
-const streetFoodCheckbox = document.getElementById('streetFoodCheckbox');
-const highSugarFoodCheckbox = document.getElementById('highSugarFoodCheckbox');
-
-
-//form 6 inputs
-// --- Blood Sugar Elements ---
-const fbsResultInput = document.getElementById('fbsResultInput');
-const rbsResultInput = document.getElementById('rbsResultInput');
-const bloodSugarDate = document.getElementById('bloodSugarDate');
-const polyphagiaCheckbox = document.getElementById('polyphagiaCheckbox');
-const polydipsiaCheckbox = document.getElementById('polydipsiaCheckbox');
-const polyuriaCheckbox = document.getElementById('polyuriaCheckbox');
-
-// --- Lipid Profile Elements ---
-const totalCholesterolInput = document.getElementById('totalCholesterolInput');
-const hdlInput = document.getElementById('hdlInput');
-const ldlInput = document.getElementById('ldlInput');
-const vldlInput = document.getElementById('vldlInput');
-const triglycerideInput = document.getElementById('triglycerideInput');
-const lipidDate = document.getElementById('lipidDate');
-
-// --- Urinalysis Elements ---
-const proteinInput = document.getElementById('proteinInput');
-const ketonesInput = document.getElementById('ketonesInput');
-const urinalysisDate = document.getElementById('urinalysisDate');
-
-// --- COPD Elements ---
-const breathlessnessCheckbox = document.getElementById('breathlessnessCheckbox');
-const chronicCoughCheckbox = document.getElementById('chronicCoughCheckbox');
-const sputumCheckbox = document.getElementById('sputumCheckbox');
-const wheezingCheckbox = document.getElementById('wheezingCheckbox');
-
-
-const familyIdStorage = document.getElementById('familyIdStorage');
-const formSteps = document.querySelectorAll('.form-step');
-const progressSteps = document.querySelectorAll('ol li');
-const cancelButton = document.getElementById('cancel-button-add-resident');
-const prevButton = document.getElementById('prev-button');
-const nextButton = document.getElementById('next-button');
-const addResidentButtonSubmit = document.getElementById('add-resident-button');
-let currentStep = 0;
 const confirmResidentModalEl = document.getElementById('confirm-add-resident-modal');
-const residentInfoReviewContainer = document.getElementById('resident-info-review');
-const reviewFullName = document.getElementById('review-full-name');
-const reviewBirthdateAge = document.getElementById('review-birthdate-age');
-const reviewSex = document.getElementById('review-sex');
-const reviewContact = document.getElementById('review-contact');
-const reviewCivilStatus = document.getElementById('review-civil-status');
-const reviewReligion = document.getElementById('review-religion');
-const reviewHousehold = document.getElementById('review-household');
-const reviewRelationship = document.getElementById('review-relationship');
-const reviewEmployment = document.getElementById('review-employment');
-const reviewPwd = document.getElementById('review-pwd');
+const residentFullNameConfirm = document.getElementById('confirm-resident-full-name');
+
+
 const confirmResidentCheckbox = document.getElementById('confirm-resident-checkbox');
 const cancelConfirm = document.getElementById('cancel-add-resident-confirm');
 const confirmAddResidentSubmitBtn = document.getElementById('confirm-resident-proceed-button');
 const openAddResidentBtn = document.getElementById('openAddResidentModal');
 
-const confirmResidentModal = new Modal(confirmResidentModalEl,{backdrop: 'static',closable: true,});
-const addResidentModal = new Modal(addResidentModalEl,{backdrop: 'static',closable: true,});
 
 let currentResidentPayload = null;
 
@@ -155,82 +66,22 @@ let familiesData = [];
 // --- Main Modal Element ---
 const chooseFamilyModalEl = document.getElementById('chooseFamilyModal');
 
-// --- Search and Filter Elements ---
+// --- Updated Element Variables ---
 const familySearchInput = document.getElementById('family-search');
-const purokFilterBtn = document.getElementById('purokFilterDropdownButton');
-const purokFilterMenu = document.getElementById('purokFilterDropdownMenu');
+const purokFilterSelect = document.getElementById('purokFilterSelect'); // REPLACED
+const familyCardContainer = document.getElementById('familyCardContainer'); // REPLACED
 
-// --- Table Element ---
-const chooseFamilyTableBody = document.getElementById('chooseFamilyTableBody');
-
-// --- Action Buttons ---
+// --- Action Buttons (Remain the same) ---
 const cancelChooseFamilyBtn = document.getElementById('cancelChooseFamily');
 const confirmChooseFamilyBtn = document.getElementById('confirmChooseFamilyBtn');
 
 
-const chooseFamilyModal = new Modal(chooseFamilyModalEl);
+const confirmResidentModal = new Modal(confirmResidentModalEl, modalOptions);
+const addResidentModal = new Modal(addResidentModalEl, modalOptions);
+const chooseFamilyModal = new Modal(chooseFamilyModalEl, modalOptions);
 
-
-const successModalEl = document.getElementById('success-modal');
-const successMesageHeader = document.getElementById('success-msg-head');
-const successMessage = document.getElementById('success-message');
-const closeSuccessModalButton = document.getElementById('close-success-modal-button');
-
-const successModal = new Modal(successModalEl,{backdrop: 'static',closable: true,});
-
-// Select all the option buttons inside the dropdown menu
-const suffixOptions = document.querySelectorAll('#suffixDropdownMenu button');
-
-function initializeDropdown(buttonId) {
-    const dropdownButton = document.getElementById(buttonId);
-    const dropdownMenu = document.getElementById(buttonId + 'Menu');
-
-    // Safety check to ensure the elements exist before proceeding
-    if (!dropdownButton || !dropdownMenu) {
-        console.error('Dropdown elements not found for ID:', buttonId);
-        return;
-    }
-
-    const options = dropdownMenu.querySelectorAll('button');
-
-    options.forEach(option => {
-        option.addEventListener('click', function () {
-            // Get the visible text from the clicked option (e.g., "Yes", "1-5 times a month")
-            const selectedText = this.textContent;
-
-            // Get the main button's first child, which is its text node
-            const buttonTextNode = dropdownButton.childNodes[0];
-
-            // Update the text, adding a space to separate it from the SVG icon
-            buttonTextNode.nodeValue = selectedText.trim() + ' ';
-
-            // Also, store the data-value on the button itself for easy access later
-            dropdownButton.setAttribute('data-selected-value', this.getAttribute('data-value'));
-        });
-    });
-}
-
-// --- Initialize All Your Dropdowns ---
-initializeDropdown('tobaccoDropdown');
-initializeDropdown('alcoholDropdown');
-initializeDropdown('alcoholNumDropdown');
-initializeDropdown('caffeineDropdown');
-
-// Loop through each option button
-suffixOptions.forEach(option => {
-    // Add a click event listener to it
-    option.addEventListener('click', function () {
-        // Get the value from the `data-value` attribute
-        const selectedValue = this.getAttribute('data-value');
-
-        // Get the main button's first child, which is its text node
-        const buttonTextNode = suffixDropdown.childNodes[0];
-
-        // Update the text node's value, preserving the SVG icon
-        // If selectedValue is empty (for a "Clear" button), reset to "Select"
-        buttonTextNode.nodeValue = selectedValue ? selectedValue + ' ' : 'Select ';
-    });
-});
+const cancelButton = document.getElementById('cancel-button-add-resident');
+const addResidentButton = document.getElementById('add-resident-button');
 
 openAddResidentBtn.addEventListener('click', function () {
     addResidentModal.show();
@@ -239,406 +90,257 @@ openAddResidentBtn.addEventListener('click', function () {
 cancelButton.addEventListener('click', function () {
     addResidentModal.hide();
 });
-// A function to update the UI based on the current step
-function updateUI(direction) {
-    // First, handle the transition out of the current form step
-    const previousStepIndex = currentStep;
-    const newStepIndex = currentStep + (direction === 'next' ? 1 : -1);
 
-    const currentFormStep = formSteps[previousStepIndex];
-    const newFormStep = formSteps[newStepIndex];
+let debounceTimer;
 
-    // Animate the current step out
-    currentFormStep.classList.add(direction === 'next' ? '-translate-x-full' : 'translate-x-full');
-    currentFormStep.classList.remove('translate-x-0');
+// Define the Tailwind classes for a selected card
+const selectionClasses = ['border-blue-500', 'bg-blue-50', 'ring-2', 'ring-blue-200'];
 
-    // Animate the new step in
-    newFormStep.classList.remove('hidden');
-    newFormStep.classList.add(direction === 'next' ? 'translate-x-full' : '-translate-x-full');
+// --- Main function to fetch data from the server ---
+function fetchAndRenderFamilies() {
+    const searchQuery = familySearchInput.value;
+    const purokId = purokFilterSelect.value;
+    const url = new URL('/barangay/resident/families/get', window.location.origin);
+    if (searchQuery) url.searchParams.append('search', searchQuery);
+    if (purokId) url.searchParams.append('purok_id', purokId);
+    
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-    // Wait for the transition to finish
-    setTimeout(() => {
-        currentStep = newStepIndex;
-
-        // Hide the old step after it has transitioned out
-        currentFormStep.classList.add('hidden');
-        currentFormStep.classList.remove('-translate-x-full', 'translate-x-full');
-
-        // Position the new step to its final state
-        newFormStep.classList.remove(direction === 'next' ? 'translate-x-full' : '-translate-x-full');
-
-        // Reapply styling for all elements from scratch to ensure consistency
-        applyStyling();
-
-    }, 500); // The duration of the CSS transition
+    fetch(url, {
+        method: 'GET',
+        headers: { 'X-CSRF-TOKEN': csrfToken, 'Accept': 'application/json' }
+    })
+    .then(response => response.ok ? response.json() : Promise.reject('Failed to fetch'))
+    .then(data => {
+        familiesData = data.families; // Update our local data cache
+        populatePurokFilter(data.puroks);
+        populateFamilyCards(data.families);
+    })
+    .catch(error => {
+        console.error('Fetch error:', error);
+        familyCardContainer.innerHTML = `<p class="text-center text-red-500 p-4">Error loading families.</p>`;
+    });
 }
 
-// A separate function to handle all UI styling updates
-function applyStyling() {
-    // Hide all form steps and labels
-    formSteps.forEach(step => step.classList.add('hidden'));
-    progressSteps.forEach(step => {
-        const labelSpan = step.querySelector('.text-start');
-        if (labelSpan) {
-            labelSpan.classList.add('hidden');
-        }
+// --- UI Population Functions ---
+function populatePurokFilter(puroks) {
+    if (isPurokFilterPopulated) return;
+    purokFilterSelect.innerHTML = '<option selected value="">All Puroks</option>';
+    puroks.forEach(purok => {
+        const option = document.createElement('option');
+        option.value = purok.id;
+        option.textContent = purok.name;
+        purokFilterSelect.appendChild(option);
     });
-
-    // Show the current form step
-    formSteps[currentStep].classList.remove('hidden');
-
-    // Update progress bar styles for completed and current steps
-    progressSteps.forEach((step, index) => {
-        // Reset all progress step styles
-        step.classList.remove('text-blue-600', 'dark:text-blue-500', 'after:border-blue-600', 'after:dark:border-blue-500');
-        const numSpan = step.querySelector('span:first-child span');
-        if (numSpan) {
-            numSpan.classList.remove('bg-nav_active', 'text-mainblue');
-            numSpan.classList.add('bg-gray-100', 'text-main_font');
-        }
-
-        if (index <= currentStep) {
-            // Apply active styles to steps up to the current one
-            step.classList.add('text-blue-600', 'dark:text-blue-500');
-            if (numSpan) {
-                numSpan.classList.remove('bg-gray-100', 'text-main_font');
-                numSpan.classList.add('bg-nav_active', 'text-mainblue');
-            }
-            if (index < currentStep) {
-                step.classList.add('after:border-blue-600', 'after:dark:border-blue-500');
-            }
-        }
-    });
-
-    // Show ONLY the label for the active step
-    const currentLabel = progressSteps[currentStep].querySelector('.text-start');
-    if (currentLabel) {
-        currentLabel.classList.remove('hidden');
-    }
-
-    // Manage button visibility
-    prevButton.style.display = currentStep === 0 ? 'none' : 'block';
-    cancelButton.style.display = currentStep > 0 ? 'none' : 'block';
-    nextButton.style.display = currentStep === formSteps.length - 1 ? 'none' : 'block';
-    addResidentButtonSubmit.style.display = currentStep === formSteps.length - 1 ? 'block' : 'none';
+    isPurokFilterPopulated = true;
 }
 
+function populateFamilyCards(families) {
+    familyCardContainer.innerHTML = '';
+    chosenFamily = null;
+    confirmChooseFamilyBtn.disabled = true;
 
-// Event listeners
-nextButton.addEventListener('click', () => {
-    if (currentStep < formSteps.length - 1) {
-        updateUI('next');
+    if (families.length === 0) {
+        familyCardContainer.innerHTML = `<p class="text-center text-gray-500 p-4">No families match your criteria.</p>`;
+        return;
     }
+
+    const cardsHTML = families.map(family => {
+        const familyIdFormatted = `FAM-${String(family.id).padStart(3, '0')}`;
+        const familyHeadName = family.head ? `${family.head.firstName} ${family.head.lastName}` : 'Not Assigned';
+        const memberCount = family.residents?.length || 0; // Use residents array length for count
+        const purokName = family.household?.purok?.name || 'N/A';
+        return `
+            <div class="family-card flex items-center p-3 w-full text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-100" data-family-id="${family.id}">
+                <div class="flex justify-between w-full pointer-events-none">
+                    <div><p class="font-semibold text-main_font">${familyHeadName}</p><p class="text-xs text-gray-500"><span>ID: ${familyIdFormatted}</span><span class="mx-1.5">&middot;</span><span>${purokName}</span></p></div>
+                    <div class="flex items-center text-xs text-gray-600"><span class="bg-gray-200 px-2 py-1 rounded-full">${memberCount} Members</span></div>
+                </div>
+            </div>`;
+    }).join('');
+    familyCardContainer.innerHTML = cardsHTML;
+}
+
+// --- Event Listeners ---
+
+// Initial fetch when the modal is opened
+chooseFamilyBtn.addEventListener('click', () => {
+    fetchAndRenderFamilies();
+    addResidentModal.hide();
+    chooseFamilyModal.show();
 });
 
-prevButton.addEventListener('click', () => {
-    if (currentStep > 0) {
-        updateUI('prev');
-    }
+// Debounced search input
+familySearchInput.addEventListener('input', () => {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(fetchAndRenderFamilies, 300);
 });
 
-function validateForm() {
-    // --- CHECK ALL REQUIRED TEXT INPUTS ---
-    // Use .trim() to ensure fields with only spaces are considered empty.
-    const areTextInputsValid =
-        residentFirstName.value.trim() !== '' &&
-        residentLastName.value.trim() !== '' &&
-        residentContactNo.value.trim() !== '' && // Included as per your instructions
-        relationshipToHead.value.trim() !== ''; // Included as per your instructions
+// Filter change
+purokFilterSelect.addEventListener('change', fetchAndRenderFamilies);
 
-    // --- CHECK DATE PICKER ---
-    const isBirthdateValid = residentBirthdate.value.trim() !== '';
-
-    // --- CHECK ALL REQUIRED DROPDOWNS ---
-    // Checks if the button's text is different from its default placeholder.
-    const areDropdownsValid =
-        residentSexDropdown.textContent.trim() !== 'Select Sex' &&
-        //(familyDropdown ? familyDropdown.textContent.trim() !== 'Choose Family' : true) && // Check if exists first
-        civilStatusDropdown.textContent.trim() !== 'Select Civil Status' &&
-        religionDropdown.textContent.trim() !== 'Select Religion' &&
-        (ethnicityDropdown ? ethnicityDropdown.textContent.trim() !== 'Select Ethnicity' : true) && // Check if exists first
-        employmentStatusDropdown.textContent.trim() !== 'Select Employment Status' &&
-        (pwdStatusDropdown ? pwdStatusDropdown.textContent.trim() !== 'Select' : true) && // Check if exists first
-        (indigenousStatusDropdown ? indigenousStatusDropdown.textContent.trim() !== 'Select' : true); // Check if exists first
-
-    console.log(areTextInputsValid, isBirthdateValid, areDropdownsValid);
-    // Return true only if all checks pass
-    return areTextInputsValid && isBirthdateValid && areDropdownsValid;
-}
-
-function updateButtonState() {
-    if (validateForm()) {
-        // If the form is valid, enable the button and remove disabled styles
-        nextButton.disabled = false;
-        nextButton.classList.remove('opacity-50', 'cursor-not-allowed');
+// Card selection
+familyCardContainer.addEventListener('click', (event) => {
+    const clickedCard = event.target.closest('.family-card');
+    if (!clickedCard) return;
+    const isAlreadySelected = clickedCard.classList.contains('border-blue-500');
+    const currentlySelected = familyCardContainer.querySelector('.border-blue-500');
+    if (currentlySelected) currentlySelected.classList.remove(...selectionClasses);
+    if (!isAlreadySelected) {
+        clickedCard.classList.add(...selectionClasses);
+        const chosenFamilyId = parseInt(clickedCard.dataset.familyId, 10);
+        chosenFamily = familiesData.find(family => family.id === chosenFamilyId);
     } else {
-        // If the form is invalid, disable the button and add disabled styles
-        nextButton.disabled = true;
-        nextButton.classList.add('opacity-50', 'cursor-not-allowed');
+        chosenFamily = null;
     }
-}
+    confirmChooseFamilyBtn.disabled = !chosenFamily;
+});
 
-// --- 3. EVENT LISTENERS ---
-
-// An array of all text/date inputs that need to be checked
-const fieldsToMonitor = [
-    residentFirstName,
-    residentLastName,
-    residentMiddleName,
-    residentContactNo,
-    residentBirthdate,
-    relationshipToHead
-];
-
-// Attach an 'input' listener to each field. It fires every time the user types.
-fieldsToMonitor.forEach(field => {
-    if (field) { // Check if the element exists on the page
-        field.addEventListener('input', updateButtonState);
+// Modal action buttons
+confirmChooseFamilyBtn.addEventListener('click', () => {
+    if (chosenFamily) {
+        const familyHeadName = chosenFamily.head ? `${chosenFamily.head.firstName} ${chosenFamily.head.lastName}` : `FAM-${String(chosenFamily.id).padStart(3, '0')}`;
+        chooseFamilyBtn.textContent = `${familyHeadName}`;
+        householdIdDisplay.value = chosenFamily.household?.id ? `HH-${String(chosenFamily.household.id).padStart(3, '0')}` : 'N/A';
+        purokDisplay.value = chosenFamily.household?.purok?.name || 'N/A';
+        familyIdStorage.textContent = chosenFamily.id;
+        familyIdStorage.dispatchEvent(new Event('change', { bubbles: true }));
+        completeAddress.value = `HH-${chosenFamily.household.id}, ${chosenFamily.purok.name}, ${chosenFamily.purok.barangay.name}, Daraga, Albay`;
+        chooseFamilyModal.hide();
+        addResidentModal.show();
     }
 });
 
-// Helper function to handle validation for Flowbite's custom dropdowns
-function setupDropdownValidation(buttonElement) {
-    if (!buttonElement) return; // Skip if the button doesn't exist
+cancelChooseFamilyBtn.addEventListener('click', () => {
+    chooseFamilyBtn.textContent = "Choose Family..."
+    familyIdStorage.textContent = '';
+    chosenFamily = null;
+    chooseFamilyModal.hide();
+    addResidentModal.show();
+});
 
-    // The menu is the next element after the button in your HTML
-    const menuElement = buttonElement.nextElementSibling;
-    if (!menuElement) return;
-
-    const options = menuElement.querySelectorAll('button[data-value]');
-    options.forEach(option => {
-        option.addEventListener('click', () => {
-            // Update the main button's text with the selected value
-            buttonElement.childNodes[0].nodeValue = option.dataset.value + ' ';
-
-            // Use a short timeout to ensure the DOM updates before we re-validate
-            setTimeout(updateButtonState, 50);
-        });
-    });
-}
-
-// An array of all dropdown buttons that need validation
-const dropdownsToMonitor = [
-    residentSexDropdown,
-    familyDropdown,
-    civilStatusDropdown,
-    religionDropdown,
-    ethnicityDropdown,
-    employmentStatusDropdown,
-    pwdStatusDropdown,
-    indigenousStatusDropdown
+// --- Array of fields requiring validation (Suffix is excluded) ---
+const fieldsToValidate = [
+    residentFirstName, residentLastName, residentMiddleName, residentBirthdate,
+    yearsOfResidency, relationshipToHead, residentSex, civilStatus, religion,
+    ethnicity, employmentStatus, pwdStatus, indigenousStatus, soloParentStatus, philhealthStatus
 ];
 
-// Attach the validation logic to each required dropdown
-dropdownsToMonitor.forEach(setupDropdownValidation);
-
-function calculateAge(birthdateString) {
-    // If the input is empty, return an empty string to clear the age field
-    if (!birthdateString) {
-        return '';
-    }
-
-    const today = new Date();
-    const birthDate = new Date(birthdateString);
-
-    // Check for an invalid date (e.g., user types "abc")
-    if (isNaN(birthDate.getTime())) {
-        return '';
-    }
-
-    // Check if the selected date is in the future
-    if (birthDate > today) {
-        // You can also show an error message here if you prefer
-        return 0;
-    }
-
-    // Calculate the initial age difference in years
-    let age = today.getFullYear() - birthDate.getFullYear();
-
-    // Adjust the age if the birthday hasn't occurred yet this year
-    const monthDifference = today.getMonth() - birthDate.getMonth();
-    if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
-        age--;
-    }
-
-    return age;
-}
-
-// --- Event Listener ---
-// This listens for the 'changeDate' event from the Flowbite datepicker.
-// It will trigger the calculation whenever a date is selected.
-residentBirthdate.addEventListener('changeDate', (event) => {
-    // Get the selected date from the input's value
+// --- 1. Age Calculation Logic ---
+const calculateAge = () => {
     const birthdateValue = residentBirthdate.value;
+    if (birthdateValue) {
+        const birthDate = new Date(birthdateValue);
+        const today = new Date();
 
-    // Calculate the age using the helper function
-    const age = calculateAge(birthdateValue);
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const monthDifference = today.getMonth() - birthDate.getMonth();
+        const dayDifference = today.getDate() - birthDate.getDate();
 
-    // Update the 'Age' input field with the result
-    residentAge.value = age;
+        // If the birthday hasn't occurred yet this year, subtract one year
+        if (monthDifference < 0 || (monthDifference === 0 && dayDifference < 0)) {
+            age--;
+        }
+        residentAge.value = age >= 0 ? age : ''; // Display age or clear if invalid date
+    } else {
+        residentAge.value = ''; // Clear age if birthdate is empty
+    }
+};
+
+// --- 2. Form Validation Logic ---
+const validateForm = () => {
+    // Check standard inputs and selects
+    const allStandardFieldsValid = fieldsToValidate.every(field => field.value.trim() !== '');
+
+    // Validate contact number format (11 digits, starts with 09)
+    // Check if a family has been selected
+    const isFamilySelected = familyIdStorage.textContent.trim() !== '';
+
+    return allStandardFieldsValid && isFamilySelected;
+};
+
+// --- 3. Handler to Enable/Disable Submit Button ---
+const handleFormChange = () => {
+    if (validateForm()) {
+        addResidentButton.disabled = false;
+    } else {
+        addResidentButton.disabled = true;
+    }
+};
+
+// --- 4. Attach All Event Listeners ---
+
+// Initial state check
+handleFormChange();
+
+// Listener for the birthdate field to auto-calculate age
+residentBirthdate.addEventListener('input', calculateAge);
+
+// Listeners for all fields that trigger validation
+fieldsToValidate.forEach(field => {
+    field.addEventListener('input', handleFormChange);
+    field.addEventListener('change', handleFormChange);
 });
 
+// Separate listener for the contact number field
+residentContactNo.addEventListener('input', handleFormChange);
 
-addResidentButtonSubmit.addEventListener('click', function () {
-    // --- 1. GATHER DATA FROM THE FORM ---
-
-    // Construct the full name, handling optional middle name and suffix
-    let fullName = residentLastName.value.trim() + ', ' + residentFirstName.value.trim();
-    if (residentMiddleName.value.trim()) {
-        fullName += ' ' + residentMiddleName.value.trim();
-    }
-    if (suffixDropdown.textContent.trim() !== 'Select') {
-        fullName += ' ' + suffixDropdown.textContent.trim();
-    }
-
-    // Combine birthdate and age
-    const birthdateAndAge = `${residentBirthdate.value} (${residentAge.value})`;
-
-    // Get values from other fields
-    const sex = residentSexDropdown.textContent.trim();
-    const contact = residentContactNo.value.trim();
-    const civilStatus = civilStatusDropdown.textContent.trim();
-    const religion = religionDropdown.textContent.trim();
-    const household = `${householdIdDisplay.value} / ${purokDisplay.value}`;
-    const relationship = relationshipToHead.value.trim();
-    const employment = employmentStatusDropdown.textContent.trim();
-    const pwdStatus = pwdStatusDropdown.textContent.trim();
+// MutationObserver to watch for programmatic changes to familyIdStorage
+const observer = new MutationObserver(() => {
+    handleFormChange();
+});
+observer.observe(familyIdStorage, { childList: true, characterData: true, subtree: true });
 
 
-    // --- 2. POPULATE THE CONFIRMATION MODAL ---
-
-    // Update the review section
-    reviewFullName.textContent = fullName;
-    reviewBirthdateAge.textContent = birthdateAndAge;
-    reviewSex.textContent = sex;
-    reviewContact.textContent = contact;
-    reviewCivilStatus.textContent = civilStatus;
-    reviewReligion.textContent = religion;
-    reviewHousehold.textContent = household;
-    reviewRelationship.textContent = relationship;
-    reviewEmployment.textContent = employment;
-    reviewPwd.textContent = pwdStatus;
-
-
+addResidentButton.addEventListener('click', function() {
+    // This payload object gathers all the values from your form fields
     currentResidentPayload = {
-        firstName: residentFirstName.value.trim(),
-        lastName: residentLastName.value.trim(),
-        middleName: residentMiddleName.value.trim() ? residentMiddleName.value.trim() : null,
-        suffix: suffixDropdown.textContent.trim() !== "Select" ? suffixDropdown.textContent.trim() : null,
-        contactNo: residentContactNo.value.trim(),
-        birthDate: residentBirthdate.value.trim(),
-        sex: residentSexDropdown.textContent.trim(),
-        familyId: chosenFamily.id,
-        familyRelationship: relationshipToHead.value.trim(),
-        civilStatus: civilStatus,
-        religion: religion,
-        ethnicity: ethnicityDropdown.textContent.trim(),
-        employmentStatus: employment,
-        isPWD: pwdStatusDropdown.textContent === "Yes" ? true : false,
-        pwdIdInput: pwdIdInput.value.trim(),
-        isIndegenous: indigenousStatusDropdown.textContent === "Yes" ? true : false,
-        emergencyContactNo: emergencyContactNo.value.trim(),
+        // Section 1: Name
+        first_name: residentFirstName.value.trim(),
+        last_name: residentLastName.value.trim(),
+        middle_name: residentMiddleName.value.trim(),
+        suffix: suffix.value,
 
-        redFlags: {
-            hasChestPain: chestPainCheckbox.checked,
-            hasBreathingDifficulty: breathingDifficultyCheckbox.checked,
-            hasLossOfConsciousness: lossOfConsciousnessCheckbox.checked,
-            hasNumbArm: numbArmCheckbox.checked,
-            hasSelfHarm: selfHarmCheckbox.checked,
-            hasAggressiveBehavior: aggressiveBehaviorCheckbox.checked,
-            hasSevereInjuries: severeInjuriesCheckbox.checked,
-            hasSlurredSpeech: slurredSpeechCheckbox.checked,
-            hasFacialAsymmetry: facialAsymmetryCheckbox.checked,
-            hasChestRetractions: chestRetractionsCheckbox.checked,
-            hasSeizure: seizureCheckbox.checked,
-            isDisoriented: disorientedCheckbox.checked,
-            hasEyeInjury: eyeInjuryCheckbox.checked
-        },
+        // Section 2: Contact & Demographics
+        contact_no: residentContactNo.value.trim(),
+        sex: residentSex.value,
+        birthdate: residentBirthdate.value,
+        age: residentAge.value,
 
-        medHistory: {
-            hasHypertension: hypertensionCheckbox.checked,
-            hasHeartDiseases: heartDiseasesCheckbox.checked,
-            hasCopd: copdCheckbox.checked,
-            hasSurgicalHistory: surgicalHistoryCheckbox.checked,
-            hasAllergies: allergiesCheckbox.checked,
-            hasDiabetes: diabetesCheckbox.checked,
-            hasCancer: cancerCheckbox.checked,
-            hasAsthma: asthmaCheckbox.checked,
-            hasKidneyDisorders: kidneyDisordersCheckbox.checked,
-            hasVisionProblems: visionProblemsCheckbox.checked,
-            hasThyroidDisorders: thyroidDisordersCheckbox.checked,
-            hasMentalDisorders: mentalDisordersCheckbox.checked
-        },
+        // Section 3: Household & Family
+        family_id: familyIdStorage.textContent.trim(), // Get ID from the hidden div
+        relationship_to_head: relationshipToHead.value.trim(),
+        
+        // Section 4: Address & Residency
+        years_of_residency: yearsOfResidency.value,
 
-        familyHistory: {
-            hasHypertension: familyHypertensionCheckbox.checked,
-            hasHeartDiseases: familyHeartDiseasesCheckbox.checked,
-            hasCopd: familyCopdCheckbox.checked,
-            hasTuberculosis: familyTuberculosisCheckbox.checked,
-            hasStroke: familyStrokeCheckbox.checked,
-            hasDiabetes: familyDiabetesCheckbox.checked,
-            hasCancer: familyCancerCheckbox.checked,
-            hasAsthma: familyAsthmaCheckbox.checked,
-            hasKidneyDisorders: familyKidneyDisordersCheckbox.checked,
-            hasCoronaryDisease: familyCoronaryDiseaseCheckbox.checked,
-            hasMentalDisorders: familyMentalDisordersCheckbox.checked
-        },
+        // Section 5: Socio-Economic Status
+        civil_status: civilStatus.value,
+        religion: religion.value,
+        ethnicity: ethnicity.value,
+        employment_status: employmentStatus.value,
 
-
-       ncd_factors: {
-            tobaccoUse: tobaccoDropdown.textContent.trim() ? tobaccoDropdown.textContent.trim() : null,
-            alcoholConsumption: alcoholDropdown.textContent.trim() ? alcoholDropdown.textContent.trim() : null,
-            alcoholFrequency: alcoholNumDropdown.textContent.trim() ? alcoholNumDropdown.textContent.trim() : null,
-            caffeineIntake: caffeineDropdown.textContent.trim() ? caffeineDropdown.textContent.trim() : null,
-            physicalActivity: physicalActivityInput.value.trim() ? physicalActivityInput.value.trim() : null,
-            weightKg: weightInput.value.trim() ? weightInput.value.trim() : null,
-            heightCm: heightInput.value.trim() ? heightInput.value.trim() : null,
-            bmi: bmiInput.value.trim() ? bmiInput.value.trim() : null,
-            waistCircumferenceCm: waistCircumferenceInput.value.trim() ? waistCircumferenceInput.value.trim() : null,
-            bpSystolic: systolicInput.value.trim() ? systolicInput.value.trim() : null,
-            bpDiastolic: diastolicInput.value.trim() ? diastolicInput.value.trim() : null,
-            eatsHighFatFood: highFatFoodCheckbox.checked,
-            eatsStreetFood: streetFoodCheckbox.checked,
-            eatsHighSugarFood: highSugarFoodCheckbox.checked
-        },
-
-        risk_assessment: {
-            bloodSugar: {
-                fbsResult: fbsResultInput.value.trim() ? fbsResultInput.value.trim() : null,
-                rbsResult: rbsResultInput.value.trim() ? rbsResultInput.value.trim() : null,
-                dateTaken: bloodSugarDate.value.trim() ? bloodSugarDate.value.trim() : null,
-                hasPolyphagia: polyphagiaCheckbox.checked,
-                hasPolydipsia: polydipsiaCheckbox.checked,
-                hasPolyuria: polyuriaCheckbox.checked
-            },
-            lipidProfile: {
-                totalCholesterol: totalCholesterolInput.value.trim() ? totalCholesterolInput.value.trim() : null,
-                hdl: hdlInput.value.trim() ? hdlInput.value.trim() : null,
-                ldl: ldlInput.value.trim() ? ldlInput.value.trim() : null,
-                vldl: vldlInput.value.trim() ? vldlInput.value.trim() : null,
-                triglyceride: triglycerideInput.value.trim() ? triglycerideInput.value.trim() : null,
-                dateTaken: lipidDate.value.trim() ? lipidDate.value.trim() : null
-            },
-            urinalysis: {
-                protein: proteinInput.value.trim() ? proteinInput.value.trim() : null,
-                ketones: ketonesInput.value.trim() ? ketonesInput.value.trim() : null,
-                dateTaken: urinalysisDate.value.trim() ? urinalysisDate.value.trim() : null
-            },
-            copdAssessment: {
-                hasBreathlessness: breathlessnessCheckbox.checked,
-                hasChronicCough: chronicCoughCheckbox.checked,
-                hasSputum: sputumCheckbox.checked,
-                hasWheezing: wheezingCheckbox.checked
-            }
-        }
+        // Section 6: Special Statuses & Emergency Contact
+        is_pwd: pwdStatus.value === 'yes' ? 1 : 0,
+        pwd_id: pwdIdInput.value.trim(),
+        is_indigenous: indigenousStatus.value === 'yes' ? 1 : 0,
+        is_solo_parent: soloParentStatus.value === 'yes' ? 1 : 0,
+        is_philhealth_member: philhealthStatus.value === 'yes' ? 1 : 0,
+        emergency_contact_no: emergencyContactNo.value.trim()
     };
 
-    console.log(currentResidentPayload);
-    // --- 3. HIDE THE CURRENT MODAL AND SHOW THE CONFIRMATION MODAL ---
+    // You can now see the complete payload in your browser's console
+    console.log("Resident Data Payload:", currentResidentPayload);
+    residentFullNameConfirm.textContent = 
+        [residentFirstName.value, residentMiddleName.value, residentLastName.value, suffix.value]
+            .map(name => name?.trim())
+            .filter(Boolean)
+            .join(' ');    addResidentModal.hide();
 
-    addResidentModal.hide(); // Hide the form modal
-    confirmResidentModal.show(); // Show the now-populated confirmation modal
+    confirmResidentModal.show();
+   
 });
+
 
 cancelConfirm.addEventListener('click', function () {
     confirmResidentModal.hide();
@@ -668,181 +370,12 @@ confirmAddResidentSubmitBtn.addEventListener('click', function () {
             console.log('Response from backend:', data);
 
             if(data.status === 'success'){
-                let fullName = residentLastName.value.trim() + ', ' + residentFirstName.value.trim();
-                if (residentMiddleName.value.trim()) {
-                    fullName += ' ' + residentMiddleName.value.trim();
-                }
-                if (suffixDropdown.textContent.trim() !== 'Select') {
-                    fullName += ' ' + suffixDropdown.textContent.trim();
-                }
+                console.log(data);
+               alert('Resident has been added successfully');
 
-                confirmResidentModal.hide();
-                successMesageHeader.textContent = "Resident Added";
-                successMessage.textContent = fullName + " has been addded.";
-                successModal.show();
+               const residentId = data.data.id;
+                window.location.href = `/barangay/residents/${residentId}`;
             }
         })
         .catch(err => console.error('Error:', err));
-});
-
-closeSuccessModalButton.addEventListener('click', function(){
-    window.location.reload();
-});
-
-
-updateButtonState();
-applyStyling();
-
-// Add a single click listener to the entire table body
-chooseFamilyTableBody.addEventListener('click', function (event) {
-    // 1. Check if the clicked element is actually a checkbox
-    if (event.target.type === 'checkbox') {
-        // 2. Get all checkboxes within the table
-        const allCheckboxes = chooseFamilyTableBody.querySelectorAll('input[type="checkbox"]');
-
-        // 3. Loop through all checkboxes
-        allCheckboxes.forEach(checkbox => {
-            // 4. Uncheck every checkbox except for the one that was just clicked
-            if (checkbox !== event.target) {
-                checkbox.checked = false;
-            }
-        });
-    }
-});
-
-function populateFamilyTable(families) {
-    // Get the table body element
-    const tableBody = document.getElementById('chooseFamilyTableBody');
-
-    // Clear any existing rows to prevent duplicates
-    tableBody.innerHTML = '';
-
-    // Check if the families array is empty
-    if (families.length === 0) {
-        const emptyRow = `
-            <tr class="bg-white border-b">
-                <td colspan="5" class="px-6 py-4 text-center text-gray-500">
-                    No families found.
-                </td>
-            </tr>
-        `;
-        tableBody.innerHTML = emptyRow;
-        return; // Stop the function here
-    }
-
-    // Loop through each family and create a table row
-    families.forEach(family => {
-        // Create a new table row element
-        const row = document.createElement('tr');
-        row.className = 'bg-white border-b hover:bg-gray-50';
-
-        // --- Data Handling ---
-        // Format a display-friendly Family ID
-        const familyIdFormatted = `FAM-${String(family.id).padStart(3, '0')}`;
-        // Handle cases where there is no family head assigned yet
-        const familyHeadName = family.head ? `${family.head.firstName} ${family.head.lastName}` : 'Not Assigned';
-        // Placeholder for member count as it's not in the JSON. You might need to add this to your Laravel query.
-        const memberCount = family.members_count || 'N/A';
-        // Get the purok name safely
-        const purokName = family.household?.purok?.name || 'N/A';
-
-
-        // Use a template literal to build the inner HTML for the row
-        row.innerHTML = `
-            <td class="w-4 p-4">
-                <div class="flex items-center">
-                    <input id="checkbox-family-${family.id}" type="checkbox" data-family-id="${family.id}" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
-                    <label for="checkbox-family-${family.id}" class="sr-only">checkbox</label>
-                </div>
-            </td>
-            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                ${familyIdFormatted}
-            </th>
-            <td class="px-6 py-4">
-                ${familyHeadName}
-            </td>
-            <td class="px-6 py-4">
-                ${memberCount}
-            </td>
-            <td class="px-6 py-4">
-                ${purokName}
-            </td>
-        `;
-
-        // Append the new row to the table body
-        tableBody.appendChild(row);
-    });
-}
-
-chooseFamilyBtn.addEventListener('click', function () {
-    const url = '/barangay/resident/families/get';
-
-    // 1. Get the CSRF token from the meta tag
-    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
-    fetch(url, { // 2. Add a second argument for options
-        method: 'GET', // Explicitly state the method
-        headers: {
-            // 3. Add the token to the headers
-            'X-CSRF-TOKEN': csrfToken,
-            'Accept': 'application/json' // Good practice to specify you want JSON back
-        }
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok: ' + response.statusText);
-            }
-            return response.json();
-        })
-        .then(families => {
-            console.log('Successfully fetched families:', families);
-            // TODO: Populate the table with the fetched families
-            familiesData = families;
-            populateFamilyTable(families);
-        })
-        .catch(error => {
-            console.error('There was a problem with the fetch operation:', error);
-        });
-
-    addResidentModal.hide();
-    chooseFamilyModal.show();
-});
-
-// Event listener for the confirmation button
-confirmChooseFamilyBtn.addEventListener('click', function () {
-    // 1. Find the single checked checkbox inside the table body
-    const selectedCheckbox = chooseFamilyTableBody.querySelector('input[type="checkbox"]:checked');
-
-    // 2. Check if a checkbox was actually selected
-    if (selectedCheckbox) {
-        // 3. Get the family ID from the 'data-family-id' attribute
-        const chosenFamilyId = parseInt(selectedCheckbox.dataset.familyId, 10);
-
-        // 4. Find the complete family object from our stored 'familiesData' array
-        chosenFamily = familiesData.find(family => family.id === chosenFamilyId);
-
-        console.log('Selected Family ID:', chosenFamilyId);
-        console.log('Selected Family Object:', chosenFamily);
-
-        // You can now use the 'chosenFamily' object for whatever you need.
-        // For example, updating a hidden input field in your main form.
-        // document.getElementById('family_id_input').value = chosenFamily.id;
-
-        // Hide the modal after selection
-        chooseFamilyModal.hide();
-        chooseFamilyBtn.textContent = "Family #" + chosenFamily.id;
-        householdIdDisplay.value = "Household #" + chosenFamily.household_id;
-        purokDisplay.value = chosenFamily.household.purok.name;
-        addResidentModal.show();
-
-    } else {
-        // 5. If no checkbox is selected, alert the user.
-        alert('Please select a family first.');
-    }
-});
-
-
-cancelChooseFamilyBtn.addEventListener('click', function () {
-    chooseFamilyModal.hide();
-    addResidentModal.show();
 });

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Helpers\ProjectCrypt;
 
 class Barangay extends Model
 {
@@ -11,6 +12,40 @@ class Barangay extends Model
 
     protected $fillable = ['name', 'user_id', 'status'];
 
+     protected $encryptable = [
+        'name',
+    ];
+
+    public function getAttribute($key)
+    {
+        $value = parent::getAttribute($key);
+
+        if (in_array($key, $this->encryptable) && $value !== null) {
+            $decrypted = ProjectCrypt::decrypt($value);
+            return $decrypted ?? $value; // fallback if decrypt fails
+        }
+
+        return $value;
+    }
+
+    /**
+     * 🔓 CRITICAL FIX: Override attributesToArray to decrypt before JSON serialization
+     * This ensures that when models are converted to JSON (e.g., @json($residents)),
+     * encrypted fields are properly decrypted for frontend consumption.
+     */
+    public function attributesToArray()
+    {
+        $attributes = parent::attributesToArray();
+
+        foreach ($this->encryptable as $key) {
+            if (isset($attributes[$key]) && $attributes[$key] !== null) {
+                $decrypted = ProjectCrypt::decrypt($attributes[$key]);
+                $attributes[$key] = $decrypted ?? $attributes[$key];
+            }
+        }
+
+        return $attributes;
+    }
     // One Barangay has many Puroks
     // Barangay.php
     public function puroks()

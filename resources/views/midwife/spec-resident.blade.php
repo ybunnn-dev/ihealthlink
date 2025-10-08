@@ -187,16 +187,7 @@
                     
                     <!-- Basic Health Information Card -->
                     <x-resident.health-info :resident="$resident" />
-
-                    <x-resident.med-history :medicalhistory="$resident->medicalHistory" />
-                    
-                    <x-resident.emergency :emergencyindicator="$resident->healthSigns" />
-                    
-                    <x-resident.family-history :famhistory="$resident->familyHistory" />
-                    
-                    <x-resident.ncd-risk :ncd="$resident->ncdRiskFactor" />
-
-                    <x-resident.risk-assessment :riskassessment="$resident->riskAssessment" />
+                 
                 </div>
                 <div id="healthProgramsCard" class="bg-f7 rounded-xl overflow-hidden">
                     <div class="p-6 pt-6">

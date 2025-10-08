@@ -9,9 +9,141 @@ use App\Models\BasicMaternalRecord;
 use App\Models\EnrolledResident;
 use App\Models\Consultation;
 use App\Models\BasicHealthRecord;
+use App\Models\MaternityScreening;
+use App\Models\PregnancyOutcome;
+use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 
 class MaternalController extends Controller
-{
+{   
+    public function updateMaternalRecord(Request $request)
+    {
+        $data = $request->all();
+        Log::info('Maternal record update payload:', $data);
+
+        $maternalRecordId = $data['imporantIds']['maternalRecordId'] ?? null;
+
+        if (!$maternalRecordId) {
+            return response()->json([
+                'message' => 'Maternal Record ID is required.'
+            ], 400);
+        }
+
+        try {
+            /*
+            |--------------------------------------------------------------------------
+            | Update or Create Pregnancy Outcome
+            |--------------------------------------------------------------------------
+            */
+            $outcomeData = $data['pregnancyOutcome'] ?? [];
+            $deliveryInfo = $data['deliveryInfo'] ?? [];
+
+            $pregnancyOutcome = PregnancyOutcome::firstOrNew([
+                'basic_maternal_record_id' => $maternalRecordId,
+            ]);
+
+            $pregnancyOutcome->date_terminated           = $outcomeData['dateTerminated'] ?? null;
+            $pregnancyOutcome->outcome                   = $outcomeData['outcome'] ?? null;
+            $pregnancyOutcome->sex                       = $outcomeData['sex'] ?? null;
+            $pregnancyOutcome->delivery_type             = $outcomeData['typeOfDelivery'] ?? null;
+            $pregnancyOutcome->birth_weight              = $outcomeData['birthWeightKg'] ?? null;
+            $pregnancyOutcome->delivery_place_type       = $deliveryInfo['place']['healthFacilityType'] ?? null;
+            $pregnancyOutcome->is_bemonc_cemonc_capable  = $deliveryInfo['place']['isBemmoncCemoncCapable'] ?? null;
+            $pregnancyOutcome->delivery_place_ownership  = $deliveryInfo['place']['facilityOwnership'] ?? null;
+            $pregnancyOutcome->birth_attendant           = $deliveryInfo['place']['birthAttendant'] ?? null;
+            $pregnancyOutcome->remarks                   = $deliveryInfo['place']['remarks'] ?? null;
+
+            if (!empty($deliveryInfo['dateTime']['date']) && !empty($deliveryInfo['dateTime']['time'])) {
+                $pregnancyOutcome->delivery_datetime = $deliveryInfo['dateTime']['date'] . ' ' . $deliveryInfo['dateTime']['time'];
+            }
+
+            if (!empty($deliveryInfo['dateTime']['date'])) {
+                $this->updateConsultations($data['imporantIds']['enrolledResidentId'], $deliveryInfo['dateTime']['date']);
+            }
+            $pregnancyOutcome->save();
+
+            $screeningData = $data['labAndDiseaseScreening'] ?? [];
+            $infectious = $screeningData['infectiousDisease'] ?? [];
+            $laboratory = $screeningData['laboratory'] ?? [];
+
+            $maternityScreening = MaternityScreening::firstOrNew([
+                'maternal_record_id' => $maternalRecordId,
+            ]);
+
+            $maternityScreening->syphilis_screening_date             = $infectious['syphilis']['date'] ?? null;
+            $maternityScreening->syphilis_screening_result           = $infectious['syphilis']['result'] ?? null;
+            $maternityScreening->hepatitis_b_screening_date          = $infectious['hepatitisB']['date'] ?? null;
+            $maternityScreening->hepatitis_b_screening_result        = $infectious['hepatitisB']['result'] ?? null;
+            $maternityScreening->hiv_screening_date                  = $infectious['hiv']['date'] ?? null;
+            $maternityScreening->hiv_screening_result                = $infectious['hiv']['result'] ?? null;
+            $maternityScreening->gestational_diabetes_screening_date = $laboratory['gestationalDiabetes']['date'] ?? null;
+            $maternityScreening->gestational_diabetes_result         = $laboratory['gestationalDiabetes']['result'] ?? null;
+            $maternityScreening->cbc_screening_date                  = $laboratory['cbc']['date'] ?? null;
+            $maternityScreening->cbc_result                          = $laboratory['cbc']['result'] ?? null;
+            $maternityScreening->given_iron                          = $laboratory['cbc']['givenIron'] ?? null;
+
+            $maternityScreening->save();
+
+            /*
+            |--------------------------------------------------------------------------
+            | Return Successful Response
+            |--------------------------------------------------------------------------
+            */
+            return response()->json([
+                'message' => 'Maternal record updated successfully.',
+                'pregnancyOutcome' => $pregnancyOutcome,
+                'maternityScreening' => $maternityScreening,
+            ], 200);
+
+        } catch (\Exception $e) {
+            Log::error('Maternal record update failed:', ['error' => $e->getMessage()]);
+
+            return response()->json([
+                'message' => 'An error occurred while updating maternal record.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    private function updateConsultations($enrolledResidentIdRecordId, $deliveryDate)
+    {
+        Log::info('Fetching consultations for enrolled resident ID: ' . $enrolledResidentIdRecordId);
+
+        $consultations = Consultation::where('enrolled_resident_id', $enrolledResidentIdRecordId)->get();
+
+        if ($consultations->isEmpty()) {
+            Log::info('No consultations found for this enrolled resident.');
+            return;
+        }
+
+        Log::info('Consultations found:', $consultations->toArray());
+        Log::info('Delivery date: ' . $deliveryDate);
+
+        // Parse delivery date
+        $delivery = Carbon::parse($deliveryDate);
+
+        // Define postpartum schedule intervals
+        $postpartumSchedules = [
+            'Postpartum (within 24h)' => $delivery->copy()->addHours(24),
+            'Postpartum (within 7 days)' => $delivery->copy()->addDays(7),
+            'Postpartum (1 month)' => $delivery->copy()->addMonth(),
+            'Postpartum (2 months)' => $delivery->copy()->addMonths(2),
+            'Postpartum (3 months)' => $delivery->copy()->addMonths(3),
+        ];
+
+        foreach ($consultations as $consultation) {
+            if (isset($postpartumSchedules[$consultation->consultation_title])) {
+                $newDate = $postpartumSchedules[$consultation->consultation_title];
+                $consultation->consultation_date = $newDate;
+                $consultation->save();
+
+                Log::info("Updated {$consultation->consultation_title} to {$newDate->toDateString()}");
+            }
+        }
+
+        Log::info('Postpartum consultations successfully updated.');
+    }
+
     public function enroll(Request $request)
     {
         $validated = $request->validate([
@@ -58,6 +190,7 @@ class MaternalController extends Controller
             'maternal_record' => $record,
         ]);
     }
+
     protected function createConsultationSchedules($residentId, $enrollId, $lmp)
     {
         $lmp = \Carbon\Carbon::parse($lmp);

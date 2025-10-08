@@ -209,7 +209,8 @@
                                     <input type="date" id="syphilis-date" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg w-full p-2.5">
                                     <select id="syphilis-result" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg w-full p-2.5">
                                         <option>Result</option>
-                                       
+                                        <option value="postive">Positive</option>
+                                        <option value="negative">Negative</option>
                                     </select>
                                 </div>
                            </div>
@@ -262,8 +263,8 @@
                                     <input type="date" id="cbc-date" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg w-full p-2.5">
                                     <select id="cbc-result" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg w-full p-2.5">
                                         <option>Result</option>
-                                        <option value="postive">Positive</option>
-                                        <option value="negative">Negative</option>
+                                        <option value="with anemia">With Anemia</option>
+                                        <option value="without anemia">Without Anemia</option>
                                     </select>
                                     <select id="cbc-given-iron" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg w-full p-2.5">
                                         <option>Given Iron?</option>
@@ -327,6 +328,7 @@
                                    <option value="RHU">RHU</option>
                                    <option value="MHC">MHC</option>
                                    <option value="Lying-in">Lying-in</option>
+                                   <option value="Hospital">Hospital</option>
                                    <option value="Birthing Homes">Birthing Homes</option>
                                    <option value="DOH Licensed Ambulance">DOH Licensed Ambulance</option>
                                    <option value="Home">Home</option>
@@ -337,8 +339,8 @@
                                <label for="bemmonc-cemonc-capable" class="block mb-2 text-sm font-medium text-main_font">BEmONC/CEmONC Capable</label>
                                <select id="bemmonc-cemonc-capable" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg w-full p-2.5">
                                    <option selected>Select</option>
-                                   <option value="Yes">Yes</option>
-                                   <option value="No">No</option>
+                                   <option value="yes">Yes</option>
+                                   <option value="no">No</option>
                                </select>
                            </div>
                            <div>
@@ -448,3 +450,4 @@
         </div>
     </div>
 </div>
+@include('components.modals.health-program.tcl-programs.update-maternity-confirmation');

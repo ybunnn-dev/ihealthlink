@@ -19,7 +19,6 @@ mainTriggerBtn.addEventListener('click', function() {
 });
 
 
-
 openPurokConfirmBtn.addEventListener('click', function () {
     const purokName = purokNameInput.value.trim();
     if (purokName === '') {

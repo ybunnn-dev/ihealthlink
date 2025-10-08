@@ -24,6 +24,8 @@
     const cancelRemove = document.getElementById('remove-cancel');
     const proceedRemove = document.getElementById('confirm-remove-button');
 
+    console.log(brgyName);
+    
     // --- 3. Add Event Listener to Open the First Modal ---
     mainTriggerBtn.addEventListener('click', function() {
         barangayNameInput.value = brgyName;

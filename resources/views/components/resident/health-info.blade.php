@@ -34,7 +34,7 @@
     <div class="grid grid-cols-1 slg2:grid-cols-2 gap-x-12 gap-y-4 text-xs">
         <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
             <p class="font-semibold text-main_font">STATUS:</p>
-            <p class="text-normal_font">{{ ucfirst($basicHR->status) }}</p>
+            <p class="text-normal_font">{{ ucfirst($resident->status) }}</p>
         </div>
 
         <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">

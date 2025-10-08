@@ -33,6 +33,7 @@ if (tableBody) {
         
         // Listener to enable/disable Save button
         purokNameInput.addEventListener('input', function(event) {
+            
             const originalName = event.target.getAttribute('data-original-name');
             const currentValue = event.target.value.trim();
             saveButton.disabled = (currentValue === '' || currentValue === originalName);
@@ -96,7 +97,7 @@ if (tableBody) {
                 alert(`Edit simulated for Purok ID ${purokId}: ${newName}`);
                 window.location.reload();
             })
-            .catch(err => console.error("❌ Error:", err));
+            .catch(err => console.error(" Error:", err));
         });
 
         // --- MAIN TABLE LISTENER for triggering modals ---
@@ -148,7 +149,7 @@ if (tableBody) {
                 alert(`Purok ID ${purokId} has been removed (simulated).`);
                 window.location.reload();
             })
-            .catch(err => console.error("❌ Error:", err));
+            .catch(err => console.error("Error:", err));
         });
         
         cancelRemove.addEventListener('click', function(e){
@@ -175,3 +176,4 @@ if (tableBody) {
         });
     }
 }
+

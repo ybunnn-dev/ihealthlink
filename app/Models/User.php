@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
+use App\Helpers\ProjectCrypt;
 
 class User extends Authenticatable
 {
@@ -41,7 +42,46 @@ class User extends Authenticatable
         'status'
     ];
 
+    protected $encryptable = [
+        'firstName',
+        'lastName',
+        'middleName',
+        'suffix',
+        'birthdate',
+        'contact_no',
+        'email', // optional but recommended for privacy
+    ];
 
+     public function getAttribute($key)
+    {
+        $value = parent::getAttribute($key);
+
+        if (in_array($key, $this->encryptable) && $value !== null) {
+            $decrypted = ProjectCrypt::decrypt($value);
+            return $decrypted ?? $value; // fallback if decrypt fails
+        }
+
+        return $value;
+    }
+
+    /**
+     * 🔓 CRITICAL FIX: Override attributesToArray to decrypt before JSON serialization
+     * This ensures that when models are converted to JSON (e.g., @json($residents)),
+     * encrypted fields are properly decrypted for frontend consumption.
+     */
+    public function attributesToArray()
+    {
+        $attributes = parent::attributesToArray();
+
+        foreach ($this->encryptable as $key) {
+            if (isset($attributes[$key]) && $attributes[$key] !== null) {
+                $decrypted = ProjectCrypt::decrypt($attributes[$key]);
+                $attributes[$key] = $decrypted ?? $attributes[$key];
+            }
+        }
+
+        return $attributes;
+    }
     /**
      * The attributes that should be hidden for serialization.
      *

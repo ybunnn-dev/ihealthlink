@@ -5,12 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
+use App\Helpers\ProjectCrypt;
+
 
 class Resident extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
+   protected $fillable = [
         'family_id',
         'added_by',
         'firstName',
@@ -26,19 +28,81 @@ class Resident extends Model
         'is_pwd',
         'pwd_id',
         'is_indigenous',
+        'if_philhealth',
+        'if_solo_parent',
         'employment_status',
         'status',
         'religion',
         'ethnicity',
-        'emergencyContactNo'
+        'emergencyContactNo',
     ];
+
+    // Fields that should be automatically encrypted/decrypted
+    protected $encryptable = [
+        'firstName',
+        'lastName',
+        'middleName',
+        'contact_no',
+        'pwd_id',
+        'emergencyContactNo',
+        'birthdate',
+        'suffix'
+    ];
+
+    /*
+    |--------------------------------------------------------------------------
+    | Encryption/Decryption Methods
+    |--------------------------------------------------------------------------
+    */
+    
+    /* 🔒 Automatically Encrypt Before Saving */
+    public function setAttribute($key, $value)
+    {
+        if (in_array($key, $this->encryptable) && $value !== null) {
+            $value = ProjectCrypt::encrypt($value);
+        }
+
+        return parent::setAttribute($key, $value);
+    }
+
+    /* 🔓 Automatically Decrypt When Accessing */
+    public function getAttribute($key)
+    {
+        $value = parent::getAttribute($key);
+
+        if (in_array($key, $this->encryptable) && $value !== null) {
+            $decrypted = ProjectCrypt::decrypt($value);
+            return $decrypted ?? $value; // fallback if decrypt fails
+        }
+
+        return $value;
+    }
+
+    /**
+     * 🔓 CRITICAL FIX: Override attributesToArray to decrypt before JSON serialization
+     * This ensures that when models are converted to JSON (e.g., @json($residents)),
+     * encrypted fields are properly decrypted for frontend consumption.
+     */
+    public function attributesToArray()
+    {
+        $attributes = parent::attributesToArray();
+
+        foreach ($this->encryptable as $key) {
+            if (isset($attributes[$key]) && $attributes[$key] !== null) {
+                $decrypted = ProjectCrypt::decrypt($attributes[$key]);
+                $attributes[$key] = $decrypted ?? $attributes[$key];
+            }
+        }
+
+        return $attributes;
+    }
 
     /*
     |--------------------------------------------------------------------------
     | Relationships
     |--------------------------------------------------------------------------
     */
-
+    
     // A resident belongs to a family
     public function family()
     {
@@ -62,6 +126,7 @@ class Resident extends Model
     {
         return $this->belongsTo(User::class, 'added_by');
     }
+    
     public function healthSigns()
     {
         return $this->hasOne(HealthSigns::class, 'resident_id');
@@ -71,10 +136,12 @@ class Resident extends Model
     {
         return $this->hasOne(ResidentMedicalHistory::class, 'resident_id');
     }
+    
     public function familyHistory()
     {
         return $this->hasOne(ResidentFamilyHistory::class);
     }
+    
     public function ncdRiskFactor()
     {
         return $this->hasOne(NcdRiskFactor::class);
@@ -84,6 +151,7 @@ class Resident extends Model
     {
         return $this->hasOne(RiskAssessment::class);
     }
+    
     public function enrolledResidents()
     {
         return $this->hasMany(EnrolledResident::class, 'resident_id');
@@ -93,16 +161,19 @@ class Resident extends Model
     {
         return $this->hasMany(Consultation::class, 'resident_id');
     }
+    
     public function maternalRecords()
     {
         return $this->hasMany(BasicMaternalRecord::class, 'resident_id');
     }
-    public function residenceHistory(){
+    
+    public function residenceHistory()
+    {
         return $this->hasMany(ResidenceHistory::class, 'resident_id');
     }
+    
     public function basicHealthRecord()
     {
         return $this->hasOne(BasicHealthRecord::class);
     }
-    
 }

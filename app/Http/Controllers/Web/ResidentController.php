@@ -9,14 +9,12 @@ use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
 use App\Models\Resident;
-use App\Models\HealthSigns;
-use App\Models\ResidentMedicalHistory;
-use App\Models\ResidentFamilyHistory;
 use App\Models\Family;
 use App\Models\Household;
 use App\Models\Barangay;
+use App\Models\ResidenceHistory;
 use App\Models\HealthProgram;
-use App\Models\BasicHealthRecord;
+use App\Helpers\ProjectCrypt;
 
 class ResidentController extends Controller
 {  
@@ -51,248 +49,103 @@ class ResidentController extends Controller
             'residents' => $residents,
         ]);
     }
+
+    
     public function addResident(Request $request)
     {
+        // Validation rules
         $rules = [
-            // Basic info
-            'firstName'          => ['required', 'string', 'max:255'],
-            'lastName'           => ['required', 'string', 'max:255'],
-            'middleName'         => ['nullable', 'string', 'max:255'],
-            'suffix'             => ['nullable', 'string', 'max:50'],
-            'contactNo'          => ['nullable', 'string', 'max:20'],
-            'birthDate'          => ['required', 'string'],
-            'familyId'           => ['required', 'integer'],
-            'familyRelationship' => ['required', 'string', 'max:255'],
-            'civilStatus'        => ['required', 'string', 'max:255'],
-            'religion'           => ['required', 'string', 'max:255'],
-            'ethnicity'          => ['required', 'string'],
-            'employmentStatus'   => ['required', 'string', 'max:255'],
-            'isPWD'              => ['boolean'],
-            'pwdIdInput'         => ['nullable', 'string', 'max:100'],
-            'isIndegenous'       => ['boolean'],
-            'emergencyContactNo' => ['nullable', 'string', 'max:20'],
-
-            // Nested objects
-            'redFlags'           => ['required', 'array'],
-            'redFlags.*'         => ['boolean'],
-
-            'medHistory'         => ['required', 'array'],
-            'medHistory.*'       => ['boolean'],
-
-            'familyHistory'      => ['required', 'array'],
-            'familyHistory.*'    => ['boolean'],
-
-            'ncd_factors'        => ['required', 'array'],
-            'ncd_factors.tobaccoUse'        => ['nullable', 'string'],
-            'ncd_factors.alcoholConsumption'=> ['nullable', 'string'],
-            'ncd_factors.alcoholFrequency'  => ['nullable', 'string'],
-            'ncd_factors.caffeineIntake'    => ['nullable', 'string'],
-            'ncd_factors.physicalActivity'  => ['nullable', 'string'],
-            'ncd_factors.weightKg'          => ['nullable', 'numeric'],
-            'ncd_factors.heightCm'          => ['nullable', 'numeric'],
-            'ncd_factors.bmi'               => ['nullable', 'numeric'],
-            'ncd_factors.waistCircumferenceCm' => ['nullable', 'numeric'],
-            'ncd_factors.bpSystolic'        => ['nullable', 'numeric'],
-            'ncd_factors.bpDiastolic'       => ['nullable', 'numeric'],
-            'ncd_factors.eatsHighFatFood'   => ['boolean'],
-            'ncd_factors.eatsStreetFood'    => ['boolean'],
-            'ncd_factors.eatsHighSugarFood' => ['boolean'],
-
-            'risk_assessment'               => ['required', 'array'],
-            'risk_assessment.bloodSugar'    => ['required', 'array'],
-            'risk_assessment.bloodSugar.fbsResult' => ['nullable', 'numeric'],
-            'risk_assessment.bloodSugar.rbsResult' => ['nullable', 'numeric'],
-            'risk_assessment.bloodSugar.dateTaken' => ['nullable', 'string'],
-            'risk_assessment.bloodSugar.hasPolyphagia' => ['boolean'],
-            'risk_assessment.bloodSugar.hasPolydipsia' => ['boolean'],
-            'risk_assessment.bloodSugar.hasPolyuria'   => ['boolean'],
-
-            'risk_assessment.lipidProfile'  => ['required', 'array'],
-            'risk_assessment.lipidProfile.totalCholesterol' => ['nullable', 'numeric'],
-            'risk_assessment.lipidProfile.hdl' => ['nullable', 'numeric'],
-            'risk_assessment.lipidProfile.ldl' => ['nullable', 'numeric'],
-            'risk_assessment.lipidProfile.vldl'=> ['nullable', 'numeric'],
-            'risk_assessment.lipidProfile.triglyceride' => ['nullable', 'numeric'],
-            'risk_assessment.lipidProfile.dateTaken' => ['nullable', 'string'],
-
-            'risk_assessment.urinalysis'    => ['required', 'array'],
-            'risk_assessment.urinalysis.protein' => ['nullable', 'string'],
-            'risk_assessment.urinalysis.ketones' => ['nullable', 'string'],
-            'risk_assessment.urinalysis.dateTaken' => ['nullable', 'string'],
-
-            'risk_assessment.copdAssessment'=> ['required', 'array'],
-            'risk_assessment.copdAssessment.hasBreathlessness' => ['boolean'],
-            'risk_assessment.copdAssessment.hasChronicCough'   => ['boolean'],
-            'risk_assessment.copdAssessment.hasSputum'         => ['boolean'],
-            'risk_assessment.copdAssessment.hasWheezing'       => ['boolean'],
+            'first_name'          => 'required|string|max:255',
+            'last_name'           => 'required|string|max:255',
+            'middle_name'         => 'nullable|string|max:255',
+            'suffix'              => 'nullable|string|max:50',
+            'contact_no'          => 'nullable|string|max:20',
+            'birthdate'           => 'required|string', // expect m/d/Y format
+            'family_id'           => 'required|integer',
+            'relationship_to_head'=> 'required|string|max:255',
+            'civil_status'        => 'required|string|max:255',
+            'religion'            => 'required|string|max:255',
+            'ethnicity'           => 'required|string',
+            'employment_status'   => 'required|string|max:255',
+            'is_pwd'              => 'boolean',
+            'pwd_id'              => 'nullable|string|max:100',
+            'is_indigenous'       => 'boolean',
+            'emergency_contact_no' => 'nullable|string|max:20',
+            'is_solo_parent'      => 'boolean',
+            'is_philhealth_member'=> 'boolean',
+            'years_of_residency'  => 'required|integer|min:0',
         ];
 
         $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
-            // Return message for frontend
             return response()->json([
                 'status' => 'error',
                 'message' => 'Validation failed',
-                'errors' => $validator->errors() // detailed field errors
+                'errors' => $validator->errors()
             ], 422);
         }
 
-        $birthDate = Carbon::createFromFormat('m/d/Y', $request->birthDate)->format('Y-m-d');
+        $validated = $validator->validated();
 
+        // Convert birthdate to Y-m-d
+        
+
+        // Create resident
         $resident = Resident::create([
-            'family_id'           => $request->familyId,
-            'added_by'            => auth()->id(), // optional if you track user
-            'firstName'           => $request->firstName,
-            'lastName'            => $request->lastName,
-            'middleName'          => $request->middleName,
-            'suffix'              => $request->suffix,
-            'birthdate'           => $birthDate,
-            'sex'                 => $request->sex, // if included
-            'contact_no'          => $request->contactNo,
-            'civil_status'        => $request->civilStatus,
-            'family_relationship' => $request->familyRelationship,
-            'is_pwd'              => $request->isPWD,
-            'pwd_id'              => $request->pwdIdInput,
-            'is_indigenous'       => $request->isIndegenous,
-            'employment_status'   => $request->employmentStatus,
-            'status'              => 'active', // default?
-            'religion'            => $request->religion,
-            'ethnicity'           => $request->ethnicity,
-            'emergencyContactNo'  => $request->emergencyContactNo,
+            'family_id'           => $validated['family_id'],
+            'added_by'            => auth()->id(),
+            'firstName'           => $validated['first_name'],
+            'lastName'            => $validated['last_name'],
+            'middleName'          => $validated['middle_name'] ?? null,
+            'suffix'              => $validated['suffix'] ?? null,
+            'birthdate'           => $validated['birthdate'],
+            'sex'                 => $request->sex ?? null,
+            'contact_no'          => $validated['contact_no'] ?? null,
+            'civil_status'        => $validated['civil_status'],
+            'family_relationship' => $validated['relationship_to_head'],
+            'is_pwd'              => $validated['is_pwd'] ?? false,
+            'pwd_id'              => $validated['pwd_id'] ?? null,
+            'is_indigenous'       => $validated['is_indigenous'] ?? false,
+            'if_philhealth'       => $validated['is_philhealth_member'] ?? false,
+            'if_solo_parent'      => $validated['is_solo_parent'] ?? false,
+            'employment_status'   => $validated['employment_status'],
+            'status'              => 'active',
+            'religion'            => $validated['religion'],
+            'ethnicity'           => $validated['ethnicity'],
+            'emergencyContactNo'  => $validated['emergency_contact_no'] ?? null,
         ]);
 
-        // Save health signs (red flags)
-        // map redFlags -> resident_health_signs
-        if ($request->has('redFlags')) {
-            $resident->healthSigns()->create([
-                'chest_pain'                       => $request->redFlags['hasChestPain'] ?? null,
-                'difficulty_in_breathing'          => $request->redFlags['hasBreathingDifficulty'] ?? null,
-                'loss_of_consciousness'            => $request->redFlags['hasLossOfConsciousness'] ?? null,
-                'numbness_of_arm'                  => $request->redFlags['hasNumbArm'] ?? null,
-                'act_of_self_harm_or_suicide'      => $request->redFlags['hasSelfHarm'] ?? null,
-                'agitated_or_aggressive_behavior'  => $request->redFlags['hasAggressiveBehavior'] ?? null,
-                'severe_injuries'                  => $request->redFlags['hasSevereInjuries'] ?? null,
-                'slurred_speech'                   => $request->redFlags['hasSlurredSpeech'] ?? null,
-                'facial_asymmetry'                 => $request->redFlags['hasFacialAsymmetry'] ?? null,
-                'chest_retractions'                => $request->redFlags['hasChestRetractions'] ?? null,
-                'seizure_or_convulsion'            => $request->redFlags['hasSeizure'] ?? null,
-                'disoriented_as_to_time_place_or_person' => $request->redFlags['isDisoriented'] ?? null,
-                'eye_injury'                       => $request->redFlags['hasEyeInjury'] ?? null,
-            ]);
+        // Get the household of the family
+        $household = $resident->family->household ?? null;
+        $purokId = $household->purok_id ?? null;
+
+        // Determine the residence start date
+        $years = $validated['years_of_residency'] ?? 0;
+        if ($years < 1) {
+            // January 1st of the current year
+            $createdAt = Carbon::now()->startOfYear();
+        } else {
+            $createdAt = Carbon::now()->subYears($years);
         }
 
-        // map medHistory -> resident_medical_history
-        if ($request->has('medHistory')) {
-            $resident->medicalHistory()->create([
-                'hypertension'   => $request->medHistory['hasHypertension'] ?? null,
-                'heart_diseases' => $request->medHistory['hasHeartDiseases'] ?? null,
-                'copd'           => $request->medHistory['hasCopd'] ?? null,
-                'surgical_history'=> $request->medHistory['hasSurgicalHistory'] ?? null,
-                'allergies'      => $request->medHistory['hasAllergies'] ?? null,
-                'diabetes'       => $request->medHistory['hasDiabetes'] ?? null,
-                'cancer'         => $request->medHistory['hasCancer'] ?? null,
-                'asthma'         => $request->medHistory['hasAsthma'] ?? null,
-                'kidney_disorders' => $request->medHistory['hasKidneyDisorders'] ?? null,
-                'vision_problems'  => $request->medHistory['hasVisionProblems'] ?? null,
-                'thyroid_disorders'=> $request->medHistory['hasThyroidDisorders'] ?? null,
-                'mental_neuro_substance_disorders' => $request->medHistory['hasMentalDisorders'] ?? null,
-            ]);
-        }
-
-        if ($request->has('familyHistory')) {
-            $resident->familyHistory()->create([
-                'hypertension'    => $request->familyHistory['hasHypertension'] ?? null,
-                'heart_diseases'  => $request->familyHistory['hasHeartDiseases'] ?? null,
-                'copd'            => $request->familyHistory['hasCopd'] ?? null,
-                'tuberculosis_last_five_years' => $request->familyHistory['hasTuberculosis'] ?? null,
-                'stroke'          => $request->familyHistory['hasStroke'] ?? null,
-                'diabetes_mellitus' => $request->familyHistory['hasDiabetes'] ?? null,
-                'cancer'          => $request->familyHistory['hasCancer'] ?? null,
-                'asthma'          => $request->familyHistory['hasAsthma'] ?? null,
-                'kidney_disorders'=> $request->familyHistory['hasKidneyDisorders'] ?? null,
-                'premature_coronary_or_vascular_disease' => $request->familyHistory['hasCoronaryDisease'] ?? null,
-                'mental_neurological_substance_abuse_disorders' => $request->familyHistory['hasMentalDisorders'] ?? null,
-            ]);
-        }
-
-        // --- 5. CREATE NCD RISK FACTOR ---
-        if ($request->has('ncd_factors')) {
-            $ncd = $request->ncd_factors;
-            $resident->ncdRiskFactor()->create([
-                'tobacco_use'     => $this->ynToBoolOrNull($ncd['tobaccoUse'] ?? null),
-                'alcohol_intake'  => $this->ynToBoolOrNull($ncd['alcoholConsumption'] ?? null),
-                'caffeine_intake' => $this->ynToBoolOrNull($ncd['caffeineIntake'] ?? null),
-                'high_fat_high_salt_food_intake' => $ncd['eatsHighFatFood'] ?? false,
-                'street_foods_intake'  => $ncd['eatsStreetFood'] ?? false,
-                'high_sugar_foods_intake' => $ncd['eatsHighSugarFood'] ?? false,
-                'number_of_drinks_last_year' => $ncd['alcoholFrequency'] ?? null,
-                'hours_of_activity_weekly' => $ncd['physicalActivity'] ?? null,
-                'weight'               => $ncd['weightKg'] ?? null,
-                'height'               => $ncd['heightCm'] ?? null,
-                'waist_circumference'  => $ncd['waistCircumferenceCm'] ?? null,
-                'systolic_pressure'    => $ncd['bpSystolic'] ?? null,
-                'diastolic_pressure'   => $ncd['bpDiastolic'] ?? null,
-            ]);
-
-            $resident->basicHealthRecord()->create([
-                'weight' => $ncd['weightKg'] ?? null,
-                'height' => $ncd['heightCm'] ?? null,
-                'systolic_pressure'    => $ncd['bpSystolic'] ?? null,
-                'diastolic_pressure'   => $ncd['bpDiastolic'] ?? null,
-                'waist_circumference'  => $ncd['waistCircumferenceCm'] ?? null,
-                'is_pregnant' => false,
-                'is_lactating' => false,
-                'weight_grams' => null,
-                'status' => 'alive',
-            ]);
-        }
+        // Create residence history
+        ResidenceHistory::create([
+            'resident_id' => $resident->id,
+            'purok_id'    => $purokId,
+            'status'      => 'active',
+            'created_at'  => $createdAt,
+            'updated_at'  => now(),
+        ]);
 
         
-        if ($request->has('risk_assessment')) {
-            $assessment = $request->risk_assessment;
-            $bloodSugar = $assessment['bloodSugar'] ?? [];
-            $lipid = $assessment['lipidProfile'] ?? [];
-            $urinalysis = $assessment['urinalysis'] ?? [];
-            $copd = $assessment['copdAssessment'] ?? [];
-
-            $resident->riskAssessment()->create([
-                // Blood Sugar Data
-                'fbs_result'             => $bloodSugar['fbsResult'] ?? null,
-                'rbs_result'             => $bloodSugar['rbsResult'] ?? null,
-                'blood_sugar_date_taken' => isset($bloodSugar['dateTaken']) && $bloodSugar['dateTaken'] ? Carbon::createFromFormat('m/d/Y', $bloodSugar['dateTaken'])->format('Y-m-d') : null,
-                'has_polyphagia'         => $bloodSugar['hasPolyphagia'] ?? false,
-                'has_polydipsia'         => $bloodSugar['hasPolydipsia'] ?? false,
-                'has_polyuria'           => $bloodSugar['hasPolyuria'] ?? false,
-
-                // Lipid Profile Data
-                'total_cholesterol'      => $lipid['totalCholesterol'] ?? null,
-                'hdl'                    => $lipid['hdl'] ?? null,
-                'ldl'                    => $lipid['ldl'] ?? null,
-                'vldl'                   => $lipid['vldl'] ?? null,
-                'triglyceride'           => $lipid['triglyceride'] ?? null,
-                'lipid_profile_date_taken' => isset($lipid['dateTaken']) && $lipid['dateTaken'] ? Carbon::createFromFormat('m/d/Y', $lipid['dateTaken'])->format('Y-m-d') : null,
-
-                // Urinalysis Data
-                'protein'                => $urinalysis['protein'] ?? null,
-                'ketones'                => $urinalysis['ketones'] ?? null,
-                'urinalysis_date_taken'  => isset($urinalysis['dateTaken']) && $urinalysis['dateTaken'] ? Carbon::createFromFormat('m/d/Y', $urinalysis['dateTaken'])->format('Y-m-d') : null,
-
-                // COPD Data
-                'has_breathlessness'     => $copd['hasBreathlessness'] ?? false,
-                'has_chronic_cough'      => $copd['hasChronicCough'] ?? false,
-                'has_sputum'             => $copd['hasSputum'] ?? false,
-                'has_wheezing'           => $copd['hasWheezing'] ?? false,
-            ]);
-        }
-        // If valid
         return response()->json([
             'status' => 'success',
-            'message' => 'Data is valid',
-            'data' => $validator->validated() // optional: return validated data
+            'message' => 'Resident created successfully',
+            'data' => $resident
         ]);
     }
-
+        
     public function show(Resident $resident){
 
         $resident->load([
@@ -350,9 +203,9 @@ class ResidentController extends Controller
         if ($request->filled('search')) {
             $search = $request->input('search');
             $query->where(function ($q) use ($search) {
-                $q->where('first_name', 'like', "%{$search}%")
-                ->orWhere('middle_name', 'like', "%{$search}%")
-                ->orWhere('last_name', 'like', "%{$search}%");
+                $q->where('firstName', 'like', "%{$search}%")
+                ->orWhere('middleName', 'like', "%{$search}%")
+                ->orWhere('lastName', 'like', "%{$search}%");
             });
         }
 
@@ -366,9 +219,20 @@ class ResidentController extends Controller
 
         $residents = $query->get();
 
-        // Attach purok info
+        // --- Attach purok info and normalize birthdate ---
         $residents->each(function ($resident) {
             $resident->purok = $resident->family->household->purok ?? null;
+
+            // Convert birthdate (string) to Carbon date, if valid
+            try {
+                if (!empty($resident->birthdate)) {
+                    $resident->birthdate = Carbon::parse($resident->birthdate)->toDateString();
+                }
+            } catch (\Exception $e) {
+                // Optional: Log invalid date formats
+                \Log::warning('Invalid birthdate format for resident ID ' . $resident->id);
+                $resident->birthdate = null;
+            }
         });
 
         return response()->json([
@@ -376,6 +240,7 @@ class ResidentController extends Controller
             'puroks' => $puroks
         ]);
     }
+
 
     public function getWRA(Request $request)
     {

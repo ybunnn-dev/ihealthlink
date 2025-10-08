@@ -7,9 +7,7 @@ const basicMaternalRecord = window.enrolledResident.maternityRecord;
 const enrolledResident = window.enrolledResident;
 
 const dconsultations = window.enrolledResident.consultations;
-
-
-console.log(enrolledResident);
+const maternityRecord = window.enrolledResident.maternal_record;
 
 const cancelUpdate = document.getElementById('cancel-update-maternity');
 // Basic Information Section
@@ -115,11 +113,27 @@ const generalRemarksTextarea = document.getElementById('general-remarks');
 
 const openUpdateMaternityModalBtn = document.getElementById('update-maternal');
 
-const updateMaternityModal = new Modal(updateMaternityModalEl,{backdrop: 'static',closable: true,});
 
+const confirmUpdateMaternityModalEl = document.getElementById('confirm-update-maternity-modal');
+
+// Interactive elements inside the modal
+const confirmUpdateCheckbox = document.getElementById('confirm-update-maternity-checkbox');
+const cancelUpdateButton = document.getElementById('confirm-update-maternity-cancel');
+const submitUpdateButton = document.getElementById('confirm-update-maternity-submit');
+
+const modalOptions = {
+    placement: 'center-center',
+    backdrop: 'static', 
+    closable: false,    
+};
+
+const updateMaternityModal = new Modal(updateMaternityModalEl,modalOptions);
+
+const confirmUpdateMaternityModal = new Modal(confirmUpdateMaternityModalEl, modalOptions);
 
 const updateMaternityBtn = document.getElementById('update-maternity-btn');
 const printMaternityBtn = document.getElementById('print-maternity-btn');
+
 
 function updateMaternityMeds(consultationTitle, medicineCategory, amountElement, dateElement) {
     const consultation = dconsultations.find(c => c.consultation_title === consultationTitle);
@@ -320,24 +334,68 @@ openUpdateMaternityModalBtn.addEventListener('click', function(){
 
     // 2. Check if any deworming consultations were found
     if (dewormingConsultations.length > 0) {
-        // 3. Sort the consultations by date to find the most recent one
-        // (new Date(b.updated_at) - new Date(a.updated_at)) sorts in descending order
+    
         dewormingConsultations.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
 
-        // 4. The most recent consultation is the first item in the sorted array
         const mostRecentConsultation = dewormingConsultations[0];
 
-        // 5. Get the date and format it to YYYY-MM-DD
         const dateOnly = mostRecentConsultation.updated_at.split('T')[0];
 
-        // 6. Update the input field with the most recent date
         dewormingDateInput.value = dateOnly;
     } else {
-        // If no deworming medicine was ever distributed, leave the input blank
         dewormingDateInput.value = '';
     }
 
     calculateBmi(enrolledResident);
+
+    console.log(maternityRecord);
+
+    if(maternityRecord.maternity_screening){
+        const maternityScreening = maternityRecord.maternity_screening;
+        syphilisDateInput.value = maternityScreening.syphilis_screening_date !== null ? maternityScreening.syphilis_screening_date : '';
+        syphilisResultSelect.value = maternityScreening.syphilis_screening_result !== null ? maternityScreening.syphilis_screening_result : '';
+        hepatitisBDateInput.value = maternityScreening.hepatitis_b_screening_date !== null ? maternityScreening.hepatitis_b_screening_date : '';
+        hepatitisBResultSelect.value = maternityScreening.hepatitis_b_screening_result !== null ? maternityScreening.hepatitis_b_screening_result : '';
+        hivDateInput.value = maternityScreening.hiv_screening_date !== null ? maternityScreening.hiv_screening_date : '';
+        hivResultSelect.value = maternityScreening.hiv_screening_result !== null ? maternityScreening.hiv_screening_result : '';
+        gestationalDiabetesDateInput.value = maternityScreening.gestational_diabetes_screening_date !== null ? maternityScreening.gestational_diabetes_screening_date : '';
+        gestationalDiabetesResultSelect.value = maternityScreening.gestational_diabetes_result !== null ? maternityScreening.gestational_diabetes_result : '';
+        cbcDateInput.value = maternityScreening.cbc_screening_date !== null ? maternityScreening.cbc_screening_date : '';
+        cbcResultSelect.value = maternityScreening.cbc_result !== null ? maternityScreening.cbc_result : '';
+        cbcGivenIronSelect.value = maternityScreening.given_iron !== null ? maternityScreening.given_iron : '';
+    }
+
+   if (maternityRecord.pregnancy_outcome) {
+        const pregnancyOutcome = maternityRecord.pregnancy_outcome;
+
+        // --- Pregnancy Outcome Section ---
+        dateTerminatedInput.value = pregnancyOutcome.date_terminated || '';
+        outcomeSelect.value = pregnancyOutcome.outcome || '';
+        sexSelect.value = pregnancyOutcome.sex || '';
+        typeOfDeliverySelect.value = pregnancyOutcome.delivery_type || '';
+        birthWeightInput.value = pregnancyOutcome.birth_weight || '';
+
+        // --- Place of Delivery Section ---
+        healthFacilityTypeSelect.value = pregnancyOutcome.delivery_place_type || '';
+        // Handle the boolean 'is_bemonc_cemonc_capable' (1 for 'yes', 0 or null for 'no')
+        bemmoncCemoncCapableSelect.value = pregnancyOutcome.is_bemonc_cemonc_capable === 1 ? "yes" : "no";
+        facilityOwnershipSelect.value = pregnancyOutcome.delivery_place_ownership || '';
+        birthAttendantSelect.value = pregnancyOutcome.birth_attendant || '';
+        deliveryRemarksTextarea.value = pregnancyOutcome.remarks || '';
+
+        // --- Date and Time of Delivery Section ---
+        if (pregnancyOutcome.delivery_datetime) {
+            // Split the datetime string "YYYY-MM-DD HH:MM:SS" into date and time parts
+            const [datePart, timePart] = pregnancyOutcome.delivery_datetime.split(' ');
+            
+            deliveryDateInput.value = datePart || '';
+            // The time part might include seconds, so we slice to get "HH:MM"
+            deliveryTimeInput.value = timePart ? timePart.slice(0, 5) : '';
+        } else {
+            deliveryDateInput.value = '';
+            deliveryTimeInput.value = '';
+        }
+    }
     updateMaternityModal.show();
 });
 
@@ -348,10 +406,10 @@ cancelUpdate.addEventListener('click', function(){
 });
 
 
-updateMaternityBtn.addEventListener('click', function() {
-
+const getMaternityPayload = () => {
     // Helper to parse G/P input like "G2P1" into an object { gravida: 2, para: 1 }
     const parseGP = (gpString) => {
+        if (!gpString) return { gravida: null, para: null };
         const match = gpString.match(/G(\d+)P(\d+)/i);
         if (match) {
             return {
@@ -365,17 +423,35 @@ updateMaternityBtn.addEventListener('click', function() {
         };
     };
 
-    const payload = {
+    const getSelectValue = (selectElement) => {
+        const value = selectElement.value;
+        const lowerCaseValue = value.toLowerCase();
+
+        // Check for an empty value or placeholder text like "Select..." or "Choose..."
+        if (value === '' || lowerCaseValue.startsWith('select') || lowerCaseValue.startsWith('choose')) {
+            return null;
+        }
+        return value;
+    };
+
+
+    // Construct and return the payload object
+    return {
+        imporantIds: {
+            enrolledResidentId: enrolledResident.id,
+            programId: enrolledResident.program_id,
+            maternalRecordId: enrolledResident.maternal_record.id
+        },
         generalInfo: {
             dateOfRegistration: dateOfRegistrationInput.value,
-            familyNumber: familyNumberInput.value.replace('#', ''), // Remove '#' if present
+            familyNumber: familyNumberInput.value.replace('#', ''),
             residentName: residentNameInput.value,
             address: addressInput.value,
-            isIndigent: socialEconomicStatusSelect.value === 'yes', // Convert to boolean
+            isIndigent: socialEconomicStatusSelect.value === 'yes',
             age: parseInt(ageInput.value, 10) || null,
             lmp: lmpInput.value,
             edc: edcInput.value,
-            ...parseGP(gpInput.value) // Spread the parsed gravida and para
+            ...parseGP(gpInput.value)
         },
         prenatalCheckups: {
             firstTrimester: prenatalFirstTriInput.value,
@@ -409,34 +485,39 @@ updateMaternityBtn.addEventListener('click', function() {
             }
         },
         healthStatus: {
-            fimStatus: fimStatusSelect.value,
+            fimStatus: getSelectValue(fimStatusSelect),
             dewormingDate: dewormingDateInput.value,
             bmi: bmiInput.value
         },
         labAndDiseaseScreening: {
             infectiousDisease: {
-                syphilis: { date: syphilisDateInput.value, result: syphilisResultSelect.value },
-                hepatitisB: { date: hepatitisBDateInput.value, result: hepatitisBResultSelect.value },
-                hiv: { date: hivDateInput.value, result: hivResultSelect.value }
+                syphilis: { date: syphilisDateInput.value, result: getSelectValue(syphilisResultSelect) },
+                hepatitisB: { date: hepatitisBDateInput.value, result: getSelectValue(hepatitisBResultSelect) },
+                hiv: { date: hivDateInput.value, result: getSelectValue(hivResultSelect) }
             },
             laboratory: {
-                gestationalDiabetes: { date: gestationalDiabetesDateInput.value, result: gestationalDiabetesResultSelect.value },
-                cbc: { date: cbcDateInput.value, result: cbcResultSelect.value, givenIron: cbcGivenIronSelect.value }
+                gestationalDiabetes: { date: gestationalDiabetesDateInput.value, result: getSelectValue(gestationalDiabetesResultSelect) },
+                cbc: { date: cbcDateInput.value, result: getSelectValue(cbcResultSelect), givenIron: getSelectValue(cbcGivenIronSelect) }
             }
         },
         pregnancyOutcome: {
             dateTerminated: dateTerminatedInput.value,
-            outcome: outcomeSelect.value,
-            sex: sexSelect.value,
-            typeOfDelivery: typeOfDeliverySelect.value,
+            outcome: getSelectValue(outcomeSelect),
+            sex: getSelectValue(sexSelect),
+            typeOfDelivery: getSelectValue(typeOfDeliverySelect),
             birthWeightKg: parseFloat(birthWeightInput.value) || null
         },
         deliveryInfo: {
             place: {
-                healthFacilityType: healthFacilityTypeSelect.value,
-                isBemmoncCemoncCapable: bemmoncCemoncCapableSelect.value,
-                facilityOwnership: facilityOwnershipSelect.value,
-                birthAttendant: birthAttendantSelect.value,
+                healthFacilityType: getSelectValue(healthFacilityTypeSelect),
+                isBemmoncCemoncCapable: (() => {
+                    const value = getSelectValue(bemmoncCemoncCapableSelect);
+                    if (value === 'yes') return 1;
+                    if (value === 'no') return 0;
+                    return null;
+                })(),
+                facilityOwnership: getSelectValue(facilityOwnershipSelect),
+                birthAttendant: getSelectValue(birthAttendantSelect),
                 remarks: deliveryRemarksTextarea.value
             },
             dateTime: {
@@ -465,163 +546,104 @@ updateMaternityBtn.addEventListener('click', function() {
             general: generalRemarksTextarea.value
         }
     };
+};
 
-    console.log("Maternity Update Payload:", payload);
-    console.log("Stringified Payload:", JSON.stringify(payload, null, 2));
+updateMaternityBtn.addEventListener('click', function(){
+    updateMaternityModal.hide();
+    confirmUpdateMaternityModal.show();
 });
 
-printMaternityBtn.addEventListener('click', function(){
-    // Helper to parse G/P input like "G2P1" into an object { gravida: 2, para: 1 }
-    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+confirmUpdateCheckbox.addEventListener('change', function(){
+    submitUpdateButton.disabled = !this.checked;
+});
 
-    const parseGP = (gpString) => {
-        const match = gpString.match(/G(\d+)P(\d+)/i);
-        if (match) {
-            return {
-                gravida: parseInt(match[1], 10),
-                para: parseInt(match[2], 10)
-            };
-        }
-        return {
-            gravida: null,
-            para: null
-        };
-    };
+submitUpdateButton.addEventListener('click', async function() {
+    const payload = getMaternityPayload();
+    submitUpdateButton.disabled = true;
 
-    const payload = {
-        generalInfo: {
-            dateOfRegistration: dateOfRegistrationInput.value,
-            familyNumber: familyNumberInput.value.replace('#', ''), // Remove '#' if present
-            residentName: residentNameInput.value,
-            address: addressInput.value,
-            isIndigent: socialEconomicStatusSelect.value === 'yes', // Convert to boolean
-            age: parseInt(ageInput.value, 10) || null,
-            lmp: lmpInput.value,
-            edc: edcInput.value,
-            ...parseGP(gpInput.value) // Spread the parsed gravida and para
-        },
-        prenatalCheckups: {
-            firstTrimester: prenatalFirstTriInput.value,
-            secondTrimester: prenatalSecondTriInput.value,
-            thirdTrimesterFirst: prenatalThirdTri1Input.value,
-            thirdTrimesterSecond: prenatalThirdTri2Input.value
-        },
-        immunization: {
-            tetanusDiphtheria: {
-                td1: td1Input.value,
-                td2: td2Input.value,
-                td3: td3Input.value,
-                td4: td4Input.value,
-                td5: td5Input.value
-            }
-        },
-        micronutrientSupplementation: {
-            ironSulfate: {
-                checkup1: { amount: ironSulfateAmount1.value, date: ironSulfateDate1.value },
-                checkup2: { amount: ironSulfateAmount2.value, date: ironSulfateDate2.value },
-                checkup3: { amount: ironSulfateAmount3.value, date: ironSulfateDate3.value },
-                checkup4: { amount: ironSulfateAmount4.value, date: ironSulfateDate4.value }
+    console.log("Data for UPDATE:", payload);
+
+    try {
+        const response = await fetch('/barangay/health-program/maternity/update-maternal-record', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
             },
-            calciumCarbonate: {
-                checkup2: { amount: calciumCarbonateAmount2.value, date: calciumCarbonateDate2.value },
-                checkup3: { amount: calciumCarbonateAmount3.value, date: calciumCarbonateDate3.value },
-                checkup4: { amount: calciumCarbonateAmount4.value, date: calciumCarbonateDate4.value }
-            },
-            iodineCapsule: {
-                checkup1: { amount: iodineCapsuleAmount1.value, date: iodineCapsuleDate1.value }
-            }
-        },
-        healthStatus: {
-            fimStatus: fimStatusSelect.value,
-            dewormingDate: dewormingDateInput.value,
-            bmi: bmiInput.value
-        },
-        labAndDiseaseScreening: {
-            infectiousDisease: {
-                syphilis: { date: syphilisDateInput.value, result: syphilisResultSelect.value },
-                hepatitisB: { date: hepatitisBDateInput.value, result: hepatitisBResultSelect.value },
-                hiv: { date: hivDateInput.value, result: hivResultSelect.value }
-            },
-            laboratory: {
-                gestationalDiabetes: { date: gestationalDiabetesDateInput.value, result: gestationalDiabetesResultSelect.value },
-                cbc: { date: cbcDateInput.value, result: cbcResultSelect.value, givenIron: cbcGivenIronSelect.value }
-            }
-        },
-        pregnancyOutcome: {
-            dateTerminated: dateTerminatedInput.value,
-            outcome: outcomeSelect.value,
-            sex: sexSelect.value,
-            typeOfDelivery: typeOfDeliverySelect.value,
-            birthWeightKg: parseFloat(birthWeightInput.value) || null
-        },
-        deliveryInfo: {
-            place: {
-                healthFacilityType: healthFacilityTypeSelect.value,
-                isBemmoncCemoncCapable: bemmoncCemoncCapableSelect.value,
-                facilityOwnership: facilityOwnershipSelect.value,
-                birthAttendant: birthAttendantSelect.value,
-                remarks: deliveryRemarksTextarea.value
-            },
-            dateTime: {
-                date: deliveryDateInput.value,
-                time: deliveryTimeInput.value
-            }
-        },
-        postpartumCare: {
-            checkups: {
-                within24Hours: postpartumCheckup24hInput.value,
-                within7Days: postpartumCheckup7dInput.value
-            },
-            supplementation: {
-                iron: {
-                    month1: { amount: postpartumIronAmount1.value, date: postpartumIronDate1.value },
-                    month2: { amount: postpartumIronAmount2.value, date: postpartumIronDate2.value },
-                    month3: { amount: postpartumIronAmount3.value, date: postpartumIronDate3.value }
-                },
-                vitaminA: {
-                    amount: postpartumVitaminAAmount.value,
-                    date: postpartumVitaminADate.value
+            body: JSON.stringify(payload)
+        });
+
+        // Handle non-OK HTTP responses (e.g., 400, 404, 500)
+        if (!response.ok) {
+            let errorMessage = `Server error (${response.status})`;
+
+            try {
+                // Try to read the JSON error message if available
+                const errorData = await response.json();
+                if (errorData.message) {
+                    errorMessage = errorData.message;
                 }
+            } catch {
+                // Fallback if not JSON
+                const text = await response.text();
+                if (text) errorMessage = text;
             }
-        },
-        remarks: {
-            general: generalRemarksTextarea.value
-        }
-    };
 
-    // Use the Fetch API to send the data to your Laravel backend
+            throw new Error(errorMessage);
+        }
+
+        // Parse success response
+        const result = await response.json();
+        console.log(result);
+
+        alert(' Maternal record updated successfully!');
+        window.location.reload();
+    } catch (error) {
+        console.error('Error updating maternal record:', error);
+        alert(` Failed to update maternal record.\n\nDetails: ${error.message}`);
+    } finally {
+        // Always re-enable the button
+        submitUpdateButton.disabled = false;
+    }
+});
+
+
+// Event listener for the PRINT button
+printMaternityBtn.addEventListener('click', function() {
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    
+    // Get the latest data from the form by calling the helper function
+    const payload = getMaternityPayload();
+
+    // Use the Fetch API to send the data to your Laravel backend for PDF generation
     fetch('/barangay/export-maternal', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': csrfToken, // Important for Laravel security
-            'Accept': 'application/pdf', // We expect a PDF response
+            'X-CSRF-TOKEN': csrfToken,
+            'Accept': 'application/pdf',
         },
         body: JSON.stringify(payload)
     })
     .then(response => {
         if (!response.ok) {
-            throw new Error('Network response was not ok');
+            // Try to get more error info from the response body if possible
+            return response.text().then(text => { throw new Error(`Network response was not ok: ${text}`) });
         }
-        return response.blob(); // Get the response body as a binary blob
+        return response.blob();
     })
     .then(blob => {
-        // Create a URL for the PDF blob
         const url = window.URL.createObjectURL(blob);
-
-        // Create a temporary link element to trigger the download
         const a = document.createElement('a');
         a.href = url;
-        a.download = `maternal_record_${payload.generalInfo.residentName.replace(/\s/g, '_')}.pdf`; // e.g., maternal_record_Jane_Doe.pdf
-        document.body.appendChild(a); // Append the link to the body
-        a.click(); // Programmatically click the link to start the download
-        a.remove(); // Remove the link from the body
-        window.URL.revokeObjectURL(url); // Clean up the blob URL
+        a.download = `maternal_record_${payload.generalInfo.residentName.replace(/\s/g, '_')}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
     })
     .catch(error => {
         console.error('Error exporting PDF:', error);
-        // You can add user-facing error handling here, like an alert
-        alert('Failed to generate PDF. Please try again.');
+        alert('Failed to generate PDF. Please check the console for more details and try again.');
     });
-
 });

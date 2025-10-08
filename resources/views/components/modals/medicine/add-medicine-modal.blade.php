@@ -94,7 +94,7 @@
                                         <button type="button" data-value="Calium Carbonate" class="w-full text-left px-4 py-2 hover:bg-gray-100">Calcium Carbonate</button>
                                     </li>
                                     <li>
-                                        <button type="button" data-value="Calium Carbonate" class="w-full text-left px-4 py-2 hover:bg-gray-100">Iodine Capsule</button>
+                                        <button type="button" data-value="Iodine" class="w-full text-left px-4 py-2 hover:bg-gray-100">Iodine Capsule</button>
                                     </li>
                                 </ul>
                             </div>

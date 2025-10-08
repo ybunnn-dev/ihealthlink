@@ -125,7 +125,7 @@ class PurokController extends Controller
             'status' => 'inactive'
         ]);
 
-        \Log::info("🗑️ Purok ID {$id} marked as removed (status updated)");
+        \Log::info(" Purok ID {$id} marked as removed (status updated)");
 
         return response()->json([
             'message' => 'Purok status updated to removed successfully!',

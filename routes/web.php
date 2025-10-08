@@ -274,4 +274,9 @@ Route::middleware([
     Route::post('/barangay/consultation/store', [ConsultationController::class, 'store']);
 
     Route::post('/barangay/export-maternal', [MaternalExport::class, 'exportIndividual']);
+
+    Route::post('/barangay/health-program/maternity/update-maternal-record', [MaternalController::class, 'updateMaternalRecord']);
+
+    
 });
+
