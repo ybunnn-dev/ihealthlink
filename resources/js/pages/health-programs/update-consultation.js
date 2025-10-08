@@ -314,10 +314,14 @@ updateButtons.forEach(button => {
             const data = await response.json();
             console.log('Fetched consultation:', data);
 
-            const consultation = data.consultation_data;
+            // CORRECTED LINE: Access the nested object
+            const consultation = data.consultation_data.consultation_data;
             
+            // Assign the entire object to your state variable
+            currentConsultation = consultation;
+
             if (consultation) {
-                // Assign values, using '|| ""' to default null/undefined to an empty string
+                // This part will now work correctly
                 fatherName.value = consultation.father_name || '';
                 motherName.value = consultation.mother_name || '';
                 chiefComplaint.value = consultation.chief_complaint || '';
@@ -325,18 +329,16 @@ updateButtons.forEach(button => {
                 weight.value = consultation.weight || '';
                 height.value = consultation.height || '';
                 temperature.value = consultation.temperature || '';
-                pr.value = consultation.pr || ''; // Pulse Rate
-                rr.value = consultation.rr || ''; // Respiratory Rate
+                pr.value = consultation.pr || '';
+                rr.value = consultation.rr || '';
                 birthweight.value = consultation.birthweight || '';
                 bpSystolic.value = consultation.bp_systolic || '';
                 bpDiastolic.value = consultation.bp_diastolic || '';
                 
-                // It's true if is_philhealth is 1, otherwise it's false
-                isPhilhealth.checked = consultation.is_philhealth == 1;
-
+                // Since `is_philhealth` is a boolean (false), you can assign it directly
+                isPhilhealth.checked = consultation.is_philhealth;
             }
-            currentConsultation = consultation; //when i add this? and no error when i remove
-            //autofill here, note that there are null ones
+            
             createConsultationModal.show();
         } catch (error) {
             console.error('Error fetching consultation:', error);
@@ -344,8 +346,6 @@ updateButtons.forEach(button => {
         }
     });
 });
-
-
 distributeMedicineBtn.addEventListener('click', function() {
     if (!medicineInventory && !prevInventory) {
         fetch('/barangay/get-medicines')

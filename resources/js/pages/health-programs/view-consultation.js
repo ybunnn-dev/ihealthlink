@@ -151,7 +151,7 @@ document.body.addEventListener('click', async (event) => {
             if (!response.ok) throw new Error('Network response was not ok');
 
             const data = await response.json();
-            populateModal(data);
+            populateModal(data.consultation_data);
 
         } catch (error) {
             console.error('Failed to fetch consultation details:', error);

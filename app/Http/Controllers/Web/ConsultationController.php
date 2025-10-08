@@ -24,16 +24,19 @@ class ConsultationController extends Controller
             'updatedBy:id,firstName,middleName,lastName,suffix', 
         ])->findOrFail($id);
 
-        // Combine full name for logging or return
+        $consultationArray = $consultation->toArray();
+
+        // Add full_name safely
         if ($consultation->updatedBy) {
-            $updatedBy = $consultation->updatedBy;
-            $fullName = trim("{$updatedBy->firstName} {$updatedBy->middleName} {$updatedBy->lastName} {$updatedBy->suffix}");
-            $consultation->updatedBy->full_name = preg_replace('/\s+/', ' ', $fullName); // clean extra spaces
+            $consultationArray['updatedBy']['full_name'] = trim("{$consultation->updatedBy->firstName} {$consultation->updatedBy->middleName} {$consultation->updatedBy->lastName} {$consultation->updatedBy->suffix}");
+            $consultationArray['updatedBy']['full_name'] = preg_replace('/\s+/', ' ', $consultationArray['updatedBy']['full_name']);
         }
 
-        \Log::info('Consultation fetched with relationships:', $consultation->toArray());
 
-        return response()->json($consultation);
+        
+        return response()->json([
+            'consultation_data' => $consultationArray
+        ]);
     }
 
     public function store(Request $request)

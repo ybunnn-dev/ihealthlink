@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Helpers\ProjectCrypt;
 
 class ConsultationData extends Model
 {
@@ -31,6 +32,10 @@ class ConsultationData extends Model
         'pr',
     ];
 
+     protected $encryptable = [
+        'father_name',
+        'mother_name',
+    ];
     /**
      * The attributes that should be cast.
      */
@@ -45,6 +50,45 @@ class ConsultationData extends Model
         'temperature' => 'float',
         'pr' => 'integer',
     ];
+
+    public function getFatherNameAttribute($value)
+    {
+        if ($value !== null && in_array('father_name', $this->encryptable)) {
+            $decrypted = ProjectCrypt::decrypt($value);
+            return $decrypted ?? $value;
+        }
+        return $value;
+    }
+
+    public function getMotherNameAttribute($value)
+    {
+        if ($value !== null && in_array('mother_name', $this->encryptable)) {
+            $decrypted = ProjectCrypt::decrypt($value);
+            return $decrypted ?? $value;
+        }
+        return $value;
+    }
+    public function setAttribute($key, $value)
+    {
+        if (in_array($key, $this->encryptable) && $value !== null) {
+            $value = ProjectCrypt::encrypt($value);
+        }
+
+        return parent::setAttribute($key, $value);
+    }
+
+    /* 🔓 Automatically Decrypt When Accessing */
+    public function getAttribute($key)
+    {
+        $value = parent::getAttribute($key);
+
+        if (in_array($key, $this->encryptable) && $value !== null) {
+            $decrypted = ProjectCrypt::decrypt($value);
+            return $decrypted ?? $value; // fallback if decrypt fails
+        }
+
+        return $value;
+    }
 
     /**
      * Relationship: ConsultationData belongs to a Consultation.
