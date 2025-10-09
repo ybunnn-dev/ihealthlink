@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\HealthProgram;
 use App\Models\ProgramSchedule;
+use Illuminate\Pagination\Paginator; 
 
 class HealthProgramController extends Controller
 {
@@ -21,9 +22,10 @@ class HealthProgramController extends Controller
             'data' => $programs
         ]);
     }
+
     public function index(){
         $programs = HealthProgram::withCount('enrolledResidents')
-        ->paginate(10);
+        ->paginate(8);
 
         return view('mho.health-program-list', [
             'healthPrograms' => $programs

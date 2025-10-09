@@ -14,6 +14,12 @@ const maternityCancelBtn = document.getElementById('maternityCancelBtn');
 const maternityBackBtn = document.getElementById('maternityBackBtn');
 const maternityNextBtn = document.getElementById('maternityNextBtn');
 
+const modalOptions = {
+    placement: 'center-center',
+    backdrop: 'static', 
+    closable: false,    
+};
+
 let selectedResidentId = null;
 let chosenResidentName = null;
 
@@ -33,6 +39,8 @@ const lmpInput = document.getElementById('last_menstrual_period');
 const edcInput = document.getElementById('expected_date_of_confinement');
 const gravidaInput = document.getElementById('gravida');
 const paraInput = document.getElementById('para');
+const weightInput = document.getElementById('initalWeight');
+const heightInput = document.getElementById('initalHeightInput');
 
 const confirmMaternityModalEl = document.getElementById('enroll-maternity-confirmation-modal');
 
@@ -48,8 +56,8 @@ const confirmCheckbox = document.getElementById('confirm-maternity-enrollment-ch
 const confirmCancelBtn = document.getElementById('enroll-maternity-confirmation-cancel-btn');
 const confirmProceedBtn = document.getElementById('enroll-maternity-confirmation-proceed-btn');
 
-const maternityModal = new Modal(maternityModalEl);
-const confirmMaternityModal = new Modal(confirmMaternityModalEl);
+const maternityModal = new Modal(maternityModalEl, modalOptions);
+const confirmMaternityModal = new Modal(confirmMaternityModalEl, modalOptions);
 
 // === Modal Elements ===
 const steps = [
@@ -109,6 +117,10 @@ function formatDate(dateStr) {
         day: "numeric"
     });
 }
+
+maternityCancelBtn.addEventListener('click', function(){
+
+});
 
 maternityNextBtn.addEventListener('click', () => {
     if (currentStep < totalSteps - 1) {
