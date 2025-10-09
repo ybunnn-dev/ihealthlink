@@ -22,7 +22,7 @@
                         </button>
                     </div>
                 </div>
-
+                
                 <div id="enrollResidentListContainer" class="space-y-3 h-[40vh] overflow-y-auto border rounded-lg p-3">
                     
                 </div>

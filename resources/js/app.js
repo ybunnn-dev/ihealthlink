@@ -98,7 +98,10 @@ document.addEventListener('DOMContentLoaded', () => {
       import('./pages/health-programs/enroll-maternal.js');
     }else if(programTypeDefine === 'child_healthcare_tcl'){
       console.log('hello');
-    }else{
+    }else if(programTypeDefine === 'family_planning_tcl'){
+      import('./pages/health-programs/enroll-family-planning.js');
+    }
+    else{
       import('./pages/health-programs/enroll-resident.js');
     } 
   }
@@ -109,7 +112,10 @@ document.addEventListener('DOMContentLoaded', () => {
       import('./pages/health-programs/update-maternity.js');
     }else if(programTypeDefine === 'child_healthcare_tcl'){
       console.log('hello');
-    }else{
+    }else if(programTypeDefine === 'family_planning_tcl'){
+      //import('./pages/health-programs/update-maternity.js');
+    }
+    else{
       console.log('hello 2');
     }
     import('./pages/health-programs/view-consultation.js');

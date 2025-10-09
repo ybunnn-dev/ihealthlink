@@ -266,12 +266,23 @@ function fetchResidents(payload) {
 }
 
 openMaternityModalBtn.addEventListener('click', function(){
-    const payload = { search: null, purok_id: null }
+    const payload = { search: null, purok_id: null };
     resetModalState();
     fetchResidents(payload); 
     maternityModal.show();
 });
 
+// Listen for input in the search field
+residentSearchInput.addEventListener('keyup', (event) => {
+    const searchQuery = event.target.value;
+    fetchResidents({ search: searchQuery, purok_id: null });
+});
+
+// Listen for changes in the purok filter
+purokFilterSelect.addEventListener('change', (event) => {
+    const purokId = event.target.value;
+    fetchResidents({ search: null, purok_id: purokId });
+});
 
 function validateForm() {
     const areTextInputsValid =

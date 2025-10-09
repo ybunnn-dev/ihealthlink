@@ -47,7 +47,15 @@ class FortifyServiceProvider extends ServiceProvider
         });
 
         RateLimiter::for('auth-web', function ($request) {
-            return Limit::perMinute(40)->by($request->user()->id);
+            return Limit::perMinute(100)->by($request->user()->id);
+        });
+
+        RateLimiter::for('heavy-req', function ($request) {
+            return Limit::perMinute(300)->by($request->user()->id);
+        });
+
+        RateLimiter::for('sync', function ($request) {
+            return Limit::perMinute(500)->by($request->user()->id);
         });
 
        $this->app->singleton(LoginResponse::class, function (Container $container) {

@@ -270,12 +270,12 @@ class ResidentController extends Controller
                 $today, $program->age_min, $program->age_max
             ]);
         // --- Search parameter ---
-        if ($request->filled('search')) {
+        if ($request->filled('search') && $request->filled('search') !== '') {
             $search = $request->input('search');
             $query->where(function ($q) use ($search) {
-                $q->where('first_name', 'like', "%{$search}%")
-                ->orWhere('middle_name', 'like', "%{$search}%")
-                ->orWhere('last_name', 'like', "%{$search}%");
+                $q->where('firstName', 'like', "%{$search}%")
+                ->orWhere('middleName', 'like', "%{$search}%")
+                ->orWhere('lastName', 'like', "%{$search}%");
             });
         }
 

@@ -26,7 +26,6 @@
                 class="border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
                 placeholder="e.g., 2 (total pregnancies)">
         </div>
-
         <div>
             <label for="para" class="block mb-2 text-sm font-medium text-main_font">Para <span class="text-red-500">*</span></label>
             <input type="number" name="para" id="para" min="0"
