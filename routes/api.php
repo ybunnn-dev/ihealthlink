@@ -13,7 +13,8 @@ use App\Http\Controllers\Mobile\MedicineInventoryController;
 use App\Http\Controllers\Mobile\ResidentController;
 use App\Http\Controllers\Mobile\UserManualController;
 use App\Http\Controllers\Mobile\ProfileController;
-// Public routes
+use App\Http\Controllers\Mobile\HealthProgramController;
+
 Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:login'); ;
 
 // Protected routes (require Sanctum token)
@@ -62,4 +63,9 @@ Route::middleware(['auth:sanctum',
     Route::post('/password/change', [ProfileController::class, 'changePassword']);
 
     Route::get('/barangay/medicine/show/{id}', [MedicineController::class, 'show']);
+
+    Route::get('/barangay/health-programs/load', [HealthProgramController::class,'index']);
+
+    Route::get('/barangay/health-programs/{healthProgram}', [HealthProgramController::class, 'specHP']);
+    
 });

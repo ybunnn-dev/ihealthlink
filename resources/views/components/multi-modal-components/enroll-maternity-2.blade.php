@@ -35,8 +35,8 @@
         </div>
         
          <div>
-            <label for="initalWeight" class="block mb-2 text-sm font-medium text-main_font">Initial Weight (kg) <span class="text-red-500">*</span></label>
-            <input type="number" name="initalWeight" id="initalWeight" min="0" 
+            <label for="initialWeight" class="block mb-2 text-sm font-medium text-main_font">Initial Weight (kg) <span class="text-red-500">*</span></label>
+            <input type="number" name="initialWeight" id="initialWeight" min="0" 
                 class="border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
                 placeholder="Weight in kg">
         </div>

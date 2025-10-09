@@ -67,7 +67,7 @@ function renderPrograms(programs) {
     // 3. Map the program data to HTML card strings
     const programCardsHTML = filteredPrograms.map(program => {
         const category = program.category ?? 'Not Specified';
-        const enrolledCount = program.enrolled_residents.length;
+        const enrolledCount = program.enrolled_residents_count;
 
         return `
             <div class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md hover:border-blue-400 transition-all duration-200 cursor-pointer" data-program-id="${program.id}">

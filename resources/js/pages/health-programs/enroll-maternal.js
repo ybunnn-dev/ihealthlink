@@ -39,8 +39,8 @@ const lmpInput = document.getElementById('last_menstrual_period');
 const edcInput = document.getElementById('expected_date_of_confinement');
 const gravidaInput = document.getElementById('gravida');
 const paraInput = document.getElementById('para');
-const weightInput = document.getElementById('initalWeight');
-const heightInput = document.getElementById('initalHeightInput');
+const weightInput = document.getElementById('initialWeight');
+const heightInput = document.getElementById('initialHeight');
 
 const confirmMaternityModalEl = document.getElementById('enroll-maternity-confirmation-modal');
 
@@ -119,7 +119,13 @@ function formatDate(dateStr) {
 }
 
 maternityCancelBtn.addEventListener('click', function(){
-
+    paraInput.value = '';
+    gravidaInput.value = '';
+    edcInput.value = '';
+    lmpInput.value = '';
+    heightInput.value = '';
+    weightInput.value = '';
+    maternityModal.hide();
 });
 
 maternityNextBtn.addEventListener('click', () => {
@@ -271,7 +277,9 @@ function validateForm() {
     const areTextInputsValid =
     lmpInput.value.trim() !== "" && 
     paraInput.value.trim() !== "" &&
-    gravidaInput.value.trim() !== "";
+    gravidaInput.value.trim() !== ""&&
+    weightInput.value.trim() !== "" &&
+    heightInput.value.trim() !== "";
 
     console.log(areTextInputsValid);
 
@@ -289,6 +297,16 @@ function updateButtonState() {
 }
 
 paraInput.addEventListener('input', function(){
+    validateForm();
+    updateButtonState()
+});
+
+heightInput.addEventListener('input', function(){
+    validateForm();
+    updateButtonState()
+});
+
+weightInput.addEventListener('input', function(){
     validateForm();
     updateButtonState()
 });
@@ -332,7 +350,9 @@ confirmProceedBtn.addEventListener('click', function(){
         last_menstrual_period: lmpInput.value,
         expected_date_of_confinement: edcInput.value,
         gravida: parseInt(gravidaInput.value, 10),
-        para: parseInt(paraInput.value, 10)
+        para: parseInt(paraInput.value, 10),
+        initial_weight: parseInt(weightInput, 10),
+        initial_height:parseInt(heightInput, 10)
     };
 
     console.log(payload);

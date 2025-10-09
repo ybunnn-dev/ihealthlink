@@ -107,7 +107,7 @@ class BarangayHealthProgramController extends Controller
         $personnel = Auth::user()->midwife;
         $barangayId = $personnel->brgy_id;
 
-        $query = HealthProgram::with(['enrolledResidents' => function ($q) use ($barangayId) {
+        $query = HealthProgram::withCount(['enrolledResidents' => function ($q) use ($barangayId) {
             $q->whereHas('resident.family.household.purok', function ($sub) use ($barangayId) {
                 $sub->where('brgy_id', $barangayId);
             });
