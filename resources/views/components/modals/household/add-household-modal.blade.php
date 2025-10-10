@@ -13,24 +13,17 @@
                         <div class="grid grid-cols-1 gap-1 relative col-span-1">
                             <label for="purokSelect" class="text-sm font-medium text-main_font">PUROK/SITIO</label>
                             <select id="purokSelect" name="purok_id" class="w-full text-main_font bg-white focus:outline-none font-medium border border-gray-300 rounded-lg text-md p-2">
-                                <option value="" disabled selected>Select</option>
+                                <option value="" disabled>Select</option>
                                 </select>
                         </div>
                         
                     </div>
         
-                    <div class="grid grid-cols-1 slg2:grid-cols-2 col-span-1 gap-3">
-                        <div class="grid grid-cols-1 gap-1 relative col-span-1">
-                            <label for="selectHouseholdHeadBtn" class="text-sm font-medium text-main_font">HOUSEHOLD HEAD</label>
-                            <button type="button" id="selectHouseholdHeadBtn" class="w-full bg-white border border-gray-300 text-gray-700 rounded-lg p-2 text-left hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-mainblue">
-                                Select Household Head
-                            </button>
-                            <input type="hidden" name="household_head_id" id="householdHeadInput">
-                        </div>
+                    <div class="grid grid-cols-1 slg2:grid-cols-1 col-span-1 gap-3">
                         <div class="grid grid-cols-1 gap-1 relative col-span-1">
                             <label for="waterSourceSelect" class="text-sm font-medium text-main_font">WATER SOURCE</label>
                             <select id="waterSourceSelect" name="water_source" class="w-full text-main_font bg-white focus:outline-none font-medium border border-gray-300 rounded-lg text-md p-2">
-                                <option value="" disabled selected>Select</option>
+                                <option value="">Select</option>
                                 <option value="Pumpwell">Pumpwell</option>
                                 <option value="Open Well">Open Well</option>
                                 <option value="Purified">Purified Water</option>
@@ -44,7 +37,7 @@
                         <div class="grid grid-cols-1 gap-1 relative col-span-1">
                             <label for="wasteDisposalSelect" class="text-sm font-medium text-main_font">WASTE DISPOSAL</label>
                             <select id="wasteDisposalSelect" name="waste_disposal" class="w-full text-main_font bg-white focus:outline-none font-medium border border-gray-300 rounded-lg text-md p-2 ">
-                                <option value="" disabled selected>Select</option>
+                                <option value="">Select</option>
                                 <option value="Collected">Garbage Collection</option>
                                 <option value="Burial">Burial</option>
                                 <option value="Burning">Burning</option>
@@ -55,7 +48,7 @@
                         <div class="grid grid-cols-1 gap-1 relative col-span-1">
                             <label for="sanitarySelect" class="text-sm font-medium text-main_font">SANITARY TOILET</label>
                             <select id="sanitarySelect" name="sanitary_toilet" class="w-full text-main_font bg-white focus:outline-none font-medium border border-gray-300 rounded-lg text-md p-2 ">
-                                <option value="" disabled selected>Select</option>
+                                <option value="">Select</option>
                                 <option value="with_sanitary_toilet">With Sanitary Toilet</option>
                                 <option value="with_unsanitary_toilet">With Unsanitary Toilet</option>
                                 <option value="without_toilet">Without Toilet</option>

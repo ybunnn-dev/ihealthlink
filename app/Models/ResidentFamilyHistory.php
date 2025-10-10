@@ -23,8 +23,8 @@ class ResidentFamilyHistory extends Model
         'mental_neurological_substance_abuse_disorders',
     ];
 
-    public function resident()
+    public function consultation()
     {
-        return $this->belongsTo(Resident::class, 'resident_id');
+        return $this->belongsTo(Consultation::class);
     }
 }

@@ -37,8 +37,8 @@ class RiskAssessment extends Model
     /**
      * A risk assessment belongs to a resident.
      */
-    public function resident()
+    public function consultation()
     {
-        return $this->belongsTo(Resident::class);
+        return $this->belongsTo(Consultation::class);
     }
 }

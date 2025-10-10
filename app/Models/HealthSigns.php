@@ -45,8 +45,8 @@ class HealthSigns extends Model
     ];
 
     // Relationship: one set of health signs belongs to a resident
-    public function resident()
+    public function consultation()
     {
-        return $this->belongsTo(Resident::class);
+        return $this->belongsTo(Consultation::class);
     }
 }

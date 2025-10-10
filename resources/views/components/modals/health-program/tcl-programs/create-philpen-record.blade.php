@@ -80,7 +80,7 @@
                             <x-multi-modal-components.add-resident-6></x-multi-modal-components.add-resident-6>
                         </div>
                         <div id="step-7" class="form-step transition-transform duration-500 ease-in-out transform translate-x-0 w-full flex-shrink-0 hidden">
-
+                            <x-multi-modal-components.add-resident-7></x-multi-modal-components.add-resident-7>
                         </div>
                     </div>
                 </div>
@@ -96,7 +96,7 @@
 
                 <!-- Right side: Skip, Next, Create Record -->
                 <div class="flex gap-3">
-                    <button id="next-philpen-button" type="button" class="text-white bg-mainblue hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center w-full slg:w-[9rem]">Next</button>
+                    <button id="next-philpen-button" type="button" class="text-white disabled:opacity-50 disabled:pointer-events-none bg-mainblue hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center w-full slg:w-[9rem]">Next</button>
 
                     <button id="create-philpen-record-button" type="button" class="hidden text-white bg-mainblue hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center w-full slg:w-[9rem]">Create Record</button>
                 </div>

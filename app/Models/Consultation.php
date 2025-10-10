@@ -59,7 +59,10 @@ class Consultation extends Model
         return $this->hasOne(ConsultationData::class, 'consultation_id');
     }
     public function ncdRiskFactors(){
-        return $this->hasMany(NcdRiskFactor::class);
+        return $this->hasOne(NcdRiskFactor::class);
+    }
+    public function philpenManagement(){
+        return $this->hasOne(PhilpenManagement::class);
     }
     public function medicineDistributions()
     {

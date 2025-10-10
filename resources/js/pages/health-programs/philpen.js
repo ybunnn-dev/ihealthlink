@@ -114,6 +114,41 @@ const waistCircumferenceInput = document.getElementById('waistCircumferenceInput
 const systolicInput = document.getElementById('systolicInput');
 const diastolicInput = document.getElementById('diastolicInput');
 
+//Risk assessment section
+const fbsResultInput = document.getElementById('fbsResultInput');
+const rbsResultInput = document.getElementById('rbsResultInput');
+const bloodSugarDate = document.getElementById('bloodSugarDate');
+const polyphagiaCheckbox = document.getElementById('polyphagiaCheckbox');
+const polydipsiaCheckbox = document.getElementById('polydipsiaCheckbox');
+const polyuriaCheckbox = document.getElementById('polyuriaCheckbox');
+
+// --- Lipid Profile ---
+const totalCholesterolInput = document.getElementById('totalCholesterolInput');
+const hdlInput = document.getElementById('hdlInput');
+const ldlInput = document.getElementById('ldlInput');
+const vldlInput = document.getElementById('vldlInput');
+const triglycerideInput = document.getElementById('triglycerideInput');
+const lipidDate = document.getElementById('lipidDate');
+
+// --- Urinalysis ---
+const proteinInput = document.getElementById('proteinInput');
+const ketonesInput = document.getElementById('ketonesInput');
+const urinalysisDate = document.getElementById('urinalysisDate');
+
+// --- COPD Symptoms ---
+const breathlessnessCheckbox = document.getElementById('breathlessnessCheckbox');
+const chronicCoughCheckbox = document.getElementById('chronicCoughCheckbox');
+const sputumCheckbox = document.getElementById('sputumCheckbox');
+const wheezingCheckbox = document.getElementById('wheezingCheckbox');
+
+
+// --- Management Section ---
+const lifestyleModificationSelect = document.getElementById('lifestyleModificationSelect');
+const antiHypertensiveSelect = document.getElementById('antiHypertensiveSelect');
+const oralHypoglycemicSelect = document.getElementById('oralHypoglycemicSelect');
+const followUpDate = document.getElementById('followUpDate');
+const remarksTextarea = document.getElementById('remarksTextarea');
+
 
 //
 let currentConsultationId = null;
@@ -129,6 +164,31 @@ const modalOptions = {
 const createPhilpenRecordModal = new Modal(createPhilpenRecordModalEl, modalOptions);
 const updateButtons = document.querySelectorAll('.js-update-consultation-btn');
 
+
+const today = new Date().toISOString().split('T')[0];
+
+// Set it as the input's value
+followUpDate.value = today;
+
+function validateNCDForm() {
+    const validationResults = {
+        tobaccoStatus: tobaccoStatusSelect.value !== '',
+        alcoholIntake: alcoholIntakeDropdown.value !== '',
+        nutrition: nutritionDropdown.value !== '',
+        physicalActivity: physicalActivityDropdown.value !== '',
+        weight: weightInput.value.trim() !== '',
+        height: heightInput.value.trim() !== '',
+        waistCircumference: waistCircumferenceInput.value.trim() !== '',
+        systolicBP: systolicInput.value.trim() !== '',
+        diastolicBP: diastolicInput.value.trim() !== ''
+    };
+
+    const allFieldsValid = Object.values(validationResults).every(isValid => isValid);
+
+    nextPhilpenButton.disabled = !allFieldsValid;
+
+    return allFieldsValid;
+}
 
 // --- Helper Functions ---
 function setDropdownValue(buttonElement, textValue) {
@@ -183,7 +243,39 @@ nutritionDropdown.addEventListener('change', function () {
     if (value === '1') {
         alert('Please give a lifestyle modification advice using the Nutrition Practice Guidelines for Health Professionals in the Primary Care Screening.');
     }
+    validateNCDForm();
 });
+
+function calculateBMI() {
+    const weight = parseFloat(weightInput.value);
+    const height = parseFloat(heightInput.value);
+
+    // Ensure valid inputs
+    if (weight > 0 && height > 0) {
+        const heightInMeters = height / 100; // assuming height is in cm
+        const bmi = weight / (heightInMeters * heightInMeters);
+        bmiInput.value = bmi.toFixed(2); // display 2 decimal places
+    } else {
+        bmiInput.value = ''; // clear BMI if invalid
+    }
+}
+
+waistCircumferenceInput.addEventListener('input',validateNCDForm);
+systolicInput.addEventListener('input',validateNCDForm);
+diastolicInput.addEventListener('input',validateNCDForm);
+alcoholNumDropdown.addEventListener('change',validateNCDForm);
+caffeineDropdown.addEventListener('change',validateNCDForm);
+
+// Add listeners
+weightInput.addEventListener('input', function(){
+    validateNCDForm();
+    calculateBMI()
+});
+heightInput.addEventListener('input', function(){
+    validateNCDForm();
+    calculateBMI()
+});
+
 
 alcoholIntakeDropdown.addEventListener('change', function () {
     const intakeValue = this.value;
@@ -203,6 +295,7 @@ alcoholIntakeDropdown.addEventListener('change', function () {
         alcoholNumDropdown.disabled = true;
         alcoholNumDropdown.value = 'Select Frequency';
     }
+     validateNCDForm();
 });
 
 physicalActivityDropdown.addEventListener('change', function () {
@@ -211,6 +304,7 @@ physicalActivityDropdown.addEventListener('change', function () {
     if (value === '0') {
         alert('Please give the patient a lifestyle modification advice using the Healthy Lifestyle Module as a guide.');
     }
+    validateNCDForm();
 });
 
 alcoholNumDropdown.addEventListener('change', function () {
@@ -225,6 +319,7 @@ alcoholNumDropdown.addEventListener('change', function () {
             alert('Advise the patient: They are in a higher-risk category for harmful alcohol use.');
         }
     }
+     validateNCDForm();
 });
 
 tobaccoStatusSelect.addEventListener('change', function () {
@@ -233,6 +328,7 @@ tobaccoStatusSelect.addEventListener('change', function () {
     if (value && value !== 'never used' && value !== 'select status') {
         alert('Reminder: Please follow the tobacco cessation protocol.');
     }
+     validateNCDForm();
 });
 
 function goToStep(stepIndex) {
@@ -308,6 +404,12 @@ function updateUI(direction) {
     if (nextStep >= 0 && nextStep < formSteps.length) {
         goToStep(nextStep); // Animate the step change
         applyStyling();     // Update the progress bar and buttons
+        console.log(currentStep);
+        if(currentStep === 4){
+            validateNCDForm();
+        }else{
+            nextPhilpenButton.disabled = false;
+        }
     }
 }
 
@@ -354,452 +456,133 @@ redFlagCheckboxes.forEach(checkbox => {
     });
 });
 
+function createPhilpenPayload() {
+    const payload = {
+        patientInformation: {
+            firstName: residentFirstName.value.trim(),
+            lastName: residentLastName.value.trim(),
+            middleName: residentMiddleName.value.trim(),
+            suffix: suffixDropdown.value,
+            contactNo: residentContactNo.value.trim(),
+            sex: residentSexDropdown.value,
+            birthdate: residentBirthdate.value,
+            age: residentAge.value,
+            address: completeAddress.value,
+            civilStatus: civilStatusDropdown.value,
+            religion: religionDropdown.value,
+            ethnicity: ethnicityDropdown.value,
+            employmentStatus: employmentStatusDropdown.value,
+            isPwd: pwdStatusDropdown.value,
+            pwdId: pwdIdInput.value.trim(),
+            isIndigenous: indigenousStatusDropdown.value,
+            philHealthNo: philHealthNo.value.trim(),
+        },
+        redFlags: {
+            chestPain: chestPainCheckbox.checked,
+            breathingDifficulty: breathingDifficultyCheckbox.checked,
+            lossOfConsciousness: lossOfConsciousnessCheckbox.checked,
+            numbArm: numbArmCheckbox.checked,
+            selfHarm: selfHarmCheckbox.checked,
+            aggressiveBehavior: aggressiveBehaviorCheckbox.checked,
+            severeInjuries: severeInjuriesCheckbox.checked,
+            slurredSpeech: slurredSpeechCheckbox.checked,
+            facialAsymmetry: facialAsymmetryCheckbox.checked,
+            chestRetractions: chestRetractionsCheckbox.checked,
+            seizure: seizureCheckbox.checked,
+            disoriented: disorientedCheckbox.checked,
+            eyeInjury: eyeInjuryCheckbox.checked,
+        },
+        medicalHistory: {
+            hypertension: hypertensionCheckbox.checked,
+            heartDiseases: heartDiseasesCheckbox.checked,
+            copd: copdCheckbox.checked,
+            surgicalHistory: surgicalHistoryCheckbox.checked,
+            allergies: allergiesCheckbox.checked,
+            diabetes: diabetesCheckbox.checked,
+            cancer: cancerCheckbox.checked,
+            asthma: asthmaCheckbox.checked,
+            kidneyDisorders: kidneyDisordersCheckbox.checked,
+            visionProblems: visionProblemsCheckbox.checked,
+            thyroidDisorders: thyroidDisordersCheckbox.checked,
+            mentalDisorders: mentalDisordersCheckbox.checked,
+        },
+        familyHistory: {
+            hypertension: familyHypertensionCheckbox.checked,
+            heartDiseases: familyHeartDiseasesCheckbox.checked,
+            copd: familyCopdCheckbox.checked,
+            tuberculosis: familyTuberculosisCheckbox.checked,
+            stroke: familyStrokeCheckbox.checked,
+            diabetes: familyDiabetesCheckbox.checked,
+            cancer: familyCancerCheckbox.checked,
+            asthma: familyAsthmaCheckbox.checked,
+            kidneyDisorders: familyKidneyDisordersCheckbox.checked,
+            coronaryDisease: familyCoronaryDiseaseCheckbox.checked,
+            mentalDisorders: familyMentalDisordersCheckbox.checked,
+        },
+        ncdRiskFactors: {
+            tobaccoStatus: tobaccoStatusSelect.value,
+            alcoholIntake: alcoholIntakeDropdown.value,
+            alcoholFrequency: alcoholNumDropdown.value,
+            caffeineIntake: caffeineDropdown.value,
+            nutrition: nutritionDropdown.value,
+            physicalActivity: physicalActivityDropdown.value,
+            weightKg: weightInput.value.trim(),
+            heightCm: heightInput.value.trim(),
+            bmi: bmiInput.value,
+            waistCm: waistCircumferenceInput.value.trim(),
+            systolicBp: systolicInput.value.trim(),
+            diastolicBp: diastolicInput.value.trim(),
+        },
+        riskAssessment: {
+            bloodSugar: {
+                fbs: fbsResultInput.value.trim(),
+                rbs: rbsResultInput.value.trim(),
+                dateTaken: bloodSugarDate.value,
+                symptoms: {
+                    polyphagia: polyphagiaCheckbox.checked,
+                    polydipsia: polydipsiaCheckbox.checked,
+                    polyuria: polyuriaCheckbox.checked,
+                },
+            },
+            lipidProfile: {
+                totalCholesterol: totalCholesterolInput.value.trim(),
+                hdl: hdlInput.value.trim(),
+                ldl: ldlInput.value.trim(),
+                vldl: vldlInput.value.trim(),
+                triglyceride: triglycerideInput.value.trim(),
+                dateTaken: lipidDate.value,
+            },
+            urinalysis: {
+                protein: proteinInput.value.trim(),
+                ketones: ketonesInput.value.trim(),
+                dateTaken: urinalysisDate.value,
+            },
+            copdSymptoms: {
+                breathlessness: breathlessnessCheckbox.checked,
+                chronicCough: chronicCoughCheckbox.checked,
+                sputumProduction: sputumCheckbox.checked,
+                wheezing: wheezingCheckbox.checked,
+            },
+        },
+        management: {
+            lifestyleModification: lifestyleModificationSelect.value,
+            medications: {
+                antiHypertensive: antiHypertensiveSelect.value,
+                oralHypoglycemic: oralHypoglycemicSelect.value,
+            },
+            followUpDate: followUpDate.value,
+            remarks: remarksTextarea.value.trim(),
+        },
+    };
+
+    return payload;
+}
+
+createPhilpenRecordButton.addEventListener('click',function(){
+    const payload = createPhilpenPayload();
+    console.log(payload);
+});
 
 applyStyling();
 
 
-/*
-const addResidentModalEl = document.getElementById('add-resident-modal');
-//form 1 inputs
-// --- Row 1: Name ---
-const residentFirstName = document.getElementById('residentFirstName');
-const residentLastName = document.getElementById('residentLastName');
-const residentMiddleName = document.getElementById('residentMiddleName');
-const suffixDropdown = document.getElementById('suffixDropdown');
-
-// --- Row 2: Contact Info & Demographics ---
-const residentContactNo = document.getElementById('residentContactNo');
-const residentSexDropdown = document.getElementById('residentSexDropdown');
-const residentBirthdate = document.getElementById('residentBirthdate');
-const residentAge = document.getElementById('residentAge');
-
-// --- Row 3: Household Info ---
-
-const chooseFamilyBtn = document.getElementById('familyDropdown');
-const relationshipToHead = document.getElementById('relationshipToHead');
-const householdIdDisplay = document.getElementById('householdIdDisplay'); // Disabled display field
-const purokDisplay = document.getElementById('purokDisplay'); // Disabled display field
-
-// --- Row 4: Other Demographics ---
-const civilStatusDropdown = document.getElementById('civilStatusDropdown');
-const religionDropdown = document.getElementById('religionDropdown');
-const ethnicityDropdown = document.getElementById('ethnicityDropdown');
-const employmentStatusDropdown = document.getElementById('employmentStatusDropdown');
-
-// --- Row 5: Special Status ---
-const pwdStatusDropdown = document.getElementById('pwdStatusDropdown');
-const pwdIdInput = document.getElementById('pwdIdInput');
-const indigenousStatusDropdown = document.getElementById('indigenousStatusDropdown');
-const emergencyContactNo = document.getElementById('emergencyContactNo');
-
-//form 2 input fields
-
-
-
-//form 5 input fields
-const tobaccoDropdown = document.getElementById('tobaccoDropdown');
-const alcoholDropdown = document.getElementById('alcoholDropdown');
-const alcoholNumDropdown = document.getElementById('alcoholNumDropdown');
-const caffeineDropdown = document.getElementById('caffeineDropdown');
-const physicalActivityInput = document.getElementById('physicalActivityInput');
-const weightInput = document.getElementById('weightInput');
-const heightInput = document.getElementById('heightInput');
-const bmiInput = document.getElementById('bmiInput');
-const waistCircumferenceInput = document.getElementById('waistCircumferenceInput');
-const systolicInput = document.getElementById('systolicInput');
-const diastolicInput = document.getElementById('diastolicInput');
-const highFatFoodCheckbox = document.getElementById('highFatFoodCheckbox');
-const streetFoodCheckbox = document.getElementById('streetFoodCheckbox');
-const highSugarFoodCheckbox = document.getElementById('highSugarFoodCheckbox');
-
-
-//form 6 inputs
-// --- Blood Sugar Elements ---
-const fbsResultInput = document.getElementById('fbsResultInput');
-const rbsResultInput = document.getElementById('rbsResultInput');
-const bloodSugarDate = document.getElementById('bloodSugarDate');
-const polyphagiaCheckbox = document.getElementById('polyphagiaCheckbox');
-const polydipsiaCheckbox = document.getElementById('polydipsiaCheckbox');
-const polyuriaCheckbox = document.getElementById('polyuriaCheckbox');
-
-// --- Lipid Profile Elements ---
-const totalCholesterolInput = document.getElementById('totalCholesterolInput');
-const hdlInput = document.getElementById('hdlInput');
-const ldlInput = document.getElementById('ldlInput');
-const vldlInput = document.getElementById('vldlInput');
-const triglycerideInput = document.getElementById('triglycerideInput');
-const lipidDate = document.getElementById('lipidDate');
-
-// --- Urinalysis Elements ---
-const proteinInput = document.getElementById('proteinInput');
-const ketonesInput = document.getElementById('ketonesInput');
-const urinalysisDate = document.getElementById('urinalysisDate');
-
-// --- COPD Elements ---
-const breathlessnessCheckbox = document.getElementById('breathlessnessCheckbox');
-const chronicCoughCheckbox = document.getElementById('chronicCoughCheckbox');
-const sputumCheckbox = document.getElementById('sputumCheckbox');
-const wheezingCheckbox = document.getElementById('wheezingCheckbox');
-
-
-const familyIdStorage = document.getElementById('familyIdStorage');
-
-
-const formSteps = document.querySelectorAll('.form-step');
-const progressSteps = document.querySelectorAll('ol li');
-const cancelButton = document.getElementById('cancel-button-add-resident');
-const prevButton = document.getElementById('prev-button');
-const nextButton = document.getElementById('next-button');
-const addResidentButtonSubmit = document.getElementById('add-resident-button');
-let currentStep = 0;
-const confirmResidentModalEl = document.getElementById('confirm-add-resident-modal');
-const residentInfoReviewContainer = document.getElementById('resident-info-review');
-const reviewFullName = document.getElementById('review-full-name');
-const reviewBirthdateAge = document.getElementById('review-birthdate-age');
-const reviewSex = document.getElementById('review-sex');
-const reviewContact = document.getElementById('review-contact');
-const reviewCivilStatus = document.getElementById('review-civil-status');
-const reviewReligion = document.getElementById('review-religion');
-const reviewHousehold = document.getElementById('review-household');
-const reviewRelationship = document.getElementById('review-relationship');
-const reviewEmployment = document.getElementById('review-employment');
-const reviewPwd = document.getElementById('review-pwd');
-const confirmResidentCheckbox = document.getElementById('confirm-resident-checkbox');
-const cancelConfirm = document.getElementById('cancel-add-resident-confirm');
-const confirmAddResidentSubmitBtn = document.getElementById('confirm-resident-proceed-button');
-const openAddResidentBtn = document.getElementById('openAddResidentModal');
-
-const confirmResidentModal = new Modal(confirmResidentModalEl,{backdrop: 'static',closable: true,});
-const addResidentModal = new Modal(addResidentModalEl,{backdrop: 'static',closable: true,});
-
-
-
-// A function to update the UI based on the current step
-function updateUI(direction) {
-    // First, handle the transition out of the current form step
-    const previousStepIndex = currentStep;
-    const newStepIndex = currentStep + (direction === 'next' ? 1 : -1);
-
-    const currentFormStep = formSteps[previousStepIndex];
-    const newFormStep = formSteps[newStepIndex];
-
-    // Animate the current step out
-    currentFormStep.classList.add(direction === 'next' ? '-translate-x-full' : 'translate-x-full');
-    currentFormStep.classList.remove('translate-x-0');
-
-    // Animate the new step in
-    newFormStep.classList.remove('hidden');
-    newFormStep.classList.add(direction === 'next' ? 'translate-x-full' : '-translate-x-full');
-
-    // Wait for the transition to finish
-    setTimeout(() => {
-        currentStep = newStepIndex;
-
-        // Hide the old step after it has transitioned out
-        currentFormStep.classList.add('hidden');
-        currentFormStep.classList.remove('-translate-x-full', 'translate-x-full');
-
-        // Position the new step to its final state
-        newFormStep.classList.remove(direction === 'next' ? 'translate-x-full' : '-translate-x-full');
-
-        // Reapply styling for all elements from scratch to ensure consistency
-        applyStyling();
-
-    }, 500); // The duration of the CSS transition
-}
-
-
-function validateForm() {
-    // --- CHECK ALL REQUIRED TEXT INPUTS ---
-    // Use .trim() to ensure fields with only spaces are considered empty.
-    const areTextInputsValid =
-        residentFirstName.value.trim() !== '' &&
-        residentLastName.value.trim() !== '' &&
-        residentContactNo.value.trim() !== '' && // Included as per your instructions
-        relationshipToHead.value.trim() !== ''; // Included as per your instructions
-
-    // --- CHECK DATE PICKER ---
-    const isBirthdateValid = residentBirthdate.value.trim() !== '';
-
-    // --- CHECK ALL REQUIRED DROPDOWNS ---
-    // Checks if the button's text is different from its default placeholder.
-    const areDropdownsValid =
-        residentSexDropdown.textContent.trim() !== 'Select Sex' &&
-        //(familyDropdown ? familyDropdown.textContent.trim() !== 'Choose Family' : true) && // Check if exists first
-        civilStatusDropdown.textContent.trim() !== 'Select Civil Status' &&
-        religionDropdown.textContent.trim() !== 'Select Religion' &&
-        (ethnicityDropdown ? ethnicityDropdown.textContent.trim() !== 'Select Ethnicity' : true) && // Check if exists first
-        employmentStatusDropdown.textContent.trim() !== 'Select Employment Status' &&
-        (pwdStatusDropdown ? pwdStatusDropdown.textContent.trim() !== 'Select' : true) && // Check if exists first
-        (indigenousStatusDropdown ? indigenousStatusDropdown.textContent.trim() !== 'Select' : true); // Check if exists first
-
-    console.log(areTextInputsValid, isBirthdateValid, areDropdownsValid);
-    // Return true only if all checks pass
-    return areTextInputsValid && isBirthdateValid && areDropdownsValid;
-}
-
-function updateButtonState() {
-    if (validateForm()) {
-        // If the form is valid, enable the button and remove disabled styles
-        nextButton.disabled = false;
-        nextButton.classList.remove('opacity-50', 'cursor-not-allowed');
-    } else {
-        // If the form is invalid, disable the button and add disabled styles
-        nextButton.disabled = true;
-        nextButton.classList.add('opacity-50', 'cursor-not-allowed');
-    }
-}
-
-// --- 3. EVENT LISTENERS ---
-
-// An array of all text/date inputs that need to be checked
-const fieldsToMonitor = [
-    residentFirstName,
-    residentLastName,
-    residentMiddleName,
-    residentContactNo,
-    residentBirthdate,
-    relationshipToHead
-];
-
-// Attach an 'input' listener to each field. It fires every time the user types.
-fieldsToMonitor.forEach(field => {
-    if (field) { // Check if the element exists on the page
-        field.addEventListener('input', updateButtonState);
-    }
-});
-
-// Helper function to handle validation for Flowbite's custom dropdowns
-function setupDropdownValidation(buttonElement) {
-    if (!buttonElement) return; // Skip if the button doesn't exist
-
-    // The menu is the next element after the button in your HTML
-    const menuElement = buttonElement.nextElementSibling;
-    if (!menuElement) return;
-
-    const options = menuElement.querySelectorAll('button[data-value]');
-    options.forEach(option => {
-        option.addEventListener('click', () => {
-            // Update the main button's text with the selected value
-            buttonElement.childNodes[0].nodeValue = option.dataset.value + ' ';
-
-            // Use a short timeout to ensure the DOM updates before we re-validate
-            setTimeout(updateButtonState, 50);
-        });
-    });
-}
-
-
-
-addResidentButtonSubmit.addEventListener('click', function () {
-    // --- 1. GATHER DATA FROM THE FORM ---
-
-    // Construct the full name, handling optional middle name and suffix
-    let fullName = residentLastName.value.trim() + ', ' + residentFirstName.value.trim();
-    if (residentMiddleName.value.trim()) {
-        fullName += ' ' + residentMiddleName.value.trim();
-    }
-    if (suffixDropdown.textContent.trim() !== 'Select') {
-        fullName += ' ' + suffixDropdown.textContent.trim();
-    }
-
-    // Combine birthdate and age
-    const birthdateAndAge = `${residentBirthdate.value} (${residentAge.value})`;
-
-    // Get values from other fields
-    const sex = residentSexDropdown.textContent.trim();
-    const contact = residentContactNo.value.trim();
-    const civilStatus = civilStatusDropdown.textContent.trim();
-    const religion = religionDropdown.textContent.trim();
-    const household = `${householdIdDisplay.value} / ${purokDisplay.value}`;
-    const relationship = relationshipToHead.value.trim();
-    const employment = employmentStatusDropdown.textContent.trim();
-    const pwdStatus = pwdStatusDropdown.textContent.trim();
-
-
-    // --- 2. POPULATE THE CONFIRMATION MODAL ---
-
-    // Update the review section
-    reviewFullName.textContent = fullName;
-    reviewBirthdateAge.textContent = birthdateAndAge;
-    reviewSex.textContent = sex;
-    reviewContact.textContent = contact;
-    reviewCivilStatus.textContent = civilStatus;
-    reviewReligion.textContent = religion;
-    reviewHousehold.textContent = household;
-    reviewRelationship.textContent = relationship;
-    reviewEmployment.textContent = employment;
-    reviewPwd.textContent = pwdStatus;
-
-
-    currentResidentPayload = {
-        firstName: residentFirstName.value.trim(),
-        lastName: residentLastName.value.trim(),
-        middleName: residentMiddleName.value.trim() ? residentMiddleName.value.trim() : null,
-        suffix: suffixDropdown.textContent.trim() !== "Select" ? suffixDropdown.textContent.trim() : null,
-        contactNo: residentContactNo.value.trim(),
-        birthDate: residentBirthdate.value.trim(),
-        sex: residentSexDropdown.textContent.trim(),
-        familyId: chosenFamily.id,
-        familyRelationship: relationshipToHead.value.trim(),
-        civilStatus: civilStatus,
-        religion: religion,
-        ethnicity: ethnicityDropdown.textContent.trim(),
-        employmentStatus: employment,
-        isPWD: pwdStatusDropdown.textContent === "Yes" ? true : false,
-        pwdIdInput: pwdIdInput.value.trim(),
-        isIndegenous: indigenousStatusDropdown.textContent === "Yes" ? true : false,
-        emergencyContactNo: emergencyContactNo.value.trim(),
-
-        redFlags: {
-            hasChestPain: chestPainCheckbox.checked,
-            hasBreathingDifficulty: breathingDifficultyCheckbox.checked,
-            hasLossOfConsciousness: lossOfConsciousnessCheckbox.checked,
-            hasNumbArm: numbArmCheckbox.checked,
-            hasSelfHarm: selfHarmCheckbox.checked,
-            hasAggressiveBehavior: aggressiveBehaviorCheckbox.checked,
-            hasSevereInjuries: severeInjuriesCheckbox.checked,
-            hasSlurredSpeech: slurredSpeechCheckbox.checked,
-            hasFacialAsymmetry: facialAsymmetryCheckbox.checked,
-            hasChestRetractions: chestRetractionsCheckbox.checked,
-            hasSeizure: seizureCheckbox.checked,
-            isDisoriented: disorientedCheckbox.checked,
-            hasEyeInjury: eyeInjuryCheckbox.checked
-        },
-
-        medHistory: {
-            hasHypertension: hypertensionCheckbox.checked,
-            hasHeartDiseases: heartDiseasesCheckbox.checked,
-            hasCopd: copdCheckbox.checked,
-            hasSurgicalHistory: surgicalHistoryCheckbox.checked,
-            hasAllergies: allergiesCheckbox.checked,
-            hasDiabetes: diabetesCheckbox.checked,
-            hasCancer: cancerCheckbox.checked,
-            hasAsthma: asthmaCheckbox.checked,
-            hasKidneyDisorders: kidneyDisordersCheckbox.checked,
-            hasVisionProblems: visionProblemsCheckbox.checked,
-            hasThyroidDisorders: thyroidDisordersCheckbox.checked,
-            hasMentalDisorders: mentalDisordersCheckbox.checked
-        },
-
-        familyHistory: {
-            hasHypertension: familyHypertensionCheckbox.checked,
-            hasHeartDiseases: familyHeartDiseasesCheckbox.checked,
-            hasCopd: familyCopdCheckbox.checked,
-            hasTuberculosis: familyTuberculosisCheckbox.checked,
-            hasStroke: familyStrokeCheckbox.checked,
-            hasDiabetes: familyDiabetesCheckbox.checked,
-            hasCancer: familyCancerCheckbox.checked,
-            hasAsthma: familyAsthmaCheckbox.checked,
-            hasKidneyDisorders: familyKidneyDisordersCheckbox.checked,
-            hasCoronaryDisease: familyCoronaryDiseaseCheckbox.checked,
-            hasMentalDisorders: familyMentalDisordersCheckbox.checked
-        },
-
-
-       ncd_factors: {
-            tobaccoUse: tobaccoDropdown.textContent.trim() ? tobaccoDropdown.textContent.trim() : null,
-            alcoholConsumption: alcoholDropdown.textContent.trim() ? alcoholDropdown.textContent.trim() : null,
-            alcoholFrequency: alcoholNumDropdown.textContent.trim() ? alcoholNumDropdown.textContent.trim() : null,
-            caffeineIntake: caffeineDropdown.textContent.trim() ? caffeineDropdown.textContent.trim() : null,
-            physicalActivity: physicalActivityInput.value.trim() ? physicalActivityInput.value.trim() : null,
-            weightKg: weightInput.value.trim() ? weightInput.value.trim() : null,
-            heightCm: heightInput.value.trim() ? heightInput.value.trim() : null,
-            bmi: bmiInput.value.trim() ? bmiInput.value.trim() : null,
-            waistCircumferenceCm: waistCircumferenceInput.value.trim() ? waistCircumferenceInput.value.trim() : null,
-            bpSystolic: systolicInput.value.trim() ? systolicInput.value.trim() : null,
-            bpDiastolic: diastolicInput.value.trim() ? diastolicInput.value.trim() : null,
-            eatsHighFatFood: highFatFoodCheckbox.checked,
-            eatsStreetFood: streetFoodCheckbox.checked,
-            eatsHighSugarFood: highSugarFoodCheckbox.checked
-        },
-
-        risk_assessment: {
-            bloodSugar: {
-                fbsResult: fbsResultInput.value.trim() ? fbsResultInput.value.trim() : null,
-                rbsResult: rbsResultInput.value.trim() ? rbsResultInput.value.trim() : null,
-                dateTaken: bloodSugarDate.value.trim() ? bloodSugarDate.value.trim() : null,
-                hasPolyphagia: polyphagiaCheckbox.checked,
-                hasPolydipsia: polydipsiaCheckbox.checked,
-                hasPolyuria: polyuriaCheckbox.checked
-            },
-            lipidProfile: {
-                totalCholesterol: totalCholesterolInput.value.trim() ? totalCholesterolInput.value.trim() : null,
-                hdl: hdlInput.value.trim() ? hdlInput.value.trim() : null,
-                ldl: ldlInput.value.trim() ? ldlInput.value.trim() : null,
-                vldl: vldlInput.value.trim() ? vldlInput.value.trim() : null,
-                triglyceride: triglycerideInput.value.trim() ? triglycerideInput.value.trim() : null,
-                dateTaken: lipidDate.value.trim() ? lipidDate.value.trim() : null
-            },
-            urinalysis: {
-                protein: proteinInput.value.trim() ? proteinInput.value.trim() : null,
-                ketones: ketonesInput.value.trim() ? ketonesInput.value.trim() : null,
-                dateTaken: urinalysisDate.value.trim() ? urinalysisDate.value.trim() : null
-            },
-            copdAssessment: {
-                hasBreathlessness: breathlessnessCheckbox.checked,
-                hasChronicCough: chronicCoughCheckbox.checked,
-                hasSputum: sputumCheckbox.checked,
-                hasWheezing: wheezingCheckbox.checked
-            }
-        }
-    };
-
-    console.log(currentResidentPayload);
-    // --- 3. HIDE THE CURRENT MODAL AND SHOW THE CONFIRMATION MODAL ---
-
-    addResidentModal.hide(); // Hide the form modal
-    confirmResidentModal.show(); // Show the now-populated confirmation modal
-});
-
-cancelConfirm.addEventListener('click', function () {
-    confirmResidentModal.hide();
-    addResidentModal.show();
-});
-
-confirmResidentCheckbox.addEventListener('change', function () {
-    confirmAddResidentSubmitBtn.disabled = !this.checked;
-});
-
-confirmAddResidentSubmitBtn.addEventListener('click', function () {
-    fetch('/barangay/resident/add', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-        },
-        body: JSON.stringify(currentResidentPayload)
-    })
-        .then(async res => {
-            const data = await res.json();
-            if (!res.ok) {
-                // Laravel returned a 422 or other error
-                console.error('Validation failed:', data.errors);
-                return;
-            }
-            console.log('Response from backend:', data);
-
-            if(data.status === 'success'){
-                let fullName = residentLastName.value.trim() + ', ' + residentFirstName.value.trim();
-                if (residentMiddleName.value.trim()) {
-                    fullName += ' ' + residentMiddleName.value.trim();
-                }
-                if (suffixDropdown.textContent.trim() !== 'Select') {
-                    fullName += ' ' + suffixDropdown.textContent.trim();
-                }
-
-                confirmResidentModal.hide();
-                successMesageHeader.textContent = "Resident Added";
-                successMessage.textContent = fullName + " has been addded.";
-                successModal.show();
-            }
-        })
-        .catch(err => console.error('Error:', err));
-});
-
-closeSuccessModalButton.addEventListener('click', function(){
-    window.location.reload();
-});
-
-
-*/
