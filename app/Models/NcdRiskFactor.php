@@ -12,6 +12,7 @@ class NcdRiskFactor extends Model
     protected $table = 'ncd_risk_factors';
 
     protected $fillable = [
+        'consultation_id',
         'resident_id',
         'tobacco_use',
         'alcohol_intake',
@@ -31,8 +32,8 @@ class NcdRiskFactor extends Model
     /**
      * A risk factor record belongs to a resident.
      */
-    public function resident()
+    public function consultation()
     {
-        return $this->belongsTo(Resident::class);
+        return $this->belongsTo(Consultation::class);
     }
 }

@@ -49,7 +49,7 @@ class EnrolledResident extends Model
     }
     public function consultations()
     {
-        return $this->hasMany(Consultation::class, 'resident_id', 'resident_id');
+        return $this->hasMany(Consultation::class, 'enrolled_resident_id');
     }
 
     public function maternalRecord(){
@@ -58,6 +58,7 @@ class EnrolledResident extends Model
     public function famPlanRecord(){
         return $this->hasOne(FamilyPlanningData::class);
     }
+   
     public function getNextConsultationAttribute($enrolledResidentId = null)
     {
         $today = Carbon::now('Asia/Manila')->startOfDay();

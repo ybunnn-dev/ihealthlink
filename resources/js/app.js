@@ -110,16 +110,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if(programTypeDefine === 'maternal_health_tcl'){
       import('./pages/health-programs/update-maternity.js');
+      import('./pages/health-programs/view-consultation.js');
+    import('./pages/health-programs/update-consultation.js');
     }else if(programTypeDefine === 'child_healthcare_tcl'){
       console.log('hello');
+      import('./pages/health-programs/view-consultation.js');
+      import('./pages/health-programs/update-consultation.js');
     }else if(programTypeDefine === 'family_planning_tcl'){
       import('./pages/health-programs/update-family-planning.js');
+      import('./pages/health-programs/view-consultation.js');
+      import('./pages/health-programs/update-consultation.js');
     }
-    else{
+    else if(programTypeDefine === 'philpen_tcl'){
+       import('./pages/health-programs/philpen.js');
       console.log('hello 2');
+    }else{
+        import('./pages/health-programs/view-consultation.js');
+        import('./pages/health-programs/update-consultation.js');
     }
-    import('./pages/health-programs/view-consultation.js');
-    import('./pages/health-programs/update-consultation.js');
   }
   else {
     console.log('Not on reports page - charts not loaded');

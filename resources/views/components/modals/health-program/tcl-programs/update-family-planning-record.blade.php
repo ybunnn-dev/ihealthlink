@@ -60,11 +60,6 @@
 
                     <!-- Dropout Section -->
                     <div class="md:col-span-2 border-t pt-6 mt-2">
-                        <div class="flex items-center mb-4">
-                            <input id="fp_dropout_checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
-                            <label for="fp_dropout_checkbox" class="ms-2 text-sm font-medium text-main_font">Dropout</label>
-                        </div>
-                        
                         <!-- I've made this visible by default for easier testing -->
                         <div id="dropout_details" class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>

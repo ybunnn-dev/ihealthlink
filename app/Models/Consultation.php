@@ -51,11 +51,16 @@ class Consultation extends Model
         return $this->belongsTo(User::class, 'updated_by');
     }
 
+    public function enrolledResident(){
+        return $this->belongsTo(EnrolledResident::class, 'enrolled_resident_id');
+    }
     public function consultationData()
     {
         return $this->hasOne(ConsultationData::class, 'consultation_id');
     }
-
+    public function ncdRiskFactors(){
+        return $this->hasMany(NcdRiskFactor::class);
+    }
     public function medicineDistributions()
     {
         return $this->hasMany(MedicineDistribution::class, 'consultation_id');

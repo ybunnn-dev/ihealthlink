@@ -279,5 +279,7 @@ Route::middleware([
 
     Route::post('/barangay/health-program/enroll/{residentId}', [BarangayHealthProgramController::class, 'enrollFamPlan']);
 
+    Route::post('/barangay/health-program/fam-plan/update/{enrolledResident}', [BarangayHealthProgramController::class, 'updateFamPlan']);
+
 });
 

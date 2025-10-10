@@ -36,18 +36,20 @@
                     </div>
 
                     <!-- Buttons -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 slg2:grid-cols-2 xl:grid-cols-1 gap-3">
+                    <div class="grid grid-cols-1 lg:grid-cols-1 gap-3">
                         <!-- Update Health Record is always enabled, no changes needed -->
                         <button id="update-record" type="button" 
-                            class="w-full h-full text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3 py-4">
+                            class="w-full h-full text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3 py-4 disabled:opacity-50 disabled:pointer-events-none"
+                            @if($enrolledResident->program->category === 'philpen_tcl') disabled @endif>
                             Update Record
                         </button>
 
                         <button id="mark-complete" type="button" 
-                            class="w-full h-full text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3 py-4">
+                            class="w-full h-full text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3 py-4 disabled:opacity-50 disabled:pointer-events-none"
+                            @if($enrolledResident->program->category === 'philpen_tcl') disabled @endif>
                             Mark as Completed
                         </button>
-                       <div class="bg-white w-full h-full rounded-lg p-6">
+                       <div class="bg-white w-full h-full rounded-lg py-10">
                             <div class="flex flex-col items-center justify-center text-main_font">
                                 <h2 class="font-semibold text-3xl text-center uppercase">
                                     <span class="
@@ -138,16 +140,32 @@
                 @foreach($enrolledResident->consultations as $consultation)
                     @php
                         $consultationDate = null;
-                        if($consultation->consultation_date){
+                        $statusText = '';
+                        $statusColorClass = '';
+
+                        if ($consultation->consultation_date) {
                             $today = \Carbon\Carbon::now('Asia/Manila')->startOfDay();
                             $consultationDate = \Carbon\Carbon::parse($consultation->consultation_date);
-                            $statusText = '';
-                            $statusColorClass = '';
-                            if ($consultation->status === 'completed') { $statusText = 'Completed'; $statusColorClass = 'bg-green-100 text-green-800'; } 
-                            elseif ($consultation->status === 'pending') {
-                                if ($consultationDate->lt($today)) { $statusText = 'Late'; $statusColorClass = 'bg-red-100 text-red-800'; } 
-                                else { $statusText = 'Ongoing'; $statusColorClass = 'bg-blue-100 text-blue-800'; }
+
+                            if ($consultation->status === 'completed') {
+                                $statusText = 'Completed';
+                                $statusColorClass = 'bg-green-100 text-green-800';
+                            } elseif ($consultation->status === 'pending') {
+                                if ($consultationDate->lt($today)) {
+                                    $statusText = 'Late';
+                                    $statusColorClass = 'bg-red-100 text-red-800';
+                                } else {
+                                    $statusText = 'Ongoing';
+                                    $statusColorClass = 'bg-blue-100 text-blue-800';
+                                }
+                            } else {
+                                $statusText = 'Terminated';
+                                $statusColorClass = 'bg-yellow-100 text-yellow-700';
                             }
+                        } else {
+                            // No consultation date — default handling
+                            $statusText = 'No Schedule';
+                            $statusColorClass = 'bg-gray-100 text-gray-700';
                         }
                     @endphp
                     <!-- The text size class has been updated on this table row -->
@@ -171,9 +189,12 @@
 
                                 <!-- Update Button -->
                                 <button type="button" 
-                                        class="js-update-consultation-btn text-mainblue hover:text-blue-900" 
+                                        class="js-update-consultation-btn text-mainblue hover:text-blue-900 disabled:opacity-50 disabled:pointer-events-none" 
                                         data-consultation-id="{{ $consultation->id }}" 
-                                        title="Update Status">
+                                        title="Update Status"
+                                        @if($consultation->status === 'completed')
+                                            disabled 
+                                        @endif>
                                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 pointer-events-none" viewBox="0 0 20 20" fill="currentColor">
                                         <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
                                         <path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" />
@@ -199,4 +220,5 @@
     @include('components.modals.consultation.view-consultation')
     @include('components.modals.consultation.distribute-medicine')
     @include('components.modals.health-program.tcl-programs.update-family-planning-record')
+    @include('components.modals.health-program.tcl-programs.create-philpen-record')
 </x-app-layout>

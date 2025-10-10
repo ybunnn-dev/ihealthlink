@@ -42,16 +42,39 @@ class MaternalController extends Controller
                 'basic_maternal_record_id' => $maternalRecordId,
             ]);
 
-            $pregnancyOutcome->date_terminated           = $outcomeData['dateTerminated'] ?? null;
-            $pregnancyOutcome->outcome                   = $outcomeData['outcome'] ?? null;
-            $pregnancyOutcome->sex                       = $outcomeData['sex'] ?? null;
-            $pregnancyOutcome->delivery_type             = $outcomeData['typeOfDelivery'] ?? null;
-            $pregnancyOutcome->birth_weight              = $outcomeData['birthWeightKg'] ?? null;
-            $pregnancyOutcome->delivery_place_type       = $deliveryInfo['place']['healthFacilityType'] ?? null;
-            $pregnancyOutcome->is_bemonc_cemonc_capable  = $deliveryInfo['place']['isBemmoncCemoncCapable'] ?? null;
-            $pregnancyOutcome->delivery_place_ownership  = $deliveryInfo['place']['facilityOwnership'] ?? null;
-            $pregnancyOutcome->birth_attendant           = $deliveryInfo['place']['birthAttendant'] ?? null;
-            $pregnancyOutcome->remarks                   = $deliveryInfo['place']['remarks'] ?? null;
+           $normalizeEnum = function ($value, $allowed) {
+                if (!$value) return null;
+                $value = trim($value);
+                // Case-insensitive match to allow for "male" / "Male"
+                foreach ($allowed as $allowedValue) {
+                    if (strcasecmp($value, $allowedValue) === 0) {
+                        return $allowedValue;
+                    }
+                }
+                return null;
+            };
+
+            // Allowed enums based on your table
+            $outcomeEnum = ['Full Term', 'Pre-term', 'Fetal Death', 'Abortion/Miscarriage'];
+            $sexEnum = ['Male', 'Female'];
+            $deliveryTypeEnum = ['Cesarean Section', 'Vaginal Delivery'];
+            $placeTypeEnum = ['BHS', 'RHU', 'MHC', 'Lying-in', 'Hospital', 'Birthing Homes', 'DOH Licensed Ambulance', 'Home', 'Others'];
+            $ownershipEnum = ['Public', 'Private'];
+            $attendantEnum = ['Doctor', 'Nurse', 'Midwife', 'Hilot', 'Others'];
+
+            // Apply normalization safely
+            $pregnancyOutcome->date_terminated          = $outcomeData['dateTerminated'] ?? null;
+            $pregnancyOutcome->outcome                  = $normalizeEnum($outcomeData['outcome'] ?? null, $outcomeEnum);
+            $pregnancyOutcome->sex                      = $normalizeEnum($outcomeData['sex'] ?? null, $sexEnum);
+            $pregnancyOutcome->delivery_type            = $normalizeEnum($outcomeData['typeOfDelivery'] ?? null, $deliveryTypeEnum);
+            $pregnancyOutcome->birth_weight             = $outcomeData['birthWeightKg'] ?? null;
+            $pregnancyOutcome->delivery_place_type      = $normalizeEnum($deliveryInfo['place']['healthFacilityType'] ?? null, $placeTypeEnum);
+            $pregnancyOutcome->is_bemonc_cemonc_capable = isset($deliveryInfo['place']['isBemmoncCemoncCapable'])
+                ? (bool)$deliveryInfo['place']['isBemmoncCemoncCapable']
+                : null;
+            $pregnancyOutcome->delivery_place_ownership = $normalizeEnum($deliveryInfo['place']['facilityOwnership'] ?? null, $ownershipEnum);
+            $pregnancyOutcome->birth_attendant          = $normalizeEnum($deliveryInfo['place']['birthAttendant'] ?? null, $attendantEnum);
+            $pregnancyOutcome->remarks                  = $deliveryInfo['place']['remarks'] ?? null;
 
             if (!empty($deliveryInfo['dateTime']['date']) && !empty($deliveryInfo['dateTime']['time'])) {
                 $pregnancyOutcome->delivery_datetime = $deliveryInfo['dateTime']['date'] . ' ' . $deliveryInfo['dateTime']['time'];
@@ -70,17 +93,51 @@ class MaternalController extends Controller
                 'maternal_record_id' => $maternalRecordId,
             ]);
 
-            $maternityScreening->syphilis_screening_date             = $infectious['syphilis']['date'] ?? null;
-            $maternityScreening->syphilis_screening_result           = $infectious['syphilis']['result'] ?? null;
-            $maternityScreening->hepatitis_b_screening_date          = $infectious['hepatitisB']['date'] ?? null;
-            $maternityScreening->hepatitis_b_screening_result        = $infectious['hepatitisB']['result'] ?? null;
-            $maternityScreening->hiv_screening_date                  = $infectious['hiv']['date'] ?? null;
-            $maternityScreening->hiv_screening_result                = $infectious['hiv']['result'] ?? null;
+            // Helper to normalize values and enforce lowercase
+            $normalize = function ($value, $allowed) {
+                if (!$value) return null;
+                $value = strtolower(trim($value));
+                return in_array($value, $allowed) ? $value : null;
+            };
+
+            // Infectious disease screenings
+            $maternityScreening->syphilis_screening_date = $infectious['syphilis']['date'] ?? null;
+            $maternityScreening->syphilis_screening_result = $normalize(
+                $infectious['syphilis']['result'] ?? null,
+                ['positive', 'negative']
+            );
+
+            $maternityScreening->hepatitis_b_screening_date = $infectious['hepatitisB']['date'] ?? null;
+            $maternityScreening->hepatitis_b_screening_result = $normalize(
+                $infectious['hepatitisB']['result'] ?? null,
+                ['positive', 'negative']
+            );
+
+            $maternityScreening->hiv_screening_date = $infectious['hiv']['date'] ?? null;
+            $maternityScreening->hiv_screening_result = $normalize(
+                $infectious['hiv']['result'] ?? null,
+                ['positive', 'negative']
+            );
+
+            // Laboratory screenings
             $maternityScreening->gestational_diabetes_screening_date = $laboratory['gestationalDiabetes']['date'] ?? null;
-            $maternityScreening->gestational_diabetes_result         = $laboratory['gestationalDiabetes']['result'] ?? null;
-            $maternityScreening->cbc_screening_date                  = $laboratory['cbc']['date'] ?? null;
-            $maternityScreening->cbc_result                          = $laboratory['cbc']['result'] ?? null;
-            $maternityScreening->given_iron                          = $laboratory['cbc']['givenIron'] ?? null;
+            $maternityScreening->gestational_diabetes_result = $normalize(
+                $laboratory['gestationalDiabetes']['result'] ?? null,
+                ['positive', 'negative']
+            );
+
+            $maternityScreening->cbc_screening_date = $laboratory['cbc']['date'] ?? null;
+            $maternityScreening->cbc_result = $normalize(
+                $laboratory['cbc']['result'] ?? null,
+                ['with anemia', 'without anemia']
+            );
+
+            // Given iron – only yes/no are valid
+            $maternityScreening->given_iron = $normalize(
+                $laboratory['cbc']['givenIron'] ?? null,
+                ['yes', 'no']
+            );
+
 
             $maternityScreening->save();
 

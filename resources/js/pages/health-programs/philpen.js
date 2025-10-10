@@ -1,3 +1,364 @@
+// --- Main Modal Container ---
+const createPhilpenRecordModalEl = document.getElementById('create-philpen-record-modal');
+
+const residentData = window.enrolledResident.resident;
+console.log(residentData);
+// --- Progress Bar Step Indicators ---
+const stepProgress1 = document.getElementById('step-progress-1');
+const stepProgress2 = document.getElementById('step-progress-2');
+const stepProgress3 = document.getElementById('step-progress-3');
+const stepProgress4 = document.getElementById('step-progress-4');
+const stepProgress5 = document.getElementById('step-progress-5');
+const stepProgress6 = document.getElementById('step-progress-6');
+const stepProgress7 = document.getElementById('step-progress-7');
+const progressSteps = [stepProgress1, stepProgress2, stepProgress3, stepProgress4, stepProgress5, stepProgress6, stepProgress7];
+
+// --- Form Step Content Divs ---
+const step1 = document.getElementById('step-1');
+const step2 = document.getElementById('step-2');
+const step3 = document.getElementById('step-3');
+const step4 = document.getElementById('step-4');
+const step5 = document.getElementById('step-5');
+const step6 = document.getElementById('step-6');
+const step7 = document.getElementById('step-7');
+const formSteps = [step1, step2, step3, step4, step5, step6,step7];
+
+// --- Navigation Buttons ---
+const cancelPhilpenButton = document.getElementById('cancel-philpen-button');
+const prevPhilpenButton = document.getElementById('prev-philpen-button');
+const skipPhilpenButton = document.getElementById('skip-philpen-button');
+const nextPhilpenButton = document.getElementById('next-philpen-button');
+const createPhilpenRecordButton = document.getElementById('create-philpen-record-button');
+
+// Patient's Information
+const residentFirstName = document.getElementById('residentFirstName');
+const residentLastName = document.getElementById('residentLastName');
+const residentMiddleName = document.getElementById('residentMiddleName');
+const suffixDropdown = document.getElementById('suffixDropdown');
+const suffixDropdownMenu = document.getElementById('suffixDropdownMenu');
+const residentContactNo = document.getElementById('residentContactNo');
+const residentSexDropdown = document.getElementById('residentSexDropdown');
+const residentSexDropdownMenu = document.getElementById('residentSexDropdownMenu');
+const residentBirthdate = document.getElementById('residentBirthdate');
+const residentAge = document.getElementById('residentAge');
+const completeAddress = document.getElementById('completeAddress');
+const civilStatusDropdown = document.getElementById('civilStatusDropdown');
+const civilStatusDropdownMenu = document.getElementById('civilStatusDropdownMenu');
+const religionDropdown = document.getElementById('religionDropdown');
+const religionDropdownMenu = document.getElementById('religionDropdownMenu');
+const ethnicityDropdown = document.getElementById('ethnicityDropdown');
+const ethnicityDropdownMenu = document.getElementById('ethnicityDropdownMenu');
+const employmentStatusDropdown = document.getElementById('employmentStatusDropdown');
+const employmentStatusDropdownMenu = document.getElementById('employmentStatusDropdownMenu');
+const pwdStatusDropdown = document.getElementById('pwdStatusDropdown');
+const pwdStatusDropdownMenu = document.getElementById('pwdStatusDropdownMenu');
+const pwdIdInput = document.getElementById('pwdIdInput');
+const indigenousStatusDropdown = document.getElementById('indigenousStatusDropdown');
+const indigenousStatusDropdownMenu = document.getElementById('indigenousStatusDropdownMenu');
+const philHealthNo = document.getElementById('philHealthNo');
+
+//assess for redflags
+const chestPainCheckbox = document.getElementById('checkbox-chest-pain');
+const breathingDifficultyCheckbox = document.getElementById('checkbox-breathing-difficulty');
+const lossOfConsciousnessCheckbox = document.getElementById('checkbox-loss-of-consciousness');
+const numbArmCheckbox = document.getElementById('checkbox-numb-arm');
+const selfHarmCheckbox = document.getElementById('checkbox-self-harm');
+const aggressiveBehaviorCheckbox = document.getElementById('checkbox-aggressive-behavior');
+const severeInjuriesCheckbox = document.getElementById('checkbox-severe-injuries');
+const slurredSpeechCheckbox = document.getElementById('checkbox-slurred-speech');
+const facialAsymmetryCheckbox = document.getElementById('checkbox-facial-asymmetry');
+const chestRetractionsCheckbox = document.getElementById('checkbox-chest-retractions');
+const seizureCheckbox = document.getElementById('checkbox-seizure');
+const disorientedCheckbox = document.getElementById('checkbox-disoriented');
+const eyeInjuryCheckbox = document.getElementById('checkbox-eye-injury');
+
+
+//medical history
+const hypertensionCheckbox = document.getElementById('medical-history-hypertension');
+const heartDiseasesCheckbox = document.getElementById('medical-history-heart-diseases');
+const copdCheckbox = document.getElementById('medical-history-copd');
+const surgicalHistoryCheckbox = document.getElementById('medical-history-surgical');
+const allergiesCheckbox = document.getElementById('medical-history-allergies');
+const diabetesCheckbox = document.getElementById('medical-history-diabetes');
+const cancerCheckbox = document.getElementById('medical-history-cancer');
+const asthmaCheckbox = document.getElementById('medical-history-asthma');
+const kidneyDisordersCheckbox = document.getElementById('medical-history-kidney-disorders');
+const visionProblemsCheckbox = document.getElementById('medical-history-vision-problems');
+const thyroidDisordersCheckbox = document.getElementById('medical-history-thyroid-disorders');
+const mentalDisordersCheckbox = document.getElementById('medical-history-mental-disorders');
+
+//family history
+const familyHypertensionCheckbox = document.getElementById('family-history-hypertension');
+const familyHeartDiseasesCheckbox = document.getElementById('family-history-heart-diseases');
+const familyCopdCheckbox = document.getElementById('family-history-copd');
+const familyTuberculosisCheckbox = document.getElementById('family-history-tuberculosis');
+const familyStrokeCheckbox = document.getElementById('family-history-stroke');
+const familyDiabetesCheckbox = document.getElementById('family-history-diabetes');
+const familyCancerCheckbox = document.getElementById('family-history-cancer');
+const familyAsthmaCheckbox = document.getElementById('family-history-asthma');
+const familyKidneyDisordersCheckbox = document.getElementById('family-history-kidney-disorders');
+const familyCoronaryDiseaseCheckbox = document.getElementById('family-history-coronary-disease');
+const familyMentalDisordersCheckbox = document.getElementById('family-history-mental-disorders');
+
+//NCD Risk Factors
+const tobaccoStatusSelect = document.getElementById('tobaccoStatusSelect');
+const alcoholIntakeDropdown = document.getElementById('alcoholIntakeDropdown');
+const alcoholNumDropdown = document.getElementById('alcoholNumDropdown');
+const caffeineDropdown = document.getElementById('caffeineDropdown');
+const nutritionDropdown = document.getElementById('nutritionDropdown');
+const physicalActivityDropdown = document.getElementById('physicalActivityDropdown');
+const weightInput = document.getElementById('weightInput');
+const heightInput = document.getElementById('heightInput');
+const bmiInput = document.getElementById('bmiInput');
+const waistCircumferenceInput = document.getElementById('waistCircumferenceInput');
+const systolicInput = document.getElementById('systolicInput');
+const diastolicInput = document.getElementById('diastolicInput');
+
+
+//
+let currentConsultationId = null;
+let currentStep = 0;
+
+
+const modalOptions = {
+    placement: 'center-center',
+    backdrop: 'static',
+    closable: false,
+};
+
+const createPhilpenRecordModal = new Modal(createPhilpenRecordModalEl, modalOptions);
+const updateButtons = document.querySelectorAll('.js-update-consultation-btn');
+
+
+// --- Helper Functions ---
+function setDropdownValue(buttonElement, textValue) {
+    if (!buttonElement || !textValue) return;
+
+    const textNode = Array.from(buttonElement.childNodes).find(node => node.nodeType === Node.TEXT_NODE);
+    if (textNode) {
+        const capitalizedValue = String(textValue).charAt(0).toUpperCase() + String(textValue).slice(1);
+        textNode.nodeValue = ` ${capitalizedValue} `;
+    }
+}
+
+function populateResidentInfo(residentData) {
+    residentFirstName.value = residentData.firstName || '';
+    residentLastName.value = residentData.lastName || '';
+    residentMiddleName.value = residentData.middleName || '';
+    residentContactNo.value = residentData.contact_no || '';
+    residentBirthdate.value = residentData.birthdate || '';
+    pwdIdInput.value = residentData.pwd_id || '';
+
+    if (residentData.birthdate) {
+        const birthDate = new Date(residentData.birthdate);
+        const today = new Date();
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const m = today.getMonth() - birthDate.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) age--;
+        residentAge.value = age;
+    } else {
+        residentAge.value = '';
+    }
+
+    if (residentData.family?.household?.purok?.barangay) {
+        completeAddress.value = `${residentData.family.household.purok.name}, ${residentData.family.household.purok.barangay.name}`;
+    } else {
+        completeAddress.value = 'Address not available';
+    }
+
+    setDropdownValue(suffixDropdown, residentData.suffix || 'Select');
+    setDropdownValue(residentSexDropdown, residentData.sex || 'Select Sex');
+    setDropdownValue(civilStatusDropdown, residentData.civil_status || 'Select Civil Status');
+    setDropdownValue(religionDropdown, residentData.religion || 'Select Religion');
+    setDropdownValue(ethnicityDropdown, residentData.ethnicity || 'Select Ethnicity');
+    setDropdownValue(employmentStatusDropdown, residentData.employment_status || 'Select Status');
+    setDropdownValue(pwdStatusDropdown, residentData.is_pwd ? 'Yes' : 'No');
+    setDropdownValue(indigenousStatusDropdown, residentData.is_indigenous ? 'Yes' : 'No');
+}
+
+
+nutritionDropdown.addEventListener('change', function () {
+    const value = this.value;
+
+    if (value === '1') {
+        alert('Please give a lifestyle modification advice using the Nutrition Practice Guidelines for Health Professionals in the Primary Care Screening.');
+    }
+});
+
+alcoholIntakeDropdown.addEventListener('change', function () {
+    const intakeValue = this.value;
+
+    if (intakeValue === '2') {
+        // No alcohol intake
+        alcoholNumDropdown.disabled = true;
+        alcoholNumDropdown.value = 'Select Frequency';
+        alert('Great! Please congratulate the patient — they are at lower risk.');
+    } 
+    else if (intakeValue === '1') {
+        // Yes, enable frequency selection
+        alcoholNumDropdown.disabled = false;
+    } 
+    else {
+        // Reset for "Select"
+        alcoholNumDropdown.disabled = true;
+        alcoholNumDropdown.value = 'Select Frequency';
+    }
+});
+
+physicalActivityDropdown.addEventListener('change', function () {
+    const value = this.value;
+
+    if (value === '0') {
+        alert('Please give the patient a lifestyle modification advice using the Healthy Lifestyle Module as a guide.');
+    }
+});
+
+alcoholNumDropdown.addEventListener('change', function () {
+    const frequencyValue = this.value;
+    const patientSex = residentData.sex;
+    // Only check when enabled and a valid selection is made
+    if (!alcoholNumDropdown.disabled && frequencyValue) {
+        if (patientSex === 'female' && (frequencyValue === '4' || frequencyValue === '5')) {
+            alert('Advise the patient: They are in a higher-risk category for harmful alcohol use.');
+        } 
+        else if (patientSex === 'male' && (frequencyValue === '5')) {
+            alert('Advise the patient: They are in a higher-risk category for harmful alcohol use.');
+        }
+    }
+});
+
+tobaccoStatusSelect.addEventListener('change', function () {
+    const value = this.value.trim().toLowerCase();
+
+    if (value && value !== 'never used' && value !== 'select status') {
+        alert('Reminder: Please follow the tobacco cessation protocol.');
+    }
+});
+
+function goToStep(stepIndex) {
+    const currentStepEl = formSteps[currentStep];
+    const targetStepEl = formSteps[stepIndex];
+    const direction = stepIndex > currentStep ? 1 : -1; // 1 for next, -1 for prev
+
+    // Position the target step off-screen
+    targetStepEl.classList.remove('hidden');
+    targetStepEl.style.transform = `translateX(${direction * 100}%)`;
+
+    // Animate the steps
+    requestAnimationFrame(() => {
+        // Slide the current step out
+        currentStepEl.style.transform = `translateX(${-direction * 100}%)`;
+        // Slide the target step in
+        targetStepEl.style.transform = 'translateX(0%)';
+    });
+
+    // After animation, hide the old step and clean up transforms
+    setTimeout(() => {
+        currentStepEl.classList.add('hidden');
+        currentStepEl.style.transform = ''; // Reset transform
+    }, 500); // This duration should match your CSS transition duration
+
+    currentStep = stepIndex;
+}
+
+function applyStyling() {
+    // This function now only handles the progress bar and buttons.
+    // The showing/hiding of steps is handled by goToStep.
+
+    // Hide all labels first
+    progressSteps.forEach(step => {
+        const labelSpan = step.querySelector('.text-start');
+        if (labelSpan) labelSpan.classList.add('hidden');
+    });
+
+    // Update progress bar styles
+    progressSteps.forEach((step, index) => {
+        step.classList.remove('text-blue-600', 'dark:text-blue-500', 'after:border-blue-600', 'after:dark:border-blue-500');
+        const numSpan = step.querySelector('span:first-child span');
+        if (numSpan) {
+            numSpan.classList.remove('bg-nav_active', 'text-mainblue');
+            numSpan.classList.add('bg-gray-100', 'text-main_font');
+        }
+
+        if (index <= currentStep) {
+            step.classList.add('text-blue-600', 'dark:text-blue-500');
+            if (numSpan) {
+                numSpan.classList.remove('bg-gray-100', 'text-main_font');
+                numSpan.classList.add('bg-nav_active', 'text-mainblue');
+            }
+            if (index < currentStep) {
+                step.classList.add('after:border-blue-600', 'after:dark:border-blue-500');
+            }
+        }
+    });
+    
+    // Show the label for the active step
+    const currentLabel = progressSteps[currentStep].querySelector('.text-start');
+    if (currentLabel) currentLabel.classList.remove('hidden');
+
+    // Manage button visibility
+    prevPhilpenButton.style.display = currentStep === 0 ? 'none' : 'block';
+    cancelPhilpenButton.style.display = currentStep > 0 ? 'none' : 'block';
+    nextPhilpenButton.style.display = currentStep === formSteps.length - 1 ? 'none' : 'block';
+    createPhilpenRecordButton.style.display = currentStep === formSteps.length - 1 ? 'block' : 'none';
+}
+
+function updateUI(direction) {
+    const nextStep = direction === 'next' ? currentStep + 1 : currentStep - 1;
+    if (nextStep >= 0 && nextStep < formSteps.length) {
+        goToStep(nextStep); // Animate the step change
+        applyStyling();     // Update the progress bar and buttons
+    }
+}
+
+// --- Event Listeners ---
+updateButtons.forEach(button => {
+    button.addEventListener('click', async () => {
+        const consultationId = button.dataset.consultationId;
+        currentConsultationId = consultationId;
+        
+        // Reset to the first step visually without animation
+        formSteps.forEach((step, index) => {
+            step.classList.toggle('hidden', index !== 0);
+            step.style.transform = '';
+        });
+        currentStep = 0; 
+
+        populateResidentInfo(residentData);
+        applyStyling(); // Apply styling for the initial state
+        createPhilpenRecordModal.show();
+    });
+});
+
+nextPhilpenButton.addEventListener('click', () => updateUI('next'));
+prevPhilpenButton.addEventListener('click', () => updateUI('prev'));
+
+// Set the initial state when the script loads by hiding all but the first step
+formSteps.forEach((step, index) => {
+    step.classList.toggle('hidden', index !== 0);
+});
+
+// --- Red Flag Checkbox Listeners ---
+const redFlagCheckboxes = [
+    chestPainCheckbox, breathingDifficultyCheckbox, lossOfConsciousnessCheckbox,
+    numbArmCheckbox, selfHarmCheckbox, aggressiveBehaviorCheckbox,
+    severeInjuriesCheckbox, slurredSpeechCheckbox, facialAsymmetryCheckbox,
+    chestRetractionsCheckbox, seizureCheckbox, disorientedCheckbox, eyeInjuryCheckbox
+];
+
+redFlagCheckboxes.forEach(checkbox => {
+    checkbox.addEventListener('change', () => {
+        if (checkbox.checked) {
+            alert('Please refer the patient immediately to a physician for further management or referral to the next level of care.');
+        }
+    });
+});
+
+
+applyStyling();
+
+
+/*
 const addResidentModalEl = document.getElementById('add-resident-modal');
 //form 1 inputs
 // --- Row 1: Name ---
@@ -32,46 +393,7 @@ const indigenousStatusDropdown = document.getElementById('indigenousStatusDropdo
 const emergencyContactNo = document.getElementById('emergencyContactNo');
 
 //form 2 input fields
-const chestPainCheckbox = document.getElementById('checkbox-chest-pain');
-const breathingDifficultyCheckbox = document.getElementById('checkbox-breathing-difficulty');
-const lossOfConsciousnessCheckbox = document.getElementById('checkbox-loss-of-consciousness');
-const numbArmCheckbox = document.getElementById('checkbox-numb-arm');
-const selfHarmCheckbox = document.getElementById('checkbox-self-harm');
-const aggressiveBehaviorCheckbox = document.getElementById('checkbox-aggressive-behavior');
-const severeInjuriesCheckbox = document.getElementById('checkbox-severe-injuries');
-const slurredSpeechCheckbox = document.getElementById('checkbox-slurred-speech');
-const facialAsymmetryCheckbox = document.getElementById('checkbox-facial-asymmetry');
-const chestRetractionsCheckbox = document.getElementById('checkbox-chest-retractions');
-const seizureCheckbox = document.getElementById('checkbox-seizure');
-const disorientedCheckbox = document.getElementById('checkbox-disoriented');
-const eyeInjuryCheckbox = document.getElementById('checkbox-eye-injury');
 
-//form 3 input fields
-const hypertensionCheckbox = document.getElementById('medical-history-hypertension');
-const heartDiseasesCheckbox = document.getElementById('medical-history-heart-diseases');
-const copdCheckbox = document.getElementById('medical-history-copd');
-const surgicalHistoryCheckbox = document.getElementById('medical-history-surgical');
-const allergiesCheckbox = document.getElementById('medical-history-allergies');
-const diabetesCheckbox = document.getElementById('medical-history-diabetes');
-const cancerCheckbox = document.getElementById('medical-history-cancer');
-const asthmaCheckbox = document.getElementById('medical-history-asthma');
-const kidneyDisordersCheckbox = document.getElementById('medical-history-kidney-disorders');
-const visionProblemsCheckbox = document.getElementById('medical-history-vision-problems');
-const thyroidDisordersCheckbox = document.getElementById('medical-history-thyroid-disorders');
-const mentalDisordersCheckbox = document.getElementById('medical-history-mental-disorders');
-
-//form 4 input fields
-const familyHypertensionCheckbox = document.getElementById('family-history-hypertension');
-const familyHeartDiseasesCheckbox = document.getElementById('family-history-heart-diseases');
-const familyCopdCheckbox = document.getElementById('family-history-copd');
-const familyTuberculosisCheckbox = document.getElementById('family-history-tuberculosis');
-const familyStrokeCheckbox = document.getElementById('family-history-stroke');
-const familyDiabetesCheckbox = document.getElementById('family-history-diabetes');
-const familyCancerCheckbox = document.getElementById('family-history-cancer');
-const familyAsthmaCheckbox = document.getElementById('family-history-asthma');
-const familyKidneyDisordersCheckbox = document.getElementById('family-history-kidney-disorders');
-const familyCoronaryDiseaseCheckbox = document.getElementById('family-history-coronary-disease');
-const familyMentalDisordersCheckbox = document.getElementById('family-history-mental-disorders');
 
 
 //form 5 input fields
@@ -150,96 +472,8 @@ const openAddResidentBtn = document.getElementById('openAddResidentModal');
 const confirmResidentModal = new Modal(confirmResidentModalEl,{backdrop: 'static',closable: true,});
 const addResidentModal = new Modal(addResidentModalEl,{backdrop: 'static',closable: true,});
 
-let currentResidentPayload = null;
-
-let chosenFamily = null;
-let familiesData = [];
-// --- Main Modal Element ---
-const chooseFamilyModalEl = document.getElementById('chooseFamilyModal');
-
-// --- Search and Filter Elements ---
-const familySearchInput = document.getElementById('family-search');
-const purokFilterBtn = document.getElementById('purokFilterDropdownButton');
-const purokFilterMenu = document.getElementById('purokFilterDropdownMenu');
-
-// --- Table Element ---
-const chooseFamilyTableBody = document.getElementById('chooseFamilyTableBody');
-
-// --- Action Buttons ---
-const cancelChooseFamilyBtn = document.getElementById('cancelChooseFamily');
-const confirmChooseFamilyBtn = document.getElementById('confirmChooseFamilyBtn');
 
 
-const chooseFamilyModal = new Modal(chooseFamilyModalEl);
-
-const successModalEl = document.getElementById('success-modal');
-const successMesageHeader = document.getElementById('success-msg-head');
-const successMessage = document.getElementById('success-message');
-const closeSuccessModalButton = document.getElementById('close-success-modal-button');
-
-const successModal = new Modal(successModalEl,{backdrop: 'static',closable: true,});
-
-// Select all the option buttons inside the dropdown menu
-const suffixOptions = document.querySelectorAll('#suffixDropdownMenu button');
-
-function initializeDropdown(buttonId) {
-    const dropdownButton = document.getElementById(buttonId);
-    const dropdownMenu = document.getElementById(buttonId + 'Menu');
-
-    // Safety check to ensure the elements exist before proceeding
-    if (!dropdownButton || !dropdownMenu) {
-        console.error('Dropdown elements not found for ID:', buttonId);
-        return;
-    }
-
-    const options = dropdownMenu.querySelectorAll('button');
-
-    options.forEach(option => {
-        option.addEventListener('click', function () {
-            // Get the visible text from the clicked option (e.g., "Yes", "1-5 times a month")
-            const selectedText = this.textContent;
-
-            // Get the main button's first child, which is its text node
-            const buttonTextNode = dropdownButton.childNodes[0];
-
-            // Update the text, adding a space to separate it from the SVG icon
-            buttonTextNode.nodeValue = selectedText.trim() + ' ';
-
-            // Also, store the data-value on the button itself for easy access later
-            dropdownButton.setAttribute('data-selected-value', this.getAttribute('data-value'));
-        });
-    });
-}
-
-// --- Initialize All Your Dropdowns ---
-initializeDropdown('tobaccoDropdown');
-initializeDropdown('alcoholDropdown');
-initializeDropdown('alcoholNumDropdown');
-initializeDropdown('caffeineDropdown');
-
-// Loop through each option button
-suffixOptions.forEach(option => {
-    // Add a click event listener to it
-    option.addEventListener('click', function () {
-        // Get the value from the `data-value` attribute
-        const selectedValue = this.getAttribute('data-value');
-
-        // Get the main button's first child, which is its text node
-        const buttonTextNode = suffixDropdown.childNodes[0];
-
-        // Update the text node's value, preserving the SVG icon
-        // If selectedValue is empty (for a "Clear" button), reset to "Select"
-        buttonTextNode.nodeValue = selectedValue ? selectedValue + ' ' : 'Select ';
-    });
-});
-
-openAddResidentBtn.addEventListener('click', function () {
-    addResidentModal.show();
-});
-
-cancelButton.addEventListener('click', function () {
-    addResidentModal.hide();
-});
 // A function to update the UI based on the current step
 function updateUI(direction) {
     // First, handle the transition out of the current form step
@@ -274,69 +508,6 @@ function updateUI(direction) {
     }, 500); // The duration of the CSS transition
 }
 
-// A separate function to handle all UI styling updates
-function applyStyling() {
-    // Hide all form steps and labels
-    formSteps.forEach(step => step.classList.add('hidden'));
-    progressSteps.forEach(step => {
-        const labelSpan = step.querySelector('.text-start');
-        if (labelSpan) {
-            labelSpan.classList.add('hidden');
-        }
-    });
-
-    // Show the current form step
-    formSteps[currentStep].classList.remove('hidden');
-
-    // Update progress bar styles for completed and current steps
-    progressSteps.forEach((step, index) => {
-        // Reset all progress step styles
-        step.classList.remove('text-blue-600', 'dark:text-blue-500', 'after:border-blue-600', 'after:dark:border-blue-500');
-        const numSpan = step.querySelector('span:first-child span');
-        if (numSpan) {
-            numSpan.classList.remove('bg-nav_active', 'text-mainblue');
-            numSpan.classList.add('bg-gray-100', 'text-main_font');
-        }
-
-        if (index <= currentStep) {
-            // Apply active styles to steps up to the current one
-            step.classList.add('text-blue-600', 'dark:text-blue-500');
-            if (numSpan) {
-                numSpan.classList.remove('bg-gray-100', 'text-main_font');
-                numSpan.classList.add('bg-nav_active', 'text-mainblue');
-            }
-            if (index < currentStep) {
-                step.classList.add('after:border-blue-600', 'after:dark:border-blue-500');
-            }
-        }
-    });
-
-    // Show ONLY the label for the active step
-    const currentLabel = progressSteps[currentStep].querySelector('.text-start');
-    if (currentLabel) {
-        currentLabel.classList.remove('hidden');
-    }
-
-    // Manage button visibility
-    prevButton.style.display = currentStep === 0 ? 'none' : 'block';
-    cancelButton.style.display = currentStep > 0 ? 'none' : 'block';
-    nextButton.style.display = currentStep === formSteps.length - 1 ? 'none' : 'block';
-    addResidentButtonSubmit.style.display = currentStep === formSteps.length - 1 ? 'block' : 'none';
-}
-
-
-// Event listeners
-nextButton.addEventListener('click', () => {
-    if (currentStep < formSteps.length - 1) {
-        updateUI('next');
-    }
-});
-
-prevButton.addEventListener('click', () => {
-    if (currentStep > 0) {
-        updateUI('prev');
-    }
-});
 
 function validateForm() {
     // --- CHECK ALL REQUIRED TEXT INPUTS ---
@@ -418,66 +589,6 @@ function setupDropdownValidation(buttonElement) {
     });
 }
 
-// An array of all dropdown buttons that need validation
-const dropdownsToMonitor = [
-    residentSexDropdown,
-    familyDropdown,
-    civilStatusDropdown,
-    religionDropdown,
-    ethnicityDropdown,
-    employmentStatusDropdown,
-    pwdStatusDropdown,
-    indigenousStatusDropdown
-];
-
-// Attach the validation logic to each required dropdown
-dropdownsToMonitor.forEach(setupDropdownValidation);
-
-function calculateAge(birthdateString) {
-    // If the input is empty, return an empty string to clear the age field
-    if (!birthdateString) {
-        return '';
-    }
-
-    const today = new Date();
-    const birthDate = new Date(birthdateString);
-
-    // Check for an invalid date (e.g., user types "abc")
-    if (isNaN(birthDate.getTime())) {
-        return '';
-    }
-
-    // Check if the selected date is in the future
-    if (birthDate > today) {
-        // You can also show an error message here if you prefer
-        return 0;
-    }
-
-    // Calculate the initial age difference in years
-    let age = today.getFullYear() - birthDate.getFullYear();
-
-    // Adjust the age if the birthday hasn't occurred yet this year
-    const monthDifference = today.getMonth() - birthDate.getMonth();
-    if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
-        age--;
-    }
-
-    return age;
-}
-
-// --- Event Listener ---
-// This listens for the 'changeDate' event from the Flowbite datepicker.
-// It will trigger the calculation whenever a date is selected.
-residentBirthdate.addEventListener('changeDate', (event) => {
-    // Get the selected date from the input's value
-    const birthdateValue = residentBirthdate.value;
-
-    // Calculate the age using the helper function
-    const age = calculateAge(birthdateValue);
-
-    // Update the 'Age' input field with the result
-    residentAge.value = age;
-});
 
 
 addResidentButtonSubmit.addEventListener('click', function () {
@@ -690,3 +801,5 @@ closeSuccessModalButton.addEventListener('click', function(){
     window.location.reload();
 });
 
+
+*/

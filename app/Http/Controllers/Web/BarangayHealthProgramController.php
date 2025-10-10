@@ -101,6 +101,8 @@ class BarangayHealthProgramController extends Controller
         }else if($enrolledResident->program && $enrolledResident->program->category === 'family_planning_tcl'){
             $enrolledResident->load('famPlanRecord');
 
+        }else if($enrolledResident->program && $enrolledResident->program->category === 'philpen_tcl'){
+             $enrolledResident->load('consultations.ncdRiskFactors');
         }
 
         return view('midwife.enrolled-resident', compact('enrolledResident'));
@@ -135,6 +137,51 @@ class BarangayHealthProgramController extends Controller
         return response()->json($programs);
     }
 
+    public function updateFamPlan(Request $request, $enrolledResident)
+    {
+        // Validate input
+        $validated = $request->validate([
+            'client_type' => 'required|string|max:255',
+            'source' => 'required|string|max:255',
+            'previous_method' => 'nullable|string|max:255',
+            'dropout_date' => 'nullable|date',
+            'dropout_reason' => 'nullable|string|max:255',
+        ]);
+
+        // Find the existing family planning data for this enrolled resident
+        $familyPlanning = FamilyPlanningData::where('enrolled_resident_id', $enrolledResident)->first();
+
+        if (!$familyPlanning) {
+            return response()->json([
+                'message' => 'Family planning record not found for the given enrolled resident.',
+                'result' => 'error'
+            ], 404);
+        }
+
+        // Update with the validated data
+        $familyPlanning->update($validated);
+
+        // If dropout_date is not null → mark as terminated
+        if (!empty($validated['dropout_date'])) {
+            $enrolledResidentModel = $familyPlanning->enrolledResident;
+
+            if ($enrolledResidentModel) {
+                // Update the status of the enrolled resident
+                $enrolledResidentModel->update(['status' => 'terminated']);
+
+                // Update all pending consultations to terminated
+                $enrolledResidentModel->consultations()
+                    ->where('status', 'pending')
+                    ->update(['status' => 'terminated']);
+            }
+        }
+
+        return response()->json([
+            'message' => 'Family planning record updated successfully.',
+            'result' => 'success',
+            'updated_record' => $familyPlanning
+        ]);
+    }
 
     public function enrollResident(Request $request, $healthProgramId, $residentId)
     {
@@ -157,6 +204,7 @@ class BarangayHealthProgramController extends Controller
         // Check if already enrolled
         $alreadyEnrolled = EnrolledResident::where('program_id', $healthProgramId)
             ->where('resident_id', $residentId)
+            ->where('status', 'pending')
             ->exists();
 
         if ($alreadyEnrolled) {
@@ -215,9 +263,8 @@ class BarangayHealthProgramController extends Controller
         ]);
     }
 
-    protected function createConsultationSchedules($residentId, $programId, $enrolledResident)
+   protected function createConsultationSchedules($residentId, $programId, $enrolledResident)
     {
-        // Fetch program fields in order
         $fields = ProgramSchedule::where('program_id', $programId)
             ->where('status', 'active')
             ->orderBy('order', 'asc')
@@ -229,23 +276,29 @@ class BarangayHealthProgramController extends Controller
         }
 
         $consultations = [];
-        $currentDate = Carbon::now(); // start from today, you can adjust
+        $currentDate = Carbon::now(); // start from today
+        $isFirst = true;
 
         foreach ($fields as $field) {
-            $currentDate = $currentDate->copy()->addDays($field->interval_days);
+            // Only add interval for subsequent consultations
+            if (!$isFirst) {
+                $currentDate = $currentDate->copy()->addDays($field->interval_days);
+            }
 
             $consultations[] = [
                 'resident_id' => $residentId,
-                'enrolled_resident_id'    => $enrolledResident,
-                'consultation_date'  => $currentDate,
-                'status'             => 'pending',
+                'enrolled_resident_id' => $enrolledResident,
+                'consultation_date' => $currentDate,
+                'status' => 'pending',
                 'consultation_title' => $field->title,
                 'schedule_extension_days' => $field->extension_days,
-                'remarks'            => null,
-                'updated_by'         => auth()->id(),
-                'created_at'         => now(),
-                'updated_at'         => now(),
+                'remarks' => null,
+                'updated_by' => auth()->id(),
+                'created_at' => now(),
+                'updated_at' => now(),
             ];
+
+            $isFirst = false;
         }
 
         Consultation::insert($consultations);
@@ -256,4 +309,5 @@ class BarangayHealthProgramController extends Controller
             'count' => count($consultations),
         ]);
     }
+
 }
