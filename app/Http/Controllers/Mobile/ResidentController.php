@@ -55,11 +55,7 @@ class ResidentController extends Controller
 
         $resident->load([
             'family.household.purok',
-            'healthSigns',
-            'medicalHistory',
-            'familyHistory',
-            'ncdRiskFactor',
-            'riskAssessment',
+            'basicHealthRecord',
         ]);
 
         return response()->json([
