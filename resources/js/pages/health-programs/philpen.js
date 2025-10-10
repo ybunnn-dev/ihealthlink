@@ -149,6 +149,13 @@ const oralHypoglycemicSelect = document.getElementById('oralHypoglycemicSelect')
 const followUpDate = document.getElementById('followUpDate');
 const remarksTextarea = document.getElementById('remarksTextarea');
 
+// --- PhilPEN Update Confirmation Modal Elements ---
+
+const confirmUpdatePhilpenModalEl = document.getElementById('confirm-update-philpen-modal');
+const residentNameToConfirm = document.getElementById('update-philpen-resident-name-confirm');
+const confirmUpdateCheckbox = document.getElementById('confirm-update-philpen-checkbox');
+const cancelConfirmUpdateBtn = document.getElementById('cancel-confirm-update-philpen');
+const confirmUpdatePhilpenBtn = document.getElementById('confirm-update-philpen-btn');
 
 //
 let currentConsultationId = null;
@@ -162,6 +169,7 @@ const modalOptions = {
 };
 
 const createPhilpenRecordModal = new Modal(createPhilpenRecordModalEl, modalOptions);
+const confirmUpdatePhilpenModal = new Modal(confirmUpdatePhilpenModalEl,modalOptions);
 const updateButtons = document.querySelectorAll('.js-update-consultation-btn');
 
 
@@ -458,6 +466,7 @@ redFlagCheckboxes.forEach(checkbox => {
 
 function createPhilpenPayload() {
     const payload = {
+        consultation: currentConsultationId,
         patientInformation: {
             firstName: residentFirstName.value.trim(),
             lastName: residentLastName.value.trim(),
@@ -577,10 +586,55 @@ function createPhilpenPayload() {
 
     return payload;
 }
+createPhilpenRecordButton.addEventListener('click', function() {
+    
+    // Build full name safely
+    const { firstName, middleName, lastName, suffix } = residentData;
 
-createPhilpenRecordButton.addEventListener('click',function(){
+    const fullName = [
+        firstName,
+        middleName ? middleName : null,
+        lastName,
+        suffix ? suffix : null
+    ].filter(Boolean).join(' ');
+
+    residentNameToConfirm.textContent = fullName;
+
+    createPhilpenRecordModal.hide();
+    confirmUpdatePhilpenModal.show();
+
+});
+
+confirmUpdateCheckbox.addEventListener('change',function(){
+    confirmUpdatePhilpenBtn.disabled = !this.checked;
+});
+
+confirmUpdatePhilpenBtn.addEventListener('click', function() {
     const payload = createPhilpenPayload();
-    console.log(payload);
+
+    console.log('Payload before sending:', payload);
+
+    fetch('/barangay/health-programs/philpen/create', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify(payload)
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Server Response:', data);
+    })
+    .catch(error => console.error('Error:', error));
+});
+
+cancelConfirmUpdateBtn.addEventListener('click',function(){
+    createPhilpenRecordModal.show();
+    confirmUpdatePhilpenModal.hide();
+});
+cancelPhilpenButton.addEventListener('click',function(){
+    createPhilpenRecordModal.hide();
 });
 
 applyStyling();

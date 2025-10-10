@@ -281,5 +281,8 @@ Route::middleware([
 
     Route::post('/barangay/health-program/fam-plan/update/{enrolledResident}', [BarangayHealthProgramController::class, 'updateFamPlan']);
 
+    Route::post('/barangay/health-programs/philpen/create', [ConsultationController::class, 'createPhilpenData'])
+    ->name('barangay.health-programs.philpen.create');
+
 });
 
