@@ -4,94 +4,110 @@ const enrollFPResidentPurokFilter = document.getElementById('enrollFPResidentPur
 const enrollFPScanQRButton = document.getElementById('enroll-fp-scan-qr');
 const enrollFPResidentListContainer = document.getElementById('enrollFPResidentListContainer');
 let isPurokFilterPopulated = false;
-// --- Part 2: Form Field Elements (from previous context) ---
+const fpClientTypeInput = document.getElementById('fp_client_type');
+const fpSourceInput = document.getElementById('fp_source');
+const fpPreviousMethodInput = document.getElementById('fp_previous_method');
+const fpClientTypeButton = document.getElementById('fp_client_type_button');
+const fpSourceButton = document.getElementById('fp_source_button');
+const fpPreviousMethodButton = document.getElementById('fp_previous_method_button');
 const fpResidentNameInput = document.getElementById('fp_resident_name');
-const fpClientTypeSelect = document.getElementById('fp_client_type');
-const fpSourceSelect = document.getElementById('fp_source');
-const fpPreviousMethodSelect = document.getElementById('fp_previous_method');
-
 let selectedResidentId = null;
 let chosenResidentName = null;
-
 const selectedHighlightClasses = ['bg-sky-100', 'dark:bg-sky-800', 'border-sky-500'];
-// --- Family Planning Modal Wrapper ---
 const enrollFamilyPlanningModalEl = document.getElementById('enroll-family-planning-modal');
-
 const healthProgramId = parseInt(document.getElementById('hpdata').textContent.trim(), 10);
-// --- Modal Header Elements ---
 const fpModalTitle = document.getElementById('fp-modal-title');
 const fpModalSubtitle = document.getElementById('fp-modal-subtitle');
-
-// --- Modal Step Containers ---
 const fpStep1 = document.getElementById('fp-step-1');
 const fpStep2 = document.getElementById('fp-step-2');
 const fpSteps = [fpStep1, fpStep2];
-
-// --- Modal Footer Buttons ---
 const fpCancelBtn = document.getElementById('fpCancelBtn');
 const fpBackBtn = document.getElementById('fpBackBtn');
 const fpNextBtn = document.getElementById('fpNextBtn');
-
-// --- Button to open the modal ---
+const enrollFamilyConfirmationModalEl = document.getElementById('enroll-family-planning-confirmation-modal');
+const residentNameToConfirm = document.getElementById('fp-resident-name-confirm');
+const clientTypeConfirm = document.getElementById('fp-client-type-confirm');
+const sourceConfirm = document.getElementById('fp-source-confirm');
+const previousMethodConfirm = document.getElementById('fp-previous-method-confirm');
+const confirmCheckbox = document.getElementById('confirm-fp-enrollment-checkbox');
+const cancelConfirmBtn = document.getElementById('enroll-fp-confirmation-cancel-btn');
+const proceedConfirmBtn = document.getElementById('enroll-fp-confirmation-proceed-btn');
 const openEnrollFpModalBtn = document.getElementById('openEnrollFpModalBtn');
+const fpClientTypeLabel = document.getElementById('fp_client_type_label');
+const fpClientTypeDropdown = document.getElementById('fp_client_type_dropdown');
+const fpClientTypeOptions = document.getElementById('fp_client_type_options');
+const fpSourceLabel = document.getElementById('fp_source_label');
+const fpSourceDropdown = document.getElementById('fp_source_dropdown');
+const fpSourceOptions = document.getElementById('fp_source_options');
+const fpPreviousMethodLabel = document.getElementById('fp_previous_method_label');
+const fpPreviousMethodDropdown = document.getElementById('fp_previous_method_dropdown');
+const fpPreviousMethodOptions = document.getElementById('fp_previous_method_options');
 
-// === Modal Initialization ===
+
+
 const modalOptions = {
     placement: 'center-center',
     backdrop: 'static',
     closable: false,
 };
 const enrollFamilyPlanningModal = new Modal(enrollFamilyPlanningModalEl, modalOptions);
-
+const enrollFamilyPlanningConfirmationModal = new Modal(enrollFamilyConfirmationModalEl, modalOptions);
 // === Multi-Step Logic ===
 let fpCurrentStep = 0; // 0-based index
 const fpTotalSteps = fpSteps.length;
 
 
-// === Validation Logic ===
-const validateDropdowns = () => {
-    // --- DIAGNOSTIC LOGS: See the actual values ---
-    console.log("--- Checking Dropdown Values ---");
-    console.log("Client Type Value:", `'${fpClientTypeSelect.value}'`);
-    console.log("Source Value:", `'${fpSourceSelect.value}'`);
-    console.log("Previous Method Value:", `'${fpPreviousMethodSelect.value}'`);
-    console.log("-----------------------------");
-    // --- END DIAGNOSTIC ---
-
-    const isClientTypeValid = fpClientTypeSelect.value.trim() !== "";
-    const isSourceValid = fpSourceSelect.value.trim() !== "";
-    const isPreviousMethodValid = fpPreviousMethodSelect.value.trim() !== "";
-
-    if (isClientTypeValid && isSourceValid && isPreviousMethodValid) {
-        console.log('Validation successful: All dropdowns have a selected value.');
-        return true;
-    } else {
-        console.log('Validation failed: One or more dropdowns are missing a selection.');
-        if (!isClientTypeValid) {
-            console.log('- Client Type is not selected.');
-        }
-        if (!isSourceValid) {
-            console.log('- Source is not selected.');
-        }
-        if (!isPreviousMethodValid) {
-            console.log('- Previous Method is not selected.');
-        }
-        return false;
-    }
-};
-
 function populatePurokFilter(puroks) {
-    if (isPurokFilterPopulated || !puroks) return; // Exit if already populated or no puroks
+    if (isPurokFilterPopulated || !puroks) return;
 
+    const optionsContainer = document.getElementById('enrollFPResidentPurokFilter_options');
+    const label = document.getElementById('enrollFPResidentPurokFilter_label');
+    const hiddenInput = document.getElementById('enrollFPResidentPurokFilter');
+
+    optionsContainer.innerHTML = ''; // Clear existing options
+
+    // --- "All" Option (Filter by Purok) ---
+    const allOption = document.createElement('li');
+    allOption.innerHTML = `
+        <button type="button" 
+            class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" 
+            data-value="">
+            Filter by Purok
+        </button>
+    `;
+    optionsContainer.appendChild(allOption);
+
+    // --- Add each purok from the data ---
     puroks.forEach(purok => {
-        const option = document.createElement('option');
-        option.value = purok.id;
-        option.textContent = purok.name; // Assuming 'purok_name' from your backend
-        enrollFPResidentPurokFilter.appendChild(option);
+        const purokOption = document.createElement('li');
+        purokOption.innerHTML = `
+            <button type="button" 
+                class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                data-value="${purok.id}">
+                ${purok.name}
+            </button>
+        `;
+        optionsContainer.appendChild(purokOption);
     });
 
-    isPurokFilterPopulated = true; // Set flag to true after populating
+    // --- Handle selection ---
+    optionsContainer.addEventListener('click', (event) => {
+        const button = event.target.closest('button[data-value]');
+        if (!button) return;
+
+        const selectedValue = button.dataset.value;
+        const selectedText = button.textContent.trim();
+
+        label.textContent = selectedText;
+        hiddenInput.value = selectedValue;
+
+        // Optionally trigger a filtering function here
+        // filterResidentsByPurok(selectedValue);
+    });
+
+    isPurokFilterPopulated = true;
 }
+
 
 function resetModalState() {
     // 1. Reset inputs
@@ -234,11 +250,6 @@ const fpUpdateButtonsAndText = () => {
     }
 };
 
-
-fpClientTypeSelect.addEventListener('change', validateDropdowns);
-fpSourceSelect.addEventListener('change', validateDropdowns);
-fpPreviousMethodSelect.addEventListener('change', validateDropdowns);
-
 // === Event Listeners ===
 if (openEnrollFpModalBtn) {
     openEnrollFpModalBtn.addEventListener('click', function () {
@@ -256,24 +267,204 @@ if (fpCancelBtn) {
 
 if (fpNextBtn) {
     fpNextBtn.addEventListener('click', () => {
-        if (fpCurrentStep < fpTotalSteps - 1) {
+        // This assumes 'fpCurrentStep', 'fpTotalSteps', 'fpGoToStep' are defined elsewhere
+        if (fpCurrentStep < fpTotalSteps - 1) { 
             fpNextBtn.disabled = true;
             fpGoToStep(fpCurrentStep + 1);
         } else {
             // This is the final step, handle the form submission
-            console.log('Enrollment form submitted!');
-            // enrollFamilyPlanningModal.hide(); // Optionally hide modal on submission
+            console.log('Final step reached. Populating confirmation modal...');
+
+            // --- CORRECTED CODE ---
+            // Get the text from the label spans of the custom dropdowns.
+            // This also assumes 'residentNameConfirm', 'clientTypeConfirm', 'sourceConfirm', 
+            // and 'previousMethodConfirm' are defined element variables for your confirmation modal.
+
+            residentNameToConfirm.textContent = fpResidentNameInput.value;
+            clientTypeConfirm.textContent = fpClientTypeLabel.textContent;
+            sourceConfirm.textContent = fpSourceLabel.textContent;
+            previousMethodConfirm.textContent = fpPreviousMethodLabel.textContent;
+            
+            // --- End of corrected code ---
+
+            // Now, show the modal
+            // This assumes 'enrollFamilyPlanningModal' and 'enrollFamilyPlanningConfirmationModal' are defined
+            enrollFamilyPlanningModal.hide();
+            enrollFamilyPlanningConfirmationModal.show();
         }
     });
 }
+
+confirmCheckbox.addEventListener('change', function () {
+    proceedConfirmBtn.disabled = !this.checked;
+});
+
+cancelConfirmBtn.addEventListener('click', function () {
+    enrollFamilyPlanningConfirmationModal.hide();
+    enrollFamilyPlanningModal.show();
+});
+
+
+// Close dropdowns when clicking outside
+document.addEventListener('click', () => {
+    document.querySelectorAll('.custom-dropdown-options').forEach(el => el.classList.add('hidden'));
+});
+
+// === Validation Logic (Updated for custom dropdowns) ===
+const validateDropdowns = () => {
+    const isClientTypeValid = fpClientTypeInput.value.trim() !== "";
+    const isSourceValid = fpSourceInput.value.trim() !== "";
+    const isPreviousMethodValid = fpPreviousMethodInput.value.trim() !== "";
+
+    const allValid = isClientTypeValid && isSourceValid && isPreviousMethodValid;
+
+    if (fpNextBtn) {
+        fpNextBtn.disabled = !allValid;
+    }
+    return allValid;
+};
+
+// === Event Listeners for Modal Flow ===
+openEnrollFpModalBtn.addEventListener('click', () => {
+    fpNextBtn.disabled = true;
+    enrollFamilyPlanningModal.show();
+});
+
+function resetEnrollmentForm() {
+    // --- Reset Step 1: Resident Search ---
+    if (enrollFPResidentSearchInput) enrollFPResidentSearchInput.value = '';
+    
+    // Reset Purok Filter Custom Dropdown
+    const purokButton = document.getElementById('enrollFPResidentPurokFilter_button');
+    if (purokButton) purokButton.querySelector('span').textContent = 'Filter by Purok';
+    if (enrollFPResidentPurokFilter) enrollFPResidentPurokFilter.value = '';
+
+    // Clear resident list and remove selection
+    if (enrollFPResidentListContainer) {
+        enrollFPResidentListContainer.innerHTML = '<p class="text-center text-gray-500 p-4">Search for a resident to begin.</p>';
+    }
+    selectedResidentId = null;
+    chosenResidentName = null;
+
+    // --- Reset Step 2: Form Details ---
+    if (fpResidentNameInput) fpResidentNameInput.value = '';
+    
+    // Reset Client Type Custom Dropdown
+    if (fpClientTypeLabel) fpClientTypeLabel.textContent = 'Choose a type';
+    if (fpClientTypeInput) fpClientTypeInput.value = '';
+    
+    // Reset Source Custom Dropdown
+    if (fpSourceLabel) fpSourceLabel.textContent = 'Choose a source';
+    if (fpSourceInput) fpSourceInput.value = '';
+
+    // Reset Previous Method Custom Dropdown
+    if (fpPreviousMethodLabel) fpPreviousMethodLabel.textContent = 'Choose a previous method if any';
+    if (fpPreviousMethodInput) fpPreviousMethodInput.value = '';
+
+    fpNextBtn.disabled = true; // Disable the 'Next' button
+}
+
+
+if (fpCancelBtn) {
+    fpCancelBtn.addEventListener('click', () => {
+        resetEnrollmentForm(); // Reset the form first
+        enrollFamilyPlanningModal.hide(); // Then hide the modal
+    });
+}
+
+confirmCheckbox.addEventListener('change', function () { proceedConfirmBtn.disabled = !this.checked; });
+
+cancelConfirmBtn.addEventListener('click', () => {
+    enrollFamilyPlanningConfirmationModal.hide();
+    enrollFamilyPlanningModal.show();
+});
+
+proceedConfirmBtn.addEventListener('click', function () {
+    // --- CORRECTED CODE ---
+    // The payload now gets the values from the hidden <input> fields
+    // associated with each custom dropdown.
+    
+    const payload = {
+        resident_id: parseInt(selectedResidentId), // Assumes selectedResidentId is available
+        client_type: fpClientTypeInput.value,
+        previous_method: fpPreviousMethodInput.value,
+        source: fpSourceInput.value, // Corrected key and variable
+        program_id: parseInt(healthProgramId) // Assumes healthProgramId is available
+    };
+
+    console.log(payload);
+    
+    // The fetch logic below remains the same.
+    fetch(`/barangay/health-program/enroll/${selectedResidentId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify(payload)
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Server response:', data);
+            if (data.result === 'success') {
+                alert('Resident has been succefully enrolled');
+                window.location.href = `/barangay/health-programs/enrolled/resident/${data.enrollment.id}`;
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+});
 
 if (fpBackBtn) {
     fpBackBtn.addEventListener('click', () => {
         if (fpCurrentStep > 0) {
             fpGoToStep(fpCurrentStep - 1);
+            fpNextBtn.disabled = false;
         }
     });
 }
+
+function initializeResponsiveDropdown(optionsContainerId, hiddenInputId, buttonId, labelId, validationCallback) {
+    const optionsContainer = document.getElementById(optionsContainerId);
+    const hiddenInput = document.getElementById(hiddenInputId);
+    const button = document.getElementById(buttonId);
+    const label = document.getElementById(labelId);
+    const dropdown = document.getElementById(button.getAttribute('data-dropdown-toggle'));
+
+    if (!optionsContainer || !hiddenInput || !button || !label || !dropdown) {
+        console.error('One or more dropdown elements are missing for', optionsContainerId);
+        return;
+    }
+
+    // --- 1. Set Dropdown Width to Match Button ---
+    const observer = new MutationObserver(() => {
+        if (!dropdown.classList.contains('hidden')) {
+            dropdown.style.width = `${button.offsetWidth}px`;
+        }
+    });
+    observer.observe(dropdown, { attributes: true, attributeFilter: ['class'] });
+
+    // --- 2. Handle Option Selection ---
+    optionsContainer.addEventListener('click', (event) => {
+        const target = event.target.closest('button');
+        if (!target) return;
+
+        // Update the hidden input's value and the button's text label
+        hiddenInput.value = target.dataset.value;
+        label.textContent = target.textContent;
+        
+        // Trigger the validation callback function
+        if (validationCallback) {
+            validationCallback();
+        }
+    });
+}
+
+// --- Apply the function to all three dropdowns, passing the validator ---
+initializeResponsiveDropdown('fp_client_type_options', 'fp_client_type', 'fp_client_type_button', 'fp_client_type_label', validateDropdowns);
+initializeResponsiveDropdown('fp_source_options', 'fp_source', 'fp_source_button', 'fp_source_label', validateDropdowns);
+initializeResponsiveDropdown('fp_previous_method_options', 'fp_previous_method', 'fp_previous_method_button', 'fp_previous_method_label', validateDropdowns);
 
 // Initial setup on load
 fpUpdateButtonsAndText();

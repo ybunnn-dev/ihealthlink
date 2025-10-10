@@ -55,6 +55,9 @@ class EnrolledResident extends Model
     public function maternalRecord(){
         return $this->hasOne(BasicMaternalRecord::class);
     }
+    public function famPlanRecord(){
+        return $this->hasOne(FamilyPlanningData::class);
+    }
     public function getNextConsultationAttribute($enrolledResidentId = null)
     {
         $today = Carbon::now('Asia/Manila')->startOfDay();

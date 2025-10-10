@@ -1,5 +1,5 @@
 <!-- Main modal for Family Planning Enrollment -->
-<div id="enroll-family-planning-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+<div id="enroll-family-planning-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-none overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
     <div class="relative p-4 w-full max-w-3xl max-h-full">
         <!-- Modal content -->
         <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700 py-10 px-6">
@@ -12,7 +12,7 @@
             </div>
             
             <!-- Modal body with sliding steps -->
-            <div class="p-4 md:p-5 flex flex-nowrap w-full h-[50vh] overflow-x-hidden">
+            <div class="p-4 md:p-5 flex flex-nowrap w-full h-[50vh] overflow-x-hidden overflow-hidden">
                 
                 <!-- Step 1: Resident Selection -->
                 <div id="fp-step-1" class="transition-transform duration-500 ease-in-out w-full flex-shrink-0">
@@ -42,3 +42,4 @@
         </div>
     </div>
 </div>
+@include('components.modals.health-program.tcl-programs.enroll-family-planning-confirmation')

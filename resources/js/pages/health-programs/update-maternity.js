@@ -109,7 +109,7 @@ const postpartumVitaminADate = document.getElementById('postpartum-vitamin-a-dat
 
 // General Remarks
 const generalRemarksTextarea = document.getElementById('general-remarks');
-const openUpdateMaternityModalBtn = document.getElementById('update-maternal');
+const openUpdateMaternityModalBtn = document.getElementById('update-record');
 
 
 const confirmUpdateMaternityModalEl = document.getElementById('confirm-update-maternity-modal');

@@ -277,6 +277,7 @@ Route::middleware([
 
     Route::post('/barangay/health-program/maternity/update-maternal-record', [MaternalController::class, 'updateMaternalRecord']);
 
-    
+    Route::post('/barangay/health-program/enroll/{residentId}', [BarangayHealthProgramController::class, 'enrollFamPlan']);
+
 });
 

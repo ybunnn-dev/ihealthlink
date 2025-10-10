@@ -94,7 +94,7 @@ class HealthProgramController extends Controller
             case 'continuous':
                 $extension = (int) $request->input('extension_days');
                 ProgramSchedule::create([
-                    'title'        => "Continuous Field",
+                    'title'        => "Scheduled Return",
                     'program_id'   => $program->id,
                     'interval_days'=> (int) $request->input('interval', 0),
                     'order'        => 1,

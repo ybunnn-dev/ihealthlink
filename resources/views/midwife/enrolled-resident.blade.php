@@ -38,31 +38,32 @@
                     <!-- Buttons -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 slg2:grid-cols-2 xl:grid-cols-1 gap-3">
                         <!-- Update Health Record is always enabled, no changes needed -->
-                        <button id="update-hr" type="button" 
+                        <button id="update-record" type="button" 
                             class="w-full h-full text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3 py-4">
-                            Update Health Record
+                            Update Record
                         </button>
 
-                        <!-- Maternal Record -->
-                        <button id="update-maternal" type="button"
-                            class="w-full h-full text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3 py-4 disabled:opacity-50 disabled:bg-mainblue disabled:text-f7 disabled:cursor-not-allowed"
-                            @if($enrolledResident->program->category !== 'maternal_health_tcl') disabled @endif>
-                            Update Maternal Record
+                        <button id="mark-complete" type="button" 
+                            class="w-full h-full text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3 py-4">
+                            Mark as Completed
                         </button>
-
-                        <!-- Child Immunization -->
-                        <button id="update-child" type="button"
-                            class="w-full h-full text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3 py-4 disabled:opacity-50 disabled:bg-mainblue disabled:text-f7 disabled:cursor-not-allowed"
-                            @if($enrolledResident->program->category !== 'child_healthcare_tcl') disabled @endif>
-                            Update Child Immunization
-                        </button>
-
-                        <!-- PhilPen Record -->
-                        <button id="update-philpen" type="button"
-                            class="w-full h-full text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3 py-4 disabled:opacity-50 disabled:bg-mainblue disabled:text-f7 disabled:cursor-not-allowed"
-                            @if($enrolledResident->program->category !== 'philpen') disabled @endif>
-                            Update PhilPen Record
-                        </button>
+                       <div class="bg-white w-full h-full rounded-lg p-6">
+                            <div class="flex flex-col items-center justify-center text-main_font">
+                                <h2 class="font-semibold text-3xl text-center uppercase">
+                                    <span class="
+                                        px-4 py-1 rounded-full
+                                        @if($enrolledResident->status === 'active')  text-blue-700
+                                        @elseif($enrolledResident->status === 'completed')  text-green-700
+                                        @elseif($enrolledResident->status === 'terminated') text-yellow-700
+                                        @else bg-gray-100 text-gray-700
+                                        @endif
+                                    ">
+                                        {{ $enrolledResident->status }}
+                                    </span>
+                                </h2>
+                                <p class="text-sm">Status</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -110,32 +111,6 @@
                             <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
                                 <p class="font-semibold text-main_font">ADDRESS:</p>
                                 <p class="text-normal_font">Household {{ $enrolledResident->resident->family->household->id }}, {{ $enrolledResident->resident->family->household->purok->name }}, {{ $enrolledResident->resident->family->household->purok->barangay->name }}, Daraga, Albay</p>
-                            </div>
-                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                <p class="font-semibold text-main_font">WEIGHT:</p>
-                                <p class="text-normal_font">{{ $enrolledResident->resident->basicHealthRecord->weight ? $enrolledResident->resident->basicHealthRecord->weight : 'N\A' }} KG</p>
-                            </div>
-                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                <p class="font-semibold text-main_font">HEIGHT:</p>
-                                <p class="text-normal_font">{{ $enrolledResident->resident->basicHealthRecord->height ? $enrolledResident->resident->basicHealthRecord->height : 'N\A'}} CM</p>
-                            </div>
-                           <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                <p class="font-semibold text-main_font">BMI:</p>
-                                @php
-                                    $weight = $enrolledResident->resident->basicHealthRecord->weight ?? 0; // kg
-                                    $heightCm = $enrolledResident->resident->basicHealthRecord->height ?? 0; // cm
-                                    $heightM = $heightCm / 100;
-                                    $bmi = $heightM > 0 ? $weight / ($heightM * $heightM) : 0;
-                                    if ($bmi == 0) { $category = 'N/A'; } elseif ($bmi < 18.5) { $category = 'Underweight'; } elseif ($bmi < 25) { $category = 'Normal'; } elseif ($bmi < 30) { $category = 'Overweight'; } else { $category = 'Obese'; }
-                                @endphp
-                                <p class="text-normal_font">
-                                    {{ number_format($bmi, 1) }}
-                                    <span class="ml-2 font-semibold text-gray-600">({{ $category }})</span>
-                                </p>
-                            </div>
-                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                <p class="font-semibold text-main_font">STATUS:</p>
-                                <p class="text-normal_font">{{ ucfirst($enrolledResident->status) }}</p>
                             </div>
                             <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
                                 <p class="font-semibold text-main_font">ENROLLMENT DATE:</p>
@@ -223,4 +198,5 @@
     @include('components.modals.consultation.create-consultation')
     @include('components.modals.consultation.view-consultation')
     @include('components.modals.consultation.distribute-medicine')
+    @include('components.modals.health-program.tcl-programs.update-family-planning-record')
 </x-app-layout>

@@ -12,6 +12,7 @@ use App\Models\ProgramSchedule;
 use App\Models\HealthProgram;
 use App\Models\EnrolledResident;
 use App\Models\BasicHealthRecord;
+use App\Models\FamilyPlanningData;
 
 
 use Illuminate\Support\Facades\Auth;
@@ -96,6 +97,10 @@ class BarangayHealthProgramController extends Controller
 
             // Attach to current enrolled resident instance
             $enrolledResident->setRelation('antiTetanusEnrollment', $antiTetanusEnrollment);
+
+        }else if($enrolledResident->program && $enrolledResident->program->category === 'family_planning_tcl'){
+            $enrolledResident->load('famPlanRecord');
+
         }
 
         return view('midwife.enrolled-resident', compact('enrolledResident'));
@@ -174,6 +179,40 @@ class BarangayHealthProgramController extends Controller
             'message' => 'Resident enrolled successfully',
             'data' => $enrollment,
         ], 201);
+    }
+
+    public function enrollFamPlan(Request $request, $residentId)
+    {
+        \Log::info('Family Planning Enrollment Data:', [
+            'resident_id' => $residentId,
+            'payload' => $request->all(),
+        ]);
+
+        // Retrieve from the JSON body
+        $healthProgramId = $request->input('program_id');
+
+        // Create the enrollment record
+        $enrollment = EnrolledResident::create([
+            'resident_id' => $residentId,
+            'program_id' => $healthProgramId,
+            'enrolled_by' => auth()->id(), // or manually set if this is a barangay user
+            'status' => 'active', // default
+        ]);
+
+        FamilyPlanningData::create([
+            'client_type' => $request->client_type,
+            'source' => $request->source_select,
+            'previous_method' => $request->previous_method,
+            'enrolled_resident_id' => $enrollment->id, // if created earlier
+        ]);
+
+        $this->createConsultationSchedules($residentId, $healthProgramId, $enrollment->id);
+
+        return response()->json([
+            'message' => 'Resident successfully enrolled in the program.',
+            'result' => 'success',
+            'enrollment' => $enrollment,
+        ]);
     }
 
     protected function createConsultationSchedules($residentId, $programId, $enrolledResident)

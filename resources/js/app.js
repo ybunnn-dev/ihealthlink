@@ -113,7 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }else if(programTypeDefine === 'child_healthcare_tcl'){
       console.log('hello');
     }else if(programTypeDefine === 'family_planning_tcl'){
-      //import('./pages/health-programs/update-maternity.js');
+      import('./pages/health-programs/update-family-planning.js');
     }
     else{
       console.log('hello 2');
