@@ -101,8 +101,17 @@ class BarangayHealthProgramController extends Controller
         }else if($enrolledResident->program && $enrolledResident->program->category === 'family_planning_tcl'){
             $enrolledResident->load('famPlanRecord');
 
-        }else if($enrolledResident->program && $enrolledResident->program->category === 'philpen_tcl'){
-             $enrolledResident->load('consultations.ncdRiskFactors');
+        }else if ($enrolledResident->program && $enrolledResident->program->category === 'philpen_tcl') {
+            $enrolledResident->load([
+                'consultations.ncdRiskFactor',
+                'consultations.philpenManagement',
+                'consultations.healthSigns',
+                'consultations.medicalHistory',
+                'consultations.familyHistory',
+                'consultations.riskAssessment',
+                'consultations.ncdRiskFactor',
+                'consultations.philpenManagement',
+            ]);
         }
 
         return view('midwife.enrolled-resident', compact('enrolledResident'));

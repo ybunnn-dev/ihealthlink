@@ -67,5 +67,7 @@ Route::middleware(['auth:sanctum',
     Route::get('/barangay/health-programs/load', [HealthProgramController::class,'index']);
 
     Route::get('/barangay/health-programs/{healthProgram}', [HealthProgramController::class, 'specHP']);
+
+    Route::post('/barangay/resident/add', [ResidentController::class,'addResident']);
     
 });

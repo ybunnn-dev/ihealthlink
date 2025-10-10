@@ -9,7 +9,7 @@ class PhilpenManagement extends Model
 {
     use HasFactory;
 
-    protected $table = 'philpen_management';
+    protected $table = 'philpen_managements';
 
     protected $fillable = [
         'consultation_id',
@@ -21,8 +21,8 @@ class PhilpenManagement extends Model
     ];
 
     // Example relationship (optional)
-    public function consultation()
+     public function consultation()
     {
-        return $this->belongsTo(Consultation::class);
+        return $this->belongsTo(Consultation::class, 'consultation_id');
     }
 }

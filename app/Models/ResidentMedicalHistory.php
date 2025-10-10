@@ -45,6 +45,6 @@ class ResidentMedicalHistory extends Model
     // Relationship: medical history belongs to one resident
     public function consultation()
     {
-        return $this->belongsTo(Consultation::class);
+        return $this->belongsTo(Consultation::class, 'consultation_id');
     }
 }

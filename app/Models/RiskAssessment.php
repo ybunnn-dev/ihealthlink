@@ -39,6 +39,6 @@ class RiskAssessment extends Model
      */
     public function consultation()
     {
-        return $this->belongsTo(Consultation::class);
+        return $this->belongsTo(Consultation::class, 'consultation_id');
     }
 }

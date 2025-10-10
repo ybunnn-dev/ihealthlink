@@ -54,16 +54,41 @@ class Consultation extends Model
     public function enrolledResident(){
         return $this->belongsTo(EnrolledResident::class, 'enrolled_resident_id');
     }
+
+        
+    public function healthSigns()
+    {
+        return $this->hasOne(HealthSigns::class, 'resident_id');
+    }
+
+    public function medicalHistory()
+    {
+        return $this->hasOne(ResidentMedicalHistory::class, 'resident_id');
+    }
+    
+    public function familyHistory()
+    {
+        return $this->hasOne(ResidentFamilyHistory::class);
+    }
+    
+    public function riskAssessment()
+    {
+        return $this->hasOne(RiskAssessment::class);
+    }
+   
+    public function ncdRiskFactor(){
+        return $this->hasOne(NcdRiskFactor::class);
+    }
+
+    public function philpenManagement(){
+        return $this->hasOne(PhilpenManagement::class);
+    }
+
     public function consultationData()
     {
         return $this->hasOne(ConsultationData::class, 'consultation_id');
     }
-    public function ncdRiskFactors(){
-        return $this->hasOne(NcdRiskFactor::class);
-    }
-    public function philpenManagement(){
-        return $this->hasOne(PhilpenManagement::class);
-    }
+
     public function medicineDistributions()
     {
         return $this->hasMany(MedicineDistribution::class, 'consultation_id');
