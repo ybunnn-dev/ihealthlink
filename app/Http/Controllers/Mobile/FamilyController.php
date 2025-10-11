@@ -63,7 +63,7 @@ class FamilyController extends Controller
         }
 
         // Get the results
-        $families = $familiesQuery->get();
+        $families = $familiesQuery->paginate(2);
 
         return response()->json([
             'families' => $families,
