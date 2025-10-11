@@ -246,7 +246,7 @@ class MaternalController extends Controller
 
         $basicHealthRecord = BasicHealthRecord::where('resident_id', $validated['resident_id'])->first();
 
-         if ($basicHealthRecord) {
+        if ($basicHealthRecord) {
             $basicHealthRecord->update(['is_pregnant' => true]);
         }
 

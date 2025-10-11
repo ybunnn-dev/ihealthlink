@@ -22,6 +22,7 @@ use App\Http\Controllers\Web\MaternalController;
 use App\Http\Controllers\Web\BarangayExportData;
 use App\Http\Controllers\Web\ConsultationController;
 use App\Http\Controllers\Web\MaternalExport;
+use App\Http\Controllers\Web\ChildcareController;
 
 Route::get('/', function () {
     return view('auth.login');
@@ -280,7 +281,7 @@ Route::middleware([
 
     Route::post('/export/referral-pdf', [BarangayExportData::class, 'exportReferralPdf']);
 
-    Route::post('/barangay/health-program/child-healthcare/enroll', [BarangayHealthProgramController::class, 'enrollChild']);
+    Route::post('/barangay/health-program/child-healthcare/enroll', [ChildcareController::class, 'enrollChild']);
 
 
 });

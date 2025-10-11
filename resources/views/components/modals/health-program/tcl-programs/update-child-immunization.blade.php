@@ -11,29 +11,33 @@
             <div class="space-y-4 h-[70vh] overflow-y-auto w-full pr-4 mb-3">
                 <form action="#" class="grid grid-cols-1 slg2:grid-cols-4 gap-x-6 gap-y-4">
                     
-                    <div class="slg2:col-span-4 font-semibold text-lg border-b pb-2 mb-2 text-normal_font">A. Basic Information</div>
+                    <div class="slg2:col-span-4 font-semibold text-lg border-b pb-2 mb-2 text-normal_font">Basic Information</div>
                     
                     <div class="slg2:col-span-2">
                         <label for="child-reg-date" class="block mb-2 text-sm font-medium text-main_font">Date of Registration</label>
-                        <input type="date" id="child-reg-date" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                        <input type="date" id="child-reg-date" disabled class="bg-gray-100 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                     </div>
                      <div class="slg2:col-span-2">
                         <label for="child-birth-date" class="block mb-2 text-sm font-medium text-main_font">Date of Birth</label>
-                        <input type="date" id="child-birth-date" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                        <input type="date" id="child-birth-date" disabled class="bg-gray-100 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                     </div>
                      <div>
                         <label for="child-family-no" class="block mb-2 text-sm font-medium text-main_font">Family #</label>
-                        <input type="text" id="child-family-no" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                        <input type="text" id="child-family-no" disabled class="bg-gray-100 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                     </div>
                      <div>
                         <label for="child-ses" class="block mb-2 text-sm font-medium text-main_font">Social Economic Status</label>
-                        <select id="child-ses" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                        <select id="child-ses" disabled class="bg-gray-100 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                             <option selected>Choose status</option>
-                            <option value="yes">NHTS</option>
-                            <option value="no">Non-NHTS</option>
+                            <option value="nhts">NHTS</option>
+                            <option value="non-nhts">Non-NHTS</option>
                         </select>
                     </div>
                      <div class="slg2:col-span-2">
+                        <label for="mother-full-name" class="block mb-2 text-sm font-medium text-main_font">Complete Name of Mother</label>
+                        <input type="text" id="mother-full-name" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                    </div>
+                     <div class="slg2:col-span-3">
                         <label for="child-full-name" class="block mb-2 text-sm font-medium text-main_font">Full Name of Child</label>
                         <input type="text" id="child-full-name" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                     </div>
@@ -45,17 +49,14 @@
                             <option value="Female">Female</option>
                         </select>
                     </div>
-                    <div class="slg2:col-span-3">
-                        <label for="mother-full-name" class="block mb-2 text-sm font-medium text-main_font">Complete Name of Mother</label>
-                        <input type="text" id="mother-full-name" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                    </div>
+                  
                     <div class="slg2:col-span-4">
                         <label for="child-address" class="block mb-2 text-sm font-medium text-main_font">Complete Address</label>
                         <input type="text" id="child-address" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                     </div>
 
                     <fieldset class="slg2:col-span-4 border p-4 rounded-lg mt-4">
-                        <legend class="text-md font-semibold text-main_font px-2">B. Child Protection at Birth</legend>
+                        <legend class="text-md font-semibold text-main_font px-2">Child Protection at Birth</legend>
                         <p class="text-xs text-gray-500 mb-3 -mt-2 px-2">Mother's Tetanus Immunization Status</p>
                         <div class="flex flex-wrap gap-x-6 gap-y-2">
                             <div class="flex items-center">
@@ -64,22 +65,18 @@
                             </div>
                             <div class="flex items-center">
                                 <input id="tt3-tt5" type="radio" value="" name="tetanus-status" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300">
-                                <label for="tt3-tt5" class="ms-2 text-sm font-medium text-main_font">TT3/TD3 - TT5/TD5</label>
-                            </div>
-                            <div class="flex items-center">
-                                <input id="tt1-tt5" type="radio" value="" name="tetanus-status" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300">
-                                <label for="tt1-tt5" class="ms-2 text-sm font-medium text-main_font">TT1/TD1 to TT5/TD5</label>
+                                <label for="tt3-tt5" class="ms-2 text-sm font-medium text-main_font">TT3/TD3 - TT5/TD5 or TT1/TD1 - TT5/TD5</label>
                             </div>
                         </div>
                     </fieldset>
                     
-                    <div class="slg2:col-span-4 font-semibold text-lg border-b pb-2 mb-2 text-normal_font mt-4">C. Newborn (0-28 days old)</div>
+                    <div class="slg2:col-span-4 font-semibold text-lg border-b pb-2 mb-2 text-normal_font mt-4">Newborn (0-28 days old)</div>
                     <div class="slg2:col-span-2">
-                        <label for="birth-weight" class="block mb-2 text-sm font-medium text-main_font">1. Birth Weight (kg)</label>
+                        <label for="birth-weight" class="block mb-2 text-sm font-medium text-main_font">Birth Weight (kg)</label>
                         <input type="number" id="birth-weight" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5" placeholder="e.g., 3.1">
                     </div>
                     <div class="slg2:col-span-2">
-                        <label for="birth-weight-status" class="block mb-2 text-sm font-medium text-main_font">2. Birth Weight Status</label>
+                        <label for="birth-weight-status" class="block mb-2 text-sm font-medium text-main_font">Birth Weight Status</label>
                         <select id="birth-weight-status" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5">
                             <option selected>Select status</option>
                             <option value="low">Low (< 2,500 grams)</option>
@@ -88,7 +85,7 @@
                         </select>
                     </div>
                     <div class="slg2:col-span-4">
-                        <label for="initiated-breastfeeding" class="block mb-2 text-sm font-medium text-main_font">3. Initiated Breastfeeding immediately after birth (within 90 mins)</label>
+                        <label for="initiated-breastfeeding" class="block mb-2 text-sm font-medium text-main_font">Initiated Breastfeeding immediately after birth (within 90 mins)</label>
                         <input type="date" id="initiated-breastfeeding" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5">
                     </div>
                     <fieldset class="slg2:col-span-4 border p-4 rounded-lg">
@@ -105,7 +102,7 @@
                         </div>
                     </fieldset>
 
-                    <div class="slg2:col-span-4 font-semibold text-lg border-b pb-2 mb-2 text-normal_font mt-4">D. 1-3 Months Old</div>
+                    <div class="slg2:col-span-4 font-semibold text-lg border-b pb-2 mb-2 text-normal_font mt-4">1-3 Months Old</div>
                      <fieldset class="slg2:col-span-4 border p-4 rounded-lg">
                         <legend class="text-md font-semibold text-main_font px-2">D.1 Nutritional Assessment & Supplementation</legend>
                         <div class="grid grid-cols-1 md:grid-cols-2 slg2:grid-cols-4 gap-4">
@@ -159,7 +156,7 @@
                     </fieldset>
                     
                     <fieldset class="slg2:col-span-4 border p-4 rounded-lg">
-                        <legend class="text-md font-semibold text-main_font px-2">D.1 Immunizations (1-3 mos)</legend>
+                        <legend class="text-md font-semibold text-main_font px-2">Immunizations (1-3 mos)</legend>
                         <div class="grid grid-cols-1 md:grid-cols-2 slg2:grid-cols-4 gap-4">
                             <div class="space-y-2">
                                 <label class="block text-sm font-medium text-main_font">DPT-HiB-HepB</label>
@@ -187,7 +184,7 @@
                     </fieldset>
                     
                      <fieldset class="slg2:col-span-4 border p-4 rounded-lg">
-                        <legend class="text-md font-semibold text-main_font px-2">D.2 Exclusive Breastfeeding</legend>
+                        <legend class="text-md font-semibold text-main_font px-2">Exclusive Breastfeeding</legend>
                         <div class="grid grid-cols-1 sm:grid-cols-2 slg2:grid-cols-4 gap-4">
                             <div>
                                 <label class="block mb-2 text-sm font-medium text-main_font">1.5 Months</label>
@@ -222,7 +219,7 @@
                     
                     <div class="slg2:col-span-4 font-semibold text-lg border-b pb-2 mb-2 text-normal_font mt-4">E. 6-11 Months Old</div>
                      <fieldset class="slg2:col-span-4 border p-4 rounded-lg">
-                        <legend class="text-md font-semibold text-main_font px-2">E.1 Nutritional Assessment</legend>
+                        <legend class="text-md font-semibold text-main_font px-2">Nutritional Assessment</legend>
                         <div class="grid grid-cols-1 md:grid-cols-2 slg2:grid-cols-3 gap-4">
                              <div>
                                 <label for="age-in-months-e" class="block mb-2 text-sm font-medium text-main_font">Age in Months</label>

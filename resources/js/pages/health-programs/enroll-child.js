@@ -395,10 +395,14 @@ enrollChildConfirmationProceedBtn.addEventListener('click', function() {
     .then(response => response.json())
     .then(data => {
         if (data.status === 'success') {
+            console.log(data);
             alert('Okay');
+            console.log(data.data.id);
+            location.href = `/barangay/health-programs/enrolled/resident/${data.data.id}`;
         } else {
             alert('Error: ' + data.message);
             location.reload();
+
         }
     })
     .catch(error => {

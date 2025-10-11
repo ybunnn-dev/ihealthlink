@@ -1,6 +1,15 @@
 // Main Modal Element
 const updateChildCareModalEl = document.getElementById('update-child-care-modal');
 
+const enrolledResident = window.enrolledResident;
+const enrolledResidentId = window.enrolledResident.id;
+const enrollmentDate = window.enrolledResident.created_at;
+const resident = window.enrolledResident.resident;
+const family = resident.family;
+
+
+console.log(enrollmentDate);
+
 // A. Basic Information Section
 const childRegDate = document.getElementById('child-reg-date');
 const childBirthDate = document.getElementById('child-birth-date');
@@ -75,4 +84,14 @@ const openUpdateChildCareBtn = document.getElementById('update-record');
 
 openUpdateChildCareBtn.addEventListener('click',function(){
     updateChildCareModal.show();
+
+    childRegDate.value = enrollmentDate;
+    childBirthDate.value = resident.birthdate;
+    childFamilyNo.value = family.id;
+    childRegDate.value = new Date(enrollmentDate).toISOString().slice(0, 10)
+    childSes.value = family.is_indigient === 1 ? 'nhts' : 'non-nhts';
+    /*const childFullName
+    const childSex
+    const motherFullName
+    const childAddress*/
 });
