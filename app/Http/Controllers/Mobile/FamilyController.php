@@ -13,30 +13,65 @@ use App\Models\Family;
 
 class FamilyController extends Controller
 {
-   public function index(){
-        //get the current user's personnel info
-        $personnel = Auth::user()->bhw;
+ public function index(Request $request)
+    {
+        // Get current user's personnel info
+        $user = Auth::user();
 
-        //find the barangay and the puroks that the user manages
+        if ($user->bhwWeb && $user->bhwWeb->role_id == 4) {
+            $personnel = $user->bhwWeb;
+        } elseif ($user->bhw && $user->bhw->role_id == 3) { // fixed bhwWeb -> bhw
+            $personnel = $user->bhw;
+        } else {
+            $personnel = Midwife::where('user_id', $user->id)->first();
+        }
+
+        if (!$personnel) {
+            abort(403, 'Unauthorized access.');
+        }
+
+        // Find barangay and its puroks
         $barangay = Barangay::with('puroks')->find($personnel->brgy_id);
-        $puroks = $barangay->puroks;
+        $puroks = $barangay?->puroks ?? collect();
 
-        //get the households that belongs to the puroks of that barangay
+        // Get all households in the barangay's puroks
         $purokIds = $puroks->pluck('id');
-        $households = Household::whereIn('purok_id', $purokIds)->get();
+        $householdIds = Household::whereIn('purok_id', $purokIds)->pluck('id');
 
-        //get the families + residents count
-        $householdIds = $households->pluck('id');
-        
-        $families = Family::with('household.purok.barangay')
-            ->withCount('residents') // <-- counts residents for each family
-            ->whereIn('household_id', $householdIds)
-            ->get();
+        // Base query
+        $familiesQuery = Family::with(['household.purok.barangay', 'residents'])
+            ->withCount('residents')
+            ->whereIn('household_id', $householdIds);
+
+        // Search only among families that have residents matching the search
+        if ($request->filled('search')) {
+            $search = $request->search;
+
+            $familiesQuery->whereHas('residents', function ($q) use ($search) {
+                $q->where('firstName', 'like', "%{$search}%")
+                ->orWhere('middleName', 'like', "%{$search}%")
+                ->orWhere('lastName', 'like', "%{$search}%");
+            });
+        }
+
+        //  Optional filter by purok
+        if ($request->filled('purok_id')) {
+            $purokId = $request->purok_id;
+            $familiesQuery->whereHas('household', function ($q) use ($purokId) {
+                $q->where('purok_id', $purokId);
+            });
+        }
+
+        // Get the results
+        $families = $familiesQuery->get();
 
         return response()->json([
             'families' => $families,
+            'puroks' => $puroks,
         ]);
     }
+
+
     public function show(Family $family)
     {
         // Eager load household + purok + residents

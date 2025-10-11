@@ -77,6 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
     import('./pages/household/add-family.js');
   }
   else if(bodyClass.contains('spec-resident')){
+    import('./pages/resident/create-referral.js');
     import('./pages/resident/spec-resident.js');
 
   }else if(bodyClass.contains('residents')){
@@ -114,6 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
     import('./pages/health-programs/update-consultation.js');
     }else if(programTypeDefine === 'child_healthcare_tcl'){
       console.log('hello');
+      import('./pages/health-programs/update-child-care.js');
       import('./pages/health-programs/view-consultation.js');
       import('./pages/health-programs/update-consultation.js');
     }else if(programTypeDefine === 'family_planning_tcl'){

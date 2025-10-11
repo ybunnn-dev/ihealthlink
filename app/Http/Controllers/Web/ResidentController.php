@@ -149,13 +149,8 @@ class ResidentController extends Controller
     public function show(Resident $resident){
 
         $resident->load([
-            'family.household.purok',
-            'healthSigns',
-            'medicalHistory',
-            'familyHistory',
+            'family.household.purok.barangay',
             'basicHealthRecord',
-            'ncdRiskFactor',
-            'riskAssessment',
         ]);
 
 

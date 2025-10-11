@@ -2,7 +2,9 @@
 @section('title', 'Residents | #' . $resident->id)
 <x-app-layout>
     <div class="py-12 px-5">
-       
+       <script>
+            window.resident = @json($resident);
+       </script>
         <div class="max-w-[90rem] mx-auto sm:px-6 lg:px-8">
             <div class="grid grid-cols gap-3">
                 <div class="grid grid-cols-2 items-center gap-3">
@@ -19,7 +21,7 @@
                     <!-- Right side: Buttons aligned right -->
                     <div class="flex justify-end gap-3">
                         <button class="w-40 h-9 bg-mainblue rounded-md text-xs font-semibold text-f7 px-6">Generate Card</button>
-                        <button class="w-40 h-9 bg-mainblue rounded-md text-xs font-semibold text-f7 px-6">Create Referral</button>
+                        <button id="create-referral-open" class="w-40 h-9 bg-mainblue rounded-md text-xs font-semibold text-f7 px-6">Create Referral</button>
                     </div>
                 </div>
                 <div class="grid grid-cols-1 xl:grid-cols-3 gap-3">
@@ -323,4 +325,5 @@
                 </div>
             </div>
         </div>
+        @include('components.modals.consultation.create-referral')
 </x-app-layout>

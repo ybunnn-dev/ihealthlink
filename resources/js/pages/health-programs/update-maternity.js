@@ -113,8 +113,6 @@ const openUpdateMaternityModalBtn = document.getElementById('update-record');
 
 
 const confirmUpdateMaternityModalEl = document.getElementById('confirm-update-maternity-modal');
-
-// Interactive elements inside the modal
 const confirmUpdateCheckbox = document.getElementById('confirm-update-maternity-checkbox');
 const cancelUpdateButton = document.getElementById('confirm-update-maternity-cancel');
 const submitUpdateButton = document.getElementById('confirm-update-maternity-submit');
