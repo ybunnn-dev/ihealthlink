@@ -170,8 +170,9 @@ confirmAddHouseholdSubmit.addEventListener('click', function(){
     .then(data => {
         console.log('Backend response:', data);
         if(data.result === 'success'){
+            console.log(data);
            alert('Household has been successfully added');
-           window.location.href = `/barangays/households/${createdHouseholdId}`;
+           window.location.href = `/barangays/households/${data.household.id}`;
         }
     })
     .catch(error => {
