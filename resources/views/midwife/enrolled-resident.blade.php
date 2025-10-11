@@ -220,5 +220,6 @@
     @include('components.modals.consultation.view-consultation')
     @include('components.modals.consultation.distribute-medicine')
     @include('components.modals.health-program.tcl-programs.update-family-planning-record')
+    @include('components.modals.health-program.tcl-programs.update-child-immunization')
     @include('components.modals.health-program.tcl-programs.create-philpen-record')
 </x-app-layout>

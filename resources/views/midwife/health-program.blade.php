@@ -8,8 +8,8 @@
         </script>
         <div class="max-w-[90rem] mx-auto sm:px-6 lg:px-8">
             <h1 class="text-3xl font-semibold text-sub_blue mb-3">Health Programs</h1>
-            <div class="grid grid-cols-1 lg2:grid-cols-5 gap-3">
-                <div class="bg-white rounded-xl p-6 px-10 mb-3 col-span-1 lg2:col-span-2">
+            <div class="grid grid-cols-1 slg:grid-cols-3 xl3:grid-cols-5 gap-3">
+                <div class="bg-white rounded-xl p-6 px-10 mb-3 col-span-1 slg:col-span-3 xl3:col-span-2">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center gap-x-3">
                             <svg class="w-10 h-10 text-maingreen"
@@ -23,7 +23,7 @@
                             </svg>
 
                             <div>
-                                <h1 class="text-2xl font-semibold text-main_font whitespace-normal break-words">
+                                <h1 class="text-sm slg:text-lg xl2:text-xl font-semibold text-main_font whitespace-normal break-words">
                                 {{ $healthProgram->name }}
                                 </h1>
                                 <p class="text-xs text-normal_font">Current Health Program</p>

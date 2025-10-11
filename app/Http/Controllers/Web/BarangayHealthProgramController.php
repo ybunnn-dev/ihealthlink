@@ -319,4 +319,66 @@ class BarangayHealthProgramController extends Controller
         ]);
     }
 
+    public function enrollChild(Request $request)
+{
+    try {
+        // Validate inputs
+        $validated = $request->validate([
+            'resident_id' => 'required|integer|exists:residents,id',
+            'mother_id' => 'required|integer|exists:residents,id',
+            'birthWeight' => 'required|numeric|min:0',
+            'program_id' => 'required|integer|exists:health_programs,id',
+        ]);
+
+        $residentId = $validated['resident_id'];
+        $programId = $validated['program_id'];
+        $motherId = $validated['mother_id'];
+        $birthWeight = $validated['birthWeight'];
+        $userId = Auth::id();
+
+        // Check if resident is already enrolled in this program
+        $alreadyEnrolled = EnrolledResident::where('resident_id', $residentId)
+            ->where('program_id', $programId)
+            ->exists();
+
+        if ($alreadyEnrolled) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Resident is already enrolled in this program.'
+            ], 422);
+        }
+
+        // Create enrolled resident
+        $enrolledResident = EnrolledResident::create([
+            'resident_id' => $residentId,
+            'program_id' => $programId,
+            'enrolled_by' => $userId,
+            'status' => 'active',
+        ]);
+
+        // Optionally, log child-specific data if you have a child health table
+        \Log::info('Child enrollment payload received:', $validated);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Resident enrolled successfully.',
+            'data' => $enrolledResident
+        ], 200);
+
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Validation failed.',
+            'errors' => $e->errors()
+        ], 422);
+    } catch (\Exception $e) {
+        \Log::error('Error enrolling child:', ['message' => $e->getMessage()]);
+        return response()->json([
+            'status' => 'error',
+            'message' => 'An unexpected error occurred.',
+        ], 500);
+    }
+}
+
+
 }

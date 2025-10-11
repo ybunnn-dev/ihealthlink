@@ -174,11 +174,9 @@ Route::middleware([
 
     Route::post('/barangay/bhw/add', [BHWController::class, 'store']);
 
-
     Route::put('/barangay/bhw/{id}/edit', [BHWController::class, 'update']);
 
     Route::put('/barangay/bhw/{id}/remove', [BhwController::class, 'remove']);
-
 
     Route::post('/barangay/resident/add', [ResidentController::class, 'addResident']);
 
@@ -186,20 +184,17 @@ Route::middleware([
     
     Route::get('/barangay/maternity/resident/enroll', [ResidentController::class, 'getWRA']);
 
-    /*Route::get('/midwife/reports', function () {
-        
-    })->name('midwife.reports');*/
-
+    Route::get('/barangay/get/mother', [ResidentController::class, 'getMother']);
+    
     Route::get('/barangay/reports',[BarangayReportsController::class, 'index'])->name('midwife.reports');
 
     Route::get('/barangay/fetch/health-programs', [HealthProgramController::class, 'provideData'])->name('health.programs');
 
     Route::put('/barangay/schedule/delete/{id}', [ScheduleController::class, 'softDelete']);
 
-
-    Route::get('/midwife/health-program-profile', function () {
+    /*Route::get('/midwife/health-program-profile', function () {
         return view('midwife.health-program-profile');
-    })->name('midwife.health-program-profile');
+    })->name('midwife.health-program-profile');*/
 
     Route::post('/barangay/health-programs/add', [HealthProgramController::class, 'store']);
     
@@ -257,10 +252,7 @@ Route::middleware([
     Route::get('/barangay/reports/export-excel', [BarangayExportData::class, 'exportCommunityReportExcel']);
     Route::get('/barangay/reports/export-csv', [BarangayExportData::class, 'exportCommunityReportCsv']);
 
-    Route::post(
-    '/barangay/health-program/{healthProgramId}/enroll/{residentId}',
-        [BarangayHealthProgramController::class, 'enrollResident']
-    )->name('barangay.health-program.enroll');
+    Route::post('/barangay/health-program/{healthProgramId}/enroll/{residentId}',[BarangayHealthProgramController::class, 'enrollResident'])->name('barangay.health-program.enroll');
     
     Route::post('/barangay/health-program/maternity/enroll/',[MaternalController::class, 'enroll']);
 
@@ -287,6 +279,9 @@ Route::middleware([
     Route::get('/barangay/get-puroks', [PurokController::class, 'getPuroks']);
 
     Route::post('/export/referral-pdf', [BarangayExportData::class, 'exportReferralPdf']);
+
+    Route::post('/barangay/health-program/child-healthcare/enroll', [BarangayHealthProgramController::class, 'enrollChild']);
+
 
 });
 

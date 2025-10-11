@@ -8,7 +8,7 @@
     <!-- Filters and Actions -->
     <div class="flex items-center gap-2 md:col-span-2">
         <select id="selectMotherResidentPurokFilter" class="border border-gray-300 text-gray-700 rounded-lg p-2.5 w-full">
-            <option selected>Filter by Purok</option>
+            <option value="" selected>Filter by Purok</option>
             <!-- Add purok options here -->
         </select>
         <button id="select-mother-scan-qr" class="border border-mainblue rounded-lg p-2.5 flex items-center justify-center font-semibold text-mainblue hover:bg-blue-50" title="Scan QR Code">

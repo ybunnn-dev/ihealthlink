@@ -1,36 +1,19 @@
 // Main modal container
 const enrollResidentModalEl = document.getElementById('enroll-resident-modal');
-
-// Search and filter controls
 const enrollResidentSearchInput = document.getElementById('enrollResidentSearchInput');
 const enrollResidentPurokFilter = document.getElementById('enrollResidentPurokFilter');
-
 let isPurokFilterPopulated = false;
-// Resident list and cards
 const enrollResidentListContainer = document.getElementById('enrollResidentListContainer');
 const residentCards = document.querySelectorAll('.resident-card'); // This will be a NodeList of all resident card divs
-
 const healthProgramId = parseInt(document.getElementById('hpdata').textContent.trim(), 10);
-// Modal footer buttons
 const enrollResidentCancelBtn = document.getElementById('enrollResidentCancelBtn');
 const enrollResidentProceedBtn = document.getElementById('enrollResidentProceedBtn');
-
 const selectedHighlightClasses = ['bg-sky-100', 'dark:bg-sky-800', 'border-sky-500'];
-
 let selectedResidentId = null;
-// The main modal container element
 const enrollResidentConfirmationModalEl = document.getElementById('enroll-resident-confirmation-modal');
-
-// The <strong> tag where the resident's name will be displayed
 const residentNameToConfirmEl = document.getElementById('resident-name-to-confirm');
-
-// The confirmation checkbox
 const confirmEnrollmentCheckbox = document.getElementById('confirm-enrollment-checkbox');
-
-// The "Cancel" button in the footer
 const enrollResidentConfirmationCancelBtn = document.getElementById('enroll-resident-confirmation-cancel-btn');
-
-// The "Confirm & Proceed" button, which is disabled by default
 const enrollResidentConfirmationProceedBtn = document.getElementById('enroll-resident-confirmation-proceed-btn');
 
 let chosenResidentName = null;
@@ -149,11 +132,10 @@ function fetchResidents(payload = { search: '', purok_id: '' }) {
     });
 }
 
-// Example: When the main button to open the modal is clicked
 openEnrollModalBtn.addEventListener('click', function () {
     enrollResidentModal.show();
-    resetModalState();  // Reset the state first
-    fetchResidents();   // Then fetch the initial, unfiltered data
+    resetModalState();  
+    fetchResidents();   
 });
 
 // Listen for input in the search field
