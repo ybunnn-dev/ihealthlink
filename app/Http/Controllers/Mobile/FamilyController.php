@@ -13,14 +13,14 @@ use App\Models\Family;
 
 class FamilyController extends Controller
 {
- public function index(Request $request)
+    public function index(Request $request)
     {
-        // Get current user's personnel info
         $user = Auth::user();
 
+        // Determine personnel type (Midwife or BHW)
         if ($user->bhwWeb && $user->bhwWeb->role_id == 4) {
             $personnel = $user->bhwWeb;
-        } elseif ($user->bhw && $user->bhw->role_id == 3) { // fixed bhwWeb -> bhw
+        } elseif ($user->bhw && $user->bhw->role_id == 3) {
             $personnel = $user->bhw;
         } else {
             $personnel = $user->midwife;
@@ -38,35 +38,45 @@ class FamilyController extends Controller
         $purokIds = $puroks->pluck('id');
         $householdIds = Household::whereIn('purok_id', $purokIds)->pluck('id');
 
-        // Base query
-        $familiesQuery = Family::with(['household.purok.barangay', 'residents'])
-            ->withCount('residents')
-            ->whereIn('household_id', $householdIds);
+        // Load families and residents
+        $families = Family::with(['household.purok.barangay', 'residents'])
+            ->whereIn('household_id', $householdIds)
+            ->get();
 
-        // Search only among families that have residents matching the search
+        // FILTER: Search (by decrypted resident names)
         if ($request->filled('search')) {
-            $search = $request->search;
+            $search = strtolower($request->search);
 
-            $familiesQuery->whereHas('residents', function ($q) use ($search) {
-                $q->where('firstName', 'like', "%{$search}%")
-                ->orWhere('middleName', 'like', "%{$search}%")
-                ->orWhere('lastName', 'like', "%{$search}%");
-            });
+            $families = $families->filter(function ($family) use ($search) {
+                return $family->residents->contains(function ($resident) use ($search) {
+                    return str_contains(strtolower($resident->firstName), $search)
+                        || str_contains(strtolower($resident->middleName), $search)
+                        || str_contains(strtolower($resident->lastName), $search);
+                });
+            })->values();
         }
 
-        //  Optional filter by purok
+        // FILTER: By Purok
         if ($request->filled('purok_id')) {
             $purokId = $request->purok_id;
-            $familiesQuery->whereHas('household', function ($q) use ($purokId) {
-                $q->where('purok_id', $purokId);
-            });
+            $families = $families->filter(function ($family) use ($purokId) {
+                return $family->household?->purok_id == $purokId;
+            })->values();
         }
 
-        // Get the results
-        $families = $familiesQuery->paginate(2);
+        // PAGINATE manually (because we filtered in PHP)
+        $page = $request->input('page', 1);
+        $perPage = 20;
+        $paginated = new \Illuminate\Pagination\LengthAwarePaginator(
+            $families->forPage($page, $perPage)->values(),
+            $families->count(),
+            $perPage,
+            $page,
+            ['path' => url()->current()]
+        );
 
         return response()->json([
-            'families' => $families,
+            'families' => $paginated,
             'puroks' => $puroks,
         ]);
     }
