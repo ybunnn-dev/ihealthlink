@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if(programTypeDefine === 'maternal_health_tcl'){
       import('./pages/health-programs/enroll-maternal.js');
     }else if(programTypeDefine === 'child_healthcare_tcl'){
-      console.log('hello');
+      import('./pages/health-programs/enroll-child.js');
     }else if(programTypeDefine === 'family_planning_tcl'){
       import('./pages/health-programs/enroll-family-planning.js');
     }

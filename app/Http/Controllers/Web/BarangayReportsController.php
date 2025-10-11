@@ -167,117 +167,117 @@ class BarangayReportsController extends Controller
         $malePerAgePerPurok = [];
         $femalePerAgePerPurok = [];
 
-foreach ($puroks as $purok) {
-    $purokName = $purok->name;
-    $purokId = $purok->id;
+    foreach ($puroks as $purok) {
+        $purokName = $purok->name;
+        $purokId = $purok->id;
 
-    // Collect active residents for this purok based on their purok_id and residence history
-    $residentsCollection = Resident::where('purok_id', $purokId)
-        ->whereHas('residenceHistory', function($query) use ($startDate, $endDate, $brgyId) {
-            $query->whereHas('purok', fn($q) => $q->where('brgy_id', $brgyId))
-                ->where('status', 'active')
-                ->when($startDate, fn($q) => $q->whereDate('updated_at', '>=', $startDate))
-                ->when($endDate, fn($q) => $q->whereDate('created_at', '<=', $endDate));
-        })
-        ->get();
+        // Collect active residents for this purok based on their purok_id and residence history
+        $residentsCollection = Resident::where('purok_id', $purokId)
+            ->whereHas('residenceHistory', function($query) use ($startDate, $endDate, $brgyId) {
+                $query->whereHas('purok', fn($q) => $q->where('brgy_id', $brgyId))
+                    ->where('status', 'active')
+                    ->when($startDate, fn($q) => $q->whereDate('updated_at', '>=', $startDate))
+                    ->when($endDate, fn($q) => $q->whereDate('created_at', '<=', $endDate));
+            })
+            ->get();
 
-    // Count total residents
-    $residentsPerPurok[$purokName] = $residentsCollection->count();
+        // Count total residents
+        $residentsPerPurok[$purokName] = $residentsCollection->count();
 
-    // Pre-filter residents by sex for efficiency
-    $maleResidents = $residentsCollection->where('sex', 'male');
-    $femaleResidents = $residentsCollection->where('sex', 'female');
+        // Pre-filter residents by sex for efficiency
+        $maleResidents = $residentsCollection->where('sex', 'male');
+        $femaleResidents = $residentsCollection->where('sex', 'female');
 
-    // Count by sex
-    $malesPerPurok[$purokName] = $maleResidents->count();
-    $femalesPerPurok[$purokName] = $femaleResidents->count();
+        // Count by sex
+        $malesPerPurok[$purokName] = $maleResidents->count();
+        $femalesPerPurok[$purokName] = $femaleResidents->count();
 
-    // Count PWDs
-    $pwdsPerPurok[$purokName] = $residentsCollection->where('is_pwd', true)->count();
-    $nonPwdsPerPurok[$purokName] = $residentsCollection->where('is_pwd', false)->count();
-    $malePwdsPerPurok[$purokName] = $maleResidents->where('is_pwd', true)->count();
-    $femalePwdsPerPurok[$purokName] = $femaleResidents->where('is_pwd', true)->count();
+        // Count PWDs
+        $pwdsPerPurok[$purokName] = $residentsCollection->where('is_pwd', true)->count();
+        $nonPwdsPerPurok[$purokName] = $residentsCollection->where('is_pwd', false)->count();
+        $malePwdsPerPurok[$purokName] = $maleResidents->where('is_pwd', true)->count();
+        $femalePwdsPerPurok[$purokName] = $femaleResidents->where('is_pwd', true)->count();
 
-    // Count WRA (Women of Reproductive Age: 10-49 years old)
-    $wraPerPurok[$purokName] = $femaleResidents->filter(function($resident) use ($end) {
-        if (!$resident->birthdate) return false;
-        $age = \Carbon\Carbon::parse($resident->birthdate)->diffInYears($end);
-        return $age >= 10 && $age <= 49;
-    })->count();
+        // Count WRA (Women of Reproductive Age: 10-49 years old)
+        $wraPerPurok[$purokName] = $femaleResidents->filter(function($resident) use ($end) {
+            if (!$resident->birthdate) return false;
+            $age = \Carbon\Carbon::parse($resident->birthdate)->diffInYears($end);
+            return $age >= 10 && $age <= 49;
+        })->count();
 
-    // Initialize age group arrays for this purok
-    $ageGroupMalePerPurok[$purokName] = [];
-    $ageGroupFemalePerPurok[$purokName] = [];
-    $malePerAgePerPurok[$purokName] = [];
-    $femalePerAgePerPurok[$purokName] = [];
+        // Initialize age group arrays for this purok
+        $ageGroupMalePerPurok[$purokName] = [];
+        $ageGroupFemalePerPurok[$purokName] = [];
+        $malePerAgePerPurok[$purokName] = [];
+        $femalePerAgePerPurok[$purokName] = [];
 
-    // Process each age group
-    foreach ($ageGroups as $range) {
-        if (str_contains($range, 'months')) {
-            // Parse months range (e.g., "0-11 months" or "0+ months")
-            $parsedRange = str_replace(' months', '', $range);
-            [$min, $max] = explode('-', $parsedRange) + [0, null];
-            $min = (int)$min;
-            $max = $max !== null ? (int)$max : null;
+        // Process each age group
+        foreach ($ageGroups as $range) {
+            if (str_contains($range, 'months')) {
+                // Parse months range (e.g., "0-11 months" or "0+ months")
+                $parsedRange = str_replace(' months', '', $range);
+                [$min, $max] = explode('-', $parsedRange) + [0, null];
+                $min = (int)$min;
+                $max = $max !== null ? (int)$max : null;
 
-            // Count males in this months-based age range
-            $maleCount = $maleResidents->filter(function($resident) use ($min, $max, $end) {
-                if (!$resident->birthdate) return false;
-                $ageInMonths = \Carbon\Carbon::parse($resident->birthdate)->diffInMonths($end);
-                return $max ? ($ageInMonths >= $min && $ageInMonths <= $max) : ($ageInMonths >= $min);
-            })->count();
+                // Count males in this months-based age range
+                $maleCount = $maleResidents->filter(function($resident) use ($min, $max, $end) {
+                    if (!$resident->birthdate) return false;
+                    $ageInMonths = \Carbon\Carbon::parse($resident->birthdate)->diffInMonths($end);
+                    return $max ? ($ageInMonths >= $min && $ageInMonths <= $max) : ($ageInMonths >= $min);
+                })->count();
 
-            // Count females in this months-based age range
-            $femaleCount = $femaleResidents->filter(function($resident) use ($min, $max, $end) {
-                if (!$resident->birthdate) return false;
-                $ageInMonths = \Carbon\Carbon::parse($resident->birthdate)->diffInMonths($end);
-                return $max ? ($ageInMonths >= $min && $ageInMonths <= $max) : ($ageInMonths >= $min);
-            })->count();
+                // Count females in this months-based age range
+                $femaleCount = $femaleResidents->filter(function($resident) use ($min, $max, $end) {
+                    if (!$resident->birthdate) return false;
+                    $ageInMonths = \Carbon\Carbon::parse($resident->birthdate)->diffInMonths($end);
+                    return $max ? ($ageInMonths >= $min && $ageInMonths <= $max) : ($ageInMonths >= $min);
+                })->count();
 
-        } else {
-            // Parse years range (e.g., "18-24 years" or "65+ years")
-            $parsedRange = str_replace(' years', '', $range);
-            [$min, $max] = explode('-', $parsedRange) + [0, null];
-            $min = (int)$min;
-            $max = $max !== null ? (int)$max : null;
+            } else {
+                // Parse years range (e.g., "18-24 years" or "65+ years")
+                $parsedRange = str_replace(' years', '', $range);
+                [$min, $max] = explode('-', $parsedRange) + [0, null];
+                $min = (int)$min;
+                $max = $max !== null ? (int)$max : null;
 
-            // Count males in this years-based age range
-            $maleCount = $maleResidents->filter(function($resident) use ($min, $max, $end) {
-                if (!$resident->birthdate) return false;
-                $ageInYears = \Carbon\Carbon::parse($resident->birthdate)->diffInYears($end);
-                return $max ? ($ageInYears >= $min && $ageInYears <= $max) : ($ageInYears >= $min);
-            })->count();
+                // Count males in this years-based age range
+                $maleCount = $maleResidents->filter(function($resident) use ($min, $max, $end) {
+                    if (!$resident->birthdate) return false;
+                    $ageInYears = \Carbon\Carbon::parse($resident->birthdate)->diffInYears($end);
+                    return $max ? ($ageInYears >= $min && $ageInYears <= $max) : ($ageInYears >= $min);
+                })->count();
 
-            // Count females in this years-based age range
-            $femaleCount = $femaleResidents->filter(function($resident) use ($min, $max, $end) {
-                if (!$resident->birthdate) return false;
-                $ageInYears = \Carbon\Carbon::parse($resident->birthdate)->diffInYears($end);
-                return $max ? ($ageInYears >= $min && $ageInYears <= $max) : ($ageInYears >= $min);
-            })->count();
+                // Count females in this years-based age range
+                $femaleCount = $femaleResidents->filter(function($resident) use ($min, $max, $end) {
+                    if (!$resident->birthdate) return false;
+                    $ageInYears = \Carbon\Carbon::parse($resident->birthdate)->diffInYears($end);
+                    return $max ? ($ageInYears >= $min && $ageInYears <= $max) : ($ageInYears >= $min);
+                })->count();
+            }
+
+            // Store counts for this age group
+            $ageGroupMalePerPurok[$purokName][] = $maleCount;
+            $ageGroupFemalePerPurok[$purokName][] = $femaleCount;
         }
 
-        // Store counts for this age group
-        $ageGroupMalePerPurok[$purokName][] = $maleCount;
-        $ageGroupFemalePerPurok[$purokName][] = $femaleCount;
-    }
+        // Count residents by exact age (in years)
+        foreach ($residentsCollection as $resident) {
+            if (!$resident->birthdate) continue;
+            
+            $age = \Carbon\Carbon::parse($resident->birthdate)->diffInYears($end);
 
-    // Count residents by exact age (in years)
-    foreach ($residentsCollection as $resident) {
-        if (!$resident->birthdate) continue;
-        
-        $age = \Carbon\Carbon::parse($resident->birthdate)->diffInYears($end);
-
-        if ($resident->sex === 'male') {
-            $malePerAgePerPurok[$purokName][$age] = ($malePerAgePerPurok[$purokName][$age] ?? 0) + 1;
-        } elseif ($resident->sex === 'female') {
-            $femalePerAgePerPurok[$purokName][$age] = ($femalePerAgePerPurok[$purokName][$age] ?? 0) + 1;
+            if ($resident->sex === 'male') {
+                $malePerAgePerPurok[$purokName][$age] = ($malePerAgePerPurok[$purokName][$age] ?? 0) + 1;
+            } elseif ($resident->sex === 'female') {
+                $femalePerAgePerPurok[$purokName][$age] = ($femalePerAgePerPurok[$purokName][$age] ?? 0) + 1;
+            }
         }
-    }
 
-    // Sort age arrays by age (ascending)
-    ksort($malePerAgePerPurok[$purokName]);
-    ksort($femalePerAgePerPurok[$purokName]);
-}
+        // Sort age arrays by age (ascending)
+        ksort($malePerAgePerPurok[$purokName]);
+        ksort($femalePerAgePerPurok[$purokName]);
+    }
 
        $residentsCollection = ResidenceHistory::with('resident') // eager load the related resident
             ->whereHas('purok', function ($q) use ($brgyId) {
@@ -388,7 +388,11 @@ foreach ($puroks as $purok) {
             'without_toilet' => $households4sanitary->filter(fn($h) => $h->sanitary_toilet === 'without_toilet')->count(),
         ];
 
-        $puroks = Purok::where('brgy_id', $brgyId)->orderBy('created_at')->pluck('name')->toArray();
+        $puroks = Purok::where('brgy_id', $brgyId)
+            ->orderBy('created_at')
+            ->get()
+            ->map(fn($p) => $p->name)
+            ->toArray();
 
         $data = [
             'residents' => $totalResidents,

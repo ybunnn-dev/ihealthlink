@@ -275,8 +275,13 @@
     <div class="hidden" id="hpdata">{{ $healthProgram->id }}</div>
     @include('components.modals.health-program.enroll-resident-modal')
     @include('components.modals.qr-scanner')
-    @include('components.modals.health-program.tcl-programs.enroll-maternity')
-    @include('components.modals.health-program.tcl-programs.enroll-family-planning')
+    @if ($healthProgram->category === 'maternal_health_tcl')
+        @include('components.modals.health-program.tcl-programs.enroll-maternity')
+    @elseif ($healthProgram->category === 'child_healthcare_tcl')
+        @include('components.modals.health-program.tcl-programs.enroll-child')
+    @else
+        @include('components.modals.health-program.tcl-programs.enroll-family-planning')
+    @endif
     @vite('resources/js/modals/qr-scanner.js')
 </x-app-layout>
 
