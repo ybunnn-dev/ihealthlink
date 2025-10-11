@@ -1,3 +1,4 @@
+<script>window</script>
 <div id="create-referral-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
     <div class="relative p-4 w-full max-w-6xl max-h-full">
         <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700 py-10 px-8">
@@ -13,8 +14,8 @@
                     
                     <div class="slg2:col-span-4 font-semibold text-lg border-b pb-2 text-normal_font">Referral Information</div>
 
-                    <div class="slg2:col-span-4 bg-blue-50 p-3 rounded-lg text-center">
-                        <p class="text-sm font-medium text-blue-800" id="referred-to">Referred to: Municipal Health Office of Municipal Health Office Daraga, Albay</p>
+                    <div class="slg2:col-span-4 bg-blue-50 p-3 rounded-lg text-start">
+                        <p class="text-sm font-medium text-blue-800">Referred to: <span id="referred-to">Municipal Health Office of Municipal Health Office Daraga, Albay</span></p>
                     </div>
                     
                     <div>
@@ -24,15 +25,23 @@
                     <div>
                         <label for="referred-time" class="block mb-2 text-sm font-medium text-main_font">Referred Time</label>
                         <input type="time" id="referred-time" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                        <span id="formatted-time" hidden style="margin-left: 8px; font-weight: 500;"></span>
                     </div>
-                    <div class="slg2:col-span-2">
-                        <label for="referred-from" class="block mb-2 text-sm font-medium text-main_font">Referred From (Facility Address)</label>
-                        <input type="text" id="referred-from" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                     <div class="slg2:col-span-1">
+                        <label for="purokSelect" class="block mb-2 text-sm font-medium text-main_font">Referred From</label>
+                        <select id="purokSelect" class="bg-gray-100 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                            <option value=""selected>Select Purok</option>
+                        </select>
+                    </div>
+                    
+                    <div class="slg2:col-span-1">
+                        <label for="referred-from" class="block mb-2 text-sm font-medium text-main_font">Barangay</label>
+                        <input type="text" id="referred-from" disabled class="bg-gray-100 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                     </div>
                     <div class="slg2:col-span-4">
                         <label for="referral-needs" class="block mb-2 text-sm font-medium text-main_font">Referral Needs</label>
                         <select id="referral-needs" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                            <option selected>Choose a reason</option>
+                            <option value="" selected>Choose a reason</option>
                             <option value="checkup">Check-up</option>
                             <option value="dental">Dental</option>
                             <option value="meds">Maintenance Meds</option>
@@ -46,7 +55,7 @@
                     
                     <div class="slg2:col-span-2">
                         <label for="patient-name" class="block mb-2 text-sm font-medium text-main_font">Name of Patient</label>
-                        <input type="text" id="patient-name" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5">
+                        <input type="text" id="patient-name" disabled class="bg-gray-100 border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5">
                     </div>
                     <div>
                         <label for="patient-birthdate" class="block mb-2 text-sm font-medium text-main_font">Birthdate</label>
@@ -58,20 +67,20 @@
                     </div>
                     <div class="slg2:col-span-4">
                         <label for="patient-address" class="block mb-2 text-sm font-medium text-main_font">Complete Address</label>
-                        <input type="text" id="patient-address" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5">
+                        <input type="text" id="patient-address" disabled class="bg-gray-100 border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5">
                     </div>
                     <div>
                         <label for="patient-sex" class="block mb-2 text-sm font-medium text-main_font">Sex</label>
-                        <select id="patient-sex" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5">
-                            <option selected>Choose Sex</option>
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
+                        <select id="patient-sex" disabled class="bg-gray-100 border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5">
+                            <option value="" selected>Choose Sex</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
                         </select>
                     </div>
                      <div>
                         <label for="civil-status" class="block mb-2 text-sm font-medium text-main_font">Civil Status</label>
-                        <select id="civil-status" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5">
-                            <option selected>Choose Status</option>
+                        <select id="civil-status" disabled class="bg-gray-100 border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5">
+                            <option value="" selected>Choose Status</option>
                             <option value="single">Single</option>
                             <option value="married">Married</option>
                             <option value="widowed">Widowed</option>
@@ -126,7 +135,8 @@
                             <div>
                                 <label for="is-pregnant" class="block mb-2 text-sm font-medium text-main_font">Is Pregnant?</label>
                                 <select id="is-pregnant" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5">
-                                    <option value="no" selected>No</option>
+                                    <option value="" selected>Select</option>
+                                    <option value="no" >No</option>
                                     <option value="yes">Yes</option>
                                 </select>
                             </div>
@@ -193,3 +203,4 @@
         </div>
     </div>
 </div>
+@include('components.modals.consultation.create-referral-confirm')

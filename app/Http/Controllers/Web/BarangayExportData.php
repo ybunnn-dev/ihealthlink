@@ -437,146 +437,6 @@ class BarangayExportData extends Controller
         }
     }
 
-    public function exportCommunityReportCsv(Request $request)
-    {
-        $startDate = $request->query('startDate'); 
-        $endDate = $request->query('endDate');
-
-        $data = $this->generateCommunityReport($startDate, $endDate);
-        $fileName = 'Community-Report-' . date('Y-m-d') . '.csv';
-
-        // Set headers to force a download
-        header('Content-Type: text/csv');
-        header('Content-Disposition: attachment; filename="' . $fileName . '"');
-
-        // Open the output stream
-        $handle = fopen('php://output', 'w');
-
-        // --- SECTION 1: PAGE 1 DATA ---
-        $formattedStart = $startDate ? $endDate : 'N/A';
-        $formattedEnd = $endDate ? $endDate : 'N/A';
-        fputcsv($handle, ['Community Profile Report']);
-        fputcsv($handle, ["Reporting Period: {$formattedStart} - {$formattedEnd}"]);
-        fputcsv($handle, []); 
-
-        // Write simple key-value sections
-        $this->writeKeyValueSectionToCsv($handle, 'Population', $data['page1']['population']);
-        $this->writeKeyValueSectionToCsv($handle, 'Households', $data['page1']['households']);
-        $this->writeKeyValueSectionToCsv($handle, 'Seniors', $data['page1']['seniors']);
-        $this->writeKeyValueSectionToCsv($handle, 'PWD', $data['page1']['pwd']);
-        
-        // Write other indicators
-        fputcsv($handle, ['Other Indicators']);
-        fputcsv($handle, ['Total Families', $data['page1']['families']]);
-        fputcsv($handle, ['4Ps Beneficiaries', $data['page1']['four_ps']]);
-        fputcsv($handle, ['Women of Reproductive Age (WRA)', $data['page1']['wra']]);
-        fputcsv($handle, ['Pregnant', $data['page1']['pregnant']['total'] ?? 'N/A']);
-        fputcsv($handle, ['Lactating', $data['page1']['lactating'] ?? 'N/A']);
-        fputcsv($handle, []);
-
-        // Write Age & Sex Distribution table
-        fputcsv($handle, ['Age & Sex Distribution']);
-        fputcsv($handle, ['Age Group', 'Male', 'Female']);
-        foreach ($data['page1']['age_sex_distribution'] as $row) {
-            fputcsv($handle, [$row['group'], $row['male'], $row['female']]);
-        }
-        fputcsv($handle, []);
-
-        $this->writeKeyValueSectionToCsv($handle, 'Household Sanitation', $data['page1']['sanitation']);
-        $this->writeKeyValueSectionToCsv($handle, 'Household Water Source', $data['page1']['water']);
-
-
-        // --- SECTION 2: PAGE 2 DATA ---
-        fputcsv($handle, []);
-        fputcsv($handle, []); // Add extra spacing
-        fputcsv($handle, ['PUROK DATA SUMMARY (PAGE 2)']);
-        fputcsv($handle, []);
-
-        $this->writePurokTableToCsv($handle, 'Summary', $data['page2']['summary']);
-        $this->writePurokTableToCsv($handle, 'Age Grouping', $data['page2']['age_grouping']);
-        
-        fputcsv($handle, ['Projected Population', $data['page2']['projected_population']]);
-
-        // --- SECTION 3: PAGE 3 DATA ---
-        fputcsv($handle, []);
-        fputcsv($handle, []);
-        fputcsv($handle, ['DEMOGRAPHIC DATA BY AGE (PAGE 3)']);
-        fputcsv($handle, []);
-
-        // Prepare headers
-        $headers = array_merge(['Age'], $data['page3']['puroks'], ['Total']);
-        fputcsv($handle, $headers);
-
-        // Loop through ages
-        foreach ($data['page3']['ages'] as $age) {
-            $rowTotal = 0;
-            $row = [$age];
-
-            foreach ($data['page3']['puroks'] as $purokName) {
-                $male = $data['page3']['malePerPurok'][$purokName][$age] ?? 0;
-                $female = $data['page3']['femalePerPurok'][$purokName][$age] ?? 0;
-                $total = $male + $female;
-
-                $row[] = $total;
-                $rowTotal += $total;
-            }
-
-            $row[] = $rowTotal; // Append total column
-            fputcsv($handle, $row);
-        }
-        fputcsv($handle, []); // blank line for spacing
-        // Close the stream
-        fclose($handle);
-        exit;
-    }
-
-    /**
-     * Helper function to write simple key-value data to the CSV.
-     */
-    private function writeKeyValueSectionToCsv($handle, $title, $data)
-    {
-        fputcsv($handle, [$title]);
-        foreach ($data as $key => $value) {
-            // Format the key to be more readable
-            $formattedKey = str_replace('_', ' ', ucfirst($key));
-            $outputValue = is_array($value) ? ($value['total'] ?? implode(', ', $value)) : $value;
-            fputcsv($handle, [$formattedKey, $outputValue]);
-        }
-        fputcsv($handle, []); // Blank line for spacing
-    }
-
-    /**
-     * Helper function to write the complex purok tables to the CSV.
-     */
-    private function writePurokTableToCsv($handle, $title, $tableData)
-    {
-        if (empty($tableData)) return;
-
-        fputcsv($handle, [$title]);
-
-        // Generate and write headers
-        $headers = ['Label'];
-        $numPuroks = count($tableData[0]['purok_data'] ?? []);
-        for ($i = 1; $i <= $numPuroks; $i++) {
-            $headers[] = 'Purok ' . $i;
-        }
-        $headers[] = 'Total';
-        fputcsv($handle, $headers);
-
-        // Write data rows
-        foreach ($tableData as $dataRow) {
-            if (isset($dataRow['is_header']) && $dataRow['is_header']) {
-                // For section headers within the table, just write the label
-                fputcsv($handle, [$dataRow['label']]);
-            } else {
-                // For data rows, combine all parts into one array and write
-                $rowData = array_merge([$dataRow['label']], $dataRow['purok_data'], [$dataRow['total']]);
-                fputcsv($handle, $rowData);
-            }
-        }
-        fputcsv($handle, []); // Blank line for spacing
-    }
-
     public function downloadCommunityReport(Request $request)
     {
         $startDate = $request->query('startDate'); // from URL
@@ -588,5 +448,22 @@ class BarangayExportData extends Controller
                 ->setPaper('Legal', 'portrait');
 
         return $pdf->download('Barangay-Tagas-Report-2025.pdf');
+    }
+
+    public function exportReferralPdf(Request $request)
+    {
+        // Get all the data sent from the JavaScript payload
+        $data = $request->all();
+
+        // Load the Blade view with the data
+        $pdf = Pdf::loadView('reports.referral_form', ['data' => $data]);
+
+        // (Optional) Sanitize the patient's name for a clean filename
+        $patientName = $data['patientInfo']['name'] ?? 'patient';
+        $safeName = preg_replace('/[^A-Za-z0-9\-]/', '_', $patientName);
+        $fileName = 'Referral-Form-' . $safeName . '.pdf';
+
+        // Return the generated PDF to the browser for download
+        return $pdf->download($fileName);
     }
 }

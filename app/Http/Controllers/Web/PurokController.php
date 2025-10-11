@@ -133,4 +133,25 @@ class PurokController extends Controller
             'status' => $purok->status,
         ], 200);
     }
+    public function getPuroks(){
+        $user = Auth::user();
+
+        if ($user->bhwWeb && $user->bhwWeb->role_id == 4) {
+            $personnel = $user->bhwWeb;
+        }  else {
+            $personnel = $user->midwife;
+        }
+
+        if (!$personnel) {
+            abort(403, 'Unauthorized access.');
+        }
+
+        $barangay = Barangay::with('puroks')->find($personnel->brgy_id);
+        $puroks = $barangay?->puroks ?? collect();
+
+        return response()->json([
+            'puroks' => $puroks
+        ]);
+        
+    }
 }

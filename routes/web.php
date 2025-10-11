@@ -284,5 +284,9 @@ Route::middleware([
     Route::post('/barangay/health-programs/philpen/create', [ConsultationController::class, 'createPhilpenData'])
     ->name('barangay.health-programs.philpen.create');
 
+    Route::get('/barangay/get-puroks', [PurokController::class, 'getPuroks']);
+
+    Route::post('/export/referral-pdf', [BarangayExportData::class, 'exportReferralPdf']);
+
 });
 

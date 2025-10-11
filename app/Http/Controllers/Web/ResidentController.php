@@ -170,129 +170,174 @@ class ResidentController extends Controller
   
     public function getResident(Request $request)
     {
-        $personnel = Auth::user()->midwife;
-        $barangay = Barangay::with('puroks')->find($personnel->brgy_id);
+        $user = Auth::user();
+
+        // --- Validate midwife access ---
+        if (!$user || !$user->midwife) {
+            return response()->json(['error' => 'Unauthorized or invalid user.'], 403);
+        }
+
+        $barangay = Barangay::with('puroks')->find($user->midwife->brgy_id);
+        if (!$barangay) {
+            return response()->json(['error' => 'Barangay not found.'], 404);
+        }
+
         $puroks = $barangay->puroks;
         $purokIds = $puroks->pluck('id');
 
-        // --- Get program info ---
-        $programId = $request->input('healthProgramId'); 
-        $program = HealthProgram::findOrFail($programId);
+        // --- Validate health program ---
+        $programId = $request->input('healthProgramId');
+        if (!$programId) {
+            return response()->json(['error' => 'Health Program ID is required.'], 422);
+        }
+
+        $program = HealthProgram::find($programId);
+        if (!$program) {
+            return response()->json(['error' => 'Health Program not found.'], 404);
+        }
 
         $today = now()->toDateString();
 
-        $query = Resident::with('family.household.purok')
+        // --- Base Query (no encrypted field conditions) ---
+        $residents = Resident::with('family.household.purok')
             ->whereHas('family.household', function ($q) use ($purokIds) {
                 $q->whereIn('purok_id', $purokIds);
             })
-            // --- Exclude residents already enrolled ---
             ->whereDoesntHave('enrolledResidents', function ($q) use ($programId) {
                 $q->where('program_id', $programId);
             })
-            // --- Filter by age ---
-            ->whereRaw("TIMESTAMPDIFF(YEAR, birthdate, ?) BETWEEN ? AND ?", [
-                $today, $program->age_min, $program->age_max
-            ]);
+            ->get(); // Fetch all first
 
-        // --- Search parameter ---
-        if ($request->filled('search')) {
-            $search = $request->input('search');
-            $query->where(function ($q) use ($search) {
-                $q->where('firstName', 'like', "%{$search}%")
-                ->orWhere('middleName', 'like', "%{$search}%")
-                ->orWhere('lastName', 'like', "%{$search}%");
-            });
-        }
+        // --- Filter by age (decrypted birthdate) ---
+        $residents = $residents->filter(function ($resident) use ($program, $today) {
+            if (!$resident->birthdate) return false;
 
-        // --- Purok filter ---
-        if ($request->filled('purok_id')) {
-            $purokId = $request->input('purok_id');
-            $query->whereHas('family.household', function ($q) use ($purokId) {
-                $q->where('purok_id', $purokId);
-            });
-        }
-
-        $residents = $query->get();
-
-        // --- Attach purok info and normalize birthdate ---
-        $residents->each(function ($resident) {
-            $resident->purok = $resident->family->household->purok ?? null;
-
-            // Convert birthdate (string) to Carbon date, if valid
             try {
-                if (!empty($resident->birthdate)) {
-                    $resident->birthdate = Carbon::parse($resident->birthdate)->toDateString();
-                }
+                $birthdate = Carbon::parse($resident->birthdate);
+                $age = $birthdate->diffInYears($today);
+                return $age >= $program->age_min && $age <= $program->age_max;
             } catch (\Exception $e) {
-                // Optional: Log invalid date formats
-                \Log::warning('Invalid birthdate format for resident ID ' . $resident->id);
-                $resident->birthdate = null;
+                \Log::warning("Invalid birthdate format for resident ID {$resident->id}");
+                return false;
             }
         });
 
-        return response()->json([
-            'residents' => $residents,
-            'puroks' => $puroks
-        ]);
-    }
-
-
-    public function getWRA(Request $request)
-    {
-        $personnel = Auth::user()->midwife;
-        $barangay = Barangay::with('puroks')->find($personnel->brgy_id);
-        $puroks = $barangay->puroks;
-        $purokIds = $puroks->pluck('id');
-
-        $programId = $request->input('healthProgramId'); 
-        $program = HealthProgram::findOrFail($programId);
-
-        $today = now()->toDateString();
-
-        $query = Resident::with('family.household.purok')
-            ->whereHas('family.household', function ($q) use ($purokIds) {
-                $q->whereIn('purok_id', $purokIds);
-            })
-            // --- Exclude residents already enrolled ---
-            ->whereDoesntHave('enrolledResidents', function ($q) use ($programId) {
-                $q->where('program_id', $programId)
-                ->where('status', 'active'); // only exclude active enrollments
-            })
-            // --- Female only ---
-            ->where('sex', 'female')
-            // --- Age strictly 10–49 years old ---
-            ->whereRaw("TIMESTAMPDIFF(YEAR, birthdate, ?) BETWEEN ? AND ?", [
-                $today, $program->age_min, $program->age_max
-            ]);
-        // --- Search parameter ---
-        if ($request->filled('search') && $request->filled('search') !== '') {
-            $search = $request->input('search');
-            $query->where(function ($q) use ($search) {
-                $q->where('firstName', 'like', "%{$search}%")
-                ->orWhere('middleName', 'like', "%{$search}%")
-                ->orWhere('lastName', 'like', "%{$search}%");
+        // --- Search filter (decrypted fields) ---
+        if ($request->filled('search')) {
+            $search = strtolower($request->input('search'));
+            $residents = $residents->filter(function ($resident) use ($search) {
+                return str_contains(strtolower($resident->firstName ?? ''), $search)
+                    || str_contains(strtolower($resident->middleName ?? ''), $search)
+                    || str_contains(strtolower($resident->lastName ?? ''), $search);
             });
         }
 
-        // --- Purok filter ---
+        // --- Filter by purok ---
         if ($request->filled('purok_id')) {
             $purokId = $request->input('purok_id');
-            $query->whereHas('family.household', function ($q) use ($purokId) {
-                $q->where('purok_id', $purokId);
+            $residents = $residents->filter(function ($resident) use ($purokId) {
+                return $resident->family?->household?->purok_id == $purokId;
             });
         }
 
-        $residents = $query->get();
-
-        // Attach purok info
+        // --- Attach purok info ---
         $residents->each(function ($resident) {
             $resident->purok = $resident->family->household->purok ?? null;
         });
 
         return response()->json([
-            'residents' => $residents,
+            'residents' => $residents->values(), // reset indexes
             'puroks' => $puroks
         ]);
     }
+    
+    public function getWRA(Request $request)
+    {
+        $user = Auth::user();
+
+        // --- Validate midwife access ---
+        if (!$user || !$user->midwife) {
+            return response()->json(['error' => 'Unauthorized or invalid user.'], 403);
+        }
+
+        $barangay = Barangay::with('puroks')->find($user->midwife->brgy_id);
+        if (!$barangay) {
+            return response()->json(['error' => 'Barangay not found.'], 404);
+        }
+
+        $puroks = $barangay->puroks;
+        $purokIds = $puroks->pluck('id');
+
+        // --- Validate health program ---
+        $programId = $request->input('healthProgramId');
+        if (!$programId) {
+            return response()->json(['error' => 'Health Program ID is required.'], 422);
+        }
+
+        $program = HealthProgram::find($programId);
+        if (!$program) {
+            return response()->json(['error' => 'Health Program not found.'], 404);
+        }
+
+        $today = now();
+
+        // --- Base Query: only unencrypted filters (relations, sex, enrollment, etc.) ---
+        $residents = Resident::with('family.household.purok')
+            ->whereHas('family.household', function ($q) use ($purokIds) {
+                $q->whereIn('purok_id', $purokIds);
+            })
+            ->where('sex', 'female') // not encrypted
+            ->whereDoesntHave('enrolledResidents', function ($q) use ($programId) {
+                $q->where('program_id', $programId)
+                ->where('status', 'active');
+            })
+            ->get(); // Fetch first before filtering encrypted/decrypted data
+
+        // --- AGE FILTER: 10–49 (based on decrypted birthdate) ---
+        $residents = $residents->filter(function ($resident) use ($program, $today) {
+            if (!$resident->birthdate) return false;
+
+            try {
+                $birthdate = Carbon::parse($resident->birthdate);
+                $age = $birthdate->diffInYears($today);
+                return $age >= $program->age_min && $age <= $program->age_max;
+            } catch (\Exception $e) {
+                \Log::warning("Invalid birthdate format for resident ID {$resident->id}");
+                return false;
+            }
+        });
+
+        // --- SEARCH FILTER: by decrypted names ---
+        if ($request->filled('search')) {
+            $search = strtolower($request->input('search'));
+
+            $residents = $residents->filter(function ($resident) use ($search) {
+                return str_contains(strtolower($resident->firstName ?? ''), $search)
+                    || str_contains(strtolower($resident->middleName ?? ''), $search)
+                    || str_contains(strtolower($resident->lastName ?? ''), $search);
+            });
+        }
+
+        // --- PUROK FILTER ---
+        if ($request->filled('purok_id')) {
+            $purokId = $request->input('purok_id');
+
+            $residents = $residents->filter(function ($resident) use ($purokId) {
+                return $resident->family?->household?->purok_id == $purokId;
+            });
+        }
+
+        // --- Attach Purok Info ---
+        $residents->each(function ($resident) {
+            $resident->purok = $resident->family->household->purok ?? null;
+        });
+
+        // --- Return final response ---
+        return response()->json([
+            'residents' => $residents->values(), // reset indexes
+            'puroks' => $puroks
+        ]);
+    }
+
 
 }   

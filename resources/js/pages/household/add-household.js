@@ -24,18 +24,17 @@ const confirmAddHouseholdSubmit = document.getElementById('confirm-add-household
 const confirmAddHouseholdCheckbox = document.getElementById('confirm-household-checkbox');
 
 
-const successModalEl = document.getElementById('success-modal');
-const successMesageHeader = document.getElementById('success-msg-head');
-const successMessage = document.getElementById('success-message');
-const closeSuccessModalButton = document.getElementById('close-success-modal-button');
-
-
 const sanitaryDropdownBtn = document.getElementById('sanitarySelect');
 const wasteDisposalDropdownBtn = document.getElementById('wasteDisposalSelect');
 
-const successModal = new Modal(successModalEl);
-const addHouseholdModal = new Modal(addHouseholdModalEl);
-const confirmAddHouseholdModal = new Modal(confirmAddHouseholdModalEl);
+const modalOptions = {
+    placement: 'center-center',
+    backdrop: 'static',
+    closable: false,
+};
+
+const addHouseholdModal = new Modal(addHouseholdModalEl, modalOptions);
+const confirmAddHouseholdModal = new Modal(confirmAddHouseholdModalEl, modalOptions);
 
 
 const confirmPurok = document.getElementById('confirm-purok');
@@ -171,11 +170,8 @@ confirmAddHouseholdSubmit.addEventListener('click', function(){
     .then(data => {
         console.log('Backend response:', data);
         if(data.result === 'success'){
-            createdHouseholdId = data.household.id;
-            confirmAddHouseholdModal.hide();
-            successMesageHeader.textContent = "Household Added";
-            successMessage.textContent = "Household has been successfully added";
-            successModal.show();
+           alert('Household has been successfully added');
+           window.location.href = `/barangays/households/${createdHouseholdId}`;
         }
     })
     .catch(error => {
@@ -183,17 +179,14 @@ confirmAddHouseholdSubmit.addEventListener('click', function(){
     });
 });
 
-closeSuccessModalButton.addEventListener('click', function(){
-    window.location.href = `/barangays/households/${createdHouseholdId}`;
-});
-
 openAddHouseholdBtn.addEventListener('click', function () {
     initializePurokDropdown();
     addHouseholdModal.show();
 });
 
-findHouseholdTrigger.addEventListener('click', function () {
-    addHouseholdModal.hide();
+confirmAddHouseholdCancel.addEventListener('click', function(){
+    confirmAddHouseholdModal.hide();
+    addHouseholdModal.show();
 });
 
 // Function to show a modal (adds Tailwind classes)
