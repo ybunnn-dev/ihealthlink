@@ -23,7 +23,7 @@ class FamilyController extends Controller
         } elseif ($user->bhw && $user->bhw->role_id == 3) { // fixed bhwWeb -> bhw
             $personnel = $user->bhw;
         } else {
-            $personnel = Midwife::where('user_id', $user->id)->first();
+            $personnel = $user->midwife;
         }
 
         if (!$personnel) {

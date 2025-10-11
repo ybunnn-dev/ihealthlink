@@ -20,33 +20,107 @@ use Carbon\Carbon;
 
 class ResidentController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $personnel = Auth::user()->bhw;
+        $user = Auth::user();
 
-        // Find the barangay and the puroks that the user manages
+        // Determine personnel type (Midwife or BHW)
+        if ($user->bhwWeb && $user->bhwWeb->role_id == 4) {
+            $personnel = $user->bhwWeb;
+        } elseif ($user->bhw && $user->bhw->role_id == 3) {
+            $personnel = $user->bhw;
+        } else {
+            $personnel = $user->midwife;
+        }
+
+        if (!$personnel) {
+            abort(403, 'Unauthorized access.');
+        }
+
+        // Fetch barangay and puroks under the user
         $barangay = Barangay::with('puroks')->find($personnel->brgy_id);
-        $puroks = $barangay->puroks;
+        $puroks = $barangay?->puroks ?? collect();
 
-        // Get the households that belong to the puroks of that barangay
+        // Get households belonging to the user's puroks
         $purokIds = $puroks->pluck('id');
-        $households = Household::whereIn('purok_id', $purokIds)->get();
+        $householdIds = Household::whereIn('purok_id', $purokIds)->pluck('id');
 
-        // Get the families
-        $householdIds = $households->pluck('id');
-        $families = Family::with('household.purok')
-            ->whereIn('household_id', $householdIds)
-            ->get();
+        // Families within those households
+        $familyIds = Family::whereIn('household_id', $householdIds)->pluck('id');
 
-        // Get the residents
-        $familyIds = $families->pluck('id');
-        $residents = Resident::with('family.household.purok')
-            ->whereIn('family_id', $familyIds)
-            ->get();
+        // Base resident query (unencrypted filters)
+        $residentsQuery = Resident::with('family.household.purok')
+            ->whereIn('family_id', $familyIds);
+
+        /**
+         * FILTER BY PUROK
+         */
+        if ($request->filled('purok_id')) {
+            $purokId = $request->purok_id;
+            $residentsQuery->whereHas('family.household', function ($q) use ($purokId) {
+                $q->where('purok_id', $purokId);
+            });
+        }
+
+        // Fetch residents after DB-level filters
+        $residents = $residentsQuery->get();
+
+        /**
+         * SEARCH (for encrypted names)
+         */
+        if ($request->filled('search')) {
+            $search = strtolower($request->search);
+            $residents = $residents->filter(function ($resident) use ($search) {
+                return str_contains(strtolower($resident->firstName), $search) ||
+                    str_contains(strtolower($resident->middleName), $search) ||
+                    str_contains(strtolower($resident->lastName), $search);
+            })->values();
+        }
+
+        /**
+         * FILTER BY AGE GROUP (for encrypted birthdate)
+         */
+        $ageRanges = [
+            'infant' => [0, 1],
+            'child' => [2, 12],
+            'teen' => [13, 17],
+            'adult' => [18, 59],
+            'senior' => [60, 200],
+        ];
+
+        if ($request->filled('age_group') && isset($ageRanges[$request->age_group])) {
+            [$min, $max] = $ageRanges[$request->age_group];
+            $today = now();
+
+            $residents = $residents->filter(function ($resident) use ($min, $max, $today) {
+                try {
+                    $birthdate = \Carbon\Carbon::parse($resident->birthdate);
+                    $age = $birthdate->diffInYears($today);
+                    return $age >= $min && $age <= $max;
+                } catch (\Exception $e) {
+                    return false; // Skip invalid or missing birthdates
+                }
+            })->values();
+        }
+
+        /**
+         * PAGINATION (manual, since data is filtered in-memory)
+         */
+        $page = $request->get('page', 1);
+        $perPage = 20;
+
+        $paginated = new \Illuminate\Pagination\LengthAwarePaginator(
+            $residents->forPage($page, $perPage),
+            $residents->count(),
+            $perPage,
+            $page,
+            ['path' => $request->url(), 'query' => $request->query()]
+        );
 
         return response()->json([
             'success' => true,
-            'data' => $residents
+            'data' => $paginated,
+            'puroks' => $puroks,
         ]);
     }
 
