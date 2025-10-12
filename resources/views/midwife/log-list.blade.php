@@ -1,10 +1,6 @@
 @section('title', 'Logs')
+@section('page-id', 'brgy-logs')
 <x-app-layout>
-    <script>
-        document.addEventListener('DOMContentLoaded', function(){
-            console.log(@json($activityLogs));
-        });
-    </script>
     <div class="py-12 px-5">
         <div class="max-w-[90rem] mx-auto sm:px-6 lg:px-8">
             <h1 class="text-3xl font-semibold text-sub_blue mb-3">Logs</h1>
@@ -63,7 +59,7 @@
                         </div>
                         <div class="relative overflow-x-auto rounded-lg">
                             <table class="w-full text-sm text-left text-main_font">
-                                <thead class="text-xs text-main_font uppercase text-center bg-col_tab_h">
+                                <thead class="text-xs text-main_font uppercase bg-col_tab_h">
                                     <tr>
                                         <th scope="col" class="px-6 py-3">LOG #</th>
                                         <th scope="col" class="px-6 py-3">NAME</th>
@@ -75,7 +71,7 @@
                                 </thead>
                                 <tbody>
                                     @forelse ($activityLogs as $log)
-                                        <tr class="bg-white border-b text-normal_font text-center hover:bg-gray-50">
+                                        <tr class="bg-white border-b text-normal_font hover:bg-gray-50">
                                             <th scope="row" class="px-6 py-4 font-medium text-normal_font whitespace-nowrap">
                                                 {{-- Use loop's iteration to number logs and fix the missing 'id' property error --}}
                                                 {{ $log->id ?? '' }}
@@ -102,9 +98,13 @@
                                                 {{-- Parse the date string with Carbon before formatting for display --}}
                                                 {{ \Carbon\Carbon::parse($log->created_at)->format('M d, Y - h:i A') }}
                                             </td>
-                                            <td class="px-6 py-4">
-                                                {{-- Placeholder link for viewing log details --}}
-                                                <a href="#" class="text-white bg-mainblue hover:bg-blue-700 font-medium rounded-lg text-sm px-4 py-2">View</a>
+                                           <td class="px-6 py-4">
+                                                {{-- The data-id attribute now holds the log's ID --}}
+                                                <button
+                                                data-id="{{ $log->id }}" 
+                                                class="text-white bg-mainblue hover:bg-blue-700 font-medium rounded-lg text-sm px-4 py-2 view-log-btn">
+                                                View
+                                                </button> 
                                             </td>
                                         </tr>
                                     @empty
@@ -123,5 +123,6 @@
             </div>
         </div>
     </div>
+    @include('components.modals.logs.bhs-logs')
 </x-app-layout>
 

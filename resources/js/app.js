@@ -131,6 +131,9 @@ document.addEventListener('DOMContentLoaded', () => {
         import('./pages/health-programs/update-consultation.js');
     }
   }
+  else if(bodyClass.contains('brgy-logs')){
+    import('./pages/logs/brgy-logs.js');
+  }
   else {
     console.log('Not on reports page - charts not loaded');
   }
