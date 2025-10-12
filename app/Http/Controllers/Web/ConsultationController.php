@@ -92,6 +92,8 @@ class ConsultationController extends Controller
                 'distributed_by' => auth()->id(),
                 'consultation_id' => $consultation->id,
                 'quantity' => $medicine['quantity'],
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
             ]);
 
             // Reduce inventory using Eloquent

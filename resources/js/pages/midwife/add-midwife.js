@@ -54,7 +54,7 @@ const hideModal = (modalEl) => {
 };
 
 const confirmCheckbox = document.getElementById('confirm-midwife-checkbox');
-const proceedButton = document.getElementById('confirm-add-midwife-button');
+const proceedButton = document.getElementById('confirm-add-midwife-btn');
 const midwifeNameSpan = document.getElementById('midwife-name-to-confirm');
 
 // --- Setup & Helper Functions ---

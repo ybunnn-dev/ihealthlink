@@ -82,19 +82,22 @@ const confirmConsultationProceedBtn = document.getElementById('confirm-consultat
 
 const confirmAddConsultationModal = new Modal(confirmAddConsultationModalEl, {backdrop: 'static',closable: true,});
 
-function renderMedicineList() {
+function renderMedicineList(medicinesToRender = medicineInventory) {
     // Clear any existing content
     medicineListContainer.innerHTML = '';
 
-    // If there's no inventory, show a message
-    if (!medicineInventory || medicineInventory.length === 0) {
-        medicineListContainer.innerHTML = '<p class="text-center text-gray-500 dark:text-gray-400">No medicines available.</p>';
+    // If the provided list is empty, show a message.
+    if (!medicinesToRender || medicinesToRender.length === 0) {
+        // Check if the search bar has text to show a more specific message
+        const message = medicineSearch.value 
+            ? 'No medicines match your search.' 
+            : 'No medicines available.';
+        medicineListContainer.innerHTML = `<p class="text-center text-gray-500 dark:text-gray-400">${message}</p>`;
         return;
     }
 
-    // Create and append a card for each medicine
-    medicineInventory.forEach(medicine => {
-        // Determine stock color: green for available, red for zero
+    // Create and append a card for each medicine in the provided list
+    medicinesToRender.forEach(medicine => {
         const stockColor = medicine.remaining_stock > 0 ? 'text-green-600' : 'text-red-600';
         
         const medicineCardHTML = `
@@ -207,12 +210,14 @@ medicineListContainer.addEventListener('click', (event) => {
     // If there was a previously selected medicine, remove its highlight
     if (clickedMedicine) {
         clickedMedicine.classList.remove(...highlightClasses);
+      
     }
 
     // If the user clicks the same card again, deselect it
     if (clickedMedicine === clickedCard) {
         clickedMedicine = null;
         medicineQuantity.disabled = true;
+        medicineQuantity.value = '';
     } else {
         clickedCard.classList.add(...highlightClasses);
         clickedMedicine = clickedCard;
@@ -302,6 +307,21 @@ appendMedicineBtn.addEventListener('click', function () {
     distributeButton.disabled = false;
 });
 
+medicineSearch.addEventListener('input', function() {
+    // Get the search term, convert to lowercase, and remove whitespace
+    const searchTerm = medicineSearch.value.toLowerCase().trim();
+
+    // Filter the main inventory based on the search term
+    const filteredMedicines = medicineInventory.filter(medicine => 
+        medicine.medicine_name.toLowerCase().includes(searchTerm)
+    );
+    chosenMedicine = null;
+    medicineQuantity.value = '';
+    appendMedicineBtn.disabled = true;
+    // Call the updated render function with only the filtered results
+    renderMedicineList(filteredMedicines);
+});
+
 updateButtons.forEach(button => {
     button.addEventListener('click', async () => {
         const consultationId = button.dataset.consultationId;
@@ -346,6 +366,7 @@ updateButtons.forEach(button => {
         }
     });
 });
+
 distributeMedicineBtn.addEventListener('click', function() {
     if (!medicineInventory && !prevInventory) {
         fetch('/barangay/get-medicines')
@@ -418,9 +439,9 @@ saveConsultationBtn.addEventListener('click', function(event) {
         mother_name: motherName.value || '',
         chief_complaint: chiefComplaint.value || '',
         treatment: treatment.value || '',
-        weight: parseInt(weight.value) || '',
-        height: parseInt(height.value) || '',
-        temperature: parseInt(temperature.value) || '',
+        weight: parseFloat(weight.value) || '',
+        height: parseFloat(height.value) || '',
+        temperature: parseFloat(temperature.value) || '',
         pr: parseInt(pr.value) || '',
         rr: parseInt(rr.value) || '',
         birthweight: parseInt(birthweight.value) || '',

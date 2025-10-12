@@ -29,7 +29,7 @@ class MidwifeController extends Controller
         $emptyBrgy = Barangay::whereDoesntHave('midwives')->get();
 
         // The query now includes latest() for sorting and paginate() for pagination.
-        $midwivesPaginator = Midwife::with(['users', 'barangays'])
+        $midwivesPaginator = Midwife::with(['user', 'barangays'])
             ->where('status', 'active') 
             ->latest() // Orders by 'created_at' descending
             ->paginate(15);
@@ -94,6 +94,8 @@ class MidwifeController extends Controller
         // Log the received payload
         Log::info('Midwife creation payload received:', $request->all());
 
+        $validated = $validator->validated();
+        
         $password = Str::random(8);
         $birthdate = Carbon::createFromFormat('m/d/Y', $request->birthdate)->format('Y-m-d');
 
@@ -141,11 +143,11 @@ class MidwifeController extends Controller
     {
         // 1. Find the midwife record using the unique ID ($m_id) from the URL.
         // The $name parameter is not needed for the query but must be in the signature.
-        $midwife = Midwife::with(['users', 'barangays'])->findOrFail($m_id);
+        $midwife = Midwife::with(['user', 'barangays'])->findOrFail($m_id);
         $emptyBrgy = Barangay::whereDoesntHave('midwives')->get();
 
         // 2. Extract the related user and barangay objects for easier access.
-        $user = $midwife->users;
+        $user = $midwife->user;
         $barangay = $midwife->barangays;
 
         // 3. Consolidate all the required details into a single array.

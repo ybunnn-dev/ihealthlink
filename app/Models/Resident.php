@@ -146,4 +146,8 @@ class Resident extends Model
     {
         return $this->hasOne(BasicHealthRecord::class);
     }
+    public function children(){
+        return $this->hasMany(ChildHealthcare::class);
+    }
+
 }

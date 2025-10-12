@@ -270,7 +270,7 @@ openUpdateMaternityModalBtn.addEventListener('click', function(){
 
     updateMaternityMeds(
         'Trimester 1',
-        'Iron sulfate With Folic Acid',
+        'iron-w-fa',
         ironSulfateAmount1,
         ironSulfateDate1
     );
@@ -284,42 +284,42 @@ openUpdateMaternityModalBtn.addEventListener('click', function(){
 
     updateMaternityMeds(
         'Trimester 2',
-        'Iron sulfate With Folic Acid',
+        'iron-w-fa',
         ironSulfateAmount2,
         ironSulfateDate2
     );
 
      updateMaternityMeds(
         'Trimester 2',
-        'Calcium Carbonate',
+        'iron-w-fa',
         calciumCarbonateAmount2,
         calciumCarbonateDate2
     );
 
      updateMaternityMeds(
         'Trimester 3 (1)',
-        'Calcium Carbonate',
+        'iron-w-fa',
         calciumCarbonateAmount3,
         calciumCarbonateDate3
     );
 
     updateMaternityMeds(
         'Trimester 3 (1)',
-        'Iron sulfate With Folic Acid',
+        'iron-w-fa',
         ironSulfateAmount3,
         ironSulfateDate3
     );
 
     updateMaternityMeds(
         'Trimester 3 (2)',
-        'Iron sulfate With Folic Acid',
+        'iron-w-fa',
         ironSulfateAmount4,
         ironSulfateDate4
     );
 
     updateMaternityMeds(
         'Trimester 3 (2)',
-        'Calcium Carbonate',
+        'cc',
         calciumCarbonateAmount4,
         calciumCarbonateDate4
     );
@@ -399,21 +399,21 @@ openUpdateMaternityModalBtn.addEventListener('click', function(){
 
     updateMaternityMeds(
         'Postpartum (1 month)',
-        'Iron With Folic Acid',
+        'iron-w-fa',
         postpartumIronAmount1,
         postpartumIronDate1
     );
 
      updateMaternityMeds(
         'Postpartum (2 months)',
-        'Iron With Folic Acid',
+        'iron-w-fa',
         postpartumIronAmount2,
         postpartumIronDate2
     );
 
      updateMaternityMeds(
         'Postpartum (3 months)',
-        'Iron With Folic Acid',
+        'iron-w-fa',
         postpartumIronAmount3,
         postpartumIronDate3
     );
@@ -433,7 +433,7 @@ openUpdateMaternityModalBtn.addEventListener('click', function(){
 
         // Find the specific Vitamin A distribution within that consultation.
         const vitaminADistribution = mostRecentConsultation.medicine_distributions.find(
-            dist => dist.medicine && dist.medicine.category === 'Vitamin A'
+            dist => dist.medicine && dist.medicine.category === 'vit-a'
         );
 
         // Extract the date and format it to YYYY-MM-DD.

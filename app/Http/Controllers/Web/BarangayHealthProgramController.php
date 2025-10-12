@@ -85,7 +85,7 @@ class BarangayHealthProgramController extends Controller
 
             $antiTetanusEnrollment = EnrolledResident::where('resident_id', $enrolledResident->resident_id)
             ->whereHas('program', function ($q) {
-                $q->where('name', 'Anti-Tetanus Vaccination');
+                 $q->where('category', 'tetanus_tcl');
             })
             ->with([
                 'consultations' => function ($q) {
@@ -112,10 +112,28 @@ class BarangayHealthProgramController extends Controller
                 'consultations.ncdRiskFactor',
                 'consultations.philpenManagement',
             ]);
-        }else if($enrolledResident->program && $enrolledResident->program->category === 'child_healthcare_tcl'){
+        }if ($enrolledResident->program && $enrolledResident->program->category === 'child_healthcare_tcl') {
             $enrolledResident->load([
-                'childHealthcare'
+                'childHealthcare.mother' // Nested eager load
             ]);
+
+            // Access the mother easily
+            $mother = $enrolledResident->childHealthcare?->mother;
+
+            $antiTetanusEnrollment = EnrolledResident::where('resident_id', $enrolledResident->childHealthcare->mother_id)
+            ->whereHas('program', function ($q) {
+                $q->where('category', 'tetanus_tcl');
+            })
+            ->with([
+                'consultations' => function ($q) {
+                    $q->with('consultationData');
+                },
+                'program'
+            ])
+            ->first();
+
+            $mother->setRelation('antiTetanusEnrollment', $antiTetanusEnrollment);
+
         }
 
         return view('midwife.enrolled-resident', compact('enrolledResident'));

@@ -18,11 +18,10 @@ class Midwife extends Model
         'added_by',
     ];
 
-    public function users()
+    public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
     }
-
     public function barangays()
     {
         return $this->belongsTo(Barangay::class, 'brgy_id');

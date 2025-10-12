@@ -52,6 +52,9 @@
                                         <button type="button" data-value="Vaccine" class="w-full text-left px-4 py-2 hover:bg-gray-100">Vaccine</button>
                                     </li>
                                     <li>
+                                        <button type="button" data-value="Supplement" class="w-full text-left px-4 py-2 hover:bg-gray-100">Iron</button>
+                                    </li>
+                                    <li>
                                         <button type="button" data-value="Vaccine" class="w-full text-left px-4 py-2 hover:bg-gray-100">Non-Medicine</button>
                                     </li>
                                 </ul>
@@ -76,25 +79,25 @@
                                         <button type="button" data-value="" class="w-full text-left px-4 py-2 hover:bg-gray-100">Select Category</button>
                                     </li>
                                     <li>
-                                        <button type="button" data-value="Medical Supplies" class="w-full text-left px-4 py-2 hover:bg-gray-100">Regular Medicine</button>
+                                        <button type="button" data-value="reg-med" class="w-full text-left px-4 py-2 hover:bg-gray-100">Regular Medicine</button>
                                     </li>
                                     <li>
-                                        <button type="button" data-value="Deworming Tablet" class="w-full text-left px-4 py-2 hover:bg-gray-100">Deworming Tablet</button>
+                                        <button type="button" data-value="deworming" class="w-full text-left px-4 py-2 hover:bg-gray-100">Deworming Tablet</button>
                                     </li>
                                      <li>
-                                        <button type="button" data-value="Iron With Folic Acid" class="w-full text-left px-4 py-2 hover:bg-gray-100">Iron with Folic Acid</button>
+                                        <button type="button" data-value="iron-w-fa" class="w-full text-left px-4 py-2 hover:bg-gray-100">Iron with Folic Acid</button>
                                     </li>
                                     <li>
-                                        <button type="button" data-value="Iron sulfate With Folic Acid" class="w-full text-left px-4 py-2 hover:bg-gray-100">Iron sulfate with Folic Acid</button>
+                                        <button type="button" data-value="iron" class="w-full text-left px-4 py-2 hover:bg-gray-100">Iron</button>
                                     </li>
                                      <li>
-                                        <button type="button" data-value="Vitamin A" class="w-full text-left px-4 py-2 hover:bg-gray-100">Vitamin A</button>
+                                        <button type="button" data-value="vit-a" class="w-full text-left px-4 py-2 hover:bg-gray-100">Vitamin A</button>
                                     </li>
                                     <li>
-                                        <button type="button" data-value="Calium Carbonate" class="w-full text-left px-4 py-2 hover:bg-gray-100">Calcium Carbonate</button>
+                                        <button type="button" data-value="cc" class="w-full text-left px-4 py-2 hover:bg-gray-100">Calcium Carbonate</button>
                                     </li>
                                     <li>
-                                        <button type="button" data-value="Iodine" class="w-full text-left px-4 py-2 hover:bg-gray-100">Iodine Capsule</button>
+                                        <button type="button" data-value="iodine" class="w-full text-left px-4 py-2 hover:bg-gray-100">Iodine Capsule</button>
                                     </li>
                                 </ul>
                             </div>

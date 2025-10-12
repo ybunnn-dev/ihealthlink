@@ -48,5 +48,6 @@ class BHW extends Model
         return trim("{$user->firstName} {$user->lastName} " . ($user->suffix ?? ''));
     }
 
+  
     protected $appends = ['name'];
 }

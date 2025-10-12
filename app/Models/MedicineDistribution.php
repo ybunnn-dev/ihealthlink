@@ -11,7 +11,7 @@ class MedicineDistribution extends Model
 {
     use HasFactory;
 
-    public $timestamps = false; // Since we only have distributed_at
+    //public $timestamps = false; // Since we only have distributed_at
 
     protected $fillable = [
         'medicine_id',

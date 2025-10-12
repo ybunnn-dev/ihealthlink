@@ -35,49 +35,46 @@
                     </div>
                      <div class="slg2:col-span-2">
                         <label for="mother-full-name" class="block mb-2 text-sm font-medium text-main_font">Complete Name of Mother</label>
-                        <input type="text" id="mother-full-name" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                        <input type="text" id="mother-full-name" disabled class="bg-gray-100  border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                     </div>
                      <div class="slg2:col-span-3">
                         <label for="child-full-name" class="block mb-2 text-sm font-medium text-main_font">Full Name of Child</label>
-                        <input type="text" id="child-full-name" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                        <input type="text" id="child-full-name" disabled class="bg-gray-100  border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                     </div>
                      <div>
                         <label for="child-sex" class="block mb-2 text-sm font-medium text-main_font">Sex</label>
-                        <select id="child-sex" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                        <select id="child-sex" disabled class="bg-gray-100  border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                             <option selected>Choose Sex</option>
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
                         </select>
                     </div>
                   
                     <div class="slg2:col-span-4">
                         <label for="child-address" class="block mb-2 text-sm font-medium text-main_font">Complete Address</label>
-                        <input type="text" id="child-address" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                        <input type="text" id="child-address" disabled class="bg-gray-100  border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                     </div>
 
-                    <fieldset class="slg2:col-span-4 border p-4 rounded-lg mt-4">
+                    <fieldset class="slg2:col-span-4 grid grid-cols-1 slg:grid-cols-4 border p-4 rounded-lg mt-4">
                         <legend class="text-md font-semibold text-main_font px-2">Child Protection at Birth</legend>
-                        <p class="text-xs text-gray-500 mb-3 -mt-2 px-2">Mother's Tetanus Immunization Status</p>
-                        <div class="flex flex-wrap gap-x-6 gap-y-2">
-                            <div class="flex items-center">
-                                <input id="tt2-td2" type="radio" value="" name="tetanus-status" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300">
-                                <label for="tt2-td2" class="ms-2 text-sm font-medium text-main_font">TT2/TD2 given a month prior to delivery</label>
-                            </div>
-                            <div class="flex items-center">
-                                <input id="tt3-tt5" type="radio" value="" name="tetanus-status" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300">
-                                <label for="tt3-tt5" class="ms-2 text-sm font-medium text-main_font">TT3/TD3 - TT5/TD5 or TT1/TD1 - TT5/TD5</label>
-                            </div>
+                        <div class="slg:col-span-2">
+                            <label for="mother-tetanus" class="block mb-2 text-sm font-medium text-main_font">Mother's Immunization Status</label>
+                            <select id="mother-tetanus" disabled class="bg-gray-100  border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                <option value="tt2/td2">TT2/TD2 given a month prior to delivery</option>
+                                <option value="tt3/td3-tt5/td5 or tt1/td1-tt5/td5">TT3/TD3 - TT5/TD5 or TT1/TD1 - TT5/TD5</option>
+                                <option value="no anti-tetanus data">No Anti-tetanus Data</option>
+                            </select>
                         </div>
                     </fieldset>
                     
                     <div class="slg2:col-span-4 font-semibold text-lg border-b pb-2 mb-2 text-normal_font mt-4">Newborn (0-28 days old)</div>
                     <div class="slg2:col-span-2">
                         <label for="birth-weight" class="block mb-2 text-sm font-medium text-main_font">Birth Weight (kg)</label>
-                        <input type="number" id="birth-weight" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5" placeholder="e.g., 3.1">
+                        <input type="number" id="birth-weight" disabled class="bg-gray-100 border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5" placeholder="e.g., 3.1">
                     </div>
                     <div class="slg2:col-span-2">
                         <label for="birth-weight-status" class="block mb-2 text-sm font-medium text-main_font">Birth Weight Status</label>
-                        <select id="birth-weight-status" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5">
+                        <select id="birth-weight-status" disabled class="bg-gray-100 border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5">
                             <option selected>Select status</option>
                             <option value="low">Low (< 2,500 grams)</option>
                             <option value="normal">Normal (>= 2,500 grams)</option>
@@ -89,23 +86,23 @@
                         <input type="date" id="initiated-breastfeeding" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5">
                     </div>
                     <fieldset class="slg2:col-span-4 border p-4 rounded-lg">
-                        <legend class="text-md font-semibold text-main_font px-2">C.2 Immunizations</legend>
+                        <legend class="text-md font-semibold text-main_font px-2">Immunizations</legend>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
                                 <label for="bcg-date" class="block mb-2 text-sm font-medium text-main_font">BCG (Date Given)</label>
-                                <input type="date" id="bcg-date" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5">
+                                <input type="date" id="bcg-date" disabled class="bg-gray-100 border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5">
                             </div>
                             <div>
                                 <label for="hepa-b-bd-date" class="block mb-2 text-sm font-medium text-main_font">Hepa B - Birth Dose (Date Given)</label>
-                                <input type="date" id="hepa-b-bd-date" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5">
+                                <input type="date" id="hepa-b-bd-date" disabled class="bg-gray-100 border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5">
                             </div>
                         </div>
                     </fieldset>
 
                     <div class="slg2:col-span-4 font-semibold text-lg border-b pb-2 mb-2 text-normal_font mt-4">1-3 Months Old</div>
                      <fieldset class="slg2:col-span-4 border p-4 rounded-lg">
-                        <legend class="text-md font-semibold text-main_font px-2">D.1 Nutritional Assessment & Supplementation</legend>
-                        <div class="grid grid-cols-1 md:grid-cols-2 slg2:grid-cols-4 gap-4">
+                        <legend class="text-md font-semibold text-main_font px-2">Nutritional Assessment & Supplementation</legend>
+                        <div class="grid grid-cols-1 md:grid-cols-2 slg2:grid-cols-3 gap-4">
                              <div>
                                 <label for="age-in-months-d" class="block mb-2 text-sm font-medium text-main_font">Age in Months</label>
                                 <input type="text" id="age-in-months-d" class="bg-gray-100 border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5 cursor-not-allowed" disabled>
@@ -113,20 +110,20 @@
                             <div>
                                 <label for="length-cm" class="block mb-2 text-sm font-medium text-main_font">Length (cm) / Date Taken</label>
                                 <div class="flex gap-2">
-                                    <input type="number" id="length-cm" class="bg-white border border-gray-300 text-sm w-1/2 p-2.5 rounded-lg" placeholder="cm">
-                                    <input type="date" id="length-date" class="bg-white border border-gray-300 text-sm w-1/2 p-2.5 rounded-lg text-main_font">
+                                    <input type="number" id="length-cm" disabled class="bg-gray-100 border border-gray-300 text-sm w-1/2 p-2.5 rounded-lg" placeholder="cm">
+                                    <input type="date" id="length-date" disabled class="bg-gray-100 border border-gray-300 text-sm w-1/2 p-2.5 rounded-lg text-main_font">
                                 </div>
                             </div>
                              <div>
                                 <label for="weight-kg-d" class="block mb-2 text-sm font-medium text-main_font">Weight (kg) / Date Taken</label>
                                 <div class="flex gap-2">
-                                    <input type="number" id="weight-kg-d" class="bg-white border border-gray-300 text-sm w-1/2 p-2.5 rounded-lg" placeholder="kg">
-                                    <input type="date" id="weight-date-d" class="bg-white border border-gray-300 text-sm w-1/2 p-2.5 rounded-lg text-main_font">
+                                    <input type="number" id="weight-kg-d" disabled class="bg-gray-100 border border-gray-300 text-sm w-1/2 p-2.5 rounded-lg" placeholder="kg">
+                                    <input type="date" id="weight-date-d" disabled class="bg-gray-100 border border-gray-300 text-sm w-1/2 p-2.5 rounded-lg text-main_font">
                                 </div>
                             </div>
                             <div>
                                 <label for="status-d" class="block mb-2 text-sm font-medium text-main_font">Status</label>
-                                <select id="status-d" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5">
+                                <select id="status-d" disabled class="bg-gray-100 border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5">
                                     <option selected>Select status</option>
                                     <option value="stunted">Stunted</option>
                                     <option value="wasted-mam">Wasted-MAM</option>
@@ -141,15 +138,15 @@
                              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                                  <div>
                                     <label for="lbw-iron-1mo" class="block mb-2 text-xs font-medium text-main_font">1st Month (Date)</label>
-                                    <input type="date" id="lbw-iron-1mo" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5">
+                                    <input type="date" id="lbw-iron-1mo" disabled class="bg-gray-100 border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5">
                                  </div>
                                  <div>
                                     <label for="lbw-iron-2mo" class="block mb-2 text-xs font-medium text-main_font">2nd Month (Date)</label>
-                                    <input type="date" id="lbw-iron-2mo" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5">
+                                    <input type="date" id="lbw-iron-2mo" disabled class="bg-gray-100 border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5">
                                  </div>
                                  <div>
                                     <label for="lbw-iron-3mo" class="block mb-2 text-xs font-medium text-main_font">3rd Month (Date)</label>
-                                    <input type="date" id="lbw-iron-3mo" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5">
+                                    <input type="date" id="lbw-iron-3mo" disabled class="bg-gray-100 border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5">
                                  </div>
                              </div>
                          </div>
@@ -159,148 +156,188 @@
                         <legend class="text-md font-semibold text-main_font px-2">Immunizations (1-3 mos)</legend>
                         <div class="grid grid-cols-1 md:grid-cols-2 slg2:grid-cols-4 gap-4">
                             <div class="space-y-2">
-                                <label class="block text-sm font-medium text-main_font">DPT-HiB-HepB</label>
-                                <input type="date" title="1st Dose (1.5 mos)" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5" placeholder="1st dose">
-                                <input type="date" title="2nd Dose (2.5 mos)" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5" placeholder="2nd dose">
-                                <input type="date" title="3rd Dose (3.5 mos)" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5" placeholder="3rd dose">
+                                <label for="dpt-hib-hepb-1" class="block text-sm font-medium text-main_font">DPT-HiB-HepB</label>
+                                <input type="date" id="dpt-hib-hepb-1" title="1st Dose (1.5 mos)" class="bg-gray-100 border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5 cursor-not-allowed" placeholder="1st dose" disabled>
+                                <input type="date" id="dpt-hib-hepb-2" title="2nd Dose (2.5 mos)" class="bg-gray-100 border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5 cursor-not-allowed" placeholder="2nd dose" disabled>
+                                <input type="date" id="dpt-hib-hepb-3" title="3rd Dose (3.5 mos)" class="bg-gray-100 border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5 cursor-not-allowed" placeholder="3rd dose" disabled>
                             </div>
-                             <div class="space-y-2">
-                                <label class="block text-sm font-medium text-main_font">OPV</label>
-                                <input type="date" title="1st Dose (1.5 mos)" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5" placeholder="1st dose">
-                                <input type="date" title="2nd Dose (2.5 mos)" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5" placeholder="2nd dose">
-                                <input type="date" title="3rd Dose (3.5 mos)" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5" placeholder="3rd dose">
-                            </div>
-                             <div class="space-y-2">
-                                <label class="block text-sm font-medium text-main_font">PCV</label>
-                                <input type="date" title="1st Dose (1.5 mos)" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5" placeholder="1st dose">
-                                <input type="date" title="2nd Dose (2.5 mos)" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5" placeholder="2nd dose">
-                                <input type="date" title="3rd Dose (3.5 mos)" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5" placeholder="3rd dose">
-                            </div>
+
                             <div class="space-y-2">
-                                <label class="block text-sm font-medium text-main_font">IPV (3.5 mos)</label>
-                                <input type="date" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5">
+                                <label for="opv-1" class="block text-sm font-medium text-main_font">OPV</label>
+                                <input type="date" id="opv-1" title="1st Dose (1.5 mos)" class="bg-gray-100 border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5 cursor-not-allowed" placeholder="1st dose" disabled>
+                                <input type="date" id="opv-2" title="2nd Dose (2.5 mos)" class="bg-gray-100 border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5 cursor-not-allowed" placeholder="2nd dose" disabled>
+                                <input type="date" id="opv-3" title="3rd Dose (3.5 mos)" class="bg-gray-100 border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5 cursor-not-allowed" placeholder="3rd dose" disabled>
+                            </div>
+
+                            <div class="space-y-2">
+                                <label for="pcv-1" class="block text-sm font-medium text-main_font">PCV</label>
+                                <input type="date" id="pcv-1" title="1st Dose (1.5 mos)" class="bg-gray-100 border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5 cursor-not-allowed" placeholder="1st dose" disabled>
+                                <input type="date" id="pcv-2" title="2nd Dose (2.5 mos)" class="bg-gray-100 border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5 cursor-not-allowed" placeholder="2nd dose" disabled>
+                                <input type="date" id="pcv-3" title="3rd Dose (3.5 mos)" class="bg-gray-100 border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5 cursor-not-allowed" placeholder="3rd dose" disabled>
+                            </div>
+
+                            <div class="space-y-2">
+                                <label for="ipv" class="block text-sm font-medium text-main_font">IPV (3.5 mos)</label>
+                                <input type="date" id="ipv" class="bg-gray-100 border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5 cursor-not-allowed" disabled>
                             </div>
                         </div>
                     </fieldset>
                     
                      <fieldset class="slg2:col-span-4 border p-4 rounded-lg">
                         <legend class="text-md font-semibold text-main_font px-2">Exclusive Breastfeeding</legend>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 slg2:grid-cols-4 gap-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 slg2:grid-cols-2 gap-4">
                             <div>
                                 <label class="block mb-2 text-sm font-medium text-main_font">1.5 Months</label>
                                 <div class="flex gap-2">
-                                    <select class="bg-white border border-gray-300 text-sm w-1/2 p-2.5 rounded-lg"><option>Yes/No</option><option value="yes">Yes</option><option value="no">No</option></select>
-                                    <input type="date" class="bg-white border border-gray-300 text-sm w-1/2 p-2.5 rounded-lg text-main_font">
-                                </div>
-                            </div>
-                            <div>
-                                <label class="block mb-2 text-sm font-medium text-main_font">2.5 Months</label>
-                                <div class="flex gap-2">
-                                    <select class="bg-white border border-gray-300 text-sm w-1/2 p-2.5 rounded-lg"><option>Yes/No</option><option value="yes">Yes</option><option value="no">No</option></select>
-                                    <input type="date" class="bg-white border border-gray-300 text-sm w-1/2 p-2.5 rounded-lg text-main_font">
+                                    <select id="ebf_select_1_5_months" class="bg-white border border-gray-300 text-sm w-1/2 p-2.5 rounded-lg">
+                                        <option value="">Select</option>
+                                        <option value="yes">Yes</option>
+                                        <option value="no">No</option>
+                                    </select>
+                                    <input type="date" id="ebf_date_1_5_months" class="bg-white border border-gray-300 text-sm w-1/2 p-2.5 rounded-lg text-main_font">
                                 </div>
                             </div>
                             <div>
                                 <label class="block mb-2 text-sm font-medium text-main_font">3.5 Months</label>
                                 <div class="flex gap-2">
-                                    <select class="bg-white border border-gray-300 text-sm w-1/2 p-2.5 rounded-lg"><option>Yes/No</option><option value="yes">Yes</option><option value="no">No</option></select>
-                                    <input type="date" class="bg-white border border-gray-300 text-sm w-1/2 p-2.5 rounded-lg text-main_font">
+                                    <select id="ebf_select_3_5_months" class="bg-white border border-gray-300 text-sm w-1/2 p-2.5 rounded-lg">
+                                        <option value="">Select</option>
+                                        <option value="yes">Yes</option>
+                                        <option value="no">No</option>
+                                    </select>
+                                    <input type="date" id="ebf_date_3_5_months" class="bg-white border border-gray-300 text-sm w-1/2 p-2.5 rounded-lg text-main_font">
+                                </div>
+                            </div>
+                             <div>
+                                <label class="block mb-2 text-sm font-medium text-main_font">2.5 Months</label>
+                                <div class="flex gap-2">
+                                    <select id="ebf_select_2_5_months" class="bg-white border border-gray-300 text-sm w-1/2 p-2.5 rounded-lg">
+                                        <option value="">Select</option>
+                                        <option value="yes">Yes</option>
+                                        <option value="no">No</option>
+                                    </select>
+                                    <input type="date" id="ebf_date_2_5_months" class="bg-white border border-gray-300 text-sm w-1/2 p-2.5 rounded-lg text-main_font">
                                 </div>
                             </div>
                             <div>
                                 <label class="block mb-2 text-sm font-medium text-main_font">4-5 Months</label>
                                 <div class="flex gap-2">
-                                    <select class="bg-white border border-gray-300 text-sm w-1/2 p-2.5 rounded-lg"><option>Yes/No</option><option value="yes">Yes</option><option value="no">No</option></select>
-                                    <input type="date" class="bg-white border border-gray-300 text-sm w-1/2 p-2.5 rounded-lg text-main_font">
+                                    <select id="ebf_select_4_5_months" class="bg-white border border-gray-300 text-sm w-1/2 p-2.5 rounded-lg">
+                                        <option value="">Select</option>
+                                        <option value="yes">Yes</option>
+                                        <option value="no">No</option>
+                                    </select>
+                                    <input type="date" id="ebf_date_4_5_months" class="bg-white border border-gray-300 text-sm w-1/2 p-2.5 rounded-lg text-main_font">
                                 </div>
                             </div>
                         </div>
                     </fieldset>
                     
-                    <div class="slg2:col-span-4 font-semibold text-lg border-b pb-2 mb-2 text-normal_font mt-4">E. 6-11 Months Old</div>
-                     <fieldset class="slg2:col-span-4 border p-4 rounded-lg">
-                        <legend class="text-md font-semibold text-main_font px-2">Nutritional Assessment</legend>
-                        <div class="grid grid-cols-1 md:grid-cols-2 slg2:grid-cols-3 gap-4">
-                             <div>
-                                <label for="age-in-months-e" class="block mb-2 text-sm font-medium text-main_font">Age in Months</label>
-                                <input type="text" id="age-in-months-e" class="bg-gray-100 border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5 cursor-not-allowed" disabled>
-                            </div>
-                            <div>
-                                <label for="weight-kg-e" class="block mb-2 text-sm font-medium text-main_font">Weight (kg) / Date Taken</label>
-                                <div class="flex gap-2">
-                                    <input type="number" id="weight-kg-e" class="bg-white border border-gray-300 text-sm w-1/2 p-2.5 rounded-lg" placeholder="kg">
-                                    <input type="date" id="weight-date-e" class="bg-white border border-gray-300 text-sm w-1/2 p-2.5 rounded-lg text-main_font">
+                    <div class="slg2:col-span-4 font-semibold text-lg border-b pb-2 mb-2 text-normal_font mt-4">6-11 Months Old</div>
+                        <fieldset class="slg2:col-span-4 border p-4 rounded-lg">
+                            <legend class="text-md font-semibold text-main_font px-2">Nutritional Assessment</legend>
+                            <div class="grid grid-cols-1 md:grid-cols-2 slg2:grid-cols-3 gap-4">
+                                <div>
+                                    <label for="age-in-months-e" class="block mb-2 text-sm font-medium text-main_font">Age in Months</label>
+                                    <input type="text" id="age-in-months-e" class="bg-gray-100 border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5 cursor-not-allowed" disabled>
+                                </div>
+                                <div>
+                                    <label for="length-cm-e" class="block mb-2 text-sm font-medium text-main_font">Length (cm) / Date Taken</label>
+                                    <div class="flex gap-2">
+                                        <input type="number" id="length-cm-e" class="bg-gray-100 border border-gray-300 text-sm w-1/2 p-2.5 rounded-lg cursor-not-allowed" placeholder="cm" disabled>
+                                        <input type="date" id="length-date-e" class="bg-gray-100 border border-gray-300 text-sm w-1/2 p-2.5 rounded-lg text-main_font cursor-not-allowed" disabled>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label for="weight-kg-e" class="block mb-2 text-sm font-medium text-main_font">Weight (kg) / Date Taken</label>
+                                    <div class="flex gap-2">
+                                        <input type="number" id="weight-kg-e" class="bg-gray-100 border border-gray-300 text-sm w-1/2 p-2.5 rounded-lg cursor-not-allowed" placeholder="kg" disabled>
+                                        <input type="date" id="weight-date-e" class="bg-gray-100 border border-gray-300 text-sm w-1/2 p-2.5 rounded-lg text-main_font cursor-not-allowed" disabled>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label for="status-e" class="block mb-2 text-sm font-medium text-main_font">Status</label>
+                                    <select id="status-e" class="bg-gray-100 border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5 cursor-not-allowed" disabled>
+                                        <option selected>Select status</option>
+                                        <option value="stunted">Stunted</option>
+                                        <option value="wasted-mam">Wasted-MAM</option>
+                                        <option value="wasted-sam">Wasted-SAM</option>
+                                        <option value="overweight">Obese/Overweight</option>
+                                        <option value="normal">Normal</option>
+                                    </select>
                                 </div>
                             </div>
-                            <div>
-                                <label for="status-e" class="block mb-2 text-sm font-medium text-main_font">Status</label>
-                                <select id="status-e" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5">
-                                    <option selected>Select status</option>
-                                    <option value="stunted">Stunted</option>
-                                    <option value="wasted-mam">Wasted-MAM</option>
-                                    <option value="wasted-sam">Wasted-SAM</option>
-                                    <option value="overweight">Obese/Overweight</option>
-                                    <option value="normal">Normal</option>
+                        </fieldset>
+                     <div class="slg2:col-span-4 grid grid-cols-1 slg:grid-cols-2 gap-4">
+                        <div>
+                             <label for="ebf-6mo" class="block mb-2 text-sm font-medium text-main_font">Exclusively Breastfed up to 6 months</label>
+                             <div>
+                                <select id="ebf-6mo" class="bg-white border text-main_font border-gray-300 text-sm w-full p-2.5 rounded-lg">
+                                    <option value="">Select</option>
+                                    <option value="yes">Yes</option>
+                                    <option value="no">No</option>
                                 </select>
                             </div>
                         </div>
-                     </fieldset>
-                     <div class="slg2:col-span-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                             <label for="ebf-6mo" class="block mb-2 text-sm font-medium text-main_font">E.2 Exclusively Breastfed up to 6 months</label>
-                             <div class="flex gap-2">
-                                <select id="ebf-6mo" class="bg-white border border-gray-300 text-sm w-1/2 p-2.5 rounded-lg"><option>Yes/No</option><option value="yes">Yes</option><option value="no">No</option></select>
-                                <input type="date" class="bg-white border border-gray-300 text-sm w-1/2 p-2.5 rounded-lg text-main_font">
-                            </div>
+                            <label for="ebf-6mo" class="block mb-2 text-sm font-medium text-main_font">If no, type the date when breasfeeding stopped</label>
+                            <input type="date" id="ebf-6mo-date" class="bg-white border border-gray-300 text-sm w-full p-2.5 rounded-lg text-main_font">
                         </div>
                         <div>
-                             <label for="comp-feeding" class="block mb-2 text-sm font-medium text-main_font">E.3 Intro. of Complementary Feeding (at 6 mos)</label>
+                             <label for="comp-feeding" class="block mb-2 text-sm font-medium text-main_font">Intro. of Complementary Feeding (at 6 mos)</label>
                              <div class="flex gap-2">
-                                 <select id="comp-feeding" class="bg-white border border-gray-300 text-sm w-1/2 p-2.5 rounded-lg">
-                                     <option selected>Choose</option>
-                                     <option value="yes-continue-bf">Yes, w/ continuous BF</option>
-                                     <option value="yes-no-bf">Yes, no longer BF</option>
+                                 <select id="comp-feeding" class="bg-white border text-main_font border-gray-300 text-sm w-full p-2.5 rounded-lg">
+                                     <option value ="" selected>Choose</option>
+                                     <option value="yes-continue-breastfeed">Yes, w/ continuous Breastfeeding</option>
+                                     <option value="yes-no-breastfeed">Yes, no longer breastfeeding</option>
                                      <option value="no">No</option>
                                  </select>
                             </div>
                         </div>
                      </div>
                      <fieldset class="slg2:col-span-4 border p-4 rounded-lg">
-                        <legend class="text-md font-semibold text-main_font px-2">E.4 Supplementation & Immunization</legend>
+                        <legend class="text-md font-semibold text-main_font px-2">Supplementation & Immunization</legend>
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                             <div>
                                 <label for="vit-a-date" class="block mb-2 text-sm font-medium text-main_font">Vitamin A (Date Given)</label>
-                                <input type="date" id="vit-a-date" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5">
+                                <input type="date" id="vit-a-date" disabled class="bg-gray-100 border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5">
                             </div>
                             <div>
                                 <label for="mnp-date" class="block mb-2 text-sm font-medium text-main_font">MNP (Date Given)</label>
-                                <input type="date" id="mnp-date" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5">
+                                <input type="date" id="mnp-date" disabled class="bg-gray-100 border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5">
                             </div>
                             <div>
                                 <label for="mmr1-date" class="block mb-2 text-sm font-medium text-main_font">MMR Dose 1 (at 9 mos) (Date Given)</label>
-                                <input type="date" id="mmr1-date" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5">
+                                <input type="date" id="mmr1-date" disabled class="bg-gray-100 border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5">
                             </div>
                         </div>
                     </fieldset>
 
-                    <div class="slg2:col-span-4 font-semibold text-lg border-b pb-2 mb-2 text-normal_font mt-4">F. 12 Months Old</div>
+                    <div class="slg2:col-span-4 font-semibold text-lg border-b pb-2 mb-2 text-normal_font mt-4">12 Months Old</div>
                     <fieldset class="slg2:col-span-4 border p-4 rounded-lg">
-                        <legend class="text-md font-semibold text-main_font px-2">F.1 Nutritional Assessment</legend>
+                        <legend class="text-md font-semibold text-main_font px-2">Nutritional Assessment</legend>
                         <div class="grid grid-cols-1 md:grid-cols-2 slg2:grid-cols-3 gap-4">
                              <div>
                                 <label for="age-in-months-f" class="block mb-2 text-sm font-medium text-main_font">Age in Months</label>
-                                <input type="text" id="age-in-months-f" value="12" class="bg-gray-100 border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5 cursor-not-allowed" disabled>
+                                <input type="text" id="age-in-months-f" class="bg-gray-100 border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5 cursor-not-allowed" disabled>
+                            </div>
+                            <div>
+                                <label for="length-cm-f" class="block mb-2 text-sm font-medium text-main_font">Length (cm) / Date Taken</label>
+                                <div class="flex gap-2">
+                                    <input type="number" id="length-cm-f" disabled class="bg-gray-100 border border-gray-300 text-sm w-1/2 p-2.5 rounded-lg" placeholder="cm">
+                                    <input type="date" id="length-date-f" disabled class="bg-gray-100 border border-gray-300 text-sm w-1/2 p-2.5 rounded-lg text-main_font">
+                                </div>
                             </div>
                             <div>
                                 <label for="weight-kg-f" class="block mb-2 text-sm font-medium text-main_font">Weight (kg) / Date Taken</label>
                                 <div class="flex gap-2">
-                                    <input type="number" id="weight-kg-f" class="bg-white border border-gray-300 text-sm w-1/2 p-2.5 rounded-lg" placeholder="kg">
-                                    <input type="date" id="weight-date-f" class="bg-white border border-gray-300 text-sm w-1/2 p-2.5 rounded-lg text-main_font">
+                                    <input type="number" id="weight-kg-f" disabled class="bg-gray-100  border border-gray-300 text-sm w-1/2 p-2.5 rounded-lg" placeholder="kg">
+                                    <input type="date" id="weight-date-f" disabled class="bg-gray-100  border border-gray-300 text-sm w-1/2 p-2.5 rounded-lg text-main_font">
                                 </div>
                             </div>
                             <div>
                                 <label for="status-f" class="block mb-2 text-sm font-medium text-main_font">Status</label>
-                                <select id="status-f" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5">
+                                <select id="status-f" disabled class="bg-gray-100 border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5">
                                     <option selected>Select status</option>
                                     <option value="stunted">Stunted</option>
                                     <option value="wasted-mam">Wasted-MAM</option>
@@ -311,12 +348,18 @@
                             </div>
                         </div>
                      </fieldset>
-                    <div class="slg2:col-span-2">
-                         <label for="fic-date" class="block mb-2 text-sm font-medium text-main_font">F.2 FIC (Fully Immunized Child) Date</label>
+                  
+                     <div class="slg2:col-span-2 gap-3">
+                        <label for="mmr2-date" class="block mb-2 text-sm font-medium text-main_font">MMR Dose 2 (Date Given)</label>
+                         <input type="date" id="mmr2-date" disabled class="bg-gray-100 border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5">
+
+                    </div>
+                    <div class="slg2:col-span-2  gap-3">
+                         <label for="fic-date" class="block mb-2 text-sm font-medium text-main_font">FIC (Fully Immunized Child) Date</label>
                          <input type="date" id="fic-date" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5">
                     </div>
 
-                    <div class="slg2:col-span-4 font-semibold text-lg border-b pb-2 mb-2 text-normal_font mt-4">G. Final Status & Remarks</div>
+                    <div class="slg2:col-span-4 font-semibold text-lg border-b pb-2 mb-2 text-normal_font mt-4">Final Status & Remarks</div>
                      <div class="slg2:col-span-2">
                          <label for="cic-date" class="block mb-2 text-sm font-medium text-main_font">CIC (Completely Immunized Child) Date</label>
                          <input type="date" id="cic-date" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5">
@@ -340,3 +383,5 @@
         </div>
     </div>
 </div>
+@include('components.modals.health-program.tcl-programs.update-child-confirmation')
+@include('components.modals.health-program.tcl-programs.print-child-confirmation')

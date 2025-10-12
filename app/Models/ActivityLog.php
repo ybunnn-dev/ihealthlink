@@ -6,16 +6,42 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Helpers\ProjectCrypt;
 
-class Barangay extends Model
+class ActivityLog extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'user_id', 'status'];
+    protected $table = 'activity_logs';
 
-     protected $encryptable = [
-        'name',
+    protected $fillable = [
+        'id',
+        'user_id',
+        'module_id',
+        'activity',
     ];
 
+    protected $encryptable = [
+        'activity'
+    ];
+    /**
+     * Relationships
+     */
+        /*
+    |--------------------------------------------------------------------------
+    | Encryption/Decryption Methods
+    |--------------------------------------------------------------------------
+    */
+    
+    /* 🔒 Automatically Encrypt Before Saving */
+    public function setAttribute($key, $value)
+    {
+        if (in_array($key, $this->encryptable) && $value !== null) {
+            $value = ProjectCrypt::encrypt($value);
+        }
+
+        return parent::setAttribute($key, $value);
+    }
+
+    /* 🔓 Automatically Decrypt When Accessing */
     public function getAttribute($key)
     {
         $value = parent::getAttribute($key);
@@ -46,33 +72,27 @@ class Barangay extends Model
 
         return $attributes;
     }
-    // One Barangay has many Puroks
-    // Barangay.php
-    public function puroks()
-    {
-        return $this->hasMany(Purok::class, 'brgy_id')
-            ->where('status', 'active');
-    }
-
-
-    // Barangay belongs to a User (e.g., captain, head)
+    // The user who performed the activity
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    // One Barangay has many Midwives
-    public function midwives()
+    // The module related to the activity
+    public function module()
     {
-        return $this->hasMany(Midwife::class, 'brgy_id'); // match your actual column
-    }
-    public function bhw()
-    {
-        return $this->hasMany(BHW::class, 'brgy_id');
-    }
-    public function bhwWeb()
-    {
-        return $this->hasMany(BHW::class, 'brgy_id')->where('role_id', 4);
+        return $this->belongsTo(Module::class);
     }
 
+    /**
+     * Quick helper to log an activity
+     */
+    public static function log($userId, $moduleId, $activity)
+    {
+        return self::create([
+            'user_id' => $userId,
+            'module_id' => $moduleId,
+            'activity' => $activity,
+        ]);
+    }
 }

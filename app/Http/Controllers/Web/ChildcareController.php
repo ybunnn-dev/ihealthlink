@@ -16,6 +16,8 @@ use App\Models\EnrolledResident;
 use App\Models\BasicHealthRecord;
 use App\Models\ChildHealthcare;
 use App\Models\Resident;
+use App\Models\ActivityLog;
+use Illuminate\Support\Str;
 
 class ChildcareController extends Controller
 {
@@ -220,5 +222,95 @@ class ChildcareController extends Controller
 
         // Insert all consultations at once
         Consultation::insert($consultations);
+    }
+
+
+    public function updateChildRecord(Request $request)
+    {
+        try {
+            $user = auth()->user();
+
+            // Determine if user is Midwife or BHW with granted access
+            if ($user->bhwWeb && $user->bhwWeb->role_id == 4) {
+                $personnel = $user->bhwWeb;
+            } else {
+                $personnel = $user->midwife;
+            }
+
+            if (!$personnel) {
+                abort(403, 'Unauthorized access.');
+            }
+            $payload = (object) $request->all();
+
+            $childCareId = $payload->importantIds['child_care_id'] ?? null;
+            $enrolledResidentId = $payload->importantIds['enrolled_resident_id'] ?? null;
+
+            if (!$childCareId || !$enrolledResidentId) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Missing important IDs (child_care_id or enrolled_resident_id).'
+                ], 400);
+            }
+
+            // Update Child Immunization Record
+            $childCare = ChildHealthcare::find($childCareId);
+            if ($childCare) {
+                $atBirth = $payload->atBirth ?? [];
+                $exclusive = $payload->nutrition['exclusiveBreastfeeding'] ?? [];
+                $nutrition = $payload->nutrition ?? [];
+
+                $childCare->birth_weight = $atBirth['birthWeightKg'] ?? null;
+                $childCare->initiated_breast_feed = $atBirth['initiatedBreastfeeding'] ?? null;
+
+                // Exclusive breastfeeding flags
+                $childCare->is_exclusive_breastfeed_1 = $exclusive['at1_5months']['status'] === 'yes' ? 1 : 0;
+                $childCare->is_exclusive_breastfeed_2 = $exclusive['at2_5months']['status'] === 'yes' ? 1 : 0;
+                $childCare->is_exclusive_breastfeed_3 = $exclusive['at3_5months']['status'] === 'yes' ? 1 : 0;
+                $childCare->is_exclusive_breastfeed_4 = $exclusive['at4_5months']['status'] === 'yes' ? 1 : 0;
+
+                $childCare->exclusive_breastfeed_date_1 = $exclusive['at1_5months']['date'] ?? null;
+                $childCare->exclusive_breastfeed_date_2 = $exclusive['at2_5months']['date'] ?? null;
+                $childCare->exclusive_breastfeed_date_3 = $exclusive['at3_5months']['date'] ?? null;
+                $childCare->exclusive_breastfeed_date_4 = $exclusive['at4_5months']['date'] ?? null;
+
+                $childCare->is_exclusive_breastfeed_6mos = $exclusive['statusAt6Months'] === 'yes' ? 1 : 0;
+                $childCare->stopped_exclusive_breastfeed_date = $exclusive['dateStopped'] ?? null;
+
+                // Complementary feeding
+                $complementary = $nutrition['complementaryFeedingStarted'] ?? null;
+                if (!empty($complementary)) {
+                    $childCare->complementary_feeding_status = $complementary;
+                } else {
+                    $childCare->complementary_feeding_status = null;
+                }
+
+                // FIC & CIC dates
+                $childCare->fic_date = $payload->immunizations['ficDate'] ?? null;
+                $childCare->cic_date = $payload->immunizations['cicDate'] ?? null;
+                $childCare->remarks = $payload->remarks ?? null;
+                $childCare->save();
+            }
+
+            $childName = $payload->basicInfo['fullName'] ?? 'Child Record';
+            $childNameSlug = Str::slug($childName);
+
+            $activityLog = ActivityLog::create([
+                'user_id' => $user->id,
+                'module_id' => 5,
+                'activity' => 'Updated the child healthcare and immunization record of ' . $childName,
+            ]);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Childcare and enrolled resident updated successfully.',
+            ]);
+
+        } catch (\Exception $e) {
+            \Log::error('Error updating childcare record: ' . $e->getMessage());
+            return response()->json([
+                'status' => 'error',
+                'message' => 'An error occurred while updating childcare record.',
+            ], 500);
+        }
     }
 }

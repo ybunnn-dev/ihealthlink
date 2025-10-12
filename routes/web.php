@@ -23,6 +23,7 @@ use App\Http\Controllers\Web\BarangayExportData;
 use App\Http\Controllers\Web\ConsultationController;
 use App\Http\Controllers\Web\MaternalExport;
 use App\Http\Controllers\Web\ChildcareController;
+use App\Http\Controllers\Web\BarangayLogs;
 
 Route::get('/', function () {
     return view('auth.login');
@@ -230,10 +231,8 @@ Route::middleware([
     })->name('midwife.BHWs-profile');
 
     // Midwife-specific dashboard
-    Route::get('/midwife/logs', function () {
-        return view('midwife.log-list');
-    })->name('midwife.logs');
 
+    Route::get('/barangay/logs', [BarangayLogs::class, 'index'])->name('midwife.logs');
     
     Route::get('/midwife/bhws/{bhw}', [BHWController::class, 'show'])->name('midwife.bhws.show');
 
@@ -283,6 +282,9 @@ Route::middleware([
 
     Route::post('/barangay/health-program/child-healthcare/enroll', [ChildcareController::class, 'enrollChild']);
 
+    Route::post('/export/child-care-record', [BarangayExportData::class, 'printChildCarePdf'])->name('export.child.pdf');
+
+    Route::post('/barangay/health-program/update-child-record', [ChildcareController::class, 'updateChildRecord']);
 
 });
 

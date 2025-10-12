@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -464,6 +465,27 @@ class BarangayExportData extends Controller
         $fileName = 'Referral-Form-' . $safeName . '.pdf';
 
         // Return the generated PDF to the browser for download
+        return $pdf->download($fileName);
+    }
+
+    public function printChildCarePdf(Request $request)
+    {
+        // Get the entire JSON payload from the request
+        $payload = (object) $request->all();
+
+        // Prepare the data for the view
+        $data = [
+            'record' => $payload
+        ];
+
+        // Generate a filename, e.g., "child-care-gusion-lodicakes-dela-cruz.pdf"
+        $childNameSlug = Str::slug($payload->basicInfo['fullName'] ?? 'child-record');
+        $fileName = 'child-care-' . $childNameSlug . '.pdf';
+
+        // Load the view and pass the data to it
+        $pdf = Pdf::loadView('reports.child-care-pdf', $data);
+
+        // Download the PDF
         return $pdf->download($fileName);
     }
 }

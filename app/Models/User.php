@@ -118,7 +118,7 @@ class User extends Authenticatable
      // A user can be a midwife
     public function midwife()
     {
-        return $this->hasOne(Midwife::class);
+        return $this->hasOne(Midwife::class, 'user_id');
     }
 
     public function role()
@@ -154,7 +154,7 @@ class User extends Authenticatable
     }
 
     public function bhwWeb(){
-        return $this->hasOne(BHW::class, 'user_id'); //the role_id should be 4
+        return $this->hasOne(BHW::class, 'user_id')->where('role_id', 4); //the role_id should be 4
     }
     public function residentsAdded()
     {

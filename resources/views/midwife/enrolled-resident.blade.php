@@ -192,7 +192,7 @@
                                         class="js-update-consultation-btn text-mainblue hover:text-blue-900 disabled:opacity-50 disabled:pointer-events-none" 
                                         data-consultation-id="{{ $consultation->id }}" 
                                         title="Update Status"
-                                        @if($consultation->status === 'completed')
+                                        @if($consultation->status === 'completed' && $enrolledResident->program->category === 'philpen_tcl')
                                             disabled 
                                         @endif>
                                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 pointer-events-none" viewBox="0 0 20 20" fill="currentColor">

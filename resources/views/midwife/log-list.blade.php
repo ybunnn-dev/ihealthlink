@@ -1,5 +1,10 @@
 @section('title', 'Logs')
 <x-app-layout>
+    <script>
+        document.addEventListener('DOMContentLoaded', function(){
+            console.log(@json($activityLogs));
+        });
+    </script>
     <div class="py-12 px-5">
         <div class="max-w-[90rem] mx-auto sm:px-6 lg:px-8">
             <h1 class="text-3xl font-semibold text-sub_blue mb-3">Logs</h1>
@@ -9,7 +14,7 @@
                         <div class="pb-6">
                             <div class="flex flex-col slg2:flex-row slg2:flex-nowrap items-end gap-4">
                                 <div class="w-full slg2:flex-grow slg2:max-w-md">
-                                    <label for="default-search" class="mb-2 text-sm font-medium text-main_font">Search NAME?</label>
+                                    <label for="default-search" class="mb-2 text-sm font-medium text-main_font">Search name?</label>
                                     <div class="relative">
                                         <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                                             <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
@@ -56,95 +61,60 @@
                                 <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Last Year</a></li>
                             </ul>
                         </div>
-                        <div class="relative overflow-x-auto rounded-lg"> {{-- Added rounded-lg here for the table container --}}
+                        <div class="relative overflow-x-auto rounded-lg">
                             <table class="w-full text-sm text-left text-main_font">
                                 <thead class="text-xs text-main_font uppercase text-center bg-col_tab_h">
                                     <tr>
-                                        <th scope="col" class="px-6 py-3">
-                                            LOG #
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            NAME
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            ROLE
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            ACTIVITY
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            DATE & TIME UPDATED
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            ACTION
-                                        </th>
+                                        <th scope="col" class="px-6 py-3">LOG #</th>
+                                        <th scope="col" class="px-6 py-3">NAME</th>
+                                        <th scope="col" class="px-6 py-3">ROLE</th>
+                                        <th scope="col" class="px-6 py-3">ACTIVITY</th>
+                                        <th scope="col" class="px-6 py-3">DATE & TIME UPDATED</th>
+                                        <th scope="col" class="px-6 py-3">ACTION</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {{-- Row 1 --}}
-                                    <tr class="bg-white border-b text-normal_font text-center hover:bg-gray-50">
-                                        <th scope="row" class="px-6 py-4 font-medium text-normal_font whitespace-nowrap">
-                                            121
-                                        </th>
-                                        <td class="px-6 py-4">
-                                            Jose Manalo
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            Admin
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            Added new admin
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            Feb 10, 2025 - 10:30 AM
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            <button class="text-white bg-mainblue hover:bg-blue-700 font-medium rounded-lg text-sm px-4 py-2">View</button>
-                                        </td>
-                                    </tr>
-                                    {{-- Row 2 --}}
-                                    <tr class="bg-white border-b text-normal_font text-center hover:bg-gray-50">
-                                        <th scope="row" class="px-6 py-4 font-medium text-normal_font whitespace-nowrap">
-                                            122
-                                        </th>
-                                        <td class="px-6 py-4">
-                                            Jose Manalo
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            Admin
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            Added new admin
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            Feb 10, 2025 - 10:30 AM
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            <button class="text-white bg-mainblue hover:bg-blue-700 font-medium rounded-lg text-sm px-4 py-2">View</button>
-                                        </td>
-                                    </tr>
-                                    {{-- Row 3 --}}
-                                    <tr class="bg-white border-b text-normal_font text-center hover:bg-gray-50">
-                                        <th scope="row" class="px-6 py-4 font-medium text-normal_font whitespace-nowrap">
-                                            123
-                                        </th>
-                                        <td class="px-6 py-4">
-                                            Jose Manalo
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            Admin
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            Added new admin
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            Feb 10, 2025 - 10:30 AM
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            <button class="text-white bg-mainblue hover:bg-blue-700 font-medium rounded-lg text-sm px-4 py-2">View</button>
-                                        </td>
-                                    </tr>
-                                    {{-- Add more rows as needed --}}
+                                    @forelse ($activityLogs as $log)
+                                        <tr class="bg-white border-b text-normal_font text-center hover:bg-gray-50">
+                                            <th scope="row" class="px-6 py-4 font-medium text-normal_font whitespace-nowrap">
+                                                {{-- Use loop's iteration to number logs and fix the missing 'id' property error --}}
+                                                {{ $log->id ?? '' }}
+                                            </th>
+                                            <td class="px-6 py-4">
+                                                {{-- Construct full name from the nested user object --}}
+                                                @if(isset($log->user))
+                                                    {{ ($log->user->firstName ?? '') . ' ' . ($log->user->lastName ?? 'N/A') }}
+                                                @else
+                                                    N/A
+                                                @endif
+                                            </td>
+                                            <td class="px-6 py-4 capitalize">
+                                                {{-- Use a sensible default for role based on the controller's logic --}}
+                                                {{ $log->user->role->name ?? 'BHW' }}
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                {{-- Responsive truncation for the activity description --}}
+                                                <div class="truncate max-w-20 slg2:max-w-30 xl3:max-w-80 mx-auto" title="{{ $log->activity }}">
+                                                    {{ $log->activity }}
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                {{-- Parse the date string with Carbon before formatting for display --}}
+                                                {{ \Carbon\Carbon::parse($log->created_at)->format('M d, Y - h:i A') }}
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                {{-- Placeholder link for viewing log details --}}
+                                                <a href="#" class="text-white bg-mainblue hover:bg-blue-700 font-medium rounded-lg text-sm px-4 py-2">View</a>
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        {{-- This row will display if $activityLogs is empty --}}
+                                        <tr class="bg-white border-b">
+                                            <td colspan="6" class="px-6 py-12 text-center text-normal_font">
+                                                No activity logs found for BHWs in this barangay.
+                                            </td>
+                                        </tr>
+                                    @endforelse
                                 </tbody>
                             </table>
                         </div>
@@ -154,3 +124,4 @@
         </div>
     </div>
 </x-app-layout>
+

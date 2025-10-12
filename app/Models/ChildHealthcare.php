@@ -28,10 +28,10 @@ class ChildHealthcare extends Model
         'exclusive_breastfeed_date_4',
         'is_exclusive_breastfeed_6mos',
         'stopped_exclusive_breastfeed_date',
-        'complementary_feeding',
         'complementary_feeding_status',
         'fic_date',
         'cic_date',
+        'remarks'
     ];
 
     // Define relationships
