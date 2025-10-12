@@ -52,7 +52,7 @@ class User extends Authenticatable
         'email', // optional but recommended for privacy
     ];
 
-     public function getAttribute($key)
+    public function getAttribute($key)
     {
         $value = parent::getAttribute($key);
 
@@ -63,12 +63,14 @@ class User extends Authenticatable
 
         return $value;
     }
+    public function setAttribute($key, $value)
+    {
+        if (in_array($key, $this->encryptable) && $value !== null) {
+            $value = ProjectCrypt::encrypt($value);
+        }
 
-    /**
-     * 🔓 CRITICAL FIX: Override attributesToArray to decrypt before JSON serialization
-     * This ensures that when models are converted to JSON (e.g., @json($residents)),
-     * encrypted fields are properly decrypted for frontend consumption.
-     */
+        return parent::setAttribute($key, $value);
+    }
     public function attributesToArray()
     {
         $attributes = parent::attributesToArray();
@@ -88,7 +90,6 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $hidden = [
-        'password',
         'remember_token',
         'two_factor_recovery_codes',
         'two_factor_secret',

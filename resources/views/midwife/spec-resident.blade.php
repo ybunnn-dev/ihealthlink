@@ -17,7 +17,6 @@
                             <span class="font-semibold">Return</span>
                         </div>
                     </a>
-
                     <!-- Right side: Buttons aligned right -->
                     <div class="flex justify-end gap-3">
                         <button class="w-40 h-9 bg-mainblue rounded-md text-xs font-semibold text-f7 px-6">Generate Card</button>
