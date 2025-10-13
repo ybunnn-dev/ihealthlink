@@ -173,11 +173,11 @@ class User extends Authenticatable
         }
 
         if ($this->role_id === 4) {
-            return $this->bhw->belongsTo(Barangay::class, 'brgy_id');
+            return $this->personnel->belongsTo(Barangay::class, 'brgy_id');
         }
     }
 
-    public function personel(){
+    public function personnel(){
         return $this->hasOne(Personnel::class, 'user_id');
     }
 }

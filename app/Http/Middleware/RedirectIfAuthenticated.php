@@ -40,7 +40,7 @@ class RedirectIfAuthenticated
             case 2: // BHW
             case 4: // Web BHW
                 // Get personnel record (bhw, bhwWeb, or midwife)
-                $personnel = $user->bhw ?? $user->bhwWeb ?? $user->midwife;
+                $personnel = $user->personnel;
                 
                 if (!$personnel || !$personnel->brgy_id) {
                     // No personnel record or barangay - redirect to generic dashboard or error

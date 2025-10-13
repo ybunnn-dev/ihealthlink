@@ -18,6 +18,7 @@ use Illuminate\View\View;
 
 
 use App\Models\BHW;
+use App\Models\Personnel;
 use App\Models\Barangay;
 use App\Models\User;
 use App\Models\Midwife;
@@ -27,7 +28,7 @@ class BHWController extends Controller
     /**
      * Display a listing of the BHWs for the authenticated midwife's barangay.
      */
-    public function index(): View
+    public function index()
     {
         // 1. Get the authenticated user (the midwife).
         $user = Auth::user();
@@ -37,30 +38,39 @@ class BHWController extends Controller
             ->where('role_id', 2)
             ->first();
 
-        // 3. Handle cases where the midwife might not be properly assigned to a barangay.
         if (!$midwifePersonnel || !$midwifePersonnel->brgy_id) {
             // Return the view with an empty collection. The @forelse loop in the view will handle this gracefully.
             return view('midwife.BHWs', ['bhws' => collect()]);
         }
 
         // 4. Fetch the BHWs assigned to the midwife's barangay.
-        $bhws = BHW::query()
-            
-            ->where('brgy_id', $midwifePersonnel->brgy_id)
-            ->where('status', 'active')
-            ->with('user')
-            ->paginate(8) // Get all results first
-            ->sortBy('name') // Now sort by the 'name' accessor from your model
-            ->values(); // Reset the collection keys
+    $bhws = Personnel::where('personnel.brgy_id', $midwifePersonnel->brgy_id)
+        ->where('personnel.status', 'active')
+        ->whereHas('user', function ($query) {
+            $query->whereIn('role_id', [3, 4]);
+        })
+        ->join('users', 'personnel.user_id', '=', 'users.id')
+        ->orderBy('users.lastName')
+        ->with('user')
+        ->select('personnel.*')
+        ->paginate(8);
+
+
 
         return view('midwife.BHWs', compact('bhws'));
     }
 
-    public function show(BHW $bhw): View
+    public function show(Personnel $personnel)
     {
-        $bhw->load('user', 'barangay');
+        
+        \Log::info($personnel);
+        $personnel->load('user', 'barangay');
 
-        return view('midwife.BHWs-profile', compact('bhw'));
+        \Log::info($personnel);
+
+        return view('midwife.BHWs-profile', [
+            'personnel' => $personnel,
+        ]);
     }
 
     public function getBHWs(){
@@ -73,7 +83,7 @@ class BHWController extends Controller
             ], 404);
         }
 
-        $bhws = BHW::where('brgy_id', $midwife->brgy_id)->get();
+        $bhws = Personnel::where('brgy_id', $midwife->brgy_id)->get();
 
         return response()->json([
             'success' => true,
@@ -132,7 +142,7 @@ class BHWController extends Controller
         ]);
 
         // create personnel record for BHW
-        $personnel = BHW::create([
+        $personnel = Personnel::create([
             'user_id' => $user->id,
             'role_id' => $validated['privilege'],
             'brgy_id' => $midwifePersonnel->brgy_id,
@@ -173,7 +183,7 @@ class BHWController extends Controller
 
         $user->update($validated);
 
-        $bhw = BHW::where('user_id', $user->id)->first();
+        $bhw = Personnel::where('user_id', $user->id)->first();
 
         if ($bhw) {
             $bhw->update([

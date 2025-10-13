@@ -38,7 +38,7 @@ class MidwifeController extends Controller
         // Use through() to apply your mapping logic to the paginated collection.
         $rows = $midwivesPaginator->through(function ($m) {
             $user = $m->users ?? $m->user ?? null;
-            $barangay = $m->barangays ?? $m->barangay ?? null;
+            $barangay = $m->barangay ?? $m->barangay ?? null;
 
             $parts = array_filter([
                 $user->firstName ?? null,
@@ -79,7 +79,7 @@ class MidwifeController extends Controller
             'civilStatus' => 'required|string|in:Single,Married,Divorced,Widowed',
             'religion' => 'required|string|max:50',
             'contactNo' => 'required|string|max:20',
-            'barangayId' => 'required|integer|exists:barangays,id',
+            'barangayId' => 'required|integer|exists:barangay,id',
             'email' => 'required|email|unique:users,email'
         ]);
 
@@ -143,12 +143,12 @@ class MidwifeController extends Controller
     {
         // 1. Find the midwife record using the unique ID ($m_id) from the URL.
         // The $name parameter is not needed for the query but must be in the signature.
-        $midwife = Midwife::with(['user', 'barangays'])->findOrFail($m_id);
+        $midwife = Midwife::with(['user', 'barangay'])->findOrFail($m_id);
         $emptyBrgy = Barangay::whereDoesntHave('midwives')->get();
 
         // 2. Extract the related user and barangay objects for easier access.
         $user = $midwife->user;
-        $barangay = $midwife->barangays;
+        $barangay = $midwife->barangay;
 
         // 3. Consolidate all the required details into a single array.
         $data = [
@@ -196,7 +196,7 @@ class MidwifeController extends Controller
 
         \Log::info($searchQuery);
 
-        $query = Midwife::query()->with(['users', 'barangays']);
+        $query = Midwife::query()->with(['users', 'barangay']);
 
         // --- Search ---
         $query->when($searchQuery, function ($q, $searchQuery) {

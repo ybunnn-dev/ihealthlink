@@ -221,111 +221,115 @@
                 </a>
             </li>
 
-            <!-- Schedules -->
-            <li class="flex items-center group">
-                <a href="{{ route('midwife.sched') }}"
-                class="flex items-center w-full py-3 pl-4 hover:bg-white/10 transition-colors rounded-lg"
-                :class="{
-                    'bg-nav_active text-f7 font-bold': activeItem === 'schedules',
-                    'text-white': activeItem !== 'schedules'
-                }"
-                @click="setActive('schedules')"
-                >
-                    <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" class="flex-shrink-0
-                            w-4 h-4"
-                        :class="{
-                            'text-mainblue': activeItem === 'schedules',
-                            'text-main_font': activeItem !== 'schedules'
-                        }" fill="currentColor">
-                        <g>
-                            <path d="M2 2h16v4H2V2zm0 10V8h4v4H2zm6-2V8h4v2H8zm6 3V8h4v5h-4zm-6 5v-6h4v6H8zm-6 0v-4h4v4H2zm12 0v-3h4v3h-4z"></path>
-                        </g>
-                    </svg>
-                    <span class="ml-3 whitespace-nowrap transition-all duration-200 text-main_font text-medium"
-                        :class="{ 
-                            'opacity-0 invisible': !open, 
-                            'opacity-100 visible': open, 
-                            'font-bold': activeItem === 'schedules',
-                            'text-mainblue': activeItem === 'schedules' 
-                        }"
-                    >
-                        Schedules
-                    </span>
-                </a>
-            </li>
-            <!-- BHWs -->
-            <li class="flex items-center group">
-                <a href="{{ route('midwife.bhws') }}"
-                class="flex items-center w-full py-3 pl-4 hover:bg-white/10 transition-colors rounded-lg"
-                :class="{
-                    'bg-nav_active text-f7 font-bold': activeItem === 'bhws',
-                    'text-white': activeItem !== 'bhws'
-                }"
-                @click="setActive('bhws')"
-                >
-                    <svg class="flex-shrink-0
-                            w-4 h-4 lg:w-4 lg:h-4"
-                        :class="{
-                            'text-mainblue': activeItem === 'bhws',
-                            'text-main_font': activeItem !== 'bhws'
-                        }" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--medical-icon" preserveAspectRatio="xMidYMid meet" fill="#000000">
-                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                            <g id="SVGRepo_iconCarrier">
-                                <path d="M40.067 20.573c0 4.557-3.699 8.25-8.26 8.25c-4.556 0-8.249-3.694-8.249-8.25s3.693-8.25 8.249-8.25c4.561 0 8.26 3.694 8.26 8.25z" fill="currentColor"></path>
-                                <path d="M31.82.524c-3.818 0-9.151 1.522-13.014 5.385l4.588 8.359a10.703 10.703 0 0 1 8.426-4.09c3.459 0 6.537 1.634 8.498 4.175l4.5-8.636C41.475 2.064 35.48.525 31.82.525zm3.4 6.138h-2.136v2.134h-2.566V6.662h-2.136V4.097h2.136V1.954h2.566v2.143h2.136v2.565z" fill="currentColor"></path>
-                                <path d="M20.966 43.651h2.113l-3.018 10.344h23.581l-3.004-10.344h2.115l3.023 10.344h6.939l-4.736-15.672c-.74-2.587-3.984-7.142-9.582-7.28l-12.87-.011c-5.725.028-9.037 4.672-9.786 7.29l-4.828 15.672h7.037l3.016-10.343z" fill="currentColor"></path>
-                                <path d="M.947 57.293h61.73v5.873H.947v-5.873z" fill="currentColor"></path>
-                            </g>
-                    </svg>
-                    <span class="ml-3 whitespace-nowrap transition-all duration-200 text-main_font text-medium"
-                        :class="{ 
-                            'opacity-0 invisible': !open, 
-                            'opacity-100 visible': open, 
-                            'font-bold': activeItem === 'bhws',
-                            'text-mainblue': activeItem === 'bhws'
-                        }"
-                    >
-                        BHWs
-                    </span>
-                </a>
-            </li>
+            @auth
+                @if (Auth::user()->role_id == 2)
+                    <!-- Schedules -->
+                    <li class="flex items-center group">
+                        <a href="{{ route('midwife.sched') }}"
+                            class="flex items-center w-full py-3 pl-4 hover:bg-white/10 transition-colors rounded-lg"
+                            :class="{
+                                'bg-nav_active text-f7 font-bold': activeItem === 'schedules',
+                                'text-white': activeItem !== 'schedules'
+                            }"
+                            @click="setActive('schedules')"
+                        >
+                            <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"
+                                class="flex-shrink-0 w-4 h-4"
+                                :class="{
+                                    'text-mainblue': activeItem === 'schedules',
+                                    'text-main_font': activeItem !== 'schedules'
+                                }"
+                                fill="currentColor"
+                            >
+                                <path d="M2 2h16v4H2V2zm0 10V8h4v4H2zm6-2V8h4v2H8zm6 3V8h4v5h-4zm-6 5v-6h4v6H8zm-6 0v-4h4v4H2zm12 0v-3h4v3h-4z"></path>
+                            </svg>
+                            <span class="ml-3 whitespace-nowrap transition-all duration-200 text-main_font text-medium"
+                                :class="{ 
+                                    'opacity-0 invisible': !open, 
+                                    'opacity-100 visible': open, 
+                                    'font-bold': activeItem === 'schedules',
+                                    'text-mainblue': activeItem === 'schedules' 
+                                }"
+                            >
+                                Schedules
+                            </span>
+                        </a>
+                    </li>
+                @endif
+            @endauth
 
-            <!-- Logs -->
-            <li class="flex items-center group">
-                <a href="{{ route('midwife.logs') }}"
-                class="flex items-center w-full py-3 pl-4 hover:bg-white/10 transition-colors rounded-lg"
-                :class="{
-                    'bg-nav_active text-f7 font-bold': activeItem === 'logs',
-                    'text-mainblue': activeItem !== 'logs'
-                }"
-                @click="setActive('logs')"
-                >
-                     <svg class="flex-shrink-0
-                            w-4 h-4 lg:w-4 lg:h-4"
+            <!-- BHWs -->
+            @auth
+            @if (Auth::user()->role_id == 2)
+                <li class="flex items-center group">
+                    <a href="{{ route('midwife.bhws') }}"
+                        class="flex items-center w-full py-3 pl-4 hover:bg-white/10 transition-colors rounded-lg"
                         :class="{
-                            'text-mainblue': activeItem === 'logs',
-                            'text-main_font': activeItem !== 'logs'
-                        }" fill="currentColor" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                            <g id="SVGRepo_iconCarrier">
-                                <title>logs</title>
-                                <path d="M0 24q0 0.832 0.576 1.44t1.44 0.576h1.984q0 2.496 1.76 4.224t4.256 1.76h6.688q-2.144-1.504-3.456-4h-3.232q-0.832 0-1.44-0.576t-0.576-1.408v-20q0-0.832 0.576-1.408t1.44-0.608h16q0.8 0 1.408 0.608t0.576 1.408v7.232q2.496 1.312 4 3.456v-10.688q0-2.496-1.76-4.256t-4.224-1.76h-16q-2.496 0-4.256 1.76t-1.76 4.256h-1.984q-0.832 0-1.44 0.576t-0.576 1.408 0.576 1.44 1.44 0.576h1.984v4h-1.984q-0.832 0-1.44 0.576t-0.576 1.408 0.576 1.44 1.44 0.576h1.984v4h-1.984q-0.832 0-1.44 0.576t-0.576 1.408zM10.016 24h2.080q0-0.064-0.032-0.416t-0.064-0.576 0.064-0.544 0.032-0.448h-2.080v1.984zM10.016 20h2.464q0.288-1.088 0.768-1.984h-3.232v1.984zM10.016 16h4.576q0.992-1.216 2.112-1.984h-6.688v1.984zM10.016 12h16v-1.984h-16v1.984zM10.016 8h16v-1.984h-16v1.984zM14.016 23.008q0 1.824 0.704 3.488t1.92 2.88 2.88 1.92 3.488 0.704 3.488-0.704 2.88-1.92 1.92-2.88 0.704-3.488-0.704-3.488-1.92-2.88-2.88-1.92-3.488-0.704-3.488 0.704-2.88 1.92-1.92 2.88-0.704 3.488zM18.016 23.008q0-2.080 1.44-3.52t3.552-1.472 3.52 1.472 1.472 3.52q0 2.080-1.472 3.52t-3.52 1.472-3.552-1.472-1.44-3.52zM22.016 23.008q0 0.416 0.288 0.704t0.704 0.288h1.984q0.416 0 0.704-0.288t0.32-0.704-0.32-0.704-0.704-0.288h-0.992v-0.992q0-0.416-0.288-0.704t-0.704-0.32-0.704 0.32-0.288 0.704v1.984z"></path>
-                            </g>
-                        </svg>
-                    <span class="ml-3 whitespace-nowrap transition-all duration-200 text-main_font text-medium rounded-lg"
-                        :class="{ 
-                            'opacity-0 invisible': !open, 
-                            'opacity-100 visible': open, 
-                            'font-bold': activeItem === 'logs',
-                            'text-mainblue': activeItem === 'logs' 
+                            'bg-nav_active text-f7 font-bold': activeItem === 'bhws',
+                            'text-white': activeItem !== 'bhws'
                         }"
+                        @click="setActive('bhws')"
                     >
-                        Logs
-                    </span>
-                </a>
-            </li>
+                        <svg class="flex-shrink-0 w-4 h-4 lg:w-4 lg:h-4"
+                            :class="{
+                                'text-mainblue': activeItem === 'bhws',
+                                'text-main_font': activeItem !== 'bhws'
+                            }"
+                            viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" fill="currentColor">
+                            <path d="M40.067 20.573c0 4.557-3.699 8.25-8.26 8.25c-4.556 0-8.249-3.694-8.249-8.25s3.693-8.25 8.249-8.25c4.561 0 8.26 3.694 8.26 8.25z"></path>
+                            <path d="M31.82.524c-3.818 0-9.151 1.522-13.014 5.385l4.588 8.359a10.703 10.703 0 0 1 8.426-4.09c3.459 0 6.537 1.634 8.498 4.175l4.5-8.636C41.475 2.064 35.48.525 31.82.525zm3.4 6.138h-2.136v2.134h-2.566V6.662h-2.136V4.097h2.136V1.954h2.566v2.143h2.136v2.565z"></path>
+                            <path d="M20.966 43.651h2.113l-3.018 10.344h23.581l-3.004-10.344h2.115l3.023 10.344h6.939l-4.736-15.672c-.74-2.587-3.984-7.142-9.582-7.28l-12.87-.011c-5.725.028-9.037 4.672-9.786 7.29l-4.828 15.672h7.037l3.016-10.343z"></path>
+                            <path d="M.947 57.293h61.73v5.873H.947v-5.873z"></path>
+                        </svg>
+                        <span class="ml-3 whitespace-nowrap transition-all duration-200 text-main_font text-medium"
+                            :class="{ 
+                                'opacity-0 invisible': !open, 
+                                'opacity-100 visible': open, 
+                                'font-bold': activeItem === 'bhws',
+                                'text-mainblue': activeItem === 'bhws'
+                            }"
+                        >
+                            BHWs
+                        </span>
+                    </a>
+                </li>
+            @endif
+        @endauth
+
+
+           @auth
+                @if (Auth::user()->role_id == 2)
+                    <!-- Logs -->
+                    <li class="flex items-center group ">
+                        <a href="{{ route('midwife.logs') }}"
+                            class="flex items-center w-full py-3 pl-4 hover:bg-white/10 transition-colors rounded-lg"
+                            :class="{
+                                'bg-nav_active text-f7 font-bold': activeItem === 'logs',
+                                'text-mainblue': activeItem !== 'logs'
+                            }"
+                            @click="setActive('logs')"
+                        >
+                            <svg class="flex-shrink-0 w-4 h-4 lg:w-4 lg:h-4"
+                                :class="{
+                                    'text-mainblue': activeItem === 'logs',
+                                    'text-main_font': activeItem !== 'logs'
+                                }" fill="currentColor" viewBox="0 0 32 32">
+                                <path d="M0 24q0 0.832 0.576 1.44t1.44 0.576h1.984q0 2.496 1.76 4.224t4.256 1.76h6.688q-2.144-1.504-3.456-4h-3.232q-0.832 0-1.44-0.576t-0.576-1.408v-20q0-0.832 0.576-1.408t1.44-0.608h16q0.8 0 1.408 0.608t0.576 1.408v7.232q2.496 1.312 4 3.456v-10.688q0-2.496-1.76-4.256t-4.224-1.76h-16q-2.496 0-4.256 1.76t-1.76 4.256h-1.984q-0.832 0-1.44 0.576t-0.576 1.408 0.576 1.44 1.44 0.576h1.984v4h-1.984q-0.832 0-1.44 0.576t-0.576 1.408 0.576 1.44 1.44 0.576h1.984v4h-1.984q-0.832 0-1.44 0.576t-0.576 1.408zM10.016 24h2.080q0-0.064-0.032-0.416t-0.064-0.576 0.064-0.544 0.032-0.448h-2.080v1.984zM10.016 20h2.464q0.288-1.088 0.768-1.984h-3.232v1.984zM10.016 16h4.576q0.992-1.216 2.112-1.984h-6.688v1.984zM10.016 12h16v-1.984h-16v1.984zM10.016 8h16v-1.984h-16v1.984zM14.016 23.008q0 1.824 0.704 3.488t1.92 2.88 2.88 1.92 3.488 0.704 3.488-0.704 2.88-1.92 1.92-2.88 0.704-3.488-0.704-3.488-1.92-2.88-2.88-1.92-3.488-0.704-3.488 0.704-2.88 1.92-1.92 2.88-0.704 3.488zM18.016 23.008q0-2.080 1.44-3.52t3.552-1.472 3.52 1.472 1.472 3.52q0 2.080-1.472 3.52t-3.52 1.472-3.552-1.472-1.44-3.52zM22.016 23.008q0 0.416 0.288 0.704t0.704 0.288h1.984q0.416 0 0.704-0.288t0.32-0.704-0.32-0.704-0.704-0.288h-0.992v-0.992q0-0.416-0.288-0.704t-0.704-0.32-0.704 0.32-0.288 0.704v1.984z"></path>
+                            </svg>
+                            <span class="ml-3 whitespace-nowrap transition-all duration-200 text-main_font text-medium rounded-lg"
+                                :class="{ 
+                                    'opacity-0 invisible': !open, 
+                                    'opacity-100 visible': open, 
+                                    'font-bold': activeItem === 'logs',
+                                    'text-mainblue': activeItem === 'logs' 
+                                }">
+                                Logs
+                            </span>
+                        </a>
+                    </li>
+                @endif
+            @endauth
+
         </ul>
         <button
             @click="toggleSidebar"

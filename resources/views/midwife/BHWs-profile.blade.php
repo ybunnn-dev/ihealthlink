@@ -1,8 +1,8 @@
-@section('title', 'BHWs | #' .$bhw->user->id)
+@section('title', 'BHWs | #' .$personnel->user->id)
  @section('page-id', 'spec-bhw')
 <x-app-layout>
     <script>
-        window.bhwData = @json($bhw);
+        window.bhwData = @json($personnel);
     </script>
     <div class="py-12 px-5">
         <div class="max-w-[90rem] mx-auto sm:px-6 lg:px-8">
@@ -27,8 +27,8 @@
                                     <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="#566A7F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> 
                                 </g>
                             </svg>
-                            <p class="text-main_font font-bold mt-4 text-xl">{{ $bhw->name }}</p> 
-                            <p class="text-main_font font-semibold">BHW #{{ $bhw->id }}</p> 
+                            <p class="text-main_font font-bold mt-4 text-xl">{{ $personnel->name }}</p> 
+                            <p class="text-main_font font-semibold">BHW #{{ $personnel->id }}</p> 
                         </div>
 
                         <!-- Scheduled Activity Card -->
@@ -50,50 +50,50 @@
                         <div class="grid grid-cols-1 gap-y-4 text-xs">
                             <div class="grid grid-rows-2 md:grid-cols-3 md:grid-rows-1">
                                 <p class="font-semibold text-main_font">FIRST NAME:</p>
-                                <p class="text-normal_font">{{ $bhw->user->firstName }}</p>
+                                <p class="text-normal_font">{{ $personnel->user->firstName }}</p>
                             </div>
 
                             <div class="grid grid-rows-2 md:grid-cols-3 md:grid-rows-1">
                                 <p class="font-semibold text-main_font">LAST NAME:</p>
-                                <p class="text-normal_font">{{ $bhw->user->lastName }}</p>
+                                <p class="text-normal_font">{{ $personnel->user->lastName }}</p>
                             </div>
 
                             <div class="grid grid-rows-2 md:grid-cols-3 md:grid-rows-1">
                                 <p class="font-semibold text-main_font">MIDDLE NAME:</p>
-                                <p class="text-normal_font">{{ $bhw->user->middleName ?? 'N/A' }}</p>
+                                <p class="text-normal_font">{{ $personnel->user->middleName ?? 'N/A' }}</p>
                             </div>
 
                             <div class="grid grid-rows-2 md:grid-cols-3 md:grid-rows-1">
                                 <p class="font-semibold text-main_font">SUFFIX:</p>
-                                <p class="text-normal_font">{{ $bhw->user->suffix ?? 'N/A' }}</p>
+                                <p class="text-normal_font">{{ $personnel->user->suffix ?? 'N/A' }}</p>
                             </div>
 
                             <div class="grid grid-rows-2 md:grid-cols-3 md:grid-rows-1">
                                 <p class="font-semibold text-main_font">BIRTHDATE:</p>
                                 {{-- Using Carbon for easy date formatting and age calculation --}}
-                                <p class="text-normal_font">{{ \Carbon\Carbon::parse($bhw->user->birthdate)->format('F d, Y') }} ({{ \Carbon\Carbon::parse($bhw->user->birthdate)->age }} Years old)</p>
+                                <p class="text-normal_font">{{ \Carbon\Carbon::parse($personnel->user->birthdate)->format('F d, Y') }} ({{ \Carbon\Carbon::parse($personnel->user->birthdate)->age }} Years old)</p>
                             </div>
 
                             <div class="grid grid-rows-2 md:grid-cols-3 md:grid-rows-1">
                                 <p class="font-semibold text-main_font">ADDRESS:</p>
-                                <p class="text-normal_font">Brgy. {{ $bhw->barangay->name }}, Daraga, Albay</p>
+                                <p class="text-normal_font">Brgy. {{ $personnel->barangay->name }}, Daraga, Albay</p>
                             </div>
 
                             <div class="grid grid-rows-2 md:grid-cols-3 md:grid-rows-1">
                                 <p class="font-semibold text-main_font">SEX:</p>
-                                <p class="text-normal_font">{{ $bhw->user->sex }}</p>
+                                <p class="text-normal_font">{{ $personnel->user->sex }}</p>
                             </div>
 
                             <div class="grid grid-rows-2 md:grid-cols-3 md:grid-rows-1">
                                 <p class="font-semibold text-main_font">MOBILE NUMBER:</p>
-                                <p class="text-normal_font">{{ $bhw->user->contact_no ?? 'N/A' }}</p>
+                                <p class="text-normal_font">{{ $personnel->user->contact_no ?? 'N/A' }}</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 {{-- "bhw Activity Log" label --}}
-                <h2 class="text-2xl font-semibold text-main_font mt-8">{{ $bhw->name }} Activity Log</h2>
+                <h2 class="text-2xl font-semibold text-main_font mt-8">{{ $personnel->name }} Activity Log</h2>
 
                 <div class="bg-white p-6 rounded-xl">
                     <div class="flex flex-col slg2:flex-row slg2:items-end gap-4 mb-4">

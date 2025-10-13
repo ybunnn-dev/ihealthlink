@@ -6,15 +6,17 @@ use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Fortify\ResetUserPassword;
 use App\Actions\Fortify\UpdateUserPassword;
 use App\Actions\Fortify\UpdateUserProfileInformation;
+use App\Models\User;
 use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Contracts\Container\Container;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Laravel\Fortify\Actions\RedirectIfTwoFactorAuthenticatable;
-use Laravel\Fortify\Fortify;
 use Laravel\Fortify\Contracts\LoginResponse;
-use Illuminate\Contracts\Container\Container;
+use Laravel\Fortify\Fortify;
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -29,16 +31,37 @@ class FortifyServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      */
+
+
     public function boot(): void
     {
+        // ✅ Custom authentication logic for encrypted emails
+        Fortify::authenticateUsing(function (Request $request) {
+            $email = $request->input('email');
+            $password = $request->input('password');
+
+            // Decrypt-aware email matching (since your model decrypts automatically)
+            $user = User::all()->first(function ($u) use ($email) {
+                return $u->email === $email;
+            });
+
+            if ($user && Hash::check($password, $user->password)) {
+                return $user;
+            }
+
+            return null;
+        });
+
+        // Fortify default setup
         Fortify::createUsersUsing(CreateNewUser::class);
         Fortify::updateUserProfileInformationUsing(UpdateUserProfileInformation::class);
         Fortify::updateUserPasswordsUsing(UpdateUserPassword::class);
         Fortify::resetUserPasswordsUsing(ResetUserPassword::class);
         Fortify::redirectUserForTwoFactorAuthenticationUsing(RedirectIfTwoFactorAuthenticatable::class);
 
+        // Rate limiters
         RateLimiter::for('login', function (Request $request) {
-            $throttleKey = Str::transliterate(Str::lower($request->input(Fortify::username())).'|'.$request->ip());
+            $throttleKey = Str::transliterate(Str::lower($request->input(Fortify::username())) . '|' . $request->ip());
             return Limit::perMinute(5)->by($throttleKey);
         });
 
@@ -58,26 +81,43 @@ class FortifyServiceProvider extends ServiceProvider
             return Limit::perMinute(500)->by($request->user()->id);
         });
 
-       $this->app->singleton(LoginResponse::class, function (Container $container) {
-        
+        // Login response customization
+        $this->app->singleton(LoginResponse::class, function (Container $container) {
             return new class implements LoginResponse {
                 public function toResponse($request)
                 {
                     $user = $request->user();
                     
-                    // For midwife and BHW, redirect to your dedicated controller route
+                    // Midwife or BHW redirect
                     if (in_array($user->role_id, [2, 4])) {
-                        return redirect()->route('midwife.dashboard'); // this is your new route
+                        $personnel = $user->personnel;
+                        
+                        if (!$personnel || !$personnel->brgy_id) {
+                            \Log::info('No barangay assigned to your account.');
+                            return redirect()->route('dashboard')
+                                ->with('error', 'No barangay assigned to your account.');
+                        }
+
+                        $barangay = $personnel->barangay;
+                        
+                        if (!$barangay) {
+                            return redirect()->route('home')
+                                ->with('error', 'Barangay not found.');
+                        }
+
+                        return redirect()->route('midwife.dashboard', [
+                            'barangay' => $barangay->name
+                        ]);
                     }
 
-                    // For other roles, keep current redirect
+                    // Other roles
                     return match ($user->role_id) {
                         1 => redirect()->intended('/mho/dashboard'),
-                        //default => redirect()->intended('/'),
                     };
                 }
             };
         });
     }
+
 }
 

@@ -33,11 +33,14 @@ class Personnel extends Model
     /**
      * Get the user that owns the personnel record.
      */
-    public function user(): BelongsTo
+    public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
     }
-
+    public function role()
+    {
+        return $this->belongsTo(Role::class, 'role_id');
+    }
     /**
      * Get the barangay associated with the personnel.
      */

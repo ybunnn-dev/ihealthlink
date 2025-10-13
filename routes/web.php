@@ -137,6 +137,14 @@ Route::middleware([
     Route::put('/barangay/bhw/{id}/edit', [BHWController::class, 'update']);
 
     Route::put('/barangay/bhw/{id}/remove', [BhwController::class, 'remove']);
+
+      //bhw routes
+    Route::get('/midwife/bhws/', [BHWController::class, 'index'])->name('midwife.bhws');
+
+    // Midwife-specific dashboard
+    Route::get('/barangay/logs', [BarangayLogs::class, 'index'])->name('midwife.logs');
+    
+    Route::get('/midwife/bhws/{personnel}', [BHWController::class, 'show'])->name('midwife.bhws.show');
 });
 
 
@@ -218,18 +226,6 @@ Route::middleware([
     // Store new medicine batch
     Route::post('/midwife/medicines/{id}/inventory', [MedicineInventoryController::class, 'store'])->name('midwife.medicines.inventory.store');
 
-    //bhw routes
-    Route::get('/midwife/bhws/', [BHWController::class, 'index'])->name('midwife.bhws');
-
-    Route::get('/midwife/bhw-profile', function () {
-        return view('midwife.BHWs-profile');
-    })->name('midwife.BHWs-profile');
-
-    // Midwife-specific dashboard
-
-    Route::get('/barangay/logs', [BarangayLogs::class, 'index'])->name('midwife.logs');
-    
-    Route::get('/midwife/bhws/{bhw}', [BHWController::class, 'show'])->name('midwife.bhws.show');
 
     Route::get('/barangay/user-manual', [UserManualController::class, 'index'])->name('midwife.faqs');
     // Midwife-specific dashboard
