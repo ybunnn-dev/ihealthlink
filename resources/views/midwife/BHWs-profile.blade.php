@@ -76,7 +76,7 @@
 
                             <div class="grid grid-rows-2 md:grid-cols-3 md:grid-rows-1">
                                 <p class="font-semibold text-main_font">ADDRESS:</p>
-                                <p class="text-normal_font">Brgy. {{ $bhw->barangays->name }}, Daraga, Albay</p>
+                                <p class="text-normal_font">Brgy. {{ $bhw->barangay->name }}, Daraga, Albay</p>
                             </div>
 
                             <div class="grid grid-rows-2 md:grid-cols-3 md:grid-rows-1">

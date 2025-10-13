@@ -176,4 +176,8 @@ class User extends Authenticatable
             return $this->bhw->belongsTo(Barangay::class, 'brgy_id');
         }
     }
+
+    public function personel(){
+        return $this->hasOne(Personnel::class, 'user_id');
+    }
 }

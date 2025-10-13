@@ -41,7 +41,7 @@ class Personnel extends Model
     /**
      * Get the barangay associated with the personnel.
      */
-    public function barangay(): BelongsTo
+    public function barangay()
     {
         return $this->belongsTo(Barangay::class, 'brgy_id');
     }

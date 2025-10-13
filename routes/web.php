@@ -25,36 +25,32 @@ use App\Http\Controllers\Web\MaternalExport;
 use App\Http\Controllers\Web\ChildcareController;
 use App\Http\Controllers\Web\BarangayLogs;
 
-Route::get('/', function () {
-    return view('auth.login');
+
+Route::middleware('guest')->group(function () {
+    Route::get('/', function () {
+        return view('auth.login');
+    })->name('home');
+    
+    Route::get('/login', function () {
+        return view('auth.login');
+    })->name('login');
+    
 });
 
-//Route::get('/test-controller-debug', [FamilyController::class, 'getFamilies']); // This one
-
-// Shared middleware group for authenticated and verified users
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
     'verified',
     'throttle:auth-web',
-])->group(function () {
-
-
-    Route::get('/redirect-dashboard', [RedirectBarangayController::class, 'redirect'])
-     ->name('role.redirect');
-    /** Municipal Health Office Module **/
-
-    // MHO-specific dashboard
+    'admin.only',
+    'active'
+])->group(function(){
+     // MHO-specific dashboard
     Route::get('/mho/dashboard', function () {
         return view('mho.dashboard');
     })->name('mho.dashboard');
 
-    /*
-    Route::get('/mho/health-programs', function () {
-        return view('mho.health-program-list');
-    })->name('mho.health-programs');
-    */
-
+  
     Route::get('/mho/health-programs', [HealthProgramController::class, 'index'])->name('mho.health-programs');
 
     Route::get('/mho/health-programs/{healthProgram}', [HealthProgramController::class, 'show'])->name('mho.spec-hprog');
@@ -63,11 +59,6 @@ Route::middleware([
     Route::get('/mho/barangays/{barangay}/{name}', [BarangayController::class, 'show'])
         ->name('mho.barangays.show')
         ->where(['barangay' => '[0-9]+', 'name' => '[a-zA-Z0-9-]+']);
-
-    //Route for specific health programs
-    /*Route::get('/mho/health-programs/spec', function () {
-        
-    })->name('mho.spec-hprog');*/
 
     //Route for barangays
     Route::get('/mho/barangays', [BarangayController::class, 'listView'])->name('mho.barangays');
@@ -125,13 +116,43 @@ Route::middleware([
         return view('mho.faq');
     })->name('mho.faq');
 
-    /** Barangay Health Center Modules **/
+});
 
-    // Midwife-specific dashboard
-     Route::get('/midwife/{barangay}/dashboard', [DashboardController::class, 'index'])
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified',
+    'throttle:auth-web',
+    'midwife.only',
+    'active'
+])->group(function () {
+     Route::get('/barangay/schedules', [ScheduleController::class, 'index'])->name('midwife.sched');
+    
+    Route::put('/daily-activity/update', [ScheduleController::class, 'updateDailyActivity']);
+
+    Route::get('/barangay/get-bhws', [BHWController::class, 'getBHWs'])->name('bhws.get');
+
+    Route::post('/barangay/bhw/add', [BHWController::class, 'store']);
+
+    Route::put('/barangay/bhw/{id}/edit', [BHWController::class, 'update']);
+
+    Route::put('/barangay/bhw/{id}/remove', [BhwController::class, 'remove']);
+});
+
+
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified',
+    'throttle:auth-web',
+    'midwife.role4',
+    'active',
+])->group(function () {
+
+
+     Route::get('barangay/{barangay}/dashboard', [DashboardController::class, 'index'])
              ->name('midwife.dashboard');
 
-    // Midwife-specific dashboard
     Route::get('/barangay/households', [HouseholdController::class, 'index'])->name('midwife.households');
 
     Route::post('/barangays/households/add', [HouseholdController::class, 'store']);
@@ -146,39 +167,17 @@ Route::middleware([
     })->name('midwife.spechouse');*/
     Route::get('/barangay/households/get', [HouseholdController::class, 'getHouseholdsJson'])
                                                                                                 ->name('households.json'); 
-    /*Route::get('/midwife/residents', function () {
-        return view('midwife.resident-list');
-    })->name('midwife.residents');*/
 
     Route::get('/barangay/residents/load', [ResidentController::class, 'index'])->name('midwife.residents');
-    /*Route::get('/midwife/families', function () {
-        
-    })->name('midwife.families');*/
-
+    
     Route::get('barangay/resident/families/get', [FamilyController::class, 'getFamilies']);
     
     Route::get('/midwife/family/{family}', [FamilyController::class, 'show'])
         ->name('midwife.cur-fam');
 
     Route::get('/barangay/residents/{resident}', [ResidentController::class, 'show'])->name('midwife.spec-resident');
-    /*
-    Route::get('/midwife/residents/spec-res', function () {
-        return view('midwife.spec-resident');
-    })->name('midwife.spec-resident');*/
 
     Route::post('/barangay/add-sched', [ScheduleController::class, 'store']);
-
-    Route::get('/barangay/schedules', [ScheduleController::class, 'index'])->name('midwife.sched');
-    
-    Route::put('/daily-activity/update', [ScheduleController::class, 'updateDailyActivity']);
-
-    Route::get('/barangay/get-bhws', [BHWController::class, 'getBHWs'])->name('bhws.get');
-
-    Route::post('/barangay/bhw/add', [BHWController::class, 'store']);
-
-    Route::put('/barangay/bhw/{id}/edit', [BHWController::class, 'update']);
-
-    Route::put('/barangay/bhw/{id}/remove', [BhwController::class, 'remove']);
 
     Route::post('/barangay/resident/add', [ResidentController::class, 'addResident']);
 
@@ -194,14 +193,10 @@ Route::middleware([
 
     Route::put('/barangay/schedule/delete/{id}', [ScheduleController::class, 'softDelete']);
 
-    /*Route::get('/midwife/health-program-profile', function () {
-        return view('midwife.health-program-profile');
-    })->name('midwife.health-program-profile');*/
-
+   
     Route::post('/barangay/health-programs/add', [HealthProgramController::class, 'store']);
     
-    // Midwife-specific dashboard 
-    // Show list
+    
     Route::get('/barangay/medicines', [MedicineController::class, 'index'])
         ->name('midwife.medicines');
 
@@ -288,4 +283,6 @@ Route::middleware([
 
     Route::get('/barangay/logs/{log}', [BarangayLogs::class, 'show'])->name('logs.show')->middleware('auth');
 });
+
+
 

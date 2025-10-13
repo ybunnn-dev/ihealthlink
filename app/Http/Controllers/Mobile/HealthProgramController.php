@@ -47,9 +47,10 @@ class HealthProgramController extends Controller
             $query->where('category', $category);
         }
 
-        $programs = $query->get();
+        $programs = $query->paginate(10);
 
-        return response()->json($programs);
+        // No need to wrap in response()->json(), paginate does this for you.
+        return $programs;
     }
 
     public function specHP(HealthProgram $healthProgram)

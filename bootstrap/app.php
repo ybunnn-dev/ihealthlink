@@ -15,10 +15,20 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // Register your middleware here
+       //$middleware->append(\App\Http\Middleware\SecurityHeaders::class);
+       $middleware->alias([
+            'admin.only' => \App\Http\Middleware\AdminOnly::class,
+            'midwife.only' => \App\Http\Middleware\MidwifeOnly::class,
+            'midwife.role4' => \App\Http\Middleware\MidwifeAndAssistantOnly::class,
+            'personnel.only' => \App\Http\Middleware\CheckPersonnelRole::class,
+            'check.barangay' => \App\Http\Middleware\CheckBarangayAccess::class,
+            'role' => \App\Http\Middleware\CheckRole::class, // Most flexible
+            'active' => \App\Http\Middleware\CheckStatus::class,
+            'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
-    })->create();
-
-    
+    })
+    ->create();

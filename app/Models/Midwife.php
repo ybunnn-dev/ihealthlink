@@ -22,7 +22,7 @@ class Midwife extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
-    public function barangays()
+    public function barangay()
     {
         return $this->belongsTo(Barangay::class, 'brgy_id');
     }

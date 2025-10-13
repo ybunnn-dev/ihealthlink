@@ -67,7 +67,7 @@ class FortifyServiceProvider extends ServiceProvider
                     
                     // For midwife and BHW, redirect to your dedicated controller route
                     if (in_array($user->role_id, [2, 4])) {
-                        return redirect()->route('role.redirect'); // this is your new route
+                        return redirect()->route('midwife.dashboard'); // this is your new route
                     }
 
                     // For other roles, keep current redirect

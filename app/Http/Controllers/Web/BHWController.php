@@ -45,31 +45,21 @@ class BHWController extends Controller
 
         // 4. Fetch the BHWs assigned to the midwife's barangay.
         $bhws = BHW::query()
-            // Filter BHWs by the midwife's barangay ID.
+            
             ->where('brgy_id', $midwifePersonnel->brgy_id)
             ->where('status', 'active')
             ->with('user')
-            ->get() // Get all results first
+            ->paginate(8) // Get all results first
             ->sortBy('name') // Now sort by the 'name' accessor from your model
             ->values(); // Reset the collection keys
 
-        \Log::info($bhws);
-        // Note: For pagination with this sorting method, you'd need to manually create a paginator.
-        // For simplicity with up to a few hundred BHWs, ->get() is fine.
-        // If you expect thousands, we should revert to a database-level sort with a JOIN.
-
-        // 5. Return the view and pass the collection of BHWs to it.
         return view('midwife.BHWs', compact('bhws'));
     }
 
     public function show(BHW $bhw): View
     {
-        // Eager load the relationships to prevent extra database queries in the view.
-        // Even for a single model, this is a good habit.
-        $bhw->load('user', 'barangays');
+        $bhw->load('user', 'barangay');
 
-        // The BHWs-profile.blade.php file you sent has a typo in its name.
-        // Make sure the filename is 'BHWs-profile.blade.php'
         return view('midwife.BHWs-profile', compact('bhw'));
     }
 
@@ -145,7 +135,7 @@ class BHWController extends Controller
         $personnel = BHW::create([
             'user_id' => $user->id,
             'role_id' => $validated['privilege'],
-            'brgy_id' => $midwifePersonnel->brgy_id, // ✅ fixed
+            'brgy_id' => $midwifePersonnel->brgy_id,
             'status'  => 'active',
         ]);
 
@@ -179,15 +169,10 @@ class BHWController extends Controller
             'role_id'      => 'required|integer',
         ]);
         
-        // Log the validated data
-        Log::info('Validated BHW update data:', $validated);
-
         $user = User::findOrFail($id);
 
-        // Step 3: Update user with validated data
         $user->update($validated);
 
-        //  Step 4: Return JSON response
         $bhw = BHW::where('user_id', $user->id)->first();
 
         if ($bhw) {
@@ -195,24 +180,17 @@ class BHWController extends Controller
                 'role_id' => $validated['role_id'],
             ]);
         }
-            // Don’t update yet, just return it
+        
         return response()->json([
             'message' => 'Payload received successfully',
-            //'validated' => $validated
         ]);
     }
 
     public function remove(Request $request, $id)
     {
-        //  Log incoming data
-        \Log::info("Removing BHW with id you vakla: " . $id);
-
-        // 🔹 Find the user
+        
         $user = User::findOrFail($id);
 
-        \Log::info('vakla');
-        
-        // Set user inactive
         $user->update([
             'status' => 'inactive'
         ]);

@@ -29,7 +29,7 @@ class MidwifeController extends Controller
         $emptyBrgy = Barangay::whereDoesntHave('midwives')->get();
 
         // The query now includes latest() for sorting and paginate() for pagination.
-        $midwivesPaginator = Midwife::with(['user', 'barangays'])
+        $midwivesPaginator = Midwife::with(['user', 'barangay'])
             ->where('status', 'active') 
             ->latest() // Orders by 'created_at' descending
             ->paginate(15);

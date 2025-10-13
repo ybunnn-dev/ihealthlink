@@ -20,7 +20,10 @@ Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:lo
 // Protected routes (require Sanctum token)
 Route::middleware(['auth:sanctum',
 'verified',
-'throttle:auth-web',]
+'throttle:auth-web',
+'active',
+'personnel.only'
+]
 )->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();

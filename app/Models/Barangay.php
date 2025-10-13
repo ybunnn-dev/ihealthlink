@@ -75,4 +75,8 @@ class Barangay extends Model
         return $this->hasMany(BHW::class, 'brgy_id')->where('role_id', 4);
     }
 
+    public function personnel(){
+        return $this->hasMany(Personnel::class, 'brgy_id');
+    }
+
 }
