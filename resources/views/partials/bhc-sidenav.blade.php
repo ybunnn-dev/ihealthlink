@@ -2,8 +2,8 @@
     {{-- Sidebar --}}
    <div
         :class="{
-            'w-52 lg:w-45 xl2:w-60': open,
-            'w-16 lg:w-15 xl2:w-20': !open
+            'w-52 lg:w-48 xl3:w-60': open,
+            'w-16 xl3:w-20': !open
         }"
         class="transition-all duration-300 bg-f7 text-white h-full flex flex-col pt-5"
     >
@@ -35,7 +35,7 @@
 
        <!--<hr class="border-t border-t-[0.4px] border-gray-200 mt-6 mx-4">-->
         {{-- Navigation --}}
-        <ul class="flex-1 mt-10 text-sm px-3">
+        <ul class="flex-1 mt-10 text-xs xl3:text-sm px-3">
             <!-- Dashboard -->
            <li class="flex items-start group">
                 <a href="{{ route('midwife.dashboard', ['barangay' => $barangayName]) }}"

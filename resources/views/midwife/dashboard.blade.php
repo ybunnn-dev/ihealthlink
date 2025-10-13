@@ -8,10 +8,10 @@
 
         <div class="grid grid-cols-1 xl:grid-cols-4 gap-3 mb-3"> 
             <div class="xl:col-span-3 flex flex-col gap-3"> 
-                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="grid grid-cols-2 xl:grid-cols-4 gap-4">
                     <div class="bg-f7 rounded-xl p-4 text-center">
                         <div class="flex items-center justify-center gap-4">
-                            <svg class="text-sub_blue w-10 h-10" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 273.052 273.052" xml:space="preserve" fill="currentColor">
+                            <svg class="text-sub_blue w-7 h-7 xl3:w-10 xl3:h-10" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 273.052 273.052" xml:space="preserve" fill="currentColor">
                                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                                 <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
                                 <g id="SVGRepo_iconCarrier"> 
@@ -22,30 +22,30 @@
                                 </g>
                              </svg>   
                             <div class="flex flex-col">
-                                <h1 class="text-sub_blue text-lg slg3:text-xl xl:text-xl 2xl:text-2xl font-bold mt-2">{{ $totalResidents }}</h1>
-                                <p class="text-sub_blue text-xs -mt-1 slg3:text-fluid-xxs xl:text-xs 2xl:text-xs">Residents</p>
+                                <h1 class="text-sub_blue text-lg xl3:text-2xl font-bold mt-2">{{ $totalResidents }}</h1>
+                                <p class="text-sub_blue text-fluid-xxs xl3:text-xs -mt-1 slg3:text-fluid-xxs xl:text-xs 2xl:text-xs">Residents</p>
                             </div>
                         </div>
                     </div>
 
                      <div class="bg-f7 rounded-xl p-4 text-center">
                         <div class="flex items-center justify-center gap-2">
-                            <svg class="text-maingreen w-10 h-10" fill="currentColor" viewBox="-64 0 512 512" xmlns="http://www.w3.org/2000/svg">
+                            <svg class="text-maingreen w-7 h-7 xl4:w-10 xl4:h-10" fill="currentColor" viewBox="-64 0 512 512" xmlns="http://www.w3.org/2000/svg">
                                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
                                 <g id="SVGRepo_iconCarrier">
                                     <path d="M120 72c0-39.765 32.235-72 72-72s72 32.235 72 72c0 39.764-32.235 72-72 72s-72-32.236-72-72zm254.627 1.373c-12.496-12.497-32.758-12.497-45.254 0L242.745 160H141.254L54.627 73.373c-12.496-12.497-32.758-12.497-45.254 0-12.497 12.497-12.497 32.758 0 45.255L104 213.254V480c0 17.673 14.327 32 32 32h16c17.673 0 32-14.327 32-32V368h16v112c0 17.673 14.327 32 32 32h16c17.673 0 32-14.327 32-32V213.254l94.627-94.627c12.497-12.497 12.497-32.757 0-45.254z"></path>
                                 </g>
                             </svg> 
                             <div class="flex flex-col">
-                                <h1 class="text-maingreen text-2xl font-bold mt-2">{{ $under5 }}</h1>
-                                <p class="text-maingreen text-xs -mt-1 ">Early Childhood</p>
+                                <h1 class="text-maingreen text-lg xl3:text-2xl font-bold mt-2">{{ $under5 }}</h1>
+                                <p class="text-maingreen text-fluid-xxs xl3:text-xs -mt-1 ">Early Childhood</p>
                             </div>
                         </div>
                     </div>
 
                      <div class="bg-f7 rounded-xl p-4 text-center">
                         <div class="flex items-center justify-center -gap-1">
-                            <svg class="text-col_orange w-10 h-10" fill="currentColor" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 124.539 124.539" xml:space="preserve">
+                            <svg class="text-col_orange w-8 h-8 xl3:w-10 xl3:h-10" fill="currentColor" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 124.539 124.539" xml:space="preserve">
                                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                                     <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
                                         <g id="SVGRepo_iconCarrier"> <g> <g> 
@@ -57,18 +57,18 @@
                                 </g>
                             </svg> 
                             <div class="flex flex-col">
-                                <h1 class="text-col_orange text-2xl font-bold mt-2">{{ $sixtyUp }}</h1>
-                                <p class="text-col_orange text-xs -mt-1 ">Senior Citizen</p>
+                                <h1 class="text-col_orange text-lg xl3:text-2xl font-bold mt-2">{{ $sixtyUp }}</h1>
+                                <p class="text-col_orange text-fluid-xxs xl3:text-xs -mt-1 ">Senior Citizen</p>
                             </div>
                         </div>
                     </div>
 
                      <div class="bg-f7 rounded-xl p-4 text-center">
                         <div class="flex items-center justify-center -gap-2">
-                            <svg class="text-col_pink w-10 h-10" fill="currentColor" version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve" fill="currentColor"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <style type="text/css">  </style> <g> <path class="st0" d="M254.962,145.192c-38.209,36.682-47.168,80.782-47.168,80.782s-78.16,49.137-47.591,157.646h91.854 l13.549,102.607C267.553,500.985,280.129,512,295.004,512h5.189c16.379,0,29.656-13.273,29.656-29.652V383.62h12.053 c0,0,0-189.14,0-233.837C341.902,114.63,290.042,111.517,254.962,145.192z"></path> <path class="st0" d="M305.398,0c-29.542,0-53.493,23.955-53.493,53.493c0,29.546,23.951,53.493,53.493,53.493 c29.542,0,53.49-23.947,53.49-53.493C358.888,23.955,334.94,0,305.398,0z"></path> </g> </g></svg>  
+                            <svg class="text-col_pink w-7 h-7 w-8 h-8 xl3:w-10 xl3:h-10" fill="currentColor" version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve" fill="currentColor"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <style type="text/css">  </style> <g> <path class="st0" d="M254.962,145.192c-38.209,36.682-47.168,80.782-47.168,80.782s-78.16,49.137-47.591,157.646h91.854 l13.549,102.607C267.553,500.985,280.129,512,295.004,512h5.189c16.379,0,29.656-13.273,29.656-29.652V383.62h12.053 c0,0,0-189.14,0-233.837C341.902,114.63,290.042,111.517,254.962,145.192z"></path> <path class="st0" d="M305.398,0c-29.542,0-53.493,23.955-53.493,53.493c0,29.546,23.951,53.493,53.493,53.493 c29.542,0,53.49-23.947,53.49-53.493C358.888,23.955,334.94,0,305.398,0z"></path> </g> </g></svg>  
                             <div class="flex flex-col">
-                                <h1 class="text-col_pink text-2xl font-bold mt-2">5,201</h1>
-                                <p class="text-col_pink text-xs -mt-1 ">Pregnant Women</p>
+                                <h1 class="text-col_pink text-lg xl3:text-2xl font-bold mt-2">5,201</h1>
+                                <p class="text-col_pink text-fluid-xxs xl3:text-xs -mt-1 ">Pregnant Women</p>
                             </div>
                         </div>
                     </div>
@@ -88,14 +88,14 @@
                 <ul class="space-y-2 max-h-80 overflow-y-auto scrollbar-thin scrollbar-gray-200 scrollbar-track-gray-100 pr-2">
                     @forelse ($scheduledActivities as $activity)
                         <li class="bg-bg_col rounded-lg p-3 flex items-start">
-                            <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" class="flex-shrink-0 w-6 h-6 text-gray-500 mr-3 mt-0.5" fill="currentColor">
+                            <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" class="flex-shrink-0 w-4 h-4 xl3:w-6 xl3:h-6 text-gray-500 mr-3 mt-0.5" fill="currentColor">
                                 <g>
                                     <path d="M2 2h16v4H2V2zm0 10V8h4v4H2zm6-2V8h4v2H8zm6 3V8h4v5h-4zm-6 5v-6h4v6H8zm-6 0v-4h4v4H2zm12 0v-3h4v3h-4z"></path>
                                 </g>
                             </svg>
                             <div class="flex-grow">
-                                <div class="text-sm font-semibold">{{ $activity->activity }}</div>
-                                <div class="text-xs text-gray-500">{{ \Carbon\Carbon::parse($activity->date)->format('F j, Y') }}</div>
+                                <div class="text-xs xl3:text-sm font-semibold">{{ $activity->activity }}</div>
+                                <div class="text-fluid-xxs xl3:text-xs text-gray-500">{{ \Carbon\Carbon::parse($activity->date)->format('F j, Y') }}</div>
                             </div>
                         </li>
                     @empty
