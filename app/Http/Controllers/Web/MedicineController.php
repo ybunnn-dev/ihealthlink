@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 use App\Models\Medicine;
+use App\Models\ActivityLog;
 use App\Models\Midwife;
 
 class MedicineController extends Controller

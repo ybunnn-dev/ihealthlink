@@ -78,4 +78,6 @@ Route::middleware(['auth:sanctum',
 
     Route::get('/preload', [PreloadController::class, 'index']);
 
+    Route::post('barangay/household/store', [HouseholdController::class, 'store']);
+
 });

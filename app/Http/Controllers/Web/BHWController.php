@@ -93,6 +93,9 @@ class BHWController extends Controller
 
     public function store(Request $request)
     {
+
+        \Log::info('vakla');
+        
         $validated = $request->validate([
             'firstName'   => 'required|string|max:50',
             'lastName'    => 'required|string|max:50',

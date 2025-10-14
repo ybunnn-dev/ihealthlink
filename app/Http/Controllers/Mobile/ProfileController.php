@@ -18,7 +18,7 @@ class ProfileController extends Controller
     {
         $user = Auth::user()->load([
             'role',
-            'bhw.barangays',
+            'bhw.barangay',
         ]);
 
         return response()->json($user);

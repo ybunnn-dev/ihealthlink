@@ -11,6 +11,10 @@ use App\Models\Household;
 use App\Models\Barangay;
 use App\Models\Family;
 use App\Models\Purok;
+use App\Models\HouseholdResidenceHistory;
+use App\Models\ActivityLog;
+use Illuminate\Validation\Rule;
+
 
 class HouseholdController extends Controller
 {
@@ -34,32 +38,88 @@ class HouseholdController extends Controller
 
     public function store(Request $request)
     {
-        // Validate input
-        $validated = $request->validate([
-            'purok_id'     => 'required|exists:puroks,id',
-            'water_source' => 'nullable|string|max:255',
-            'sanitary'     => 'required|string|max:255', // 1 = yes, 2 = no
-            'waste_disposal' => 'required|string|max:255'
+        $user = Auth::user();
+
+        // Identify which type of personnel is logged in
+        $personnel = $user->bhw ?? $user->bhwWeb ?? $user->midwife;
+
+        if (!$personnel) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'No associated personnel found for this user.'
+            ], 404);
+        }
+
+        // Get barangay with its puroks
+        $barangay = Barangay::with('puroks')->find($personnel->brgy_id);
+
+        if (!$barangay) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Barangay not found for this personnel.'
+            ], 404);
+        }
+
+        $brgyId = $barangay->id;
+
+        // Merge metadata
+        $request->merge([
+            'added_by' => $user->id,
+            'brgy_id' => $brgyId,
         ]);
 
-      
+        $validated = $request->validate([
+            'purok_id' => [
+                'required',
+                Rule::exists('puroks', 'id')->where(function ($query) use ($brgyId) {
+                    $query->where('brgy_id', $brgyId);
+                }),
+            ],
+            'water_source'   => 'nullable|string|max:255',
+            'sanitary'       => 'required|string|max:255',
+            'waste_disposal' => 'required|string|max:255',
+            'added_by'       => 'required|exists:users,id',
+            'brgy_id'        => 'required|exists:barangays,id',
+        ]);
 
         // Create household
         $household = Household::create([
-            'purok_id'     => $validated['purok_id'],
-            'head_id'      => null, // will be set later
-            'sanitary_toilet'   => $validated['sanitary'],
-            'water_source' => $validated['water_source'],
-            'waste_disposal' => $validated['waste_disposal'],
-            'status'       => 'active',
+            'purok_id'        => $validated['purok_id'],
+            'head_id'         => null, // will be assigned later
+            'sanitary_toilet' => $validated['sanitary'],
+            'water_source'    => $validated['water_source'],
+            'waste_disposal'  => $validated['waste_disposal'],
+            'status'          => 'active',
+        ]);
+
+        // Create household residence history
+        $history = HouseholdResidenceHistory::create([
+            'household_id'         => $household->id,
+            'head_id'              => null,
+            'purok_id'             => $validated['purok_id'],
+            'water_source'         => $validated['water_source'],
+            'waste_disposal'       => $validated['waste_disposal'],
+            'sanitary_toilet'      => $validated['sanitary'],
+            'status'               => 'active',
+        ]);
+
+        // Get purok name for logging
+        $purok = Purok::find($validated['purok_id']);
+
+        // Log the activity
+        ActivityLog::create([
+            'user_id'   => $user->id,
+            'module_id' => 5, // replace with correct module ID for households
+            'activity'  => 'Added a new household in Purok ' . ucfirst($purok->name) . '.',
         ]);
 
         return response()->json([
-            'result' => 'success',
-            'message'   => 'Household created successfully',
+            'message'   => 'Household created successfully!',
             'household' => $household,
-        ]);
+            'history'   => $history,
+        ], 201);
     }
+
 
     public function show(Household $id)
     {
