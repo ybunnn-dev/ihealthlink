@@ -45,7 +45,7 @@ export default {
             },
             fontSize: {
                 // More aggressive clamping for better scaling on smaller PC screens
-                'fluid-xxs': 'clamp(0.35rem, 0.55vw + 0.75rem, 0.55rem)',
+                'fluid-xxs': 'clamp(0.35rem, 0.55vw + 0.75rem, 0.6rem)',
                 'fluid-xs': 'clamp(0.45rem, 0.9vw + 0.1rem, 0.75rem)',
                 'fluid-sm': 'clamp(0.55rem, 1.1vw + 0.1rem, 0.875rem)',
                 'fluid-base': 'clamp(0.65rem, 1.3vw + 0.1rem, 1rem)',

@@ -53,7 +53,7 @@ class HealthProgramController extends Controller
         return $programs;
     }
 
-    public function specHP(HealthProgram $healthProgram)
+    public function specHP(HealthProgram $healthProgram, Request $request)
     {
         $user = Auth::user();
 
@@ -72,14 +72,15 @@ class HealthProgramController extends Controller
             $healthProgram = HealthProgram::latest()->first();
         }
 
-        // Get enrolled residents for this health program and midwife's barangay
+        // Fetch enrolled residents with resident and consultations
         $enrolledResidents = EnrolledResident::with(['consultations' => function ($q) {
-                $q->orderBy('consultation_date'); // 
-            }])
+                $q->orderBy('consultation_date', 'desc'); // sort consultations latest first
+            }, 'resident'])
             ->where('program_id', $healthProgram->id)
             ->whereHas('resident.family.household.purok', function ($q) use ($barangayId) {
                 $q->where('brgy_id', $barangayId);
             })
+            ->orderBy('created_at', 'desc') // latest enrollment first
             ->get();
 
         // Filter consultations to only those matching the enrolled resident
@@ -88,10 +89,36 @@ class HealthProgramController extends Controller
                 ->where('enrolled_resident_id', $enrollment->id);
         });
 
+        // Apply search by resident name
+        $search = $request->query('search');
+        if ($search) {
+            $search = strtolower($search);
+            $enrolledResidents = $enrolledResidents->filter(function ($enrollment) use ($search) {
+                $resident = $enrollment->resident;
+                return str_contains(strtolower($resident->firstName), $search)
+                    || str_contains(strtolower($resident->middleName), $search)
+                    || str_contains(strtolower($resident->lastName), $search);
+            })->values();
+        }
+
+        // Apply status filters: 'overdue', 'completed'
+        $filter = $request->query('filter'); // e.g., ?filter=overdue or ?filter=completed
+        if ($filter) {
+            $filter = strtolower($filter);
+            if ($filter === 'completed') {
+                $enrolledResidents = $enrolledResidents->where('status', 'completed')->values();
+            } elseif ($filter === 'overdue') {
+                $enrolledResidents = $enrolledResidents->filter(function ($enrollment) {
+                    return $enrollment->resident->consultations->contains(function ($consultation) {
+                        return $consultation->status === 'pending'
+                            && \Carbon\Carbon::parse($consultation->consultation_date)->isBefore(\Carbon\Carbon::today());
+                    });
+                })->values();
+            }
+        }
+
         $totalEnrolled = $enrolledResidents->count();
-
         $completed = $enrolledResidents->where('status', 'completed')->count();
-
         $overdue = $enrolledResidents->filter(function ($enrollment) {
             return $enrollment->resident->consultations->contains(function ($consultation) {
                 return $consultation->status === 'pending'
@@ -110,4 +137,55 @@ class HealthProgramController extends Controller
             ],
         ]);
     }
+
+    public function show(EnrolledResident $enrolledResident)
+    {
+        $enrolledResident->load([
+            'consultations' => function ($q) use ($enrolledResident) {
+                $q->where('enrolled_resident_id', $enrolledResident->id)
+                    ->with('consultationData')
+                    ->with('medicineDistributions.medicine');
+            },
+            'resident.family.household.purok.barangay',
+            'resident.basicHealthRecord',
+            'program'
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $enrolledResident
+        ]);
+    }
+
+    public function philpen(EnrolledResident $enrolledResident)
+    {
+        $enrolledResident->load([
+            'consultations' => function ($q) use ($enrolledResident) {
+                $q->where('enrolled_resident_id', $enrolledResident->id)
+                    ->with('consultationData')
+                    ->with('medicineDistributions.medicine');
+            },
+            'resident.family.household.purok.barangay',
+            'resident.basicHealthRecord',
+            'program'
+        ]);
+
+        // PhilPEN TCL
+        if ($enrolledResident->program && $enrolledResident->program->category === 'philpen_tcl') {
+            $enrolledResident->load([
+                'consultations.ncdRiskFactor',
+                'consultations.philpenManagement',
+                'consultations.healthSigns',
+                'consultations.medicalHistory',
+                'consultations.familyHistory',
+                'consultations.riskAssessment',
+            ]);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $enrolledResident
+        ]);
+    }
+
 }

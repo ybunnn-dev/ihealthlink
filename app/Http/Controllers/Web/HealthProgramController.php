@@ -10,9 +10,6 @@ use Illuminate\Pagination\Paginator;
 
 class HealthProgramController extends Controller
 {
-    /**
-     * Provide all health programs (active + inactive).
-     */
     public function provideData()
     {
         $programs = HealthProgram::all();
@@ -34,7 +31,6 @@ class HealthProgramController extends Controller
 
     public function show(HealthProgram $healthProgram)
     {
-        
         $healthProgram = HealthProgram::withCount('enrolledResidents')
             ->with('programFields') 
             ->findOrFail($healthProgram->id);
@@ -43,11 +39,9 @@ class HealthProgramController extends Controller
             'healthProgram' => $healthProgram
         ]);
     }
+
     public function store(Request $request)
     {
-        \Log::info('Health Program Payload:', $request->all());
-
-        // Step 1: Create Health Program
         $program = HealthProgram::create([
             'name'          => $request->input('program_name'),   // from frontend
             'age_min'       => $request->input('min_age'),

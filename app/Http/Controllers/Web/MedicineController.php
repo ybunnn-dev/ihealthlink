@@ -110,7 +110,12 @@ class MedicineController extends Controller
 
         // 5. Create a new Medicine record
         $medicine = Medicine::create($validatedData);
-
+        
+         ActivityLog::create([
+            'user_id' => $user->id,
+            'module_id' => 1, // change this based on your module mapping (e.g., 8 for medicines)
+            'activity' => 'Added new medicine "' . $medicine->medicine_name . '" to the inventory.',
+        ]);
         // 6. Return a success response as JSON
         return response()->json([
             'message' => 'Medicine added successfully!',

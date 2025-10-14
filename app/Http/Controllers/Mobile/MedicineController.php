@@ -9,24 +9,55 @@ use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
 use App\Models\Medicine;
+use App\Models\ActivityLog;
 
 class MedicineController extends Controller
 {
-    public function index()
+   public function index(Request $request)
     {
-        $personnel = Auth::user()->bhw;
+        $user = Auth::user();
 
-        // Get medicines only for the personnel's barangay
-        $medicines = Medicine::with(['inventories'])
-            ->where('brgy_id', $personnel->brgy_id)
-            ->where('status', 'active')
-            ->orderBy('id', 'asc')
-            ->get();
+        $personnel = $user->bhw ?? $user->bhwWeb ?? $user->midwife;
 
-        // Map each medicine to include remaining non-expired stock
+        if (!$personnel) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'No associated personnel found for this user.'
+            ], 404);
+        }
+
+        $barangayId = $personnel->brgy_id;
+
+        // Get query params
+        $search = $request->query('search');
+        $category = $request->query('category');
+
+        // Base query: medicines belonging to the personnel's barangay and active
+        $query = Medicine::with(['inventories'])
+            ->where('brgy_id', $barangayId)
+            ->where('status', 'active');
+
+        // Apply search filter
+       if (!empty($search)) {
+            $query->where(function ($q) use ($search) {
+                $lowerSearch = strtolower($search);
+                $q->whereRaw('LOWER(medicine_name) LIKE ?', ['%' . $lowerSearch . '%'])
+                ->orWhereRaw('LOWER(generic_name) LIKE ?', ['%' . $lowerSearch . '%']);
+            });
+        }
+
+        // Apply category filter
+        if (!empty($category)) {
+            $query->where('category', $category);
+        }
+
+        // Sort by latest (you can change to 'asc' if needed)
+        $medicines = $query->orderBy('id', 'desc')->get();
+
+        // Compute remaining stock (only non-expired)
         $medicinesWithStock = $medicines->map(function ($medicine) {
             $remainingStock = $medicine->inventories
-                ->filter(fn($inventory) => Carbon::parse($inventory->expiry_date)->isFuture())
+                ->filter(fn($inventory) => \Carbon\Carbon::parse($inventory->expiry_date)->isFuture())
                 ->sum('stock');
 
             $medicine->remaining_stock = $remainingStock;
@@ -34,30 +65,61 @@ class MedicineController extends Controller
         });
 
         return response()->json([
+            'status' => 'success',
             'medicines' => $medicinesWithStock
         ]);
     }
 
+
+    private function normalizeCategory($category)
+    {
+        $map = [
+            'reg-med' => 'Regular Medicine',
+            'deworming' => 'Deworming Tablet',
+            'iron-w-fa' => 'Iron with Folic Acid',
+            'iron' => 'Iron',
+            'vit-a' => 'Vitamin A',
+            'cc' => 'Calcium Carbonate',
+            'iodine' => 'Iodine Capsule',
+        ];
+
+        return $map[strtolower($category)] ?? ucfirst($category);
+    }
+
+    private function normalizeForm($form)
+    {
+        $map = [
+            'tablet' => 'Tablet',
+            'capsule' => 'Capsule',
+            'syrup' => 'Syrup',
+            'vaccine' => 'Vaccine',
+            'iron' => 'Iron',
+            'non-medicine' => 'Non-Medicine',
+        ];
+
+        return $map[strtolower($form)] ?? ucfirst($form);
+    }
+
     public function store(Request $request)
     {
-        // 1. Get the authenticated user
         $user = Auth::user();
 
-        $brgyId = $user->bhw->brgy_id;
+        $personnel = $user->bhw ?? $user->bhwWeb ?? $user->midwife;
 
-        // Abort if the user is not associated with a barangay
-        if (!$brgyId) {
-            return response()->json(['message' => 'User is not associated with a barangay.'], 403); // 403 Forbidden
+        if (!$personnel) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'No associated personnel found for this user.'
+            ], 404);
         }
 
-        // 3. Merge the user's ID and barangay ID into the request data
+        $brgyId = $personnel->brgy_id;
+
         $request->merge([
             'added_by' => $user->id,
             'brgy_id' => $brgyId,
         ]);
 
-        // 4. Validate the incoming data
-        //    The unique rule now checks that the medicine_name is unique *per barangay*.
         $validatedData = $request->validate([
             'medicine_name' => [
                 'required',
@@ -75,15 +137,26 @@ class MedicineController extends Controller
             'brgy_id' => 'required|exists:barangays,id',
         ]);
 
-        // 5. Create a new Medicine record
+        // Normalize category and form
+        $validatedData['category'] = $this->normalizeCategory(strtolower($validatedData['category']));
+        $validatedData['form'] = $this->normalizeForm(strtolower($validatedData['form']));
+
+        // Create new medicine
         $medicine = Medicine::create($validatedData);
 
-        // 6. Return a success response as JSON
+        // Log the activity
+        ActivityLog::create([
+            'user_id' => $user->id,
+            'module_id' => 8, // Use correct module ID for Medicines
+            'activity' => 'Added new medicine "' . ucfirst($medicine->medicine_name) . '" to the inventory.',
+        ]);
+
         return response()->json([
             'message' => 'Medicine added successfully!',
             'medicine' => $medicine
-        ], 201); // 201 Created
+        ], 201);
     }
+
     public function updateMedicine(Request $request, $id)
     {
         // Validate input (optional but good practice)

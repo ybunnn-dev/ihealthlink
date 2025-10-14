@@ -65,7 +65,6 @@ class BarangayHealthProgramController extends Controller
 
     public function show(EnrolledResident $enrolledResident)
     {
-        // Load main enrolled resident relationships
         $enrolledResident->load([
             'consultations' => function ($q) use ($enrolledResident) {
                 $q->where('enrolled_resident_id', $enrolledResident->id)

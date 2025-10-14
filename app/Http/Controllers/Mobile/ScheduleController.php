@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Mobile;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 use App\Models\Schedules;
 use App\Models\BHW;
@@ -13,29 +14,29 @@ class ScheduleController extends Controller
 {
     public function index(Request $request)
     {
-        $user = $request->user();
 
-        \Log::info($user);
+       $user = Auth::user();
 
-        $bhwPersonnel = $user->bhw; 
-        
-        \Log::info($bhwPersonnel);
-        /*if (!$bhwPersonnel) {
-            return response()->json(['error' => 'BHW not found or unauthorized'], 403);
-        }*/
+        $personnel = $user->bhw ?? $user->bhwWeb ?? $user->midwife;
 
-        $brgyId = $bhwPersonnel->brgy_id;
+        if (!$personnel) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'No associated personnel found for this user.'
+            ], 404);
+        }
+     
+        $brgyId = $personnel->brgy_id;
 
         // extract payload month/year
         $month = $request->input('month');
         $year = $request->input('year');
 
         $schedules = Schedules::where('brgy_id', $brgyId)
-            ->whereMonth('date', $month)   // assuming you have a `schedule_date` column
+            ->whereMonth('date', $month)   
             ->whereYear('date', $year)
             ->get();
 
-        \Log::info('vakla');
         return response()->json($schedules);
     }
 }

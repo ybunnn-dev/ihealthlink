@@ -7,9 +7,9 @@ Chart.defaults.color = '#566A7F';
 // Chart 1: Residents Line Chart
 const ctx = document.getElementById('residentsLineChart');
 if (!ctx) {
-    console.error('❌ Canvas #residentsLineChart not found');
+    console.error(' Canvas #residentsLineChart not found');
 } else {
-    console.log('✅ Creating residents line chart...');
+    console.log(' Creating residents line chart...');
     
     new Chart(ctx, {
         type: 'line',
