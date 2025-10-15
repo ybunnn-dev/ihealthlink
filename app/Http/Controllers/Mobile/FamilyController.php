@@ -10,7 +10,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Barangay;
 use App\Models\Household;
 use App\Models\Family;
-
+use App\Models\FamilyResidenceHistory;
+use App\Models\ActivityLog;
 class FamilyController extends Controller
 {
     public function index(Request $request)
@@ -93,6 +94,70 @@ class FamilyController extends Controller
         return response()->json([
             'family' => $family,
             'residentCount' => $residentCount,
+        ]);
+    }
+
+    public function store(Request $request)
+    {
+        $user = Auth::user();
+
+        // Determine personnel type (Midwife or BHW)
+        if ($user->bhwWeb && $user->bhwWeb->role_id == 4) {
+            $personnel = $user->bhwWeb;
+        } elseif ($user->bhw && $user->bhw->role_id == 3) {
+            $personnel = $user->bhw;
+        } else {
+            $personnel = $user->midwife;
+        }
+
+        if (!$personnel) {
+            abort(403, 'Unauthorized access.');
+        }
+
+        // Validate inputs
+        $validated = $request->validate([
+            'household_server_id' => 'required|integer|exists:households,id',
+            'is4ps'               => 'required|boolean',
+            'isIndigent'          => 'required|boolean',
+            'is_iwas_gutom'       => 'required|boolean',
+        ]);
+
+        // Get the parent household
+        $household = Household::findOrFail($validated['household_server_id']);
+
+        // Create the family record
+        $family = Family::create([
+            'household_id'  => $household->id,
+            'status'        => 'active',
+            'is_indigent'   => $validated['isIndigent'],
+            'is_4ps'        => $validated['is4ps'],
+            'is_iwas_gutom' => $validated['is_iwas_gutom'],
+        ]);
+
+        // Create a residence history record
+        FamilyResidenceHistory::create([
+            'family_id'   => $family->id,
+            'purok_id'    => $household->purok_id, // Get from the parent household
+            'is_indigent' => $validated['isIndigent'],
+            'is_4ps'      => $validated['is4ps'],
+            'is_iwas_gutom' => $validated['is_iwas_gutom'],
+            'status'      => 'active',
+        ]);
+
+        // Get the purok name for activity log
+        $purok = $household->purok;
+
+        // Log the activity
+        ActivityLog::create([
+            'user_id'   => $user->id,
+            'module_id' => 5, // replace with correct module ID for households
+            'activity'  => 'Added a new family in Purok ' . ucfirst($purok->name) . '.',
+        ]);
+
+        return response()->json([
+            'status'  => 'success',
+            'message' => 'Family successfully added',
+            'data'    => $family,
         ]);
     }
 

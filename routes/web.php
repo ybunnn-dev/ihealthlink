@@ -165,7 +165,7 @@ Route::middleware([
 
     Route::post('/barangays/households/add', [HouseholdController::class, 'store']);
 
-    Route::get('/barangays/households/{id}', [HouseholdController::class, 'show'])->name('midwife.spec-household');
+    Route::get('/barangays/households/{household}', [HouseholdController::class, 'show'])->name('midwife.spec-household');
 
     Route::get('/barangay/families', [FamilyController::class, 'index'])->name('midwife.families');
 

@@ -121,21 +121,30 @@ class HouseholdController extends Controller
     }
 
 
-    public function show(Household $id)
+    public function show(Household $household)
     {
-        $household = $id->load(['purok', 'families']); 
+        $user = Auth::user();
 
-        // decrypt here
-        if ($household->water_source) {
-            $household->water_source = $household->water_source;
+        $personnel = $user->bhw ?? $user->bhwWeb ?? $user->midwife;
+
+        if (!$personnel) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'No associated personnel found for this user.'
+            ], 404);
         }
 
+        $household = $household->load(['purok', 'families']); 
+
+        \Log::info($household);
+        
         return view('midwife.spec-household', [
             'household' => $household,
             'purok'     => $household->purok,
             'families'  => $household->families,
         ]);
     }
+
     
     public function getHouseholdsJson(Request $request)
     {

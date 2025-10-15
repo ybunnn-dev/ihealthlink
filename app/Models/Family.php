@@ -14,6 +14,7 @@ class Family extends Model
         'head_id',
         'status',
         'is_indigent',
+        'is_iwas_gutom',
         'is_4ps',
     ];
 

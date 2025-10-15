@@ -23,7 +23,7 @@ class ResidentController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-
+        
         // Determine personnel type (Midwife or BHW)
         if ($user->bhwWeb && $user->bhwWeb->role_id == 4) {
             $personnel = $user->bhwWeb;
@@ -32,26 +32,26 @@ class ResidentController extends Controller
         } else {
             $personnel = $user->midwife;
         }
-
+        
         if (!$personnel) {
             abort(403, 'Unauthorized access.');
         }
-
+        
         // Fetch barangay and puroks under the user
         $barangay = Barangay::with('puroks')->find($personnel->brgy_id);
         $puroks = $barangay?->puroks ?? collect();
-
+        
         // Get households belonging to the user's puroks
         $purokIds = $puroks->pluck('id');
         $householdIds = Household::whereIn('purok_id', $purokIds)->pluck('id');
-
+        
         // Families within those households
         $familyIds = Family::whereIn('household_id', $householdIds)->pluck('id');
-
-        // Base resident query (unencrypted filters)
+        
+        // Base resident query
         $residentsQuery = Resident::with('family.household.purok')
             ->whereIn('family_id', $familyIds);
-
+        
         /**
          * FILTER BY PUROK
          */
@@ -61,65 +61,13 @@ class ResidentController extends Controller
                 $q->where('purok_id', $purokId);
             });
         }
-
-        // Fetch residents after DB-level filters
-        $residents = $residentsQuery->get();
-
-        /**
-         * SEARCH (for encrypted names)
-         */
-        if ($request->filled('search')) {
-            $search = strtolower($request->search);
-            $residents = $residents->filter(function ($resident) use ($search) {
-                return str_contains(strtolower($resident->firstName), $search) ||
-                    str_contains(strtolower($resident->middleName), $search) ||
-                    str_contains(strtolower($resident->lastName), $search);
-            })->values();
-        }
-
-        /**
-         * FILTER BY AGE GROUP (for encrypted birthdate)
-         */
-        $ageRanges = [
-            'infant' => [0, 1],
-            'child' => [2, 12],
-            'teen' => [13, 17],
-            'adult' => [18, 59],
-            'senior' => [60, 200],
-        ];
-
-        if ($request->filled('age_group') && isset($ageRanges[$request->age_group])) {
-            [$min, $max] = $ageRanges[$request->age_group];
-            $today = now();
-
-            $residents = $residents->filter(function ($resident) use ($min, $max, $today) {
-                try {
-                    $birthdate = \Carbon\Carbon::parse($resident->birthdate);
-                    $age = $birthdate->diffInYears($today);
-                    return $age >= $min && $age <= $max;
-                } catch (\Exception $e) {
-                    return false; // Skip invalid or missing birthdates
-                }
-            })->values();
-        }
-
-        /**
-         * PAGINATION (manual, since data is filtered in-memory)
-         */
-        $page = $request->get('page', 1);
-        $perPage = 20;
-
-        $paginated = new \Illuminate\Pagination\LengthAwarePaginator(
-            $residents->forPage($page, $perPage),
-            $residents->count(),
-            $perPage,
-            $page,
-            ['path' => $request->url(), 'query' => $request->query()]
-        );
-
+        
+        // Paginate residents
+        $residents = $residentsQuery->paginate(20);
+        
         return response()->json([
             'success' => true,
-            'data' => $paginated,
+            'data' => $residents,
             'puroks' => $puroks,
         ]);
     }

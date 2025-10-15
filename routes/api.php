@@ -80,4 +80,8 @@ Route::middleware(['auth:sanctum',
 
     Route::post('barangay/household/store', [HouseholdController::class, 'store']);
 
+    Route::post('barangay/family/store', [FamilyController::class, 'store']);
+
+    Route::get('barangay/household/show/{household}', [HouseholdController::class, 'show']);
+
 });
