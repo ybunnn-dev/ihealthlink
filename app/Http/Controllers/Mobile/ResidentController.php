@@ -14,6 +14,7 @@ use App\Models\ResidentFamilyHistory;
 use App\Models\Family;
 use App\Models\Household;
 use App\Models\Barangay;
+use App\Models\ActivityLog;
 
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -62,8 +63,41 @@ class ResidentController extends Controller
             });
         }
         
-        // Paginate residents
-        $residents = $residentsQuery->paginate(20);
+        // Get all residents (before pagination if search is applied)
+        if ($request->filled('search')) {
+            $searchTerm = strtolower(trim($request->search));
+            
+            // Get all residents and filter in memory
+            $allResidents = $residentsQuery->get();
+            
+            $filteredResidents = $allResidents->filter(function ($resident) use ($searchTerm) {
+                $firstName = strtolower($resident->firstName ?? '');
+                $lastName = strtolower($resident->lastName ?? '');
+                $middleName = strtolower($resident->middleName ?? '');
+                $fullName = $firstName . ' ' . $middleName . ' ' . $lastName;
+                
+                return str_contains($firstName, $searchTerm) ||
+                    str_contains($lastName, $searchTerm) ||
+                    str_contains($middleName, $searchTerm) ||
+                    str_contains($fullName, $searchTerm);
+            });
+            
+            // Manual pagination
+            $page = $request->get('page', 1);
+            $perPage = 20;
+            $total = $filteredResidents->count();
+            
+            $residents = new \Illuminate\Pagination\LengthAwarePaginator(
+                $filteredResidents->forPage($page, $perPage)->values(),
+                $total,
+                $perPage,
+                $page,
+                ['path' => $request->url(), 'query' => $request->query()]
+            );
+        } else {
+            // Paginate residents normally
+            $residents = $residentsQuery->paginate(20);
+        }
         
         return response()->json([
             'success' => true,
@@ -97,7 +131,6 @@ class ResidentController extends Controller
             'contact_no'          => 'nullable|string|max:20',
             'birthdate'           => 'required|string', // expect m/d/Y format
             'family_id'           => 'required|integer',
-            'relationship_to_head'=> 'required|string|max:255',
             'civil_status'        => 'required|string|max:255',
             'religion'            => 'required|string|max:255',
             'ethnicity'           => 'required|string',
@@ -108,7 +141,6 @@ class ResidentController extends Controller
             'emergency_contact_no' => 'nullable|string|max:20',
             'is_solo_parent'      => 'boolean',
             'is_philhealth_member'=> 'boolean',
-            'years_of_residency'  => 'required|integer|min:0',
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -125,7 +157,6 @@ class ResidentController extends Controller
 
         // Convert birthdate to Y-m-d
         
-
         // Create resident
         $resident = Resident::create([
             'family_id'           => $validated['family_id'],
@@ -138,7 +169,6 @@ class ResidentController extends Controller
             'sex'                 => $request->sex ?? null,
             'contact_no'          => $validated['contact_no'] ?? null,
             'civil_status'        => $validated['civil_status'],
-            'family_relationship' => $validated['relationship_to_head'],
             'is_pwd'              => $validated['is_pwd'] ?? false,
             'pwd_id'              => $validated['pwd_id'] ?? null,
             'is_indigenous'       => $validated['is_indigenous'] ?? false,
@@ -155,24 +185,24 @@ class ResidentController extends Controller
         $household = $resident->family->household ?? null;
         $purokId = $household->purok_id ?? null;
 
-        // Determine the residence start date
-        $years = $validated['years_of_residency'] ?? 0;
-        if ($years < 1) {
-            // January 1st of the current year
-            $createdAt = Carbon::now()->startOfYear();
-        } else {
-            $createdAt = Carbon::now()->subYears($years);
-        }
-
         // Create residence history
         ResidenceHistory::create([
             'resident_id' => $resident->id,
             'purok_id'    => $purokId,
             'status'      => 'active',
-            'created_at'  => $createdAt,
+            'created_at'  => now(),
             'updated_at'  => now(),
         ]);
 
+        // Log the activity
+        $residentName = trim($validated['first_name'] . ' ' . ($validated['middle_name'] ?? '') . ' ' . $validated['last_name'] . ' ' . ($validated['suffix'] ?? ''));
+        $purokName = $household->purok->name ?? 'Unknown';
+        
+        ActivityLog::create([
+            'user_id'   => auth()->id(),
+            'module_id' => 2, // replace with correct module ID for residents
+            'activity'  => 'Added a new resident: ' . $residentName . ' in Purok ' . ucfirst($purokName) . '.',
+        ]);
         
         return response()->json([
             'status' => 'success',
