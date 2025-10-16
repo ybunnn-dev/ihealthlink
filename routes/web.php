@@ -180,7 +180,7 @@ Route::middleware([
     
     Route::get('barangay/resident/families/get', [FamilyController::class, 'getFamilies']);
     
-    Route::get('/midwife/family/{family}', [FamilyController::class, 'show'])
+    Route::get('/barangay/family/{family}', [FamilyController::class, 'show'])
         ->name('midwife.cur-fam');
 
     Route::get('/barangay/residents/{resident}', [ResidentController::class, 'show'])->name('midwife.spec-resident');

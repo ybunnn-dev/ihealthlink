@@ -20,6 +20,7 @@ const isIwasGutomMenu = document.getElementById('isIwasGutomMenu');
 const cancelAddFamilyButton = document.getElementById('cancelAddFamilyButton');
 const proceedAddFamilyButton = document.getElementById('proceedAddFamilyButton');
 
+
 // The main confirmation modal element
 const confirmAddFamilyModalEl = document.getElementById('confirm-add-family-modal');
 const confirmFamilyCheckbox = document.getElementById('confirm-family-checkbox');
@@ -90,6 +91,12 @@ cancelAddFamilyButton.addEventListener('click', function() {
     proceedAddFamilyButton.disabled = true; 
 
     addFamilyModal.hide();
+});
+
+confirmAddFamilyCancelBtn.addEventListener('click',function(){
+    confirmAddFamilyModal.hide();
+    confirmFamilyCheckbox.checked = false;
+    addFamilyModal.show();
 });
 
 function setupDropdownValueUpdater(buttonEl, menuEl, textEl) {

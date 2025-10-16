@@ -16,16 +16,15 @@ const indigentDropdownMenu = document.getElementById('indigentDropdownMenu');
 const cancelAddFamilyButton = document.getElementById('cancelAddFamilyButton');
 const proceedAddFamilyButton = document.getElementById('proceedAddFamilyButton');
 
+const isIwasGutomButton = document.getElementById('isIwasGutom');
+const isIwasGutomButtonText = document.getElementById('isIwasGutomButtonText');
+const isIwasGutomMenu = document.getElementById('isIwasGutomMenu');
+
 // The main confirmation modal element
 const confirmAddFamilyModalEl = document.getElementById('confirm-add-family-modal');
 const confirmFamilyCheckbox = document.getElementById('confirm-family-checkbox');
 const confirmAddFamilyCancelBtn = document.getElementById('confirm-add-family-cancel');
 const confirmAddFamilySubmitBtn = document.getElementById('confirm-add-family-submit');
-
-const successModalEl = document.getElementById('success-modal');
-const successMesageHeader = document.getElementById('success-msg-head');
-const successMessage = document.getElementById('success-message');
-const closeSuccessModalButton = document.getElementById('close-success-modal-button');
 
 const chooseHouseholdCompleteBtn = document.getElementById('choosenHouseholdBtn');
 const switchHouseholdModalEl = document.getElementById('switchHouseholdModal');
@@ -39,10 +38,16 @@ const purokFilterDropdownMenu = document.getElementById('purokFilterDropdownMenu
 
 const addFamilyTriggerBtn = document.getElementById('add-family-trigger');
 
-const addFamilyModal = new Modal(addFamilyModalEl);
-const confirmAddFamilyModal = new Modal(confirmAddFamilyModalEl);
-const switchHouseholdModal = new Modal(switchHouseholdModalEl);
-const successModal = new Modal(successModalEl);
+const modalOptions = {
+    placement: 'center-center',
+    backdrop: 'static',
+    closable: false,
+};
+
+const addFamilyModal = new Modal(addFamilyModalEl, modalOptions);
+const confirmAddFamilyModal = new Modal(confirmAddFamilyModalEl, modalOptions);
+const switchHouseholdModal = new Modal(switchHouseholdModalEl, modalOptions);
+
 
 const householdTableBody = document.getElementById('switchHHTableBody'); // Target for rendering rows
 
@@ -55,13 +60,19 @@ let currentHouseholdId;
 const barangayName = window.barangay_name;
 const barangayId = window.barangay_id;
 
+confirmAddFamilyCancelBtn.addEventListener('click',function(){
+    confirmAddFamilyModal.hide();
+    confirmFamilyCheckbox.checked = false;
+    addFamilyModal.show();
+});
 // NEW: Completed validation function
 function validateForm() {
     const is4psSelected = is4psButtonText.textContent !== 'Select';
     const isIndigentSelected = isIndigentButtonText.textContent !== 'Select';
+    const isIwasGutomSelected = isIwasGutomButtonText.textContent !== 'Select';
 
     // If both dropdowns have a value, enable the button. Otherwise, disable it.
-    if (is4psSelected && isIndigentSelected) {
+    if (is4psSelected && isIndigentSelected && isIwasGutomSelected) {
         proceedAddFamilyButton.disabled = false;
     } else {
         proceedAddFamilyButton.disabled = true;
@@ -114,6 +125,7 @@ function setupDropdownValueUpdater(buttonEl, menuEl, textEl) {
 
 setupDropdownValueUpdater(is4psButton, psDropdownMenu, is4psButtonText);
 setupDropdownValueUpdater(isIndigentButton, indigentDropdownMenu, isIndigentButtonText);
+setupDropdownValueUpdater(isIwasGutomButton, isIwasGutomMenu, isIwasGutomButtonText);
 
 confirmFamilyCheckbox.addEventListener('change', function(){
     confirmAddFamilySubmitBtn.disabled = !this.checked;
@@ -122,10 +134,11 @@ confirmFamilyCheckbox.addEventListener('change', function(){
 confirmAddFamilySubmitBtn.addEventListener('click', function () {
     const addFamilyPayload = {
         household_id: currentHouseholdId,
-        familyHeadId: null,
         is4ps: is4psButtonText.textContent,
-        isIndigent: isIndigentButtonText.textContent
+        isIndigent: isIndigentButtonText.textContent,
+        isIwasGutom: isIwasGutomButtonText.textContent
     };
+    confirmAddFamilySubmitBtn.disabled = true;
 
     fetch('/barangays/families/add', {
         method: 'POST',
@@ -139,10 +152,9 @@ confirmAddFamilySubmitBtn.addEventListener('click', function () {
     .then(data => {
         //console.log("Server response:", data);
         if(data.status === 'success'){
-            confirmAddFamilyModal.hide();
-            successMesageHeader.textContent = "Family Added";
-            successMessage.textContent = "Family has been succussfully added to the household";
-            successModal.show();
+            alert("Family has been added successfully!");
+            
+            window.location.href = `/barangay/family/${data.data.id}`;
         }
     })
     .catch(error => {
