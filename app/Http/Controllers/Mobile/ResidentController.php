@@ -63,32 +63,76 @@ class ResidentController extends Controller
             });
         }
         
-        // Get all residents (before pagination if search is applied)
-        if ($request->filled('search')) {
-            $searchTerm = strtolower(trim($request->search));
-            
+        // Check if we need to filter in memory (search or age group)
+        $needsMemoryFiltering = $request->filled('search') || 
+                            ($request->filled('age_group') && 
+                                $request->age_group !== 'All age group' && 
+                                $request->age_group !== '');
+        
+        if ($needsMemoryFiltering) {
             // Get all residents and filter in memory
             $allResidents = $residentsQuery->get();
             
-            $filteredResidents = $allResidents->filter(function ($resident) use ($searchTerm) {
-                $firstName = strtolower($resident->firstName ?? '');
-                $lastName = strtolower($resident->lastName ?? '');
-                $middleName = strtolower($resident->middleName ?? '');
-                $fullName = $firstName . ' ' . $middleName . ' ' . $lastName;
+            // Apply search filter
+            if ($request->filled('search')) {
+                $searchTerm = strtolower(trim($request->search));
                 
-                return str_contains($firstName, $searchTerm) ||
-                    str_contains($lastName, $searchTerm) ||
-                    str_contains($middleName, $searchTerm) ||
-                    str_contains($fullName, $searchTerm);
-            });
+                $allResidents = $allResidents->filter(function ($resident) use ($searchTerm) {
+                    $firstName = strtolower($resident->firstName ?? '');
+                    $lastName = strtolower($resident->lastName ?? '');
+                    $middleName = strtolower($resident->middleName ?? '');
+                    $fullName = $firstName . ' ' . $middleName . ' ' . $lastName;
+                    
+                    return str_contains($firstName, $searchTerm) ||
+                        str_contains($lastName, $searchTerm) ||
+                        str_contains($middleName, $searchTerm) ||
+                        str_contains($fullName, $searchTerm);
+                });
+            }
+            
+            // Apply age group filter
+            if ($request->filled('age_group') && 
+                $request->age_group !== 'All age group' && 
+                $request->age_group !== '') {
+                
+                $ageGroup = $request->age_group;
+                
+                $allResidents = $allResidents->filter(function ($resident) use ($ageGroup) {
+                    if (!$resident->birthdate) {
+                        return false;
+                    }
+                    
+                    try {
+                        $birthdate = \Carbon\Carbon::parse($resident->birthdate);
+                        $age = $birthdate->age;
+                        
+                        switch ($ageGroup) {
+                            case 'Infant (0-1)':
+                                return $age >= 0 && $age <= 1;
+                            case 'Child (2-12)':
+                                return $age >= 2 && $age <= 12;
+                            case 'Teen (13-17)':
+                                return $age >= 13 && $age <= 17;
+                            case 'Adult (18-59)':
+                                return $age >= 18 && $age <= 59;
+                            case 'Senior (60+)':
+                                return $age >= 60;
+                            default:
+                                return true;
+                        }
+                    } catch (\Exception $e) {
+                        return false;
+                    }
+                });
+            }
             
             // Manual pagination
             $page = $request->get('page', 1);
             $perPage = 20;
-            $total = $filteredResidents->count();
+            $total = $allResidents->count();
             
             $residents = new \Illuminate\Pagination\LengthAwarePaginator(
-                $filteredResidents->forPage($page, $perPage)->values(),
+                $allResidents->forPage($page, $perPage)->values(),
                 $total,
                 $perPage,
                 $page,
