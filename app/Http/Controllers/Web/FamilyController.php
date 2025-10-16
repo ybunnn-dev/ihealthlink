@@ -41,22 +41,23 @@ class FamilyController extends Controller
         // Validate inputs
         $validated = $request->validate([
             'household_id' => 'required|integer|exists:households,id',
-            'familyHeadId' => 'nullable|integer|exists:residents,id',
             'is4ps'        => 'required|string|in:Yes,No',
             'isIndigent'   => 'required|string|in:Yes,No',
+            'isIwasGutom' => 'required|string|in:Yes,No',
         ]);
 
         // Convert "Yes"/"No" to booleans
         $is4ps = $validated['is4ps'] === 'Yes';
         $isIndigent = $validated['isIndigent'] === 'Yes';
+        $isIwasGutom = $validated['isIwasGutom'] === 'Yes';
 
         // Save to database
         $family = Family::create([
             'household_id' => $validated['household_id'],
-            'head_id'      => $validated['familyHeadId'],
             'status'       => 'active',
             'is_indigent'  => $isIndigent,
             'is_4ps'       => $is4ps,
+            'is_iwas_gutom' => $isIwasGutom,
         ]);
 
         return response()->json([

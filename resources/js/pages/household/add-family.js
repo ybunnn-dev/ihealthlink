@@ -13,8 +13,12 @@ const isIndigentButton = document.getElementById('isIndigentButton');
 const isIndigentButtonText = document.getElementById('isIndigentButtonText');
 const indigentDropdownMenu = document.getElementById('indigentDropdownMenu');
 
+const isIwasGutomButton = document.getElementById('isIwasGutom');
+const isIwasGutomButtonText = document.getElementById('isIwasGutomButtonText');
+const isIwasGutomMenu = document.getElementById('isIwasGutomMenu');
+
 const cancelAddFamilyButton = document.getElementById('cancelAddFamilyButton');
-const proceedAddHouseholdButton = document.getElementById('proceedAddHouseholdButton');
+const proceedAddFamilyButton = document.getElementById('proceedAddFamilyButton');
 
 // The main confirmation modal element
 const confirmAddFamilyModalEl = document.getElementById('confirm-add-family-modal');
@@ -27,29 +31,42 @@ const successMesageHeader = document.getElementById('success-msg-head');
 const successMessage = document.getElementById('success-message');
 const closeSuccessModalButton = document.getElementById('close-success-modal-button');
 
+const modalOptions = {
+    placement: 'center-center',
+    backdrop: 'static',
+    closable: false,
+};
+
+const selectedHH = document.getElementById('selectHouseholdButton');
+
+const household = window.household;
+console.log(household);
+
+const purokFilterDropdownButton = document.getElementById('purokFilterDropdownButton');
+const purokFilterDropdownMenu = document.getElementById('purokFilterDropdownMenu')
+
 const addFamilyTriggerBtn = document.getElementById('add-family-trigger');
 
-const addFamilyModal = new Modal(addFamilyModalEl);
-const confirmAddFamilyModal = new Modal(confirmAddFamilyModalEl);
-const successModal = new Modal(successModalEl);
+const addFamilyModal = new Modal(addFamilyModalEl, modalOptions);
+const confirmAddFamilyModal = new Modal(confirmAddFamilyModalEl, modalOptions);
+const successModal = new Modal(successModalEl, modalOptions);
 
-let household = window.household;
-let householdHead;
 
 // NEW: Completed validation function
 function validateForm() {
     const is4psSelected = is4psButtonText.textContent !== 'Select';
     const isIndigentSelected = isIndigentButtonText.textContent !== 'Select';
+    const isIwasGutomSelected = isIwasGutomButtonText.textContent !== 'Select';
 
     // If both dropdowns have a value, enable the button. Otherwise, disable it.
-    if (is4psSelected && isIndigentSelected) {
-        proceedAddHouseholdButton.disabled = false;
+    if (is4psSelected && isIndigentSelected && isIwasGutomSelected) {
+        proceedAddFamilyButton.disabled = false;
     } else {
-        proceedAddHouseholdButton.disabled = true;
+        proceedAddFamilyButton.disabled = true;
     }
 }
 
-proceedAddHouseholdButton.addEventListener('click', function(){
+proceedAddFamilyButton.addEventListener('click', function(){
     event.preventDefault();
 
     addFamilyModal.hide();
@@ -57,25 +74,20 @@ proceedAddHouseholdButton.addEventListener('click', function(){
 });
 
 
-addFamilyTriggerBtn.addEventListener('click', function() {
-    selectHouseholdButton.style.backgroundColor = "#EBEBEB";
-    selectHouseholdButton.disabled = true;
-    selectHouseholdButton.textContent = "Household #" + household.id;
-    
+addFamilyTriggerBtn.addEventListener('click', function() {    
     // CHANGED: Ensure the button is disabled when the modal opens
-    proceedAddHouseholdButton.disabled = true; 
-
+    proceedAddFamilyButton.disabled = true; 
+    selectedHH.textContent = `Household #${household.id}`;
     addFamilyModal.show();
 });
 
 cancelAddFamilyButton.addEventListener('click', function() {
-    householdHead = null;
     selectFamilyHeadButton.textContent = "Select Household Head";
     isIndigentButtonText.textContent = "Select";
     is4psButtonText.textContent = "Select";
 
     // CHANGED: Ensure the button is disabled when the form is reset
-    proceedAddHouseholdButton.disabled = true; 
+    proceedAddFamilyButton.disabled = true; 
 
     addFamilyModal.hide();
 });
@@ -99,6 +111,7 @@ function setupDropdownValueUpdater(buttonEl, menuEl, textEl) {
 
 setupDropdownValueUpdater(is4psButton, psDropdownMenu, is4psButtonText);
 setupDropdownValueUpdater(isIndigentButton, indigentDropdownMenu, isIndigentButtonText);
+setupDropdownValueUpdater(isIwasGutomButton, isIwasGutomMenu, isIwasGutomButtonText);
 
 confirmFamilyCheckbox.addEventListener('change', function(){
     confirmAddFamilySubmitBtn.disabled = !this.checked;
@@ -109,8 +122,11 @@ confirmAddFamilySubmitBtn.addEventListener('click', function () {
         household_id: household.id,
         familyHeadId: null,
         is4ps: is4psButtonText.textContent,
-        isIndigent: isIndigentButtonText.textContent
+        isIndigent: isIndigentButtonText.textContent,
+        isIwasGutom: isIwasGutomButtonText.textContent
     };
+    
+    confirmAddFamilySubmitBtn.disabled = true;
 
     fetch('/barangays/families/add', {
         method: 'POST',
@@ -124,10 +140,8 @@ confirmAddFamilySubmitBtn.addEventListener('click', function () {
     .then(data => {
         //console.log("Server response:", data);
         if(data.status === 'success'){
-            confirmAddFamilyModal.hide();
-            successMesageHeader.textContent = "Family Added";
-            successMessage.textContent = "Family has been succussfully added to the household";
-            successModal.show();
+            alert('Family has been added successfully!');
+            window.location.reload();
         }
     })
     .catch(error => {
@@ -135,6 +149,3 @@ confirmAddFamilySubmitBtn.addEventListener('click', function () {
     });
 });
 
-closeSuccessModalButton.addEventListener('click', function(){
-    window.location.reload();
-});

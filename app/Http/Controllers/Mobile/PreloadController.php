@@ -11,6 +11,7 @@ use App\Models\MedicineInventory;
 use App\Models\Schedules;
 use App\Models\DailyActivities;
 use App\Models\UserManual;
+use App\Models\HealthProgram;
 
 class PreloadController extends Controller
 {
@@ -55,7 +56,7 @@ class PreloadController extends Controller
         $schedules = Schedules::where('brgy_id', $barangay->id)->get();
         $dailyActivities = DailyActivities::where('brgy_id', $barangay->id)->get();
         $userManuals = UserManual::all();
-
+        $health_programs = HealthProgram::where('status', 'active')->get();
         // Return all in one payload
         return response()->json([
             'barangay' => $barangay,
@@ -65,6 +66,7 @@ class PreloadController extends Controller
             'schedules' => $schedules,
             'daily_activities' => $dailyActivities,
             'user_manuals' => $userManuals,
+            'health_programs' => $health_programs,
         ]);
     }
 }

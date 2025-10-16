@@ -18,13 +18,6 @@
                         </button>
                     </div>
 
-                    <div class="grid grid-cols-1 gap-1">
-                        <label for="selectFamilyHeadButton" class="text-sm font-medium text-main_font">FAMILY HEAD</label>
-                        <button id="selectFamilyHeadButton" type="button" class="w-full text-normal_font bg-white border border-gray-300 rounded-lg p-2 text-left inline-flex items-center justify-between hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-300">
-                            Select Household Head
-                        </button>
-                    </div>
-
                     <div class="grid grid-cols-1 gap-1 relative">
                         <label for="is4psButton" class="text-sm font-medium text-main_font">4PS MEMBER</label>
                         <button id="is4psButton" data-dropdown-toggle="4psDropdownMenu" class="w-full  text-gray-400 bg-white focus:outline-none font-medium border border-gray-300 rounded-lg text-md p-2 text-center inline-flex items-center justify-between" type="button">
@@ -57,6 +50,21 @@
                         </div>
                     </div>
 
+                    <div class="grid grid-cols-1 col-span-1 gap-1 relative">
+                        <label for="isIwasGutom" class="text-sm font-medium text-main_font uppercase">Iwas Gutom Program</label>
+                        <button id="isIwasGutom" data-dropdown-toggle="isIwasGutomMenu" class="w-full text-gray-400 bg-white focus:outline-none font-medium border border-gray-300 rounded-lg text-md p-2 text-center inline-flex items-center justify-between" type="button">
+                            <span id="isIwasGutomButtonText">Select</span>
+                            <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4" />
+                            </svg>
+                        </button>
+                        <div id="isIwasGutomMenu" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-full absolute top-full mt-1">
+                            <ul class="py-2 text-sm text-gray-700" aria-labelledby="isIwasGutom">
+                                <li><button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-value="Yes">Enrolled</button></li>
+                                <li><button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-value="No">No</button></li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
 
