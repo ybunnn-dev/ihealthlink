@@ -71,10 +71,6 @@
                                 </div>
 
                                 <div class="border-t border-gray-200"></div>
-
-                                <a href="#" class="block text-center px-4 py-2 text-sm text-blue-600 hover:text-blue-500 hover:bg-gray-50">
-                                    {{ __('View All Notifications') }}
-                                </a>
                             </div> 
                         </x-slot>
                     </x-dropdown>

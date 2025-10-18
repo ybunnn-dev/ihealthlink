@@ -150,15 +150,14 @@ Route::middleware([
     Route::get('/midwife/bhws/{personnel}', [BHWController::class, 'show'])->name('midwife.bhws.show');
 });
 
-
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
     'verified',
     'throttle:auth-web',
-    'midwife.role4',
     'active',
 ])->group(function () {
+
     Route::get('/firebase-messaging-sw.js', function () {
         return response()->view('firebase-messaging-sw')
             ->header('Content-Type', 'application/javascript')
@@ -167,10 +166,20 @@ Route::middleware([
 
      Route::patch('/firebase/token', [FirebaseController::class, 'updateToken'])
         ->name('firebase.token');
-
+        
     Route::get('/notifications', [App\Http\Controllers\NotificationController::class, 'index']);
     Route::patch('/notifications/{id}/read', [App\Http\Controllers\NotificationController::class, 'markAsRead']);
     Route::patch('/notifications/read-all', [App\Http\Controllers\NotificationController::class, 'markAllAsRead']);
+});
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified',
+    'throttle:auth-web',
+    'midwife.role4',
+    'active',
+])->group(function () {
+    
     Route::post('/notifications/send', [App\Http\Controllers\NotificationController::class, 'send']);
 
      Route::get('barangay/{barangay}/dashboard', [DashboardController::class, 'index'])
