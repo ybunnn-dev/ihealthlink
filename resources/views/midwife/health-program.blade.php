@@ -164,6 +164,16 @@
                                         </button>
                                         
                                     @endif
+
+                                 
+                                </div>
+                                <div class="w-full xs:w-40 pt-5 xs:pt-0">
+                                     @if(optional(Auth::user())->role_id === 2 && $healthProgram->category === 'philpen_tcl')
+                                        {{-- your content here --}}
+                                        <button type="button" id="createNewPhilpen" class="w-full h-[2.375rem] text-white bg-mainblue hover:bg-blue-700 font-medium rounded-lg text-sm px-3 flex items-center justify-center gap-2">
+                                            New PhilPEN
+                                        </button>
+                                    @endif
                                 </div>
                                 <x-hide-button />
                             </div>

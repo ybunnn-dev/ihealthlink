@@ -15,6 +15,8 @@ use App\Models\Barangay;
 use App\Models\ResidenceHistory;
 use App\Models\HealthProgram;
 use App\Helpers\ProjectCrypt;
+use App\Models\ActivityLog;
+use App\Models\EnrolledResident;
 
 class ResidentController extends Controller
 {  
@@ -53,14 +55,13 @@ class ResidentController extends Controller
     
     public function addResident(Request $request)
     {
-        // Validation rules
         $rules = [
             'first_name'          => 'required|string|max:255',
             'last_name'           => 'required|string|max:255',
             'middle_name'         => 'nullable|string|max:255',
             'suffix'              => 'nullable|string|max:50',
             'contact_no'          => 'nullable|string|max:20',
-            'birthdate'           => 'required|string', // expect m/d/Y format
+            'birthdate'           => 'required|string',
             'family_id'           => 'required|integer',
             'relationship_to_head'=> 'required|string|max:255',
             'civil_status'        => 'required|string|max:255',
@@ -88,10 +89,6 @@ class ResidentController extends Controller
 
         $validated = $validator->validated();
 
-        // Convert birthdate to Y-m-d
-        
-
-        // Create resident
         $resident = Resident::create([
             'family_id'           => $validated['family_id'],
             'added_by'            => auth()->id(),
@@ -116,28 +113,35 @@ class ResidentController extends Controller
             'emergencyContactNo'  => $validated['emergency_contact_no'] ?? null,
         ]);
 
-        // Get the household of the family
         $household = $resident->family->household ?? null;
         $purokId = $household->purok_id ?? null;
 
-        // Determine the residence start date
-        $years = $validated['years_of_residency'] ?? 0;
-        if ($years < 1) {
-            // January 1st of the current year
-            $createdAt = Carbon::now()->startOfYear();
-        } else {
-            $createdAt = Carbon::now()->subYears($years);
-        }
 
         // Create residence history
         ResidenceHistory::create([
             'resident_id' => $resident->id,
             'purok_id'    => $purokId,
             'status'      => 'active',
-            'created_at'  => $createdAt,
+            'created_at'  => now(),
             'updated_at'  => now(),
         ]);
 
+        // Calculate age and enroll in PhilPEN TCL if eligible
+        $age = Carbon::parse($validated['birthdate'])->age;
+        
+        if ($age >= 20 && $age <= 59) {
+            $this->enrollPhilpen($resident->id);
+        }
+
+          // Log the activity
+        $residentName = trim($validated['first_name'] . ' ' . ($validated['middle_name'] ?? '') . ' ' . $validated['last_name'] . ' ' . ($validated['suffix'] ?? ''));
+        $purokName = $household->purok->name ?? 'Unknown';
+        
+        ActivityLog::create([
+            'user_id'   => auth()->id(),
+            'module_id' => 2, // replace with correct module ID for residents
+            'activity'  => 'Added a new resident: ' . $residentName . ' in ' . ucfirst($purokName) . '.',
+        ]);
         
         return response()->json([
             'status' => 'success',
@@ -145,7 +149,38 @@ class ResidentController extends Controller
             'data' => $resident
         ]);
     }
+
+    private function enrollPhilpen($residentId)
+    {
+        // Find the PhilPEN TCL program
+        $program = HealthProgram::where('category', 'philpen_tcl')
+            ->where('status', 'active') // Optional: ensure program is active
+            ->first();
         
+        if (!$program) {
+            // Log or handle case where program doesn't exist
+            \Log::warning('PhilPEN TCL program not found for resident enrollment', ['resident_id' => $residentId]);
+            return;
+        }
+
+        // Check if already enrolled to avoid duplicates
+        $existingEnrollment = EnrolledResident::where('resident_id', $residentId)
+            ->where('program_id', $program->id)
+            ->first();
+        
+        if ($existingEnrollment) {
+            return; // Already enrolled
+        }
+
+        // Enroll the resident
+        EnrolledResident::create([
+            'resident_id' => $residentId,
+            'program_id' => $program->id,
+            'enrolled_by' => auth()->id(),
+            'status' => 'active',
+        ]);
+    }
+
     public function show(Resident $resident){
 
         $resident->load([
