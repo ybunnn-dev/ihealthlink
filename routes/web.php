@@ -187,6 +187,8 @@ Route::middleware([
 
     Route::post('/barangay/add-sched', [ScheduleController::class, 'store']);
 
+    Route::put('/barangay/schedule/edit/{id}', [ScheduleController::class, 'edit']);
+
     Route::post('/barangay/resident/add', [ResidentController::class, 'addResident']);
 
     Route::get('/barangay/resident/enroll', [ResidentController::class, 'getResident']);

@@ -18,6 +18,7 @@ use App\Models\ResidentFamilyHistory;
 use App\Models\RiskAssessment;
 use App\Models\NcdRiskFactor;
 use App\Models\PhilpenManagement;
+use App\Models\ActivityLog;
 
 use Carbon\Carbon;
 
@@ -157,8 +158,6 @@ class ConsultationController extends Controller
             'height' => $payload['height'] ?? null,
             'systolic_pressure' => $payload['bp_systolic'] ?? null,
             'diastolic_pressure' => $payload['bp_diastolic'] ?? null,
-            'is_pregnant' => $payload['is_pregnant'] ?? null,
-            'is_lactating' => $payload['is_lactating'] ?? null,
         ], fn($value) => !is_null($value));
 
         // Update only if there’s something to update
@@ -166,6 +165,17 @@ class ConsultationController extends Controller
             $basicHR->update($updateData);
         }
 
+        $resident = $enrolledResident->resident;
+        $program = $enrolledResident->program;
+        $residentName = trim($resident->firstName . ' ' . ($resident->middleName ? $resident->middleName . ' ' : '') . $resident->lastName . ($resident->suffix ? ' ' . $resident->suffix : ''));
+        $programName = $program->name;
+        $consultationTitle = $consultation->consultation_title ?? 'consultation';
+        
+        ActivityLog::create([
+            'user_id' => auth()->id(),
+            'module_id' => 5, // Replace with your correct module ID for health programs/consultations
+            'activity' => "Updated {$consultationTitle} consultation for resident {$residentName} in {$programName} health program.",
+        ]);
         return response()->json(['message' => 'Consultation updated successfully']);
     }
 

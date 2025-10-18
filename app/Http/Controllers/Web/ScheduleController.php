@@ -10,7 +10,7 @@ use App\Models\DailyActivities;
 use App\Models\ActivityIcons;
 use App\Models\ScheduleAssignments;
 use Carbon\Carbon;
-
+use Illuminate\Support\Facades\Log;
 
 class ScheduleController extends Controller
 {
@@ -19,28 +19,39 @@ class ScheduleController extends Controller
         // Get the current logged-in user's midwife record
         $midwife = Midwife::where('user_id', auth()->id())->first();
 
-        $schedules = collect(); // default empty collection
-        $dailyActivities = collect(); // default empty collection
+        $schedules = collect();
+        $dailyActivities = collect();
         $activityIcons = ActivityIcons::all();
 
         if ($midwife) {
-            // Fetch schedules for their barangay
+            // FIXED: Added 'user' relationship to activeBhws
             $schedules = Schedules::where('brgy_id', $midwife->brgy_id)
-                                  ->where('status', 'active')
-                                  ->with('assignedBHWs', 'healthProgram', 'barangay')
+                ->where('status', 'active')
+                ->with([
+                    'barangay'
+                ])
+                ->get();
 
-                                  ->get();
+            // Detailed logging with user info
+            Log::info('=== Schedules Data ===');
+            Log::info('Midwife ID: ' . $midwife->id);
+            Log::info('Barangay ID: ' . $midwife->brgy_id);
+            Log::info('Total schedules found: ' . $schedules->count());
+            
 
-            // Fetch daily activities for their barangay
             $dailyActivities = DailyActivities::where('brgy_id', $midwife->brgy_id)
-                                              ->with('icon')
-                                              ->get();
+                ->with('icon')
+                ->get();
+                
+            Log::info('=== Daily Activities ===');
+            Log::info('Total activities: ' . $dailyActivities->count());
+        } else {
+            Log::warning('No midwife found for user ID: ' . auth()->id());
         }
-        //can you log the data here before returning tghe view?
-        // Pass both to the view
-        
+
         return view('midwife.schedules', compact('schedules', 'dailyActivities', 'activityIcons'));
     }
+
 
     public function updateDailyActivity(Request $request)
     {
@@ -80,9 +91,6 @@ class ScheduleController extends Controller
             'date' => 'required|string',
             'time' => 'required|string|max:50',
             'venue' => 'required|string|max:255',
-            'health_program_id' => 'nullable|exists:health_programs,id',
-            'bhws' => 'nullable|array',
-            'bhws.*.id' => 'nullable|integer|exists:personnel,id',
         ]);
 
         $normalizedDate = Carbon::createFromFormat('m/d/Y', $validated['date'])->format('Y-m-d');
@@ -98,24 +106,7 @@ class ScheduleController extends Controller
             'time' => $normalizedTime,
             'venue' => $validated['venue'],
             'brgy_id' => $midwife->brgy_id,
-            'health_program_id' => $validated['health_program_id'] ?? null,
             'added_by' => auth()->id(),
-        ]);
-
-        // Assign BHWs if provided
-        if (!empty($validated['bhws'])) {
-            foreach ($validated['bhws'] as $bhw) {
-                ScheduleAssignments::create([
-                    'schedule_id' => $schedule->id,
-                    'personnel_id' => $bhw['id'],
-                ]);
-            }
-        }
-
-        // Log the saved data
-        \Log::info('New Schedule Saved:', [
-            'schedule' => $schedule->toArray(),
-            'bhws' => $validated['bhws'] ?? [],
         ]);
 
         return response()->json([
@@ -127,6 +118,7 @@ class ScheduleController extends Controller
             ]
         ]);
     }
+
     public function edit(Request $request, $id)
     {
         // Validate payload
@@ -135,9 +127,6 @@ class ScheduleController extends Controller
             'date' => 'required|string',
             'time' => 'required|string|max:50',
             'venue' => 'required|string|max:255',
-            'health_program_id' => 'nullable|exists:health_programs,id',
-            'bhws' => 'nullable|array',
-            'bhws.*.id' => 'required|integer|exists:personnel,id',
         ]);
 
         $schedule = Schedules::findOrFail($id);
@@ -148,51 +137,15 @@ class ScheduleController extends Controller
         $schedule->date = $normalizedDate;
         $schedule->time = $normalizedTime;
         $schedule->venue = $validated['venue'];
-        $schedule->health_program_id = $validated['health_program_id'] ?? null;
 
         $schedule->save();
 
-        // Sync BHWs with status
-        $newBHWIds = collect($validated['bhws'] ?? [])->pluck('id')->toArray();
-
-        // Get all current assignments
-        $currentAssignments = ScheduleAssignments::where('schedule_id', $schedule->id)->get();
-
-        foreach ($currentAssignments as $assignment) {
-            if (in_array($assignment->personnel_id, $newBHWIds)) {
-                // Previously inactive or active → set active
-                $assignment->status = 'active';
-                $assignment->save();
-
-                // Remove from $newBHWIds so we don’t create duplicate
-                $newBHWIds = array_diff($newBHWIds, [$assignment->personnel_id]);
-            } else {
-                // Not in payload → set inactive
-                $assignment->status = 'inactive';
-                $assignment->save();
-            }
-        }
-
-        // Add remaining new BHWs
-        foreach ($newBHWIds as $bhwId) {
-            ScheduleAssignments::create([
-                'schedule_id' => $schedule->id,
-                'personnel_id' => $bhwId,
-                'status' => 'active'
-            ]);
-        }
-
-        \Log::info('Updated schedule:', [
-            'schedule' => $schedule->toArray(),
-            'bhws' => $validated['bhws'] ?? []
-        ]);
 
         return response()->json([
             'success' => true,
             'message' => 'Schedule updated successfully',
             'data' => [
                 'schedule' => $schedule,
-                'bhws' => $validated['bhws'] ?? []
             ]
         ]);
     }

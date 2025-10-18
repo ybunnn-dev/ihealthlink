@@ -10,25 +10,6 @@
                 </p>
             </div>
 
-            <div class="px-4 md:px-5 py-3 space-y-3 bg-gray-50 rounded-lg border">
-                <div class="flex justify-between items-center text-sm">
-                    <span class="text-gray-600">Activity:</span>
-                    <strong id="edit-schedule-activity-to-confirm" class="text-main_font text-right">Updated Activity Name Here</strong>
-                </div>
-                <div class="flex justify-between items-center text-sm">
-                    <span class="text-gray-600">Date:</span>
-                    <strong id="edit-schedule-date-to-confirm" class="text-main_font text-right">Updated Date Here</strong>
-                </div>
-                <div class="flex justify-between items-center text-sm">
-                    <span class="text-gray-600">Time:</span>
-                    <strong id="edit-schedule-time-to-confirm" class="text-main_font text-right">Updated Time Here</strong>
-                </div>
-                <div class="flex justify-between items-center text-sm">
-                    <span class="text-gray-600">Venue:</span>
-                    <strong id="edit-schedule-venue-to-confirm" class="text-main_font text-right">Updated Venue Here</strong>
-                </div>
-            </div>
-
             <div class="p-4 md:p-5 mt-4">
                 <div class="flex items-center justify-center">
                     <input id="confirm-edit-schedule-checkbox" type="checkbox" value="" class="w-4 h-4 text-mainblue bg-gray-100 border-gray-300 rounded focus:ring-mainblue">

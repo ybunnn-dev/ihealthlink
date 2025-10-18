@@ -83,7 +83,6 @@ addFamilyTriggerBtn.addEventListener('click', function() {
 });
 
 cancelAddFamilyButton.addEventListener('click', function() {
-    selectFamilyHeadButton.textContent = "Select Household Head";
     isIndigentButtonText.textContent = "Select";
     is4psButtonText.textContent = "Select";
 

@@ -44,23 +44,7 @@
                              <input type="text" id="activityVenue" class="border border-gray-300 text-gray-700 rounded-lg p-2">
                         </div>
                         
-                        <div class="grid grid-cols-1 slg:grid-cols-2 gap-3">
-                            <div class="flex flex-col col-span-1 relative">
-                                <label for="healthProgramButton" class="text-sm font-medium text-main_font">HEALTH PROGRAM</label>
-                                <button id="healthProgramButton" class="w-full text-main_font bg-white focus:outline-none font-medium border border-gray-300 rounded-lg text-md p-2 text-left inline-flex items-center justify-between" type="button">
-                                    Select Program...
-                                </button>
-                                <input type="hidden" id="healthProgramId" name="health_program_id">
-                            </div>
-
-                            <div class="flex flex-col col-span-1 relative">
-                                <label for="bhwButton" class="block text-sm font-medium text-main_font">ASSIGNED BHW</label>
-                                <button id="bhwButton" data-modal-target="select-bhw-modal" data-modal-toggle="select-bhw-modal" class="w-full text-main_font bg-white focus:outline-none font-medium border border-gray-300 rounded-lg text-md p-2 text-left inline-flex items-center justify-between" type="button">
-                                    Select BHW...
-                                </button>
-                                <input type="hidden" id="assignedBhwId" name="assigned_bhw_id">
-                            </div>
-                        </div>                    
+                                       
                     </div>
                 </div>
                 <div class="flex items-center border-t border-gray-200 rounded-b dark:border-gray-600 gap-3 justify-end pt-6 px-6">
@@ -77,6 +61,4 @@
     </div>
 </div>
 
-@include('components.modals.schedules.choose-health-program')
-@include('components.modals.schedules.choose-bhw-modal')
 @include('components.modals.schedules.add-activity-confirmation')

@@ -45,24 +45,7 @@
                             <label for="editActivityVenue" class="text-sm font-medium text-main_font">VENUE</label>
                              <input type="text" id="editActivityVenue" class="border border-gray-300 text-gray-700 rounded-lg p-2">
                         </div>
-                        
-                        <div class="grid grid-cols-1 slg:grid-cols-2 gap-3">
-                            <div class="flex flex-col col-span-1 relative">
-                                <label for="editHealthProgramButton" class="text-sm font-medium text-main_font">HEALTH PROGRAM</label>
-                                <button id="editHealthProgramButton" class="w-full text-main_font bg-white focus:outline-none font-medium border border-gray-300 rounded-lg text-md p-2 text-left inline-flex items-center justify-between" type="button">
-                                    Select Program...
-                                </button>
-                                <input type="hidden" id="editHealthProgramId" name="health_program_id">
-                            </div>
-
-                            <div class="flex flex-col col-span-1 relative">
-                                <label for="editBhwButton" class="block text-sm font-medium text-main_font">ASSIGNED BHW</label>
-                                <button id="editBhwButton" data-modal-target="select-bhw-modal" data-modal-toggle="select-bhw-modal" class="w-full text-main_font bg-white focus:outline-none font-medium border border-gray-300 rounded-lg text-md p-2 text-left inline-flex items-center justify-between" type="button">
-                                    Select BHW...
-                                </button>
-                                <input type="hidden" id="editAssignedBhwId" name="assigned_bhw_id">
-                            </div>
-                        </div>                    
+                                      
                     </div>
                 </div>
                 <div class="flex items-center border-t border-gray-200 rounded-b dark:border-gray-600 gap-3 justify-end pt-6 px-6">
@@ -78,7 +61,4 @@
         </div>
     </div>
 </div>
-
-@include('components.modals.schedules.choose-health-program')
-@include('components.modals.schedules.choose-bhw-modal')
 @include('components.modals.schedules.edit-activity-confirmation')

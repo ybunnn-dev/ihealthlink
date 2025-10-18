@@ -41,14 +41,6 @@
                                 <p class="font-semibold text-main_font">VENUE:</p>
                                 <p id="view-venue" class="text-normal_font"></p>
                             </div>
-                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1 md:gap-x-2">
-                                <p class="font-semibold text-main_font">HEALTH PROGRAM:</p>
-                                <p id="view-program" class="text-normal_font"></p>
-                            </div>
-                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1 md:gap-x-2">
-                                <p class="font-semibold text-main_font">ASSIGNED BHW(s):</p>
-                                <p id="view-bhws" class="text-normal_font"></p>
-                            </div>
                         </div>
 
                         <div id="no-activity-message" class="hidden text-center py-8">

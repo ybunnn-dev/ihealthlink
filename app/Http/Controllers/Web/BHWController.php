@@ -33,7 +33,6 @@ class BHWController extends Controller
         // 1. Get the authenticated user (the midwife).
         $user = Auth::user();
 
-
         $midwifePersonnel = Midwife::where('user_id', $user->id)
             ->where('role_id', 2)
             ->first();
@@ -73,17 +72,24 @@ class BHWController extends Controller
         ]);
     }
 
-    public function getBHWs(){
-        $midwife = Midwife::where('user_id', auth()->id())->first();
+    public function getBHWs()
+    {
+        $user = Auth::user();
+        $midwife = $user->midwife;
 
-        if(!$midwife){
+        if (!$midwife) {
             return response()->json([
                 'success' => false,
                 'message' => 'No midwife found for this user.'
             ], 404);
         }
 
-        $bhws = Personnel::where('brgy_id', $midwife->brgy_id)->get();
+        // Get personnel in the same barangay with role_id 3 or 4
+        $bhws = Personnel::with('user') // include related user model
+            ->where('brgy_id', $midwife->brgy_id)
+            ->whereIn('role_id', [3, 4])
+            ->where('status', 'active')
+            ->get();
 
         return response()->json([
             'success' => true,

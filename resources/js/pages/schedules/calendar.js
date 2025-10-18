@@ -16,29 +16,20 @@ const viewActivity = document.getElementById('view-activity');
 const viewDate = document.getElementById('view-date');
 const viewTime = document.getElementById('view-time');
 const viewVenue = document.getElementById('view-venue');
-const viewProgram = document.getElementById('view-program');
-const viewBhws = document.getElementById('view-bhws');
 
+console.log(window.scheds);
 
-// --- 2. DEFINE STATE ---
 let currentDate = new Date();
 let selectedDate = new Date(); // Defaults to highlighting today's date
 
-/**
- * Displays the "no schedule" message and hides the details view.
- */
 function displayNoScheduleView() {
     currentActivityDetails.classList.add('hidden');
     noActivityMessage.classList.remove('hidden');
 }
-
-/**
- * Populates the details view with schedule info and displays it.
- * @param {string} scheduleId - The ID of the schedule to view.
- */
 function handleViewSchedule(scheduleId) {
     const schedule = window.scheds.find(s => s.id == scheduleId);
     console.log('data', schedule)
+    
     if (schedule) {
         viewActivity.textContent = schedule.activity || 'N/A';
         viewDate.textContent = new Date(schedule.date + 'T00:00:00').toLocaleDateString('en-US', { 
@@ -46,16 +37,6 @@ function handleViewSchedule(scheduleId) {
         });
         viewTime.textContent = formatTime(schedule.time);
         viewVenue.textContent = schedule.venue || 'N/A';
-        viewProgram.textContent = schedule.health_program?.name || 'N/A';
-
-        // Merge BHW names
-        if (Array.isArray(schedule.assigned_b_h_ws) && schedule.assigned_b_h_ws.length > 0) {
-            viewBhws.textContent = schedule.assigned_b_h_ws
-                                      .map(bhw => bhw.name)
-                                      .join(', ');
-        } else {
-            viewBhws.textContent = 'N/A';
-        }
 
         // Show the details view and hide the empty message
         currentActivityDetails.classList.remove('hidden');
@@ -66,21 +47,14 @@ function handleViewSchedule(scheduleId) {
 }
 
 
-
-/**
- * Handles the click event for the 'Edit' button.
- * @param {string} scheduleId - The ID of the schedule to edit.
- */
-
-// --- 3. PROCESS DATABASE DATA ---
-// Assumes 'window.scheds' is defined by your server and now uses the 'date' key.
 const scheduleData = {};
+
 if (window.scheds && Array.isArray(window.scheds)) {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
     window.scheds.forEach(schedule => {
-        // ✨ UPDATED: Using 'schedule.date' to match your table column.
+        // UPDATED: Using 'schedule.date' to match your table column.
         const scheduleDateStr = schedule.date; 
         if (!scheduleDateStr) return;
 
