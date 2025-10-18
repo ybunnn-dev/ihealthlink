@@ -30,10 +30,12 @@ class HealthProgramController extends Controller
         $barangayId = $personnel->brgy_id;
 
         $query = HealthProgram::withCount(['enrolledResidents' => function ($q) use ($barangayId) {
-            $q->whereHas('resident.family.household.purok', function ($sub) use ($barangayId) {
-                $sub->where('brgy_id', $barangayId);
-            });
-        }]);
+                $q->whereHas('resident.family.household.purok', function ($sub) use ($barangayId) {
+                    $sub->where('brgy_id', $barangayId);
+                });
+            }])
+            // ✅ Exclude programs with category 'philpen_tcl'
+            ->where('category', '!=', 'philpen_tcl');
 
         // Search by program name (optional)
         if ($request->filled('search')) {

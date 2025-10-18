@@ -21,51 +21,61 @@
             </div>
             <div class="hidden sm:flex sm:items-center sm:ms-6">
                 <!-- Notification Button -->
-                <div class="ms-3 relative">
-                    <x-dropdown align="right" width="48">
+                <div class="ms-3 relative" x-data="notificationHandler">
+                    <x-dropdown align="right" width="80">
                         <x-slot name="trigger">
                             <button class="relative inline-flex items-center p-2 text-gray-400 bg-white hover:text-gray-500 focus:outline-none focus:text-gray-500 transition duration-150 ease-in-out">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
                                 </svg>
-                                <!-- Notification Badge -->
-                                <span class="absolute -top-0.5 -right-0.5 inline-flex items-center justify-center px-1.5 py-0.5 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">3</span>
+                                <!-- ✅ DYNAMIC Badge -->
+                                <span x-show="unreadCount > 0" 
+                                    x-text="unreadCount" 
+                                    class="absolute -top-0.5 -right-0.5 inline-flex items-center justify-center px-1.5 py-0.5 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">
+                                </span>
                             </button>
                         </x-slot>
 
                         <x-slot name="content">
                             <!-- Notification Header -->
-                            <div class="block px-4 py-2 text-xs text-gray-400 border-b border-gray-200">
-                                {{ __('Notifications') }}
-                            </div>
-
-                            <!-- Sample Notifications -->
-                            <x-dropdown-link href="#" class="flex items-start py-3">
-                                <div class="flex-1">
-                                    <p class="text-sm font-medium text-gray-900">New message received</p>
-                                    <p class="text-xs text-gray-500 mt-1">2 minutes ago</p>
+                            <div class="w-full max-w-2xl">
+                                <div class="flex items-center justify-between px-4 py-2 text-xs text-gray-400 border-b border-gray-200">
+                                    <span>{{ __('Notifications') }}</span>
+                                    <button @click="markAllRead()" 
+                                            x-show="unreadCount > 0" 
+                                            class="text-blue-600 hover:text-blue-500 text-xs">
+                                        Mark all read
+                                    </button>
                                 </div>
-                            </x-dropdown-link>
 
-                            <x-dropdown-link href="#" class="flex items-start py-3">
-                                <div class="flex-1">
-                                    <p class="text-sm font-medium text-gray-900">System update available</p>
-                                    <p class="text-xs text-gray-500 mt-1">1 hour ago</p>
+                                <!-- ✅ DYNAMIC Notifications from Database -->
+                                <div class="max-h-96 overflow-y-auto">
+                                    <template x-for="notification in notifications" :key="notification.id">
+                                        <a :href="'#'" 
+                                        @click="markAsRead(notification.id)"
+                                        class="flex items-start py-3 px-4 hover:bg-gray-50 border-b border-gray-100"
+                                        :class="{ 'bg-blue-50': !notification.is_read }">
+                                            <div class="flex-1">
+                                                <p class="text-sm font-medium text-gray-900" x-text="notification.subject"></p>
+                                                <p class="text-xs text-gray-500 mt-1" x-text="notification.message"></p>
+                                                <p class="text-xs text-gray-400 mt-1" x-text="formatTime(notification.created_at)"></p>
+                                            </div>
+                                            <span x-show="!notification.is_read" class="ml-2 w-2 h-2 bg-blue-600 rounded-full"></span>
+                                        </a>
+                                    </template>
+
+                                    <!-- Empty State -->
+                                    <div x-show="notifications.length === 0" class="px-4 py-8 text-center text-gray-500 text-sm">
+                                        No notifications yet
+                                    </div>
                                 </div>
-                            </x-dropdown-link>
 
-                            <x-dropdown-link href="#" class="flex items-start py-3">
-                                <div class="flex-1">
-                                    <p class="text-sm font-medium text-gray-900">Task completed</p>
-                                    <p class="text-xs text-gray-500 mt-1">3 hours ago</p>
-                                </div>
-                            </x-dropdown-link>
+                                <div class="border-t border-gray-200"></div>
 
-                            <div class="border-t border-gray-200"></div>
-
-                            <x-dropdown-link href="#" class="text-center text-sm text-blue-600 hover:text-blue-500">
-                                {{ __('View All Notifications') }}
-                            </x-dropdown-link>
+                                <a href="#" class="block text-center px-4 py-2 text-sm text-blue-600 hover:text-blue-500 hover:bg-gray-50">
+                                    {{ __('View All Notifications') }}
+                                </a>
+                            </div> 
                         </x-slot>
                     </x-dropdown>
                 </div>
@@ -175,17 +185,61 @@
             </div>
 
             <div class="mt-4 space-y-1">
-                <!-- Notifications for mobile -->
-                <x-responsive-nav-link href="#" class="flex items-center justify-between">
-                    <div class="flex items-center">
-                        <svg class="w-5 h-5 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
-                        </svg>
-                        {{ __('Notifications') }}
-                    </div>
-                    <span class="inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">3</span>
-                </x-responsive-nav-link>
+                <!-- Notification Button -->
+                <div class="ms-3 relative" x-data="notificationHandler">
+                    <x-dropdown align="right" width="128">
+                        <x-slot name="trigger">
+                            <button class="relative inline-flex items-center p-2 text-gray-400 bg-white hover:text-gray-500 focus:outline-none focus:text-gray-500 transition duration-150 ease-in-out">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                                </svg>
+                                <span x-show="unreadCount > 0" 
+                                    x-text="unreadCount" 
+                                    class="absolute -top-0.5 -right-0.5 inline-flex items-center justify-center px-1.5 py-0.5 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">
+                                </span>
+                            </button>
+                        </x-slot>
 
+                        <x-slot name="content">
+                            <!-- Notification Header -->
+                            <div class="flex items-center justify-between px-4 py-2 text-xs text-gray-400 border-b border-gray-200">
+                                <span>{{ __('Notifications') }}</span>
+                                <button @click="markAllRead()" 
+                                        x-show="unreadCount > 0" 
+                                        class="text-blue-600 hover:text-blue-500 text-xs">
+                                    Mark all read
+                                </button>
+                            </div>
+
+                            <!-- Notifications List -->
+                            <div class="max-h-96 overflow-y-auto">
+                                <template x-for="notification in notifications" :key="notification.id">
+                                    <a :href="'#'" 
+                                    @click="markAsRead(notification.id)"
+                                    class="flex items-start py-3 px-4 hover:bg-gray-50 border-b border-gray-100"
+                                    :class="{ 'bg-blue-50': !notification.is_read }">
+                                        <div class="flex-1">
+                                            <p class="text-sm font-medium text-gray-900" x-text="notification.subject"></p>
+                                            <p class="text-xs text-gray-500 mt-1" x-text="notification.message"></p>
+                                            <p class="text-xs text-gray-400 mt-1" x-text="formatTime(notification.created_at)"></p>
+                                        </div>
+                                        <span x-show="!notification.is_read" class="ml-2 w-2 h-2 bg-blue-600 rounded-full"></span>
+                                    </a>
+                                </template>
+
+                                <div x-show="notifications.length === 0" class="px-4 py-8 text-center text-gray-500 text-sm">
+                                    No notifications yet
+                                </div>
+                            </div>
+
+                            <div class="border-t border-gray-200"></div>
+
+                            <a href="#" class="block text-center px-4 py-2 text-sm text-blue-600 hover:text-blue-500 hover:bg-gray-50">
+                                {{ __('View All Notifications') }}
+                            </a>
+                        </x-slot>
+                    </x-dropdown>
+                </div>
                 <!-- Language for mobile -->
                 <x-responsive-nav-link href="#" class="flex items-center">
                     <svg class="w-5 h-5 mr-3" viewBox="0 0 24 24" fill="none">
@@ -221,7 +275,6 @@
     </div>
 </nav>
 <script>
-  // Update date/time every second
   function updateDateTime() {
     const now = new Date();
     const options = { 
@@ -242,25 +295,4 @@
   // Update every second
   setInterval(updateDateTime, 1000);
 
-  // If using Vue 3 in Jetstream, you might want to use this instead:
-  // import { onMounted, onUnmounted } from 'vue';
-  //
-  // export default {
-  //   setup() {
-  //     let interval;
-  //     
-  //     const updateDateTime = () => {
-  //       // same function as above
-  //     };
-  //     
-  //     onMounted(() => {
-  //       updateDateTime();
-  //       interval = setInterval(updateDateTime, 1000);
-  //     });
-  //     
-  //     onUnmounted(() => {
-  //       clearInterval(interval);
-  //     });
-  //   }
-  // }
 </script>

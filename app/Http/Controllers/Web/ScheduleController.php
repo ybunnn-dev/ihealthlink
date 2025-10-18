@@ -9,6 +9,9 @@ use App\Models\Schedules;
 use App\Models\DailyActivities;
 use App\Models\ActivityIcons;
 use App\Models\ScheduleAssignments;
+use App\Models\Personnel;  
+use App\Models\Notification;  
+use App\Services\Notifications\FireBase;  
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 
@@ -32,19 +35,10 @@ class ScheduleController extends Controller
                 ])
                 ->get();
 
-            // Detailed logging with user info
-            Log::info('=== Schedules Data ===');
-            Log::info('Midwife ID: ' . $midwife->id);
-            Log::info('Barangay ID: ' . $midwife->brgy_id);
-            Log::info('Total schedules found: ' . $schedules->count());
-            
 
             $dailyActivities = DailyActivities::where('brgy_id', $midwife->brgy_id)
                 ->with('icon')
                 ->get();
-                
-            Log::info('=== Daily Activities ===');
-            Log::info('Total activities: ' . $dailyActivities->count());
         } else {
             Log::warning('No midwife found for user ID: ' . auth()->id());
         }
@@ -109,14 +103,69 @@ class ScheduleController extends Controller
             'added_by' => auth()->id(),
         ]);
 
+        $this->notifyBarangayPersonnel($midwife->brgy_id, $schedule);
+
         return response()->json([
             'result' => 'success',
-            'message' => 'Schedule created successfully',
+            'message' => 'Schedule created successfully and notifications sent',
             'data' => [
                 'schedule' => $schedule,
                 'bhws' => $validated['bhws'] ?? []
             ]
         ]);
+    }
+
+    private function notifyBarangayPersonnel($brgyId, $schedule)
+    {
+        // Get all active personnel in this barangay
+        $personnel = Personnel::where('brgy_id', $brgyId)
+            ->where('status', 'active')
+            ->with('user')
+            ->get();
+
+        // Format the date and time for the notification
+        $scheduleDate = Carbon::parse($schedule->date)->format('F d, Y');
+        $scheduleTime = Carbon::parse($schedule->time)->format('h:i A');
+
+        $notificationSubject = 'New Activity: ' . $schedule->activity;
+        $notificationMessage = "A new activity '{$schedule->activity}' has been scheduled for {$scheduleDate} at {$scheduleTime}. Venue: {$schedule->venue}";
+
+        $notifiedCount = 0;
+
+        foreach ($personnel as $person) {
+            if ($person->user) {
+                // Create notification in database (shows in UI bell icon)
+                Notification::create([
+                    'user_id' => $person->user->id,
+                    'subject' => $notificationSubject,
+                    'message' => $notificationMessage,
+                    'module_id' => $schedule->id,
+                    'is_read' => false
+                ]);
+
+                // Send push notification if user has FCM token
+                if ($person->user->fcm_token) {
+                    try {
+                        FireBase::send(
+                            $notificationSubject,
+                            $notificationMessage,
+                            [$person->user->fcm_token],
+                            [
+                                'schedule_id' => (string)$schedule->id,
+                                'type' => 'new_schedule',
+                                'date' => (string)$schedule->date,
+                                'time' => (string)$schedule->time
+                            ]
+                        );
+                        $notifiedCount++;
+                    } catch (\Exception $e) {
+                        Log::error('FCM Error for user ' . $person->user->id . ': ' . $e->getMessage());
+                    }
+                }
+            }
+        }
+
+        Log::info("Schedule {$schedule->id} created. Notified {$notifiedCount} personnel in barangay {$brgyId}");
     }
 
     public function edit(Request $request, $id)

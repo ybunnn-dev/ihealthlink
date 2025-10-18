@@ -88,4 +88,10 @@ Route::middleware(['auth:sanctum',
     Route::get('/barangay/medicines/get', [MedicineController::class, 'getMedicines']);
 
     Route::post('/barangay/health-program/consultation/update', [ConsultationController::class, 'updateConsultation']);
+
+    Route::patch('/firebase/token', [App\Http\Controllers\FirebaseController::class, 'updateToken'])
+    ->name('firebase.token')
+    ->middleware('auth');
+
+
 });

@@ -11,7 +11,14 @@ $alignmentClasses = match ($align) {
 $width = match ($width) {
     '48' => 'w-48',
     '60' => 'w-60',
-    default => 'w-48',
+    '64' => 'w-64',
+    '72' => 'w-72',
+    '80' => 'w-80',
+    '96' => 'w-96',
+    '128' => 'w-[32rem]',  // ✅ Added support for 128
+    '160' => 'w-[40rem]',
+    '192' => 'w-[48rem]',
+    default => $width,  // ✅ Pass through custom values
 };
 @endphp
 

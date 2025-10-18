@@ -1,6 +1,7 @@
 import './bootstrap';
 import Alpine from 'alpinejs';
 import sideMenu from './components/side-menu-bhc.js';
+import notificationHandler from './notification.js';
 
 import 'flowbite';
 import 'flowbite-datepicker';
@@ -155,6 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // Initialize Alpine.js
 document.addEventListener('alpine:init', () => {
   Alpine.data('sideMenu', sideMenu);
+  Alpine.data('notificationHandler', notificationHandler); 
 });
 
 Alpine.start();

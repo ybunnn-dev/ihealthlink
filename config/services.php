@@ -34,5 +34,14 @@ return [
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
-
+    'firebase' => [
+        'credentials' => storage_path(env('FIREBASE_CREDENTIALS')),
+        'project_id' => env('FIREBASE_PROJECT_ID'),
+        'api_key' => env('VITE_FIREBASE_API_KEY'),
+        'auth_domain' => env('VITE_FIREBASE_AUTH_DOMAIN'),
+        'storage_bucket' => env('VITE_FIREBASE_STORAGE_BUCKET'),
+        'messaging_sender_id' => env('VITE_FIREBASE_MESSAGING_SENDER_ID'),
+        'app_id' => env('VITE_FIREBASE_APP_ID'),
+        
+    ],
 ];

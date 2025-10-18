@@ -24,6 +24,8 @@ use App\Http\Controllers\Web\ConsultationController;
 use App\Http\Controllers\Web\MaternalExport;
 use App\Http\Controllers\Web\ChildcareController;
 use App\Http\Controllers\Web\BarangayLogs;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\FirebaseController;
 
 
 Route::middleware('guest')->group(function () {
@@ -118,6 +120,7 @@ Route::middleware([
 
 });
 
+
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
@@ -156,7 +159,19 @@ Route::middleware([
     'midwife.role4',
     'active',
 ])->group(function () {
+    Route::get('/firebase-messaging-sw.js', function () {
+        return response()->view('firebase-messaging-sw')
+            ->header('Content-Type', 'application/javascript')
+            ->header('Service-Worker-Allowed', '/');
+    });
 
+     Route::patch('/firebase/token', [FirebaseController::class, 'updateToken'])
+        ->name('firebase.token');
+
+    Route::get('/notifications', [App\Http\Controllers\NotificationController::class, 'index']);
+    Route::patch('/notifications/{id}/read', [App\Http\Controllers\NotificationController::class, 'markAsRead']);
+    Route::patch('/notifications/read-all', [App\Http\Controllers\NotificationController::class, 'markAllAsRead']);
+    Route::post('/notifications/send', [App\Http\Controllers\NotificationController::class, 'send']);
 
      Route::get('barangay/{barangay}/dashboard', [DashboardController::class, 'index'])
              ->name('midwife.dashboard');

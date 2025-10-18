@@ -24,7 +24,7 @@ class DashboardController extends Controller
 
         $schedules = Schedules::where('brgy_id', $midwife->brgy_id)
                                             ->where('status', 'active')
-                                            ->with('assignedBHWs', 'healthProgram', 'barangay')
+                                            ->with('healthProgram', 'barangay')
                                             ->get();
 
         // Resident statistics
