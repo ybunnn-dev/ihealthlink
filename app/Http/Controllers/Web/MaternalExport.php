@@ -13,6 +13,18 @@ class MaternalExport extends Controller
      */
     public function exportIndividual(Request $request)
     {
+        $user = auth()->user();
+
+        // Determine personnel: BHW with role 4 or Midwife
+        if ($user->bhwWeb && $user->bhwWeb->role_id == 4) {
+            $personnel = $user->bhwWeb;
+        } else {
+            $personnel = $user->midwife;
+        }
+
+        if (!$personnel) {
+            abort(403, 'Unauthorized access.');
+        }
         // Get all the data sent from the frontend
         $data = $request->all();
 

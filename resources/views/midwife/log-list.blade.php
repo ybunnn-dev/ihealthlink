@@ -102,7 +102,7 @@
                                                 {{-- The data-id attribute now holds the log's ID --}}
                                                 <button
                                                 data-id="{{ $log->id }}" 
-                                                class="text-white bg-mainblue hover:bg-blue-700 font-medium rounded-lg text-sm px-4 py-2 view-log-btn">
+                                                class="text-white bg-mainblue hover:bg-blue-700 font-medium rounded-lg text-sm px-4 py-1 view-log-btn">
                                                 View
                                                 </button> 
                                             </td>

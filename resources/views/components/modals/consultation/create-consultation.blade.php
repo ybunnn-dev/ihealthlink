@@ -20,18 +20,6 @@
                             <label for="consultation_date" class="block mb-2 text-sm font-medium text-main_font">Consultation Date</label>
                             <input type="date" name="consultation_date" id="consultation_date" class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" value="{{ date('Y-m-d') }}" required>
                         </div>
-
-                        <!-- Father's Name -->
-                        <div>
-                            <label for="father_name" class="block mb-2 text-sm font-medium text-main_font">Father's Name</label>
-                            <input type="text" name="father_name" id="father_name" class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Juan Dela Cruz">
-                        </div>
-
-                        <!-- Mother's Name -->
-                        <div>
-                            <label for="mother_name" class="block mb-2 text-sm font-medium text-main_font">Mother's Name</label>
-                            <input type="text" name="mother_name" id="mother_name" class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Maria Dela Cruz">
-                        </div>
                         
                         <!-- Chief Complaint -->
                         <div class="md:col-span-2">
@@ -69,10 +57,6 @@
                                 <label for="rr" class="block mb-2 text-sm font-medium text-main_font">Resp. Rate</label>
                                 <input type="number" name="rr" id="rr" class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                             </div>
-                            <div>
-                                <label for="birthweight" class="block mb-2 text-sm font-medium text-main_font">Birth Weight (kg)</label>
-                                <input type="number" step="0.1" name="birthweight" id="birthweight" class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                            </div>
                             <div class="col-span-2">
                                 <label class="block mb-2 text-sm font-medium text-main_font">Blood Pressure</label>
                                 <div class="flex items-center gap-2">
@@ -84,15 +68,8 @@
                         </div>
 
                         <hr class="md:col-span-2 my-2"/>
-
-                        <!-- PhilHealth Member Checkbox -->
-                        <div class="flex items-center">
-                            <input id="is_philhealth" name="is_philhealth" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
-                            <label for="is_philhealth" class="ms-2 text-sm font-medium text-main_font">PhilHealth Member</label>
-                        </div>
-                        
                         <!-- Distribute Medicine Button -->
-                        <div class="flex justify-end">
+                        <div class="flex justify-start">
                             <button id="distributeMedicineBtn" type="button" class="text-white bg-maingreen hover:bg-green-700 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Distribute Medicine</button>
                         </div>
                     </div>

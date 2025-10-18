@@ -53,6 +53,18 @@ class MedicineController extends Controller
 
     public function show($id) // Show specific medicine details
     {
+        $user = auth()->user();
+
+        // Determine personnel: BHW with role 4 or Midwife
+        if ($user->bhwWeb && $user->bhwWeb->role_id == 4) {
+            $personnel = $user->bhwWeb;
+        } else {
+            $personnel = $user->midwife;
+        }
+
+        if (!$personnel) {
+            abort(403, 'Unauthorized access.');
+        }
         $medicine = Medicine::with(['inventories.addedBy'])->findOrFail($id);
 
         return view('midwife.spec-medicine', [
@@ -125,6 +137,18 @@ class MedicineController extends Controller
     }
     public function updateMedicine(Request $request, $id)
     {
+        $user = auth()->user();
+
+        // Determine personnel: BHW with role 4 or Midwife
+        if ($user->bhwWeb && $user->bhwWeb->role_id == 4) {
+            $personnel = $user->bhwWeb;
+        } else {
+            $personnel = $user->midwife;
+        }
+
+        if (!$personnel) {
+            abort(403, 'Unauthorized access.');
+        }
         // Validate input (optional but good practice)
         $validated = $request->validate([
             'medicine_name' => 'required|string|max:255',
@@ -148,6 +172,19 @@ class MedicineController extends Controller
     }
     public function delete($id, Request $request)
     {
+        $user = auth()->user();
+
+        // Determine personnel: BHW with role 4 or Midwife
+        if ($user->bhwWeb && $user->bhwWeb->role_id == 4) {
+            $personnel = $user->bhwWeb;
+        } else {
+            $personnel = $user->midwife;
+        }
+
+        if (!$personnel) {
+            abort(403, 'Unauthorized access.');
+        }
+        
         $medicine = Medicine::find($id);
 
         if (!$medicine) {

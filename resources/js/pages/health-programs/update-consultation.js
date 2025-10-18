@@ -7,8 +7,6 @@ const consultationModalSubtitle = document.getElementById('consultation-modal-su
 let currentConsultationId = null;
 // Form Input Fields
 const consultationDate = document.getElementById('consultation_date');
-const fatherName = document.getElementById('father_name');
-const motherName = document.getElementById('mother_name');
 const chiefComplaint = document.getElementById('chief_complaint');
 const treatment = document.getElementById('treatment');
 const weight = document.getElementById('weight');
@@ -16,10 +14,9 @@ const height = document.getElementById('height');
 const temperature = document.getElementById('temperature');
 const pr = document.getElementById('pr');
 const rr = document.getElementById('rr');
-const birthweight = document.getElementById('birthweight');
 const bpSystolic = document.getElementById('bp_systolic');
 const bpDiastolic = document.getElementById('bp_diastolic');
-const isPhilhealth = document.getElementById('is_philhealth'); 
+
 
 const successModalEl = document.getElementById('success-modal');
 const successMesageHeader = document.getElementById('success-msg-head');
@@ -342,8 +339,6 @@ updateButtons.forEach(button => {
 
             if (consultation) {
                 // This part will now work correctly
-                fatherName.value = consultation.father_name || '';
-                motherName.value = consultation.mother_name || '';
                 chiefComplaint.value = consultation.chief_complaint || '';
                 treatment.value = consultation.treatment || '';
                 weight.value = consultation.weight || '';
@@ -351,12 +346,8 @@ updateButtons.forEach(button => {
                 temperature.value = consultation.temperature || '';
                 pr.value = consultation.pr || '';
                 rr.value = consultation.rr || '';
-                birthweight.value = consultation.birthweight || '';
                 bpSystolic.value = consultation.bp_systolic || '';
                 bpDiastolic.value = consultation.bp_diastolic || '';
-                
-                // Since `is_philhealth` is a boolean (false), you can assign it directly
-                isPhilhealth.checked = consultation.is_philhealth;
             }
             
             createConsultationModal.show();
@@ -435,8 +426,6 @@ saveConsultationBtn.addEventListener('click', function(event) {
     payload = {
         consultation_id: currentConsultationId,
         consultation_date: consultationDate.value || null,
-        father_name: fatherName.value || '',
-        mother_name: motherName.value || '',
         chief_complaint: chiefComplaint.value || '',
         treatment: treatment.value || '',
         weight: parseFloat(weight.value) || '',
@@ -444,10 +433,8 @@ saveConsultationBtn.addEventListener('click', function(event) {
         temperature: parseFloat(temperature.value) || '',
         pr: parseInt(pr.value) || '',
         rr: parseInt(rr.value) || '',
-        birthweight: parseInt(birthweight.value) || '',
         bp_systolic: parseInt(bpSystolic.value) || '',
         bp_diastolic: parseInt(bpDiastolic.value) || '',
-        is_philhealth: parseInt(isPhilhealth.checked) ? 1 : 0,
         distributed_medicines: distributedMedicines 
     };
 

@@ -42,7 +42,7 @@ class BarangayLogs extends Controller
         $activityLogs = ActivityLog::whereIn('user_id', $userIds)
             ->with('user') // just the user relation
             ->latest()
-            ->get();
+            ->paginate(7);
 
         // Return the full user object for each activity
         $logs = $activityLogs->map(function ($log) {
@@ -54,7 +54,6 @@ class BarangayLogs extends Controller
             ];
         });
 
-        \Log::info($logs);
         return view('midwife.log-list', ['activityLogs' => $logs]);
     }
 

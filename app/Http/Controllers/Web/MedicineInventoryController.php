@@ -12,6 +12,19 @@ class MedicineInventoryController extends Controller
 {
     public function store(Request $request, $id)
     {
+        $user = auth()->user();
+
+        // Determine personnel: BHW with role 4 or Midwife
+        if ($user->bhwWeb && $user->bhwWeb->role_id == 4) {
+            $personnel = $user->bhwWeb;
+        } else {
+            $personnel = $user->midwife;
+        }
+
+        if (!$personnel) {
+            abort(403, 'Unauthorized access.');
+        }
+        
         $medicine = Medicine::findOrFail($id);
 
         // Validate input

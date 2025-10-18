@@ -25,6 +25,19 @@ class ConsultationController extends Controller
 {
     public function getConsultation($id)
     {
+        $user = auth()->user();
+
+        // Determine personnel: BHW with role 4 or Midwife
+        if ($user->bhwWeb && $user->bhwWeb->role_id == 4) {
+            $personnel = $user->bhwWeb;
+        } else {
+            $personnel = $user->midwife;
+        }
+
+        if (!$personnel) {
+            abort(403, 'Unauthorized access.');
+        }
+
         $consultation = Consultation::with([
             'consultationData',
             'medicineDistributions.medicine',
@@ -48,6 +61,17 @@ class ConsultationController extends Controller
 
     public function store(Request $request)
     {
+        $user = auth()->user();
+
+        if ($user->bhwWeb && $user->bhwWeb->role_id == 4) {
+            $personnel = $user->bhwWeb;
+        } else {
+            $personnel = $user->midwife;
+        }
+
+        if (!$personnel) {
+            abort(403, 'Unauthorized access.');
+        }
         $payload = $request->all();
 
         // 1. Find consultation
@@ -66,12 +90,8 @@ class ConsultationController extends Controller
         ConsultationData::updateOrCreate(
             ['consultation_id' => $consultation->id],
             [
-                'father_name' => $payload['father_name'],
-                'mother_name' => $payload['mother_name'],
-                'is_philhealth' => $payload['is_philhealth'],
                 'chief_complaint' => $payload['chief_complaint'],
                 'treatment' => $payload['treatment'],
-                'birthweight' => $payload['birthweight'],
                 'weight' => $payload['weight'],
                 'height' => $payload['height'],
                 'bp_systolic' => $payload['bp_systolic'],

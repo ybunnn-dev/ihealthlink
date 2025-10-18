@@ -189,4 +189,59 @@ class MedicineController extends Controller
             'inventories' => $medicine->inventories
         ]);
     }
+
+    public function getMedicines()
+    {
+        $user = Auth::user();
+
+        $personnel = $user->bhw ?? $user->bhwWeb ?? $user->midwife;
+
+        if (!$personnel) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'No associated personnel found for this user.'
+            ], 404);
+        }
+      
+        $brgyId = $personnel->brgy_id;
+
+        if (!$brgyId) {
+            return response()->json(['message' => 'User is not associated with a barangay.'], 403);
+        }
+
+        // Fetch medicines only for this barangay
+        $medicines = Medicine::with(['inventories'])
+            ->where('brgy_id', $brgyId)
+            ->where('status', 'active')
+            ->orderBy('id', 'asc')
+            ->get();
+
+        // Set threshold (2 months from now)
+        $thresholdDate = Carbon::now()->addMonths(2);
+
+        $medicinesWithStock = $medicines->map(function ($medicine) use ($thresholdDate) {
+            $remainingStock = $medicine->inventories
+                ->filter(function ($inventory) use ($thresholdDate) {
+                    // Only include stocks expiring more than 2 months from now
+                    return Carbon::parse($inventory->expiry_date)->greaterThan($thresholdDate);
+                })
+                ->sum('stock');
+
+            // Add computed stock count
+            $medicine->remaining_stock = $remainingStock;
+
+            // Remove inventories to reduce payload
+            unset($medicine->inventories);
+
+            return $medicine;
+        })
+        // Only include medicines that still have stock
+        ->filter(function ($medicine) {
+            return $medicine->remaining_stock > 0;
+        })
+        // Reset array keys
+        ->values();
+
+        return response()->json($medicinesWithStock);
+    }
 }

@@ -15,6 +15,7 @@ use App\Http\Controllers\Mobile\UserManualController;
 use App\Http\Controllers\Mobile\ProfileController;
 use App\Http\Controllers\Mobile\HealthProgramController;
 use App\Http\Controllers\Mobile\PreloadController;
+use App\Http\Controllers\Mobile\ConsultationController;
 
 Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:login'); ;
 
@@ -78,10 +79,13 @@ Route::middleware(['auth:sanctum',
 
     Route::get('/preload', [PreloadController::class, 'index']);
 
-    Route::post('barangay/household/store', [HouseholdController::class, 'store']);
+    Route::post('/barangay/household/store', [HouseholdController::class, 'store']);
 
-    Route::post('barangay/family/store', [FamilyController::class, 'store']);
+    Route::post('/barangay/family/store', [FamilyController::class, 'store']);
 
-    Route::get('barangay/household/show/{household}', [HouseholdController::class, 'show']);
+    Route::get('/barangay/household/show/{household}', [HouseholdController::class, 'show']);
 
+    Route::get('/barangay/medicines/get', [MedicineController::class, 'getMedicines']);
+
+    Route::post('/barangay/health-program/consultation/update', [ConsultationController::class, 'updateConsultation']);
 });
