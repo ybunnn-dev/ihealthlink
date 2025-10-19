@@ -152,6 +152,10 @@
                                             </svg>
                                             Enroll Resident
                                         </button>
+                                    @elseif($healthProgram->category === 'philpen_tcl')
+                                        <button type="button" id="createNewPhilpen" class="w-full h-[2.375rem] text-white bg-mainblue hover:bg-blue-700 font-medium rounded-lg text-sm px-3 flex items-center justify-center gap-2">
+                                            New PhilPEN
+                                        </button>
                                     @else
                                         {{-- Show the default enroll button for all other cases --}}
                                         <button type="button" id="openEnrollModalBtn" class="w-full h-[2.375rem] text-white bg-mainblue hover:bg-blue-700 font-medium rounded-lg text-sm px-3 flex items-center justify-center gap-2">
@@ -163,16 +167,6 @@
                                             Enroll Resident
                                         </button>
                                         
-                                    @endif
-
-                                 
-                                </div>
-                                <div class="w-full xs:w-40 pt-5 xs:pt-0">
-                                     @if(optional(Auth::user())->role_id === 2 && $healthProgram->category === 'philpen_tcl')
-                                        {{-- your content here --}}
-                                        <button type="button" id="createNewPhilpen" class="w-full h-[2.375rem] text-white bg-mainblue hover:bg-blue-700 font-medium rounded-lg text-sm px-3 flex items-center justify-center gap-2">
-                                            New PhilPEN
-                                        </button>
                                     @endif
                                 </div>
                                 <x-hide-button />
@@ -280,6 +274,8 @@
         @include('components.modals.health-program.tcl-programs.enroll-maternity')
     @elseif ($healthProgram->category === 'child_healthcare_tcl')
         @include('components.modals.health-program.tcl-programs.enroll-child')
+    @elseif ($healthProgram->category === 'philpen_tcl')
+        @include('components.modals.health-program.tcl-programs.create-new-consultations')
     @else
         @include('components.modals.health-program.tcl-programs.enroll-family-planning')
     @endif

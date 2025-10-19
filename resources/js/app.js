@@ -102,6 +102,8 @@ document.addEventListener('DOMContentLoaded', () => {
       import('./pages/health-programs/enroll-child.js');
     }else if(programTypeDefine === 'family_planning_tcl'){
       import('./pages/health-programs/enroll-family-planning.js');
+    }else if(programTypeDefine === 'philpen_tcl'){
+      import('./pages/health-programs/create-philpen-consultation.js');
     }
     else{
       import('./pages/health-programs/enroll-resident.js');

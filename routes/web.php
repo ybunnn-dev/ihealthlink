@@ -26,7 +26,7 @@ use App\Http\Controllers\Web\ChildcareController;
 use App\Http\Controllers\Web\BarangayLogs;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\FirebaseController;
-
+use App\Http\Controllers\Web\PhilpenController;
 
 Route::middleware('guest')->group(function () {
     Route::get('/', function () {
@@ -148,6 +148,10 @@ Route::middleware([
     Route::get('/barangay/logs', [BarangayLogs::class, 'index'])->name('midwife.logs');
     
     Route::get('/midwife/bhws/{personnel}', [BHWController::class, 'show'])->name('midwife.bhws.show');
+
+    Route::get('/barangay/philpen/count/', [PhilpenController::class, 'countIncomplete']);
+
+    Route::post('/barangay/philpen/consultation/create', [PhilpenController::class, 'createNewScheds']);
 });
 
 Route::middleware([

@@ -20,7 +20,16 @@ class HouseholdController extends Controller
 {
    public function index()
     {
-        $personnel = Auth::user()->midwife;
+        $user = Auth::user();
+
+        $personnel = $user->bhwWeb ?? $user->midwife;
+
+        if (!$personnel) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'No associated personnel found for this user.'
+            ], 404);
+        }
 
         // Get barangay with its puroks
         $barangay = Barangay::with('puroks')->find($personnel->brgy_id);
@@ -41,7 +50,7 @@ class HouseholdController extends Controller
         $user = Auth::user();
 
         // Identify which type of personnel is logged in
-        $personnel = $user->bhw ?? $user->bhwWeb ?? $user->midwife;
+        $personnel = $user->bhwWeb ?? $user->midwife;
 
         if (!$personnel) {
             return response()->json([
@@ -125,7 +134,7 @@ class HouseholdController extends Controller
     {
         $user = Auth::user();
 
-        $personnel = $user->bhw ?? $user->bhwWeb ?? $user->midwife;
+        $personnel = $user->bhwWeb ?? $user->midwife;
 
         if (!$personnel) {
             return response()->json([
@@ -148,7 +157,16 @@ class HouseholdController extends Controller
     
     public function getHouseholdsJson(Request $request)
     {
-        $personnel = Auth::user()->midwife;
+        $user = Auth::user();
+
+        $personnel = $user->bhwWeb ?? $user->midwife;
+
+        if (!$personnel) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'No associated personnel found for this user.'
+            ], 404);
+        }
 
         // Get barangay with its puroks
         $barangay = Barangay::with('puroks')->find($personnel->brgy_id);

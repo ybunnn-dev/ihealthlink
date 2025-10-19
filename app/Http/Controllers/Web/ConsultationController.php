@@ -191,7 +191,7 @@ class ConsultationController extends Controller
 
             // 2. Create/Update Health Signs (Red Flags)
             HealthSigns::updateOrCreate(
-                ['resident_id' => $consultation->resident_id],
+                ['consultation_id' => $consultation->id],
                 [
                     'chest_pain' => $request->redFlags['chestPain'] ?? false,
                     'difficulty_in_breathing' => $request->redFlags['breathingDifficulty'] ?? false,
@@ -211,7 +211,7 @@ class ConsultationController extends Controller
 
             // 3. Create/Update Medical History
             ResidentMedicalHistory::updateOrCreate(
-                ['resident_id' => $consultation->resident_id],
+                ['consultation_id' => $consultation->id],
                 [
                     'hypertension' => $request->medicalHistory['hypertension'] ?? false,
                     'heart_diseases' => $request->medicalHistory['heartDiseases'] ?? false,
@@ -230,7 +230,7 @@ class ConsultationController extends Controller
 
             // 4. Create/Update Family History
             ResidentFamilyHistory::updateOrCreate(
-                ['resident_id' => $consultation->resident_id],
+                ['consultation_id' => $consultation->id],
                 [
                     'hypertension' => $request->familyHistory['hypertension'] ?? false,
                     'heart_diseases' => $request->familyHistory['heartDiseases'] ?? false,
@@ -251,7 +251,6 @@ class ConsultationController extends Controller
             NcdRiskFactor::updateOrCreate(
                 [
                     'consultation_id' => $consultation->id,
-                    'resident_id' => $consultation->resident_id
                 ],
                 [
                     'tobacco_use' => $ncdData['tobaccoStatus'] ?? null,
@@ -277,7 +276,7 @@ class ConsultationController extends Controller
             $copdSymptoms = $request->riskAssessment['copdSymptoms'];
 
             RiskAssessment::updateOrCreate(
-                ['resident_id' => $consultation->resident_id],
+                ['consultation_id' => $consultation->id],
                 [
                     'polyphagia' => $bloodSugar['symptoms']['polyphagia'] ?? false,
                     'polydipsia' => $bloodSugar['symptoms']['polydipsia'] ?? false,
@@ -316,6 +315,9 @@ class ConsultationController extends Controller
 
             \DB::commit();
 
+            $consultation->update([
+                'status' => 'completed'
+            ]);
             return response()->json([
                 'message' => 'Philpen record created successfully.',
                 'data' => [
