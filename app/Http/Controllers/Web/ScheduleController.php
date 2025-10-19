@@ -9,6 +9,7 @@ use App\Models\Schedules;
 use App\Models\DailyActivities;
 use App\Models\ActivityIcons;
 use App\Models\ScheduleAssignments;
+use App\Models\ActivityLog;
 use App\Models\Personnel;  
 use App\Models\Notification;  
 use App\Services\Notifications\FireBase;  
@@ -105,6 +106,12 @@ class ScheduleController extends Controller
 
         $this->notifyBarangayPersonnel($midwife->brgy_id, $schedule);
 
+         // Log the activity
+        ActivityLog::create([
+            'user_id'   => $user->id,
+            'module_id' => 6, // replace with correct module ID for households
+            'activity'  => 'Created a new schedule ' . $validated['activity']. '.',
+        ]);
         return response()->json([
             'result' => 'success',
             'message' => 'Schedule created successfully and notifications sent',
@@ -139,7 +146,7 @@ class ScheduleController extends Controller
                     'user_id' => $person->user->id,
                     'subject' => $notificationSubject,
                     'message' => $notificationMessage,
-                    'module_id' => $schedule->id,
+                    'module_id' => 6,
                     'is_read' => false
                 ]);
 
@@ -164,8 +171,6 @@ class ScheduleController extends Controller
                 }
             }
         }
-
-        Log::info("Schedule {$schedule->id} created. Notified {$notifiedCount} personnel in barangay {$brgyId}");
     }
 
     public function edit(Request $request, $id)
@@ -189,7 +194,13 @@ class ScheduleController extends Controller
 
         $schedule->save();
 
-
+         // Log the activity
+        ActivityLog::create([
+            'user_id'   => $user->id,
+            'module_id' => 6, // replace with correct module ID for households
+            'activity'  => 'Updated scheduled acitvity: ' . $validated['activity']. '.',
+        ]);
+        
         return response()->json([
             'success' => true,
             'message' => 'Schedule updated successfully',
@@ -210,6 +221,13 @@ class ScheduleController extends Controller
             'success' => true,
             'message' => 'Schedule marked as inactive',
             'data' => ['id' => $id]
+        ]);
+
+         // Log the activity
+        ActivityLog::create([
+            'user_id'   => $user->id,
+            'module_id' => 6, // replace with correct module ID for households
+            'activity'  => 'Deleted scheduled acitvity: ' . $validated['activity']. '.',
         ]);
     }
 }

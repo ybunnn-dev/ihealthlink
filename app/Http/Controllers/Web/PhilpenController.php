@@ -15,11 +15,15 @@ use App\Helpers\ProjectCrypt;
 use App\Models\ActivityLog;
 use App\Models\EnrolledResident;
 use App\Models\Consultation;
+use App\Models\Notification;  
+use App\Models\Personnel; 
+use App\Services\Notifications\FireBase;  
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 
 use Illuminate\Support\Facades\Auth;
-use Carbon\Carbon;
+
 
 class PhilpenController extends Controller
 {
@@ -114,10 +118,13 @@ class PhilpenController extends Controller
 
             DB::commit();
 
-            \Log::info('Scheduled consultation date:', [
-                'consultation_date' => $validated['consultation_date'],
-                'updated_consultations' => $updatedCount,
-                'new_consultations' => count($newConsultations)
+            $this->notifyBarangayPersonnel($brgyId);
+
+             // Log the activity
+            ActivityLog::create([
+                'user_id'   => $user->id,
+                'module_id' => 5, // replace with correct module ID for households
+                'activity'  => 'Created new PhilPEN scheduled consulations.',
             ]);
 
             return response()->json([
@@ -142,6 +149,48 @@ class PhilpenController extends Controller
                 'message' => 'Failed to create consultations.',
                 'error' => $e->getMessage()
             ], 500);
+        }
+    }
+
+    private function notifyBarangayPersonnel($brgyId)
+    {
+        // Get all active personnel in this barangay
+        $personnel = Personnel::where('brgy_id', $brgyId)
+            ->where('status', 'active')
+            ->with('user')
+            ->get();
+
+
+        $notificationSubject = 'New PhilPEN Consulations';
+        $notificationMessage = "A new scheduled activity for PhilPEN Risk Assessment has been created. Please download the new PhilPEN consultations.";
+
+        $notifiedCount = 0;
+
+        foreach ($personnel as $person) {
+            if ($person->user) {
+                // Create notification in database (shows in UI bell icon)
+                Notification::create([
+                    'user_id' => $person->user->id,
+                    'subject' => $notificationSubject,
+                    'message' => $notificationMessage,
+                    'module_id' => 5,
+                    'is_read' => false
+                ]);
+
+                // Send push notification if user has FCM token
+                if ($person->user->fcm_token) {
+                    try {
+                        FireBase::send(
+                            $notificationSubject,
+                            $notificationMessage,
+                            [$person->user->fcm_token]
+                        );
+                        $notifiedCount++;
+                    } catch (\Exception $e) {
+                        Log::error('FCM Error for user ' . $person->user->id . ': ' . $e->getMessage());
+                    }
+                }
+            }
         }
     }
     public function countIncomplete(){
