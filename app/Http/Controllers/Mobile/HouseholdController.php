@@ -103,11 +103,10 @@ class HouseholdController extends Controller
                 'status' => 'error',
                 'message' => 'No associated personnel found for this user.'
             ], 404);
-        }
+        }; 
 
-        $household = $household->load(['purok.barangay', 'families']); 
-
-        \Log::info($household);
+        $household = $household->load(['purok.barangay', 'families', 'head'])
+                            ->loadCount('families'); 
         
         return response()->json([
             'household' => $household,
