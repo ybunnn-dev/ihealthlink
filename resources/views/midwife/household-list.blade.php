@@ -125,7 +125,16 @@
                                     @php
                                         // Prepare the variables for easier use inside the template
                                         $householdIdString = str_pad($household->id, 3, '0', STR_PAD_LEFT);
-                                        $householdHead = 'n/a'; // Placeholder as in your original code
+
+                                        if ($household->head) {
+                                            $head = $household->head;
+                                            $middle = !empty($head->middleName) ? ' ' . strtoupper($head->middleName[0]) . '.' : ''; // Use middle initial
+                                            $suffix = !empty($head->suffix) ? ' ' . $head->suffix : '';
+                                            $householdHead = "{$head->firstName}{$middle} {$head->lastName}{$suffix}";
+                                        } else {
+                                            $householdHead = 'N/A';
+                                        }
+
                                         $purokName = $household->purok->name ?? 'No Purok';
                                         $dateAdded = $household->created_at->format('M d, Y');
                                         $dateUpdated = $household->updated_at->format('M d, Y');

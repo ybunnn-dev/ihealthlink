@@ -297,7 +297,7 @@ class BarangayController extends Controller
         $barangay->load('puroks');
 
         // Query for the current midwife assigned to this barangay
-        $midwife = Midwife::with('users')
+        $midwife = Midwife::with('user')
             ->where('brgy_id', $barangay->id)
             ->where('status', 'active') // optional filter
             ->first();

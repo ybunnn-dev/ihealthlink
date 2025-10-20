@@ -184,6 +184,8 @@ Route::middleware([
     'active',
 ])->group(function () {
     
+    Route::put('/barangay/household/update', [HouseholdController::class, 'update']);
+
     Route::post('/notifications/send', [App\Http\Controllers\NotificationController::class, 'send']);
 
      Route::get('barangay/{barangay}/dashboard', [DashboardController::class, 'index'])

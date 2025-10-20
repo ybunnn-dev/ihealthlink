@@ -18,7 +18,7 @@ use Illuminate\Validation\Rule;
 
 class HouseholdController extends Controller
 {
-   public function index()
+    public function index()
     {
         $user = Auth::user();
 
@@ -35,14 +35,122 @@ class HouseholdController extends Controller
         $barangay = Barangay::with('puroks')->find($personnel->brgy_id);
         $puroks = $barangay->puroks;
 
-        // Get households under those puroks
+        // Get households under those puroks with their head
         $purokIds = $puroks->pluck('id');
-        $households = Household::whereIn('purok_id', $purokIds)->get();
+        $households = Household::with('head') //  eager load head
+            ->whereIn('purok_id', $purokIds)
+            ->get();
 
         return view('midwife.household-list', [
-            'households' => $households, //this is the one that will be used to fill that table
+            'households' => $households, // includes head info
             'puroks'     => $puroks,
         ]);
+    }
+
+    public function update(Request $request){
+        $user = Auth::user();
+
+        // Identify which type of personnel is logged in
+        $personnel = $user->bhwWeb ?? $user->midwife;
+
+        if (!$personnel) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'No associated personnel found for this user.'
+            ], 404);
+        }
+
+        // Get barangay with its puroks
+        $barangay = Barangay::with('puroks')->find($personnel->brgy_id);
+
+        if (!$barangay) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Barangay not found for this personnel.'
+            ], 404);
+        }
+
+        $brgyId = $barangay->id;
+
+        // Merge metadata
+        $request->merge([
+            'updated_by' => $user->id,
+            'brgy_id' => $brgyId,
+        ]);
+
+        $validated = $request->validate([
+            'household_id' => 'required|exists:households,id',
+            'purok_id' => [
+                'required',
+                Rule::exists('puroks', 'id')->where(function ($query) use ($brgyId) {
+                    $query->where('brgy_id', $brgyId);
+                }),
+            ],
+            'water_source'   => 'nullable|string|max:255',
+            'sanitary'       => 'required|string|max:255',
+            'waste_disposal' => 'required|string|max:255',
+            'updated_by'     => 'required|exists:users,id',
+            'brgy_id'        => 'required|exists:barangays,id',
+        ]);
+
+        // Find the household to update
+        $household = Household::find($validated['household_id']);
+
+        if (!$household) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Household not found.'
+            ], 404);
+        }
+
+        // Find the most recent active history record and set it to inactive
+        $previousHistory = HouseholdResidenceHistory::where('household_id', $household->id)
+            ->where('status', 'active')
+            ->latest()
+            ->first();
+
+        if ($previousHistory) {
+            $previousHistory->update(['status' => 'inactive']);
+        }
+
+        // Update household
+        $household->update([
+            'purok_id'        => $validated['purok_id'],
+            'sanitary_toilet' => $validated['sanitary'],
+            'water_source'    => $validated['water_source'],
+            'waste_disposal'  => $validated['waste_disposal'],
+            'status'          => 'active',
+        ]);
+
+        // Refresh the household to get updated values
+        $household->refresh();
+
+        // Create new household residence history using the updated household data
+        $history = HouseholdResidenceHistory::create([
+            'household_id'         => $household->id,
+            'head_id'              => $household->head_id,
+            'purok_id'        => $household->purok_id,
+            'water_source'         => $household->water_source,
+            'waste_disposal'       => $household->waste_disposal,
+            'sanitary_toilet'      => $household->sanitary_toilet,
+            'status'               => 'active',
+        ]);
+
+        // Get purok name for logging
+        $purok = Purok::find($household->purok_id);
+
+        // Log the activity
+        ActivityLog::create([
+            'user_id'   => $user->id,
+            'module_id' => 5, // replace with correct module ID for households
+            'activity'  => 'Updated household details in Purok ' . ucfirst($purok->name) . '.',
+        ]);
+
+        return response()->json([
+            'message'   => 'Household updated successfully!',
+            'household' => $household,
+            'history'   => $history,
+        ], 200);
     }
 
     public function store(Request $request)
@@ -143,14 +251,17 @@ class HouseholdController extends Controller
             ], 404);
         }
 
-        $household = $household->load(['purok', 'families']); 
+        // Load related data + count families
+        $household = $household->load(['purok', 'families', 'head'])
+                            ->loadCount('families'); // ✅ adds families_count attribute
 
         \Log::info($household);
-        
+
         return view('midwife.spec-household', [
             'household' => $household,
             'purok'     => $household->purok,
             'families'  => $household->families,
+            'familiesCount' => $household->families_count, // ✅ pass the count to view
         ]);
     }
 

@@ -16,6 +16,7 @@ use App\Http\Controllers\Mobile\ProfileController;
 use App\Http\Controllers\Mobile\HealthProgramController;
 use App\Http\Controllers\Mobile\PreloadController;
 use App\Http\Controllers\Mobile\ConsultationController;
+use App\Http\Controllers\Mobile\PhilpenController;
 
 Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:login'); ;
 
@@ -93,5 +94,11 @@ Route::middleware(['auth:sanctum',
     ->name('firebase.token')
     ->middleware('auth');
 
+    Route::get('/barangay/get/philpen', [PhilpenController::class, 'getLatestPhilpenData']);
 
+    Route::put('/barangay/household/update', [HouseholdController::class, 'update']);
+
+    Route::get('/barangay/household/get', [HouseholdController::class, 'householdGet']);
+
+    Route::put('/barangay/household/head/set', [HouseholdController::class, 'setHead']);
 });

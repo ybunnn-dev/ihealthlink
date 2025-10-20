@@ -47,6 +47,14 @@ class EnrolledResident extends Model
     {
         return $this->belongsTo(User::class, 'updated_by');
     }
+
+    public function latestPendingConsultation()
+    {
+        return $this->hasOne(Consultation::class, 'enrolled_resident_id')
+                    ->where('status', 'pending')
+                    ->latestOfMany();
+    }
+    
     public function consultations()
     {
         return $this->hasMany(Consultation::class, 'enrolled_resident_id');

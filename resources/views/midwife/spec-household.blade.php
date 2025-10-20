@@ -38,7 +38,7 @@
                             <button id="remove-med-btn" 
                                     type="button" 
                                     class="remove-medicine-btn col-span-1 px-5 py-3 text-sm font-medium text-mainblue bg-white border border-mainblue rounded-lg hover:bg-blue-50 focus:outline-none focus:ring-4 focus:ring-300">
-                                Remove
+                                Change Head
                             </button>
                         </div>
                     </div>
@@ -49,10 +49,22 @@
                             <p class="text-normal_font">{{ $purok->name }}</p>
 
                             <p class="font-semibold text-main_font">NUMBER OF FAMILIES:</p>
-                            <p class="text-normal_font">6</p>
+                            <p class="text-normal_font">{{ $household->families_count }}</p>
 
                             <p class="font-semibold text-main_font">HOUSEHOLD HEAD:</p>
-                            <p class="text-normal_font">Ron Peter Mortega</p>
+                            <p class="text-normal_font">
+                                @if ($household->head)
+                                    @php
+                                        $head = $household->head;
+                                        $middle = !empty($head->middleName) ? ' '. $head->middleName : '';
+                                        $suffix = !empty($head->suffix) ? ' ' . $head->suffix : '';
+                                        $fullName = "{$head->firstName}{$middle} {$head->lastName}{$suffix}";
+                                    @endphp
+                                    {{ $fullName }}
+                                @else
+                                    N/A
+                                @endif
+                            </p>
 
                             <p class="font-semibold text-main_font">INDIGENT:</p>
                             <p class="text-normal_font">{{ $household->is_indigent == 1 ? 'Yes' : 'No' }}</p>
@@ -90,6 +102,7 @@
                                 <!-- Flex container -->
                                 <div class="flex flex-col slg2:flex-row slg2:items-end gap-4 justify-end">  
                                     <!-- Add Household Button -->
+                                    
                                     <div class="w-full xs:w-40 pt-5 xs:pt-0">
                                         <button id="add-family-trigger" type="button" class="w-full h-[2.375rem] text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3">Add Family</button>
                                     </div>
@@ -103,7 +116,7 @@
                                                 FAMILY #
                                             </th>
                                             <th scope="col" class="px-6 py-3">
-                                                FAMILY HEAD
+                                                MEMBERS
                                             </th>
                                             <th scope="col" class="px-6 py-3">
                                                 4PS MEMBER
@@ -123,7 +136,7 @@
                                                     {{ $family->id }}
                                                 </th>
                                                 <td class="px-6 py-4">
-                                                    {{ $family->head ? $family->head->full_name : '—' }}
+                                                    yes members
                                                 </td>
                                                <td class="px-6 py-4">
                                                     @if($family->is_4ps)
