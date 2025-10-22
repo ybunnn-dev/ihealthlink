@@ -86,6 +86,17 @@ class Resident extends Model
      * This ensures that when models are converted to JSON (e.g., @json($residents)),
      * encrypted fields are properly decrypted for frontend consumption.
      */
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($resident) {
+            if (empty($resident->client_uuid)) {
+                $resident->client_uuid = Str::uuid()->toString();
+            }
+        });
+    }
     public function attributesToArray()
     {
         $attributes = parent::attributesToArray();

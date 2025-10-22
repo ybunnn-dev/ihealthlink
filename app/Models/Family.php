@@ -16,6 +16,7 @@ class Family extends Model
         'is_indigent',
         'is_iwas_gutom',
         'is_4ps',
+        'client_uuid',
     ];
 
     /*

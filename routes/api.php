@@ -105,4 +105,10 @@ Route::middleware(['auth:sanctum',
     Route::put('/barangay/family/update/{family}', [FamilyController::class, 'update']);
 
     Route::put('/barangay/resident/update/{id}', [ResidentController::class, 'updateResident']);
+
+    Route::post('/barangay/consultation/create', [ConsultationController::class, 'createConsultation']);
+
+    Route::post('/barangay/households/sync', [HouseholdController::class, 'storeOrUpdateHouseholdSync']);
+    Route::post('/barangay/families/sync', [FamilyController::class, 'storeOrUpdateFamilySync']);
+    Route::post('/barangay/residents/sync', [ResidentController::class, 'storeOrUpdateResidentSync']);
 });

@@ -13,6 +13,7 @@ use App\Models\Family;
 use App\Models\Purok;
 use App\Models\HouseholdResidenceHistory;
 use App\Models\ActivityLog;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
 
@@ -199,8 +200,9 @@ class HouseholdController extends Controller
             'brgy_id'        => 'required|exists:barangays,id',
         ]);
 
-        // Create household
+        // Create household with UUID
         $household = Household::create([
+            'client_uuid'     => Str::uuid()->toString(),  // ← Add UUID for sync
             'purok_id'        => $validated['purok_id'],
             'head_id'         => null, // will be assigned later
             'sanitary_toilet' => $validated['sanitary'],
@@ -211,13 +213,13 @@ class HouseholdController extends Controller
 
         // Create household residence history
         $history = HouseholdResidenceHistory::create([
-            'household_id'         => $household->id,
-            'head_id'              => null,
-            'purok_id'             => $validated['purok_id'],
-            'water_source'         => $validated['water_source'],
-            'waste_disposal'       => $validated['waste_disposal'],
-            'sanitary_toilet'      => $validated['sanitary'],
-            'status'               => 'active',
+            'household_id'    => $household->id,
+            'head_id'         => null,
+            'purok_id'        => $validated['purok_id'],
+            'water_source'    => $validated['water_source'],
+            'waste_disposal'  => $validated['waste_disposal'],
+            'sanitary_toilet' => $validated['sanitary'],
+            'status'          => 'active',
         ]);
 
         // Get purok name for logging
@@ -236,8 +238,6 @@ class HouseholdController extends Controller
             'history'   => $history,
         ], 201);
     }
-
-
     public function show(Household $household)
     {
         $user = Auth::user();

@@ -17,12 +17,8 @@ class ConsultationData extends Model
      */
     protected $fillable = [
         'consultation_id',
-        'father_name',
-        'mother_name',
-        'is_philhealth',
         'chief_complaint',
         'treatment',
-        'birthweight',
         'weight',
         'height',
         'bp_systolic',

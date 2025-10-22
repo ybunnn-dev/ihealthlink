@@ -11,6 +11,7 @@ use App\Models\Family;
 use App\Models\Purok;
 use App\Models\ActivityLog;
 use App\Models\HouseholdResidenceHistory;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
 class HouseholdController extends Controller
@@ -113,6 +114,10 @@ class HouseholdController extends Controller
             'purok'     => $household->purok,
             'families'  => $household->families,
         ]);
+    }
+
+    public function storeOrUpdateHouseholdSyc(Request $request){
+        //here
     }
 
     public function store(Request $request)
@@ -413,4 +418,128 @@ class HouseholdController extends Controller
             'household' => $household
         ], 200);
     }
+
+    public function storeOrUpdateHouseholdSync(Request $request)
+    {
+        $user = Auth::user();
+        $personnel = $user->bhw ?? $user->bhwWeb ?? $user->midwife;
+
+        if (!$personnel) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'No associated personnel found for this user.'
+            ], 404);
+        }
+
+        $barangay = Barangay::with('puroks')->find($personnel->brgy_id);
+
+        if (!$barangay) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Barangay not found for this personnel.'
+            ], 404);
+        }
+
+        $validated = $request->validate([
+            'households' => 'required|array',
+            'households.*.local_id' => 'required|integer',
+            'households.*.client_uuid' => 'required|string',
+            'households.*.purok_server_id' => 'required|exists:puroks,id',
+            'households.*.water_source' => 'nullable|string|max:255',
+            'households.*.sanitary_toilet' => 'required|string|max:255',
+            'households.*.waste_disposal' => 'required|string|max:255',
+            'households.*.is_iwas_gutom_enrolled' => 'nullable|integer',
+            'households.*.is_indigent' => 'nullable|integer',
+            'households.*.status' => 'required|string',
+            'households.*.updated_at' => 'required|string',
+        ]);
+
+        $syncedHouseholds = [];
+
+        DB::transaction(function () use ($validated, $user, $barangay, &$syncedHouseholds) {
+            $householdsToUpsert = [];
+
+            foreach ($validated['households'] as $householdData) {
+                // Check if household exists by client_uuid
+                $existingHousehold = Household::where('client_uuid', $householdData['client_uuid'])->first();
+
+                // Last Write Wins conflict resolution
+                if ($existingHousehold) {
+                    $serverUpdatedAt = Carbon::parse($existingHousehold->updated_at);
+                    $clientUpdatedAt = Carbon::parse($householdData['updated_at']);
+
+                    // Skip if server has newer data
+                    if ($serverUpdatedAt->greaterThan($clientUpdatedAt)) {
+                        $syncedHouseholds[] = [
+                            'local_id' => $householdData['local_id'],
+                            'server_id' => $existingHousehold->id,
+                            'updated_at' => $existingHousehold->updated_at->toIso8601String(),
+                        ];
+                        continue;
+                    }
+                }
+
+                $householdsToUpsert[] = [
+                    'client_uuid' => $householdData['client_uuid'],
+                    'purok_id' => $householdData['purok_server_id'],
+                    'water_source' => $householdData['water_source'],
+                    'waste_disposal' => $householdData['waste_disposal'],
+                    'sanitary_toilet' => $householdData['sanitary_toilet'],
+                    'is_iwas_gutom_enrolled' => $householdData['is_iwas_gutom_enrolled'] ?? 0,
+                    'is_indigent' => $householdData['is_indigent'] ?? 0,
+                    'status' => $householdData['status'],
+                    'updated_at' => $householdData['updated_at'],
+                    'created_at' => now(),
+                ];
+            }
+
+            // Perform bulk upsert
+            if (!empty($householdsToUpsert)) {
+                Household::upsert(
+                    $householdsToUpsert,
+                    ['client_uuid'], // Unique constraint
+                    ['purok_id', 'water_source', 'waste_disposal', 'sanitary_toilet', 
+                    'is_iwas_gutom_enrolled', 'is_indigent', 'status', 'updated_at'] // Columns to update
+                );
+            }
+
+            // Retrieve server IDs and map to local IDs
+            foreach ($validated['households'] as $householdData) {
+                $household = Household::where('client_uuid', $householdData['client_uuid'])->first();
+
+                if ($household) {
+                    $syncedHouseholds[] = [
+                        'local_id' => $householdData['local_id'],
+                        'server_id' => $household->id,
+                        'updated_at' => $household->updated_at->toIso8601String(),
+                    ];
+
+                    // Create history record
+                    HouseholdResidenceHistory::create([
+                        'household_id' => $household->id,
+                        'head_id' => $household->head_id,
+                        'purok_id' => $household->purok_id,
+                        'water_source' => $household->water_source,
+                        'waste_disposal' => $household->waste_disposal,
+                        'sanitary_toilet' => $household->sanitary_toilet,
+                        'status' => 'active',
+                    ]);
+
+                    // Log activity
+                    $purok = Purok::find($household->purok_id);
+                    ActivityLog::create([
+                        'user_id' => $user->id,
+                        'module_id' => 5,
+                        'activity' => 'Synced household in Purok ' . ucfirst($purok->name) . '.',
+                    ]);
+                }
+            }
+        });
+
+        return response()->json([
+            'message' => 'Households synced successfully!',
+            'households' => $syncedHouseholds,
+        ], 200);
+    }
+
 }

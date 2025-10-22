@@ -11,6 +11,7 @@ class Household extends Model
 
     protected $fillable = [
         'purok_id',
+        'client_uuid',
         'head_id',
         'sanitary_toilet',
         'water_source',
