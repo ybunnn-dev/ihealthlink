@@ -17,6 +17,7 @@ use App\Models\HealthProgram;
 use App\Helpers\ProjectCrypt;
 use App\Models\ActivityLog;
 use App\Models\EnrolledResident;
+use App\Models\BasicHealthRecord;
 
 class ResidentController extends Controller
 {  
@@ -63,7 +64,8 @@ class ResidentController extends Controller
             'contact_no'          => 'nullable|string|max:20',
             'birthdate'           => 'required|string',
             'family_id'           => 'required|integer',
-            'relationship_to_head'=> 'required|string|max:255',
+            'educational_attainment' => 'required|string|max:255',
+            'philhealth_no' => 'nullable|string|max:255',
             'civil_status'        => 'required|string|max:255',
             'religion'            => 'required|string|max:255',
             'ethnicity'           => 'required|string',
@@ -74,7 +76,6 @@ class ResidentController extends Controller
             'emergency_contact_no' => 'nullable|string|max:20',
             'is_solo_parent'      => 'boolean',
             'is_philhealth_member'=> 'boolean',
-            'years_of_residency'  => 'required|integer|min:0',
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -100,7 +101,8 @@ class ResidentController extends Controller
             'sex'                 => $request->sex ?? null,
             'contact_no'          => $validated['contact_no'] ?? null,
             'civil_status'        => $validated['civil_status'],
-            'family_relationship' => $validated['relationship_to_head'],
+            'educational_attainment' => $validated['educational_attainment'],
+            'philhealth_no' => $validated['philhealth_no'] ?? null,
             'is_pwd'              => $validated['is_pwd'] ?? false,
             'pwd_id'              => $validated['pwd_id'] ?? null,
             'is_indigenous'       => $validated['is_indigenous'] ?? false,
@@ -116,7 +118,6 @@ class ResidentController extends Controller
         $household = $resident->family->household ?? null;
         $purokId = $household->purok_id ?? null;
 
-
         // Create residence history
         ResidenceHistory::create([
             'resident_id' => $resident->id,
@@ -126,6 +127,21 @@ class ResidentController extends Controller
             'updated_at'  => now(),
         ]);
 
+        // Create empty basic health record
+        BasicHealthRecord::create([
+            'resident_id' => $resident->id,
+            'weight' => null,
+            'height' => null,
+            'weight_grams' => null,
+            'status' => 'alive',
+            'health_records' => null,
+            'waist_circumference' => null,
+            'systolic_pressure' => null,
+            'diastolic_pressure' => null,
+            'is_pregnant' => false,
+            'is_lactating' => false,
+        ]);
+
         // Calculate age and enroll in PhilPEN TCL if eligible
         $age = Carbon::parse($validated['birthdate'])->age;
         
@@ -133,7 +149,7 @@ class ResidentController extends Controller
             $this->enrollPhilpen($resident->id);
         }
 
-          // Log the activity
+        // Log the activity
         $residentName = trim($validated['first_name'] . ' ' . ($validated['middle_name'] ?? '') . ' ' . $validated['last_name'] . ' ' . ($validated['suffix'] ?? ''));
         $purokName = $household->purok->name ?? 'Unknown';
         
@@ -149,6 +165,7 @@ class ResidentController extends Controller
             'data' => $resident
         ]);
     }
+
 
     private function enrollPhilpen($residentId)
     {

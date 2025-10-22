@@ -10,6 +10,7 @@ use App\Models\Resident;
 use App\Models\ResidenceHistory;
 use App\Models\HealthSigns;
 use App\Models\ResidentMedicalHistory;
+use App\Models\BasicHealthRecord;
 use App\Models\ResidentFamilyHistory;
 use App\Models\Family;
 use App\Models\Household;
@@ -168,6 +169,20 @@ class ResidentController extends Controller
 
     public function addResident(Request $request)
     {
+        $user = Auth::user();
+        
+        // Determine personnel type (Midwife or BHW)
+        if ($user->bhwWeb && $user->bhwWeb->role_id == 4) {
+            $personnel = $user->bhwWeb;
+        } elseif ($user->bhw && $user->bhw->role_id == 3) {
+            $personnel = $user->bhw;
+        } else {
+            $personnel = $user->midwife;
+        }
+        
+        if (!$personnel) {
+            abort(403, 'Unauthorized access.');
+        }
         $rules = [
             'first_name'          => 'required|string|max:255',
             'last_name'           => 'required|string|max:255',
@@ -176,6 +191,8 @@ class ResidentController extends Controller
             'contact_no'          => 'nullable|string|max:20',
             'birthdate'           => 'required|string',
             'family_id'           => 'required|integer',
+            'educational_attainment' => 'required|string|max:255',
+            'philhealth_no' => 'nullable|string|max:255',
             'civil_status'        => 'required|string|max:255',
             'religion'            => 'required|string|max:255',
             'ethnicity'           => 'required|string',
@@ -200,7 +217,6 @@ class ResidentController extends Controller
 
         $validated = $validator->validated();
 
-        // Create resident
         $resident = Resident::create([
             'family_id'           => $validated['family_id'],
             'added_by'            => auth()->id(),
@@ -212,6 +228,8 @@ class ResidentController extends Controller
             'sex'                 => $request->sex ?? null,
             'contact_no'          => $validated['contact_no'] ?? null,
             'civil_status'        => $validated['civil_status'],
+            'educational_attainment' => $validated['educational_attainment'],
+            'philhealth_no' => $validated['philhealth_no'] ?? null,
             'is_pwd'              => $validated['is_pwd'] ?? false,
             'pwd_id'              => $validated['pwd_id'] ?? null,
             'is_indigenous'       => $validated['is_indigenous'] ?? false,
@@ -224,7 +242,6 @@ class ResidentController extends Controller
             'emergencyContactNo'  => $validated['emergency_contact_no'] ?? null,
         ]);
 
-        // Get the household of the family
         $household = $resident->family->household ?? null;
         $purokId = $household->purok_id ?? null;
 
@@ -237,7 +254,22 @@ class ResidentController extends Controller
             'updated_at'  => now(),
         ]);
 
-         // Calculate age and enroll in PhilPEN TCL if eligible
+        // Create empty basic health record
+        BasicHealthRecord::create([
+            'resident_id' => $resident->id,
+            'weight' => null,
+            'height' => null,
+            'weight_grams' => null,
+            'status' => 'alive',
+            'health_records' => null,
+            'waist_circumference' => null,
+            'systolic_pressure' => null,
+            'diastolic_pressure' => null,
+            'is_pregnant' => false,
+            'is_lactating' => false,
+        ]);
+
+        // Calculate age and enroll in PhilPEN TCL if eligible
         $age = Carbon::parse($validated['birthdate'])->age;
         
         if ($age >= 20 && $age <= 59) {
@@ -259,6 +291,102 @@ class ResidentController extends Controller
             'message' => 'Resident created successfully',
             'data' => $resident
         ]);
+    }
+
+    public function updateResident(Request $request, $id)
+    {
+        $user = Auth::user();
+        
+        // Determine personnel type (Midwife or BHW)
+        if ($user->bhwWeb && $user->bhwWeb->role_id == 4) {
+            $personnel = $user->bhwWeb;
+        } elseif ($user->bhw && $user->bhw->role_id == 3) {
+            $personnel = $user->bhw;
+        } else {
+            $personnel = $user->midwife;
+        }
+        
+        if (!$personnel) {
+            abort(403, 'Unauthorized access.');
+        }
+        
+        try {
+            // Find the resident
+            $resident = Resident::findOrFail($id);
+            
+            \Log::info('Resident found: ' . $resident->firstName . ' ' . $resident->lastName);
+            
+            // Map the incoming data to database columns
+            $updateData = [
+                'firstName' => $request->input('first_name'),
+                'lastName' => $request->input('last_name'),
+                'middleName' => $request->input('middle_name'),
+                'suffix' => $request->input('suffix'),
+                'contact_no' => $request->input('contact_no'),
+                'sex' => $request->input('sex'),
+                'birthdate' => $request->input('birthdate'),
+                'civil_status' => $request->input('civil_status'),
+                'religion' => $request->input('religion'),
+                'ethnicity' => $request->input('ethnicity'),
+                'employment_status' => $request->input('employment_status'),
+                'is_pwd' => $request->input('is_pwd') ? 1 : 0,
+                'pwd_id' => $request->input('pwd_id'),
+                'is_indigenous' => $request->input('is_indigenous') ? 1 : 0,
+                'if_solo_parent' => $request->input('is_solo_parent') ? 1 : 0,
+                'if_philhealth' => $request->input('is_philhealth_member') ? 1 : 0,
+                'philhealth_no' => $request->input('philhealth_no'),
+                'emergencyContactNo' => $request->input('emergency_contact_no'),
+                'educational_attainment' => $request->input('educational_attainment'),
+                'status' => $request->input('status'),
+            ];
+            
+            \Log::info('Mapped update data:', $updateData);
+            
+            // Update the resident
+            $resident->update($updateData);
+            
+            \Log::info('✅ Resident updated successfully');
+            
+            // Reload the resident with relationships
+            $resident->load(['family.household.purok', 'basicHealthRecord']);
+            
+            // ✅ Create activity log
+            $residentName = trim($resident->firstName . ' ' . ($resident->middleName ? $resident->middleName . ' ' : '') . $resident->lastName . ($resident->suffix ? ' ' . $resident->suffix : ''));
+            $purokName = $resident->family->household->purok->name ?? 'Unknown Purok';
+            
+            ActivityLog::create([
+                'user_id'   => auth()->id(),
+                'module_id' => 2, // Module ID for residents
+                'activity'  => 'Updated resident: ' . $residentName . ' in ' . ucfirst($purokName) . '.',
+            ]);
+            
+            \Log::info('Activity log created for: ' . $residentName);
+            \Log::info('================================');
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Resident updated successfully',
+                'resident' => $resident
+            ], 200);
+            
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            \Log::error('❌ Resident not found with ID: ' . $id);
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Resident not found'
+            ], 404);
+            
+        } catch (\Exception $e) {
+            \Log::error('❌ Error updating resident: ' . $e->getMessage());
+            \Log::error('Stack trace: ' . $e->getTraceAsString());
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to update resident',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
 

@@ -17,13 +17,9 @@ const residentAge = document.getElementById('residentAge');
 const familyIdHolder = document.getElementById('familyIdHolder');
 const chooseFamilyBtn = document.getElementById('familyDropdown'); // This is the 'Choose Family' button
 const familyIdStorage = document.getElementById('familyIdStorage'); // Hidden div for the selected family's ID
-const relationshipToHead = document.getElementById('relationshipToHead');
-const householdIdDisplay = document.getElementById('householdIdDisplay');
-const purokDisplay = document.getElementById('purokDisplay');
 
 // --- Section 4: Address & Residency ---
 const completeAddress = document.getElementById('completeAddress');
-const yearsOfResidency = document.getElementById('yearsOfResidency');
 
 // --- Section 5: Socio-Economic Status ---
 const civilStatus = document.getElementById('civilStatus');
@@ -38,7 +34,8 @@ const indigenousStatus = document.getElementById('indigenousStatus');
 const soloParentStatus = document.getElementById('soloParentStatus');
 const philhealthStatus = document.getElementById('philhealthStatus');
 const emergencyContactNo = document.getElementById('emergencyContactNo');
-
+const educAttainment = document.getElementById('educationAttainment');
+const philhealthNo = document.getElementById('philHealthNo');
 let isPurokFilterPopulated = false;
 
 // --- Footer Action Buttons ---
@@ -200,9 +197,6 @@ familyCardContainer.addEventListener('click', (event) => {
 confirmChooseFamilyBtn.addEventListener('click', () => {
     if (chosenFamily) {
         const familyHeadName = chosenFamily.head ? `${chosenFamily.head.firstName} ${chosenFamily.head.lastName}` : `FAM-${String(chosenFamily.id).padStart(3, '0')}`;
-        chooseFamilyBtn.textContent = `${familyHeadName}`;
-        householdIdDisplay.value = chosenFamily.household?.id ? `HH-${String(chosenFamily.household.id).padStart(3, '0')}` : 'N/A';
-        purokDisplay.value = chosenFamily.household?.purok?.name || 'N/A';
         familyIdStorage.textContent = chosenFamily.id;
         familyIdStorage.dispatchEvent(new Event('change', { bubbles: true }));
         completeAddress.value = `HH-${chosenFamily.household.id}, ${chosenFamily.purok.name}, ${chosenFamily.purok.barangay.name}, Daraga, Albay`;
@@ -222,7 +216,7 @@ cancelChooseFamilyBtn.addEventListener('click', () => {
 // --- Array of fields requiring validation (Suffix is excluded) ---
 const fieldsToValidate = [
     residentFirstName, residentLastName, residentMiddleName, residentBirthdate,
-    yearsOfResidency, relationshipToHead, residentSex, civilStatus, religion,
+    educAttainment, residentSex, civilStatus, religion,
     ethnicity, employmentStatus, pwdStatus, indigenousStatus, soloParentStatus, philhealthStatus
 ];
 
@@ -309,11 +303,10 @@ addResidentButton.addEventListener('click', function() {
 
         // Section 3: Household & Family
         family_id: familyIdStorage.textContent.trim(), // Get ID from the hidden div
-        relationship_to_head: relationshipToHead.value.trim(),
         
-        // Section 4: Address & Residency
-        years_of_residency: yearsOfResidency.value,
+        philhealth_no: philhealthNo.value.trim(),
 
+        educational_attainment: educAttainment.value,
         // Section 5: Socio-Economic Status
         civil_status: civilStatus.value,
         religion: religion.value,

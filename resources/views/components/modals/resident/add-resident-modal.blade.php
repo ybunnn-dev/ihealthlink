@@ -65,32 +65,13 @@
                             <button id="familyDropdown" class="border text-start border-gray-300 text-gray-700 rounded-lg p-2">Choose Family ...</button>
                             <div id="familyIdStorage" class="hidden"></div>
                         </div>
-                        <div class="grid grid-cols-1 gap-1 relative col-span-1">
-                            <label for="relationshipToHead" class="text-sm font-medium text-main_font">RELATIONSHIP WITH HEAD<span class="text-red-500 ml-1">*</span></label>
-                            <input type="text" id="relationshipToHead" class="border border-gray-300 text-gray-700 rounded-lg p-2">
-                        </div>
-                        <div class="grid grid-cols-1 gap-1 relative col-span-1">
-                            <label for="householdIdDisplay" class="text-sm font-medium text-main_font">HOUSEHOLD ID</label>
-                            <input type="text" id="householdIdDisplay" class="border border-gray-300 text-gray-700 rounded-lg p-2 bg-gray-100" disabled>
-                        </div>
-                        <div class="grid grid-cols-1 gap-1 relative col-span-1">
-                            <label for="purokDisplay" class="text-sm font-medium text-main_font">PUROK NO.</label>
-                            <input type="text" id="purokDisplay" class="border border-gray-300 text-gray-700 rounded-lg p-2 bg-gray-100" disabled>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 slg:grid-cols-4 col-span-1 gap-4 mb-4">
-                         <div class="grid grid-cols-1 gap-1 relative col-span-1 slg:col-span-3">
+                        <div class="grid grid-cols-1 gap-1 relative col-span-1 slg:col-span-3">
                             <label for="completeAddress" class="text-sm font-medium text-main_font">COMPLETE ADDRESS</label>
                             <input type="text" id="completeAddress" disabled class="border bg-gray-100 border-gray-300 text-gray-700 rounded-lg p-2">
                         </div>
-                         <div class="grid grid-cols-1 gap-1 relative col-span-1">
-                            <label for="yearsOfResidency" class="text-sm font-medium text-main_font">YEARS OF RESIDENCY<span class="text-red-500 ml-1">*</span></label>
-                            <input type="number" id="yearsOfResidency" class="border border-gray-300 text-gray-700 rounded-lg p-2">
-                        </div>
                     </div>
 
-                    <div class="grid grid-cols-1 slg:grid-cols-4 col-span-1 gap-4 mb-4">
+                    <div class="grid grid-cols-1 slg:grid-cols-3 col-span-1 gap-4 mb-4">
                         <div class="flex flex-col col-span-1 relative">
                             <label for="civilStatus" class="text-sm font-medium text-main_font">CIVIL STATUS<span class="text-red-500 ml-1">*</span></label>
                             <select id="civilStatus" class="border border-gray-300 text-gray-700 rounded-lg p-2">
@@ -124,6 +105,26 @@
                                 <option value="Other">Other</option>
                             </select>
                         </div>
+                        
+                    </div>
+
+                    <div class="grid grid-cols-1 slg:grid-cols-3 col-span-1 gap-4 mb-4">
+                        <div class="flex flex-col col-span-1 relative">
+                            <label for="educationAttainment" class="text-sm font-medium text-main_font">
+                                EDUCATIONAL ATTAINMENT<span class="text-red-500 ml-1">*</span>
+                            </label>
+                            <select id="educationAttainment" class="border border-gray-300 text-gray-700 rounded-lg p-2">
+                                <option value="" selected>Select Attainment</option>
+                                <option value="Early Childhood Education">Early Childhood Education</option>
+                                <option value="Primary Education">Primary Education</option>
+                                <option value="Lower Secondary Education">Lower Secondary Education</option>
+                                <option value="Upper Secondary Education">Upper Secondary Education</option>
+                                <option value="Bachelor Level Education or Equivalent">Bachelor Level Education or Equivalent</option>
+                                <option value="Master Level Education or Equivalent">Master Level Education or Equivalent</option>
+                                <option value="Doctoral Level Education or Equivalent">Doctoral Level Education or Equivalent</option>
+                            </select>
+                        </div>
+
                         <div class="flex flex-col col-span-1 relative">
                             <label for="employmentStatus" class="text-sm font-medium text-main_font">EMPLOYMENT STATUS<span class="text-red-500 ml-1">*</span></label>
                             <select id="employmentStatus" class="border border-gray-300 text-gray-700 rounded-lg p-2">
@@ -136,9 +137,6 @@
                                 <option value="Overseas Filipino Worker">Overseas Filipino Worker</option>
                             </select>
                         </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 slg:grid-cols-4 col-span-1 gap-4 mb-4">
                         <div class="flex flex-col col-span-1 relative">
                             <label for="pwdStatus" class="text-sm font-medium text-main_font">PWD<span class="text-red-500 ml-1">*</span></label>
                              <select id="pwdStatus" class="border border-gray-300 text-gray-700 rounded-lg p-2">
@@ -174,6 +172,10 @@
                                 <option value="Yes">Yes</option>
                                 <option value="No">No</option>
                             </select>
+                        </div>
+                        <div class="grid grid-cols-1 gap-1 relative col-span-1">
+                            <label for="philHealthNo" class="text-sm font-medium text-main_font">PHILHEALTH NO.</label>
+                            <input type="text" id="philHealthNo" class="border border-gray-300 text-gray-700 rounded-lg p-2">
                         </div>
                         <div class="grid grid-cols-1 gap-1 relative col-span-1">
                             <label for="emergencyContactNo" class="text-sm font-medium text-main_font">EMERGENCY NO.</label>

@@ -25,6 +25,8 @@ class Resident extends Model
         'contact_no',
         'civil_status',
         'family_relationship',
+        'philhealth_no',
+        'educational_attainment',
         'is_pwd',
         'pwd_id',
         'is_indigenous',

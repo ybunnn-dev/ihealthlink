@@ -101,4 +101,8 @@ Route::middleware(['auth:sanctum',
     Route::get('/barangay/household/get', [HouseholdController::class, 'householdGet']);
 
     Route::put('/barangay/household/head/set', [HouseholdController::class, 'setHead']);
+
+    Route::put('/barangay/family/update/{family}', [FamilyController::class, 'update']);
+
+    Route::put('/barangay/resident/update/{id}', [ResidentController::class, 'updateResident']);
 });

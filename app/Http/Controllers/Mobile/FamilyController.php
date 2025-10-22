@@ -160,5 +160,36 @@ class FamilyController extends Controller
             'data'    => $family,
         ]);
     }
+    public function update(Request $request, int $id)
+    {
+        $validated = $request->validate([
+            'is_4ps' => 'boolean',
+            'is_indigent' => 'boolean',
+            'is_iwas_gutom' => 'boolean',
+        ]);
+
+        // Perform the update
+        $updatedRows = Family::where('id', $id)->update([
+            'is_4ps' => $validated['is_4ps'] ?? false,
+            'is_indigent' => $validated['is_indigent'] ?? false,
+            'is_iwas_gutom' => $validated['is_iwas_gutom'] ?? false,
+        ]);
+
+        // Log the activity if updated
+        if ($updatedRows > 0) {
+            $user = auth()->user();
+
+            ActivityLog::create([
+                'user_id'   => $user->id,
+                'module_id' => 4,
+                'activity'  => 'Updated family ' . $id . '.',
+            ]);
+        }
+
+        return response()->json([
+            'message' => $updatedRows > 0 ? 'Family updated successfully.' : 'No changes made.',
+            'updatedRows' => $updatedRows,
+        ]);
+    }
 
 }
