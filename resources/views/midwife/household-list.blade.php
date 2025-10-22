@@ -191,6 +191,10 @@
                             </tbody>
                         </table>
                     </div>
+                    <div class="mt-6 text-main_font">
+                        {{ $households->links() }}
+                    </div>
+                </div>
                 </div>
                 </div>
             </div>

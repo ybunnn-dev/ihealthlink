@@ -101,7 +101,7 @@
                                         Family Head
                                     </th>
                                     <th scope="col" class="px-6 py-3">
-                                        Indigent
+                                        Purok
                                     </th>
                                     <th scope="col" class="px-6 py-3">
                                         4PS Member
@@ -208,6 +208,10 @@
                                 @endforelse
                             </tbody>
                         </table>
+                    </div>
+                </div>
+                <div class="mt-6 text-main_font">
+                        {{ $families->links() }}
                     </div>
                 </div>
                 </div>

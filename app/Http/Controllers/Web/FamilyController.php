@@ -29,7 +29,7 @@ class FamilyController extends Controller
         $householdIds = $households->pluck('id');
         $families = Family::with('household.purok')
         ->whereIn('household_id', $householdIds)
-        ->get(); 
+        ->paginate(7); 
         
         return view('midwife.families', [
             'families' => $families

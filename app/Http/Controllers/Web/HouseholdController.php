@@ -39,7 +39,7 @@ class HouseholdController extends Controller
         $purokIds = $puroks->pluck('id');
         $households = Household::with('head') //  eager load head
             ->whereIn('purok_id', $purokIds)
-            ->get();
+            ->paginate(7);
 
         return view('midwife.household-list', [
             'households' => $households, // includes head info
