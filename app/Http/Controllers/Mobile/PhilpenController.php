@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Mobile;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-
 use App\Models\Resident;
 use App\Models\Family;
 use App\Models\Household;
@@ -18,22 +17,28 @@ use App\Models\EnrolledResident;
 use App\Models\Consultation;
 use App\Models\Notification;  
 use App\Models\Personnel; 
-use App\Services\Notifications\FireBase;  
+use App\Services\Notifications\FireBase;
+use App\Models\HealthSigns;
+use App\Models\ResidentFamilyHistory;
+use App\Models\ResidentMedicalHistory;
+use App\Models\NcdRiskFactor;
+use App\Models\RiskAssessment;
+use App\Models\PhilpenManagement;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
-
 class PhilpenController extends Controller
 {
-   public function getLatestPhilpenData(Request $request){
+    public function getLatestPhilpenData(Request $request)
+    {
         $validated = $request->validate([
             'purok_ids' => 'required|array',
             'purok_ids.*' => 'integer|exists:puroks,id'
         ]);
 
         $user = Auth::user();
-        $personnel = $user->midwife;
+        $personnel = $user->midwife ?? $user->bhwWeb ?? $user->bhw;
 
         if (!$personnel) {
             return response()->json([
@@ -67,16 +72,26 @@ class PhilpenController extends Controller
             })
             ->with([
                 'resident' => function($query) {
-                    $query->select('id', 'firstName', 'middleName', 'lastName', 'suffix', 'birthdate', 'sex', 'family_id'); // Include family_id
+                    $query->select('id', 'firstName', 'middleName', 'lastName', 'suffix', 'birthdate', 'sex', 'family_id');
                 },
                 'resident.family' => function($query) {
-                    $query->select('id', 'household_id'); // Include household_id
+                    $query->select('id', 'household_id');
                 },
                 'resident.family.household' => function($query) {
-                    $query->select('id', 'purok_id'); // Include purok_id
+                    $query->select('id', 'purok_id');
                 },
                 'resident.family.household.purok:id',
-                'latestPendingConsultation'
+                'latestPendingConsultation' => function($query) {
+                    // Eager load all PhilPEN records for the consultation
+                    $query->with([
+                        'healthSigns',
+                        'familyHistory',
+                        'medicalHistory',
+                        'ncdRiskFactor',
+                        'riskAssessment',
+                        'philpenManagement'
+                    ]);
+                }
             ])
             ->get();
 
@@ -87,6 +102,7 @@ class PhilpenController extends Controller
             })
             ->map(function($enrolledResident) {
                 $resident = $enrolledResident->resident;
+                $consultation = $enrolledResident->latestPendingConsultation;
                 
                 // Build full name
                 $fullName = $resident->firstName;
@@ -99,7 +115,7 @@ class PhilpenController extends Controller
                 }
                 
                 // Calculate age
-                $age = \Carbon\Carbon::parse($resident->birthdate)->age;
+                $age = Carbon::parse($resident->birthdate)->age;
                 
                 // Get purok ID from nested relationship
                 $purokId = $resident->family->household->purok->id;
@@ -113,7 +129,24 @@ class PhilpenController extends Controller
                         'age' => $age,
                         'sex' => $resident->sex
                     ],
-                    'consultation' => $enrolledResident->latestPendingConsultation
+                    'consultation' => [
+                        'id' => $consultation->id,
+                        'uuid' => $consultation->uuid,
+                        'resident_id' => $consultation->resident_id,
+                        'consultation_title' => $consultation->consultation_title,
+                        'consultation_date' => $consultation->consultation_date,
+                        'status' => $consultation->status,
+                        'created_at' => $consultation->created_at,
+                        'updated_at' => $consultation->updated_at,
+                        
+                        // PhilPEN assessment data (all empty initially)
+                        'health_signs' => $consultation->healthSigns,
+                        'family_history' => $consultation->familyHistory,
+                        'medical_history' => $consultation->medicalHistory,
+                        'ncd_risk_factor' => $consultation->ncdRiskFactor,
+                        'risk_assessment' => $consultation->riskAssessment,
+                        'philpen_management' => $consultation->philpenManagement,
+                    ]
                 ];
             })
             ->values();
@@ -124,5 +157,4 @@ class PhilpenController extends Controller
             'data' => $transformedData
         ]);
     }
-
 }

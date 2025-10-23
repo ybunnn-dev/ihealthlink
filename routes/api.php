@@ -17,6 +17,7 @@ use App\Http\Controllers\Mobile\HealthProgramController;
 use App\Http\Controllers\Mobile\PreloadController;
 use App\Http\Controllers\Mobile\ConsultationController;
 use App\Http\Controllers\Mobile\PhilpenController;
+use App\Http\Controllers\Mobile\SyncController;
 
 Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:login'); ;
 
@@ -111,4 +112,8 @@ Route::middleware(['auth:sanctum',
     Route::post('/barangay/households/sync', [HouseholdController::class, 'storeOrUpdateHouseholdSync']);
     Route::post('/barangay/families/sync', [FamilyController::class, 'storeOrUpdateFamilySync']);
     Route::post('/barangay/residents/sync', [ResidentController::class, 'storeOrUpdateResidentSync']);
+    Route::post('/barangay/basic-health-records/sync', [SyncController::class, 'storeOrUpdateBasicHealthRecordSync']);
+    Route::post('/barangay/consultations/sync', [SyncController::class, 'storeConsultationSync']);
+    Route::post('/barangay/philpen/sync', [SyncController::class, 'syncPhilpenAssessments']);
+
 });

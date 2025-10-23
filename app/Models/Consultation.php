@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Consultation extends Model
 {
@@ -22,6 +23,7 @@ class Consultation extends Model
         'is_lactating',
         'schedule_extension_days',
         'consultation_title',
+        'uuid',
         'remarks', //ignore this
         'updated_by',
     ];
@@ -30,6 +32,18 @@ class Consultation extends Model
     protected $casts = [
         'consultation_date' => 'datetime',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($consultation) {
+            if (empty($consultation->uuid)) {
+                $consultation->uuid = Str::uuid()->toString();
+            }
+        });
+    }
+
 
     /**
      * Relationships

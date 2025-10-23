@@ -15,9 +15,11 @@ class BasicHealthRecord extends Model
      * The attributes that are mass assignable.
      */
     protected $fillable = [
+        'uuid',
         'resident_id',
         'weight',
         'height',
+        'weight_grams',
         'status',
         'health_records',
         'waist_circumference',
@@ -25,7 +27,6 @@ class BasicHealthRecord extends Model
         'diastolic_pressure',
         'is_pregnant',
         'is_lactating',
-        'weight_grams',
     ];
 
     protected $casts = [
@@ -38,6 +39,16 @@ class BasicHealthRecord extends Model
         'diastolic_pressure' => 'integer',
     ];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($record) {
+            if (empty($record->uuid)) {
+                $record->uuid = Str::uuid()->toString();
+            }
+        });
+    }
     /**
      * Relationship: A basic health record belongs to a resident.
      */

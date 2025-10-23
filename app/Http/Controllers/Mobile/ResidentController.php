@@ -627,14 +627,7 @@ class ResidentController extends Controller
                             'status' => 'active',
                         ]);
 
-                        // Create empty basic health record
-                        BasicHealthRecord::create([
-                            'resident_id' => $resident->id,
-                            'weight' => null,
-                            'height' => null,
-                            'status' => 'alive',
-                        ]);
-
+                   
                         // Check age for PhilPEN enrollment
                         $age = Carbon::parse($residentData['birthdate'])->age;
                         if ($age >= 20 && $age <= 59) {
