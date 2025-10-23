@@ -486,4 +486,26 @@ class SyncController extends Controller
             ], 500);
         }
     }
+
+    public function fetchAllByPuroks(Request $request)
+    {
+        $purokIds = $request->input('puroks', []);
+
+        if (empty($purokIds)) {
+            return response()->json(['error' => 'No purok IDs provided.'], 400);
+        }
+
+        return response()->json([
+            'households' => Household::whereIn('purok_id', $purokIds)->get(),
+
+            'families' => Family::whereHas('household', function ($q) use ($purokIds) {
+                $q->whereIn('purok_id', $purokIds);
+            })->get(),
+
+            'residents' => Resident::whereIn('purok_id', $purokIds)
+                ->with('basicHealthRecord')
+                ->get(),
+
+        ]);
+    }
 }

@@ -115,5 +115,8 @@ Route::middleware(['auth:sanctum',
     Route::post('/barangay/basic-health-records/sync', [SyncController::class, 'storeOrUpdateBasicHealthRecordSync']);
     Route::post('/barangay/consultations/sync', [SyncController::class, 'storeConsultationSync']);
     Route::post('/barangay/philpen/sync', [SyncController::class, 'syncPhilpenAssessments']);
+    Route::get('/barangay/offline-data', [SyncController::class, 'fetchAllByPuroks']);
 
+
+    Route::put('/barangay/family/transfer', [FamilyController::class, 'transfer']);
 });
