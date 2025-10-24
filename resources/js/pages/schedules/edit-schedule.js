@@ -1,10 +1,5 @@
 const editActivityModalEl = document.getElementById('edit-activity-modal');
-const editActivityForm = document.getElementById('edit-activity-form');
 const confirmEditScheduleModalEl = document.getElementById('confirm-edit-schedule-modal');
-const editScheduleActivityToConfirm = document.getElementById('edit-schedule-activity-to-confirm');
-const editScheduleDateToConfirm = document.getElementById('edit-schedule-date-to-confirm');
-const editScheduleTimeToConfirm = document.getElementById('edit-schedule-time-to-confirm');
-const editScheduleVenueToConfirm = document.getElementById('edit-schedule-venue-to-confirm');
 const confirmEditScheCheckbox = document.getElementById('confirm-edit-schedule-checkbox');
 const cancelConfirmEditScheduleBtn = document.getElementById('cancel-confirm-edit-schedule');
 const confirmEditScheduleBtn = document.getElementById('confirm-edit-schedule-btn');
@@ -121,21 +116,13 @@ confirmEditScheCheckbox.addEventListener('change', function(){
     confirmEditScheduleBtn.disabled = !this.checked;
 });
 
-const successSchedModalEl = document.getElementById('success-modal');
-const successSchedMesageHeader = document.getElementById('success-msg-head');
-const successSchedMessage = document.getElementById('success-message');
-const closeSuccessSchedModalButton = document.getElementById('close-success-modal-button');
 
-const successSchedModal = new Modal(successSchedModalEl);
 
 confirmEditScheduleBtn.addEventListener('click', function() {
-    
-
-    // Construct the URL using the schedule ID
     const url = `/barangay/schedule/edit/${passPayload.id}`;
 
     fetch(url, {
-        method: 'PUT', // or 'POST' if your route expects POST
+        method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
@@ -146,10 +133,11 @@ confirmEditScheduleBtn.addEventListener('click', function() {
     .then(data => {
         console.log("Controller response:", data);
         if(data.success){
-            confirmEditModal.hide();
-            successSchedMesageHeader.textContent = "Edit Schedule";
-            successSchedMessage.textContent = "Schedule has been successfully updated";
-            successSchedModal.show();
+           alert('Schedule has been successfully updated.');
+            // Redirect to a GET route after success
+            
+            window.location.reload(); // or your schedules list page
+            
         }
     })
     .catch(error => {

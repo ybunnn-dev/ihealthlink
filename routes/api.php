@@ -18,6 +18,7 @@ use App\Http\Controllers\Mobile\PreloadController;
 use App\Http\Controllers\Mobile\ConsultationController;
 use App\Http\Controllers\Mobile\PhilpenController;
 use App\Http\Controllers\Mobile\SyncController;
+use App\Http\Controllers\FirebaseController;
 
 Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:login'); ;
 
@@ -92,8 +93,7 @@ Route::middleware(['auth:sanctum',
     Route::post('/barangay/health-program/consultation/update', [ConsultationController::class, 'updateConsultation']);
 
     Route::patch('/firebase/token', [App\Http\Controllers\FirebaseController::class, 'updateToken'])
-    ->name('firebase.token')
-    ->middleware('auth');
+    ->name('firebase.token');
 
     Route::get('/barangay/get/philpen', [PhilpenController::class, 'getLatestPhilpenData']);
 
@@ -119,4 +119,30 @@ Route::middleware(['auth:sanctum',
 
 
     Route::put('/barangay/family/transfer', [FamilyController::class, 'transfer']);
+    Route::put('/barangay/resident/transfer', [ResidentController::class, 'transfer']);
+
+
+    
+});
+
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified',
+    'throttle:auth-web',
+    'active',
+])->group(function () {
+
+    Route::get('/firebase-messaging-sw.js', function () {
+        return response()->view('firebase-messaging-sw')
+            ->header('Content-Type', 'application/javascript')
+            ->header('Service-Worker-Allowed', '/');
+    });
+
+     Route::patch('/firebase/token', [FirebaseController::class, 'updateToken'])
+        ->name('firebase.token');
+        
+    Route::get('/notifications', [App\Http\Controllers\NotificationController::class, 'index']);
+    Route::patch('/notifications/{id}/read', [App\Http\Controllers\NotificationController::class, 'markAsRead']);
+    Route::patch('/notifications/read-all', [App\Http\Controllers\NotificationController::class, 'markAllAsRead']);
 });

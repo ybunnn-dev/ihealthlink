@@ -117,19 +117,12 @@ confirmAddScheduleBtn.addEventListener('click', function() {
     .then(data => {
         console.log("Response from backend:", data);
         if(data.result == 'success'){
-            confirmAddSchedulModal.hide();
-            successSchedMesageHeader.textContent = "Schedule Added";
-            successSchedMessage.textContent = "Schedule has been added successfully";
-            successSchedModal.show();
+            alert('Scheduled activity has been successfully added.');
+            window.location.reload();
         }
     })
     .catch(err => {
         console.error("Error sending schedule:", err);
     });
 });
-
-closeSuccessSchedModalButton.addEventListener('click', function(){
-    window.location.reload();
-});
-
 validateAddActivityForms();

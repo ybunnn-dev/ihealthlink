@@ -50,6 +50,19 @@ class ScheduleController extends Controller
 
     public function updateDailyActivity(Request $request)
     {
+        $user = auth()->user();
+
+        // Determine personnel: BHW with role 4 or Midwife
+        if ($user->bhwWeb && $user->bhwWeb->role_id == 4) {
+            $personnel = $user->bhwWeb;
+        } else {
+            $personnel = $user->midwife;
+        }
+
+        if (!$personnel) {
+            abort(403, 'Unauthorized access.');
+        }
+        
         // Validate the incoming request
         $validated = $request->validate([
             'id' => 'required|exists:daily_activities,id',
@@ -80,6 +93,19 @@ class ScheduleController extends Controller
 
     public function store(Request $request)
     {
+        $user = auth()->user();
+
+        // Determine personnel: BHW with role 4 or Midwife
+        if ($user->bhwWeb && $user->bhwWeb->role_id == 4) {
+            $personnel = $user->bhwWeb;
+        } else {
+            $personnel = $user->midwife;
+        }
+
+        if (!$personnel) {
+            abort(403, 'Unauthorized access.');
+        }
+
         // Validate request
         $validated = $request->validate([
             'activity' => 'required|string|max:255',
@@ -175,6 +201,19 @@ class ScheduleController extends Controller
 
     public function edit(Request $request, $id)
     {
+       $user = auth()->user();
+
+        // Determine personnel: BHW with role 4 or Midwife
+        if ($user->bhwWeb && $user->bhwWeb->role_id == 4) {
+            $personnel = $user->bhwWeb;
+        } else {
+            $personnel = $user->midwife;
+        }
+
+        if (!$personnel) {
+            abort(403, 'Unauthorized access.');
+        }
+
         // Validate payload
         $validated = $request->validate([
             'activity' => 'required|string|max:255',

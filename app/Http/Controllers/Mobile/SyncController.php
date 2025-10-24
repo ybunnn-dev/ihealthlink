@@ -495,17 +495,22 @@ class SyncController extends Controller
             return response()->json(['error' => 'No purok IDs provided.'], 400);
         }
 
+        // Fetch all relevant data filtered by purok_id through relationships
         return response()->json([
+            // 1️⃣ Households directly under these puroks
             'households' => Household::whereIn('purok_id', $purokIds)->get(),
 
+            // 2️⃣ Families whose households belong to those puroks
             'families' => Family::whereHas('household', function ($q) use ($purokIds) {
                 $q->whereIn('purok_id', $purokIds);
             })->get(),
 
-            'residents' => Resident::whereIn('purok_id', $purokIds)
+            // 3️⃣ Residents whose families’ households belong to those puroks
+            'residents' => Resident::whereHas('family.household', function ($q) use ($purokIds) {
+                    $q->whereIn('purok_id', $purokIds);
+                })
                 ->with('basicHealthRecord')
                 ->get(),
-
         ]);
     }
 }

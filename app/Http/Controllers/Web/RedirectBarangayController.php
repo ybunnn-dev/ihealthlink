@@ -20,7 +20,6 @@ class RedirectBarangayController extends Controller
             $personnel = $user->bhw;
         } else {
             // Default fallback for other roles
-            \Log::info('vakla');
             return redirect()->intended('/');
         }
 
