@@ -6,31 +6,8 @@
                     Confirm New Household
                 </h3>
                 <p class="text-sm text-normal_font">
-                    Please review the details below before proceeding.
+                    Are you sure you want to add this household?
                 </p>
-            </div>
-            
-            <div class="p-4 my-4 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg space-y-3">
-                <div class="flex justify-between items-center">
-                    <span class="font-semibold text-gray-600 dark:text-gray-300">Purok:</span>
-                    <span id="confirm-purok" class="text-main_font font-medium"></span>
-                </div>
-                <div class="flex justify-between items-center">
-                    <span class="font-semibold text-gray-600 dark:text-gray-300">Water Source:</span>
-                    <span id="confirm-water-source" class="text-main_font font-medium"></span>
-                </div>
-                <div class="flex justify-between items-center">
-                    <span class="font-semibold text-gray-600 dark:text-gray-300">Waste Disposal:</span>
-                    <span id="confirm-waste-disposal" class="text-main_font font-medium"></span>
-                </div>
-                <div class="flex justify-between items-center">
-                    <span class="font-semibold text-gray-600 dark:text-gray-300">Sanitary Toilet:</span>
-                    <span id="confirm-sanitary" class="text-main_font font-medium"></span>
-                </div>
-                <div class="flex justify-between items-center">
-                    <span class="font-semibold text-gray-600 dark:text-gray-300">Is Indigent:</span>
-                    <span id="confirm-indigent" class="text-main_font font-medium"></span>
-                </div>
             </div>
             <div class="p-4 md:p-5">
                 <div class="flex items-center justify-center">

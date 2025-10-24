@@ -105,18 +105,9 @@ class HouseholdController extends Controller
         }
 
         // Find the most recent active history record and set it to inactive
-        $previousHistory = HouseholdResidenceHistory::where('household_id', $household->id)
-            ->where('status', 'active')
-            ->latest()
-            ->first();
-
-        if ($previousHistory) {
-            $previousHistory->update(['status' => 'inactive']);
-        }
 
         // Update household
         $household->update([
-            'purok_id'        => $validated['purok_id'],
             'sanitary_toilet' => $validated['sanitary'],
             'water_source'    => $validated['water_source'],
             'waste_disposal'  => $validated['waste_disposal'],
@@ -144,7 +135,7 @@ class HouseholdController extends Controller
         ActivityLog::create([
             'user_id'   => $user->id,
             'module_id' => 5, // replace with correct module ID for households
-            'activity'  => 'Updated household details in Purok ' . ucfirst($purok->name) . '.',
+            'activity'  => 'Updated household details in ' . ucfirst($purok->name) . '.',
         ]);
 
         return response()->json([
@@ -241,31 +232,40 @@ class HouseholdController extends Controller
     public function show(Household $household)
     {
         $user = Auth::user();
-
+        
         $personnel = $user->bhwWeb ?? $user->midwife;
-
+        
         if (!$personnel) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'No associated personnel found for this user.'
             ], 404);
         }
-
-        // Load related data + count families
-        $household = $household->load(['purok', 'families', 'head'])
-                            ->loadCount('families'); // ✅ adds families_count attribute
-
+        
+        // Load related data with active residents count per family
+        $household = $household->load([
+                'purok',
+                'head',
+                'families' => function ($query) {
+                    $query->withCount([
+                        'residents' => function ($query) {
+                            $query->where('status', 'active');
+                        }
+                    ]);
+                }
+            ])
+            ->loadCount('families');
+        
         \Log::info($household);
-
+        
         return view('midwife.spec-household', [
             'household' => $household,
             'purok'     => $household->purok,
             'families'  => $household->families,
-            'familiesCount' => $household->families_count, // ✅ pass the count to view
+            'familiesCount' => $household->families_count,
         ]);
     }
 
-    
     public function getHouseholdsJson(Request $request)
     {
         $user = Auth::user();

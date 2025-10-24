@@ -75,6 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
     import('./pages/household/add-household.js');
   }
   else if(bodyClass.contains('spec-household')){
+    import('./pages/household/edit-household.js');
     import('./pages/household/add-family.js');
   }
   else if(bodyClass.contains('spec-resident')){

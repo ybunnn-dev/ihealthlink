@@ -33,10 +33,10 @@
               <!-- Optional: Add a placeholder -->
               <option selected>Select a type</option>
               
-              <option value="philpen">Philpen</option>
-              <option value="child_healthcare">Child Healthcare</option>
+              <option value="philpen_tcl">Philpen</option>
+              <option value="child_healthcare_tcl">Child Healthcare</option>
               <option value="vaccines">Vaccination Drive</option>
-              <option value="maternal_healthcare">Maternal Healthcare</option>
+              <option value="maternal_healthcare_tcl">Maternal Healthcare</option>
               <option value="general_consultation">General Consultation</option>
             </select>
         </div>

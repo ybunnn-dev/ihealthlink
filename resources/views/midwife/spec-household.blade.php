@@ -28,16 +28,16 @@
                             <p class="text-main_font font-bold mt-2">Household #144</p> 
                         </div>
                         <div class="grid grid-cols-1 lg:grid-cols-2 w-full px-0 pb-0 row-span-1 gap-3"> 
-                            <button id="edit-med-btn" 
+                            <button id="edit-household-btn" 
                                     type="button" 
-                                    class="edit-medicine-btn col-span-1 px-5 py-3 text-sm font-medium text-white bg-mainblue rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300"
+                                    class="edit-household col-span-1 px-5 py-3 text-sm font-medium text-white bg-mainblue rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300"
                                 >
                                 Edit
                             </button>   
                                             
-                            <button id="remove-med-btn" 
+                            <button id="change-head-btn" 
                                     type="button" 
-                                    class="remove-medicine-btn col-span-1 px-5 py-3 text-sm font-medium text-mainblue bg-white border border-mainblue rounded-lg hover:bg-blue-50 focus:outline-none focus:ring-4 focus:ring-300">
+                                    class=" col-span-1 px-5 py-3 text-sm font-medium text-mainblue bg-white border border-mainblue rounded-lg hover:bg-blue-50 focus:outline-none focus:ring-4 focus:ring-300">
                                 Change Head
                             </button>
                         </div>
@@ -102,7 +102,9 @@
                                 <!-- Flex container -->
                                 <div class="flex flex-col slg2:flex-row slg2:items-end gap-4 justify-end">  
                                     <!-- Add Household Button -->
-                                    
+                                    <div class="w-full xs:w-40 pt-5 xs:pt-0">
+                                        <button id="add-existing-family-trigger" type="button" class="w-full h-[2.375rem] text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3">Add Existing Family</button>
+                                    </div>
                                     <div class="w-full xs:w-40 pt-5 xs:pt-0">
                                         <button id="add-family-trigger" type="button" class="w-full h-[2.375rem] text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3">Add Family</button>
                                     </div>
@@ -136,7 +138,7 @@
                                                     {{ $family->id }}
                                                 </th>
                                                 <td class="px-6 py-4">
-                                                    yes members
+                                                    {{ $family->residents_count }}
                                                 </td>
                                                <td class="px-6 py-4">
                                                     @if($family->is_4ps)
@@ -193,5 +195,6 @@
                 </div>
             </div>
         </div>
+        @include('components.modals.household.edit-household');
          @include('components.modals.family.add-family-modal')
 </x-app-layout>
