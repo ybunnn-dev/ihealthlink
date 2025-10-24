@@ -6,6 +6,7 @@
 <x-app-layout>
     <div class="py-12 px-5">
         <div class="max-w-[90rem] mx-auto sm:px-6 lg:px-8">
+            
              <a href="{{ route('midwife.health-program', $enrolledResident->program->id) }}">
                 <div class="flex items-center space-x-2 mb-3">
                     <svg class="w-5 h-5" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -32,8 +33,16 @@
                             </g>
                         </svg>
                         <p class="text-main_font font-bold mt-4 text-xl">{{ $enrolledResident->resident->firstName }} {{ $enrolledResident->resident->lastName }}</p> 
-                        <p class="text-main_font font-semibold" style="cursor: pointer" onclick="window.location='{{ route('midwife.spec-resident', ['resident' => $enrolledResident->resident->id]) }}'"><u>Resident #{{ $enrolledResident->resident->id }}</u></p> 
-                    </div>
+                        <p
+                            class="text-main_font font-semibold"
+                            style="cursor: pointer"
+                            onclick="window.location='{{ route('midwife.spec-resident', [
+                                'resident' => $enrolledResident->resident->id,
+                                'return' => url()->current()
+                            ]) }}'">
+                            <u>Resident #{{ $enrolledResident->resident->id }}</u>
+                        </p>
+                        </div>
 
                     <!-- Buttons -->
                     <div class="grid grid-cols-1 lg:grid-cols-1 gap-3">
@@ -124,90 +133,90 @@
             </div>
             <!-- Activities and Follow-Up Table -->
             <div class="bg-white rounded-xl overflow-hidden p-6">
-    <h2 class="text-2xl font-semibold text-main_font mb-4">Activities and Follow-Up</h2>
-    <div class="relative overflow-x-auto">
-        <table class="w-full text-sm text-left text-main_font">
-            <thead class="text-xs text-main_font uppercase bg-col_tab_h">
-                <tr>
-                    <th scope="col" class="px-6 py-3">ACTIVITY</th>
-                    <th scope="col" class="px-6 py-3">DATE COMPLETED</th>
-                    <th scope="col" class="px-6 py-3">STATUS</th>
-                    <th scope="col" class="px-6 py-3">EXPECTED SCHEDULE</th>
-                    <th scope="col" class="px-6 py-3">ACTION</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($enrolledResident->consultations as $consultation)
-                    @php
-                        $consultationDate = null;
-                        $statusText = '';
-                        $statusColorClass = '';
+                <h2 class="text-2xl font-semibold text-main_font mb-4">Activities and Follow-Up</h2>
+                <div class="relative overflow-x-auto">
+                    <table class="w-full text-sm text-left text-main_font">
+                        <thead class="text-xs text-main_font uppercase bg-col_tab_h">
+                            <tr>
+                                <th scope="col" class="px-6 py-3">ACTIVITY</th>
+                                <th scope="col" class="px-6 py-3">DATE COMPLETED</th>
+                                <th scope="col" class="px-6 py-3">STATUS</th>
+                                <th scope="col" class="px-6 py-3">EXPECTED SCHEDULE</th>
+                                <th scope="col" class="px-6 py-3">ACTION</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($enrolledResident->consultations as $consultation)
+                                @php
+                                    $consultationDate = null;
+                                    $statusText = '';
+                                    $statusColorClass = '';
 
-                        if ($consultation->consultation_date) {
-                            $today = \Carbon\Carbon::now('Asia/Manila')->startOfDay();
-                            $consultationDate = \Carbon\Carbon::parse($consultation->consultation_date);
+                                    if ($consultation->consultation_date) {
+                                        $today = \Carbon\Carbon::now('Asia/Manila')->startOfDay();
+                                        $consultationDate = \Carbon\Carbon::parse($consultation->consultation_date);
 
-                            if ($consultation->status === 'completed') {
-                                $statusText = 'Completed';
-                                $statusColorClass = 'bg-green-100 text-green-800';
-                            } elseif ($consultation->status === 'pending') {
-                                if ($consultationDate->lt($today)) {
-                                    $statusText = 'Late';
-                                    $statusColorClass = 'bg-red-100 text-red-800';
-                                } else {
-                                    $statusText = 'Ongoing';
-                                    $statusColorClass = 'bg-blue-100 text-blue-800';
-                                }
-                            } else {
-                                $statusText = 'Terminated';
-                                $statusColorClass = 'bg-yellow-100 text-yellow-700';
-                            }
-                        } else {
-                            // No consultation date — default handling
-                            $statusText = 'No Schedule';
-                            $statusColorClass = 'bg-gray-100 text-gray-700';
-                        }
-                    @endphp
-                    <!-- The text size class has been updated on this table row -->
-                    <tr class="bg-white border-b text-xs lg2:text-sm hover:bg-gray-50">
-                        <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">{{ $consultation->consultation_title }}</th>
-                        <td class="px-6 py-4">{{ $consultation->status === 'completed' ? $consultation->updated_at->format('M d, Y') : '--' }}</td>
-                        <td class="px-6 py-4"><span class="px-2 py-1 font-semibold text-xs rounded-full {{ $statusColorClass }}">{{ $statusText }}</span></td>
-                        <td class="px-6 py-4">{{ $consultationDate ? $consultationDate->format('M d, Y') : '--' }}</td>
-                        <td class="px-6 py-4">
-                            <div class="flex justify-start items-center space-x-4">
-                                <!-- View Button -->
-                                <button type="button" 
-                                        class="js-view-consultation-btn text-gray-500 hover:text-gray-800" 
-                                        data-consultation-id="{{ $consultation->id }}" 
-                                        title="View Details">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 pointer-events-none" viewBox="0 0 20 20" fill="currentColor">
-                                    <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                                    <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.022 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
-                                    </svg>
-                                </button>
+                                        if ($consultation->status === 'completed') {
+                                            $statusText = 'Completed';
+                                            $statusColorClass = 'bg-green-100 text-green-800';
+                                        } elseif ($consultation->status === 'pending') {
+                                            if ($consultationDate->lt($today)) {
+                                                $statusText = 'Late';
+                                                $statusColorClass = 'bg-red-100 text-red-800';
+                                            } else {
+                                                $statusText = 'Ongoing';
+                                                $statusColorClass = 'bg-blue-100 text-blue-800';
+                                            }
+                                        } else {
+                                            $statusText = 'Terminated';
+                                            $statusColorClass = 'bg-yellow-100 text-yellow-700';
+                                        }
+                                    } else {
+                                        // No consultation date — default handling
+                                        $statusText = 'No Schedule';
+                                        $statusColorClass = 'bg-gray-100 text-gray-700';
+                                    }
+                                @endphp
+                                <!-- The text size class has been updated on this table row -->
+                                <tr class="bg-white border-b text-xs lg2:text-sm hover:bg-gray-50">
+                                    <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">{{ $consultation->consultation_title }}</th>
+                                    <td class="px-6 py-4">{{ $consultation->status === 'completed' ? $consultation->updated_at->format('M d, Y') : '--' }}</td>
+                                    <td class="px-6 py-4"><span class="px-2 py-1 font-semibold text-xs rounded-full {{ $statusColorClass }}">{{ $statusText }}</span></td>
+                                    <td class="px-6 py-4">{{ $consultationDate ? $consultationDate->format('M d, Y') : '--' }}</td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex justify-start items-center space-x-4">
+                                            <!-- View Button -->
+                                            <button type="button" 
+                                                    class="js-view-consultation-btn text-gray-500 hover:text-gray-800" 
+                                                    data-consultation-id="{{ $consultation->id }}" 
+                                                    title="View Details">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 pointer-events-none" viewBox="0 0 20 20" fill="currentColor">
+                                                <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                                                <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.022 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
+                                                </svg>
+                                            </button>
 
-                                <!-- Update Button -->
-                                <button type="button" 
-                                        class="js-update-consultation-btn text-mainblue hover:text-blue-900 disabled:opacity-50 disabled:pointer-events-none" 
-                                        data-consultation-id="{{ $consultation->id }}" 
-                                        title="Update Status"
-                                        @if($consultation->status === 'completed' && $enrolledResident->program->category === 'philpen_tcl')
-                                            disabled 
-                                        @endif>
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 pointer-events-none" viewBox="0 0 20 20" fill="currentColor">
-                                        <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
-                                        <path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" />
-                                    </svg>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
-</div>
+                                            <!-- Update Button -->
+                                            <button type="button" 
+                                                    class="js-update-consultation-btn text-mainblue hover:text-blue-900 disabled:opacity-50 disabled:pointer-events-none" 
+                                                    data-consultation-id="{{ $consultation->id }}" 
+                                                    title="Update Status"
+                                                    @if($consultation->status === 'completed' && $enrolledResident->program->category === 'philpen_tcl')
+                                                        disabled 
+                                                    @endif>
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 pointer-events-none" viewBox="0 0 20 20" fill="currentColor">
+                                                    <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
+                                                    <path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
 
         </div>
