@@ -1,4 +1,4 @@
-@section('page-id', 'reports')
+@section('page-id', 'brgy-reports')
 @section('title', 'Reports')
 <x-app-layout>
     <div class="py-12 px-5">
@@ -78,6 +78,7 @@
     </div>
 </x-app-layout>
 @include('components.modals.print-report-modal')
+@include('components.modals.reports.filter-date')
 
 
 
