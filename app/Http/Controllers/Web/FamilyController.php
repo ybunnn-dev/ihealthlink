@@ -432,8 +432,6 @@ class FamilyController extends Controller
         // Determine personnel type
         if ($user->bhwWeb && $user->bhwWeb->role_id == 4) {
             $personnel = $user->bhwWeb;
-        } elseif ($user->bhw && $user->bhw->role_id == 3) {
-            $personnel = $user->bhw;
         } else {
             $personnel = $user->midwife;
         }
@@ -444,21 +442,19 @@ class FamilyController extends Controller
                 'message' => 'Unauthorized access. No associated personnel found.'
             ], 403);
         }
-
         $validated = $request->validate([
             'household_id'  => 'sometimes|integer|exists:households,id',
-            'is_4ps'        => 'sometimes|string|in:Yes,No',
-            'is_indigent'   => 'sometimes|string|in:Yes,No',
-            'is_iwas_gutom' => 'sometimes|string|in:Yes,No',
+            'is_4ps'        => 'sometimes|boolean',
+            'is_indigent'   => 'sometimes|boolean',
+            'is_iwas_gutom' => 'sometimes|boolean',
         ]);
+
+        $is4ps = $validated['is_4ps'];
+        $isIndigent = $validated['is_indigent'];
+        $isIwasGutom = $validated['is_iwas_gutom'];
 
         // Find the family
         $family = Family::findOrFail($id);
-
-        // Convert Yes/No to booleans if provided
-        $is4ps = isset($validated['is_4ps']) ? ($validated['is_4ps'] === 'Yes') : $family->is_4ps;
-        $isIndigent = isset($validated['is_indigent']) ? ($validated['is_indigent'] === 'Yes') : $family->is_indigent;
-        $isIwasGutom = isset($validated['is_iwas_gutom']) ? ($validated['is_iwas_gutom'] === 'Yes') : $family->is_iwas_gutom;
 
         // Check if household changed (family moved)
         $householdChanged = isset($validated['household_id']) && $validated['household_id'] != $family->household_id;

@@ -83,5 +83,4 @@
 </div>
 @include('components.modals.family.choose-household-modal')
 @include('components.modals.family.add-family-confirmation')
-@include('components.modals.qr-scanner')
-@vite('resources/js/modals/qr-scanner.js')
+

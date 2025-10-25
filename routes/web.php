@@ -320,6 +320,8 @@ Route::middleware([
     Route::get('/barangay/residents/get/all' , [ResidentController::class, 'getAllResidents']);
 
     Route::put('/barangay/resident/transfer', [ResidentController::class, 'transfer']);
+
+    Route::put('/barangay/family/update/{family}', [FamilyController::class, 'update']);
 });
 
 
