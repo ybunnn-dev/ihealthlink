@@ -19,7 +19,7 @@ use App\Models\Purok;
 
 class FamilyController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         // Get the current user's personnel info
         $personnel = Auth::user()->midwife;
@@ -28,26 +28,120 @@ class FamilyController extends Controller
         $barangay = Barangay::with('puroks')->find($personnel->brgy_id);
         $puroks = $barangay->puroks;
 
-        // Get the households that belong to the puroks of that barangay
+        // Get the purok IDs
         $purokIds = $puroks->pluck('id');
-        $households = Household::whereIn('purok_id', $purokIds)->get();
 
-        // Get the families with household + purok + count of active residents
-        $householdIds = $households->pluck('id');
-
-        $families = Family::with(['household.purok'])
+        // Build the query
+        $query = Family::with(['household.purok'])
             ->withCount([
                 'residents as active_residents_count' => function ($query) {
-                    $query->where('status', 'active'); // adjust field name if needed
+                    $query->where('status', 'active');
                 }
             ])
-            ->whereIn('household_id', $householdIds)
-            ->paginate(7);
+            ->whereHas('household', function($q) use ($purokIds) {
+                $q->whereIn('purok_id', $purokIds);
+            });
 
+        // Apply purok filter (can be done at DB level)
+        if ($request->filled('purok_id')) {
+            $query->whereHas('household', function($q) use ($request) {
+                $q->where('purok_id', $request->purok_id);
+            });
+        }
+
+        // Apply date sorting
+        if ($request->filled('date_sort')) {
+            $dateSort = $request->date_sort;
+            
+            switch ($dateSort) {
+                case 'Last Week':
+                    $query->where('created_at', '>=', now()->subWeek());
+                    break;
+                case 'Month':
+                    $query->where('created_at', '>=', now()->subMonth());
+                    break;
+                case 'Last Year':
+                    $query->where('created_at', '>=', now()->subYear());
+                    break;
+                // 'Custom' would need additional date range parameters
+            }
+            
+            $query->orderBy('created_at', 'desc');
+        } else {
+            // Default sort by newest first
+            $query->orderBy('created_at', 'desc');
+        }
+
+        // Check if we need to filter in memory (search only, since names might be encrypted)
+        $needsMemoryFiltering = $request->filled('search');
+
+        if ($needsMemoryFiltering) {
+            // Get all families for in-memory filtering
+            $allFamilies = $query->get();
+
+            // Apply search filter (search through family members)
+            if ($request->filled('search')) {
+                $searchTerm = strtolower($request->search);
+                $allFamilies = $allFamilies->filter(function($family) use ($searchTerm) {
+                    // Search by family ID
+                    if (str_contains((string)$family->id, $searchTerm)) {
+                        return true;
+                    }
+                    
+                    // Search by household purok name
+                    $purokName = strtolower($family->household->purok->name ?? '');
+                    if (str_contains($purokName, $searchTerm)) {
+                        return true;
+                    }
+                    
+                    // Search through family members (if residents are loaded)
+                    if ($family->relationLoaded('residents')) {
+                        foreach ($family->residents as $resident) {
+                            $fullName = strtolower(trim($resident->firstName . ' ' . ($resident->middleName ?? '') . ' ' . $resident->lastName));
+                            if (str_contains($fullName, $searchTerm)) {
+                                return true;
+                            }
+                        }
+                    }
+                    
+                    return false;
+                });
+            }
+
+            // Manually paginate
+            $page = $request->get('page', 1);
+            $perPage = 7;
+            $total = $allFamilies->count();
+            $results = $allFamilies->forPage($page, $perPage);
+            
+            $families = new \Illuminate\Pagination\LengthAwarePaginator(
+                $results, 
+                $total, 
+                $perPage, 
+                $page, 
+                ['path' => $request->url(), 'query' => $request->query()]
+            );
+        } else {
+            // No memory filtering needed, use database pagination
+            $families = $query->paginate(7);
+        }
+
+        // Return JSON for AJAX requests
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'status' => 'success',
+                'html' => view('components.family.table-rows', compact('families'))->render(),
+                'pagination' => view('components.family.pagination', compact('families'))->render(),
+            ]);
+        }
+
+        // Return full view for initial page load
         return view('midwife.families', [
-            'families' => $families
+            'families' => $families,
+            'puroks' => $puroks,
         ]);
     }
+
 
 
     public function store(Request $request)

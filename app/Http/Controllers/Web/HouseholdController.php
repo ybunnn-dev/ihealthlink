@@ -19,10 +19,9 @@ use Illuminate\Validation\Rule;
 
 class HouseholdController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
-
         $personnel = $user->bhwWeb ?? $user->midwife;
 
         if (!$personnel) {
@@ -32,19 +31,68 @@ class HouseholdController extends Controller
             ], 404);
         }
 
-        // Get barangay with its puroks
         $barangay = Barangay::with('puroks')->find($personnel->brgy_id);
         $puroks = $barangay->puroks;
-
-        // Get households under those puroks with their head
         $purokIds = $puroks->pluck('id');
-        $households = Household::with('head') //  eager load head
-            ->whereIn('purok_id', $purokIds)
-            ->paginate(7);
 
+        // Fetch all relevant households
+        $households = Household::with(['head', 'families.residents'])
+            ->whereIn('purok_id', $purokIds)
+            ->get();
+
+        // Apply purok filter
+        if ($request->filled('purok_id')) {
+            $households = $households->where('purok_id', $request->purok_id);
+        }
+
+        // Apply search filter (PHP-level, after decryption)
+        if ($request->filled('search')) {
+            $searchTerm = strtolower($request->search);
+
+            $households = $households->filter(function ($household) use ($searchTerm) {
+                // Search in household head
+                $head = $household->head;
+                if ($head) {
+                    $headName = strtolower(trim("{$head->firstName} {$head->middleName} {$head->lastName}"));
+                    if (str_contains($headName, $searchTerm)) return true;
+                }
+
+                // Search among residents
+                foreach ($household->families as $family) {
+                    foreach ($family->residents as $resident) {
+                        $residentName = strtolower(trim("{$resident->firstName} {$resident->middleName} {$resident->lastName}"));
+                        if (str_contains($residentName, $searchTerm)) return true;
+                    }
+                }
+
+                return false;
+            });
+        }
+
+        // Manual pagination since we're filtering in collection
+        $perPage = 7;
+        $page = $request->get('page', 1);
+        $paginated = new \Illuminate\Pagination\LengthAwarePaginator(
+            $households->forPage($page, $perPage),
+            $households->count(),
+            $perPage,
+            $page,
+            ['path' => url()->current()]
+        );
+
+        // AJAX response
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'status' => 'success',
+                'html' => view('components.household.household-table-rows', ['households' => $paginated])->render(),
+                'pagination' => view('components.household.pagination', ['households' => $paginated])->render(),
+            ]);
+        }
+
+        // Regular view
         return view('midwife.household-list', [
-            'households' => $households, // includes head info
-            'puroks'     => $puroks,
+            'households' => $paginated,
+            'puroks' => $puroks,
         ]);
     }
 
@@ -334,7 +382,7 @@ class HouseholdController extends Controller
             'households' => $formattedHouseholds
         ]);
     }
-    
+
     public function setHead(Request $request)
     {
         $user = Auth::user();

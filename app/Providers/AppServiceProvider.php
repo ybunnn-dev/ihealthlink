@@ -26,6 +26,7 @@ class AppServiceProvider extends ServiceProvider
                 $view->with([
                     'barangayName' => "Brgy. ".Auth::user()->barangay->name,
                     'barangayId'   => Auth::user()->barangay->id,
+                    'puroks' => Auth::user()->personnel->barangay->puroks
                 ]);
             }else{
                 $view->with([

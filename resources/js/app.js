@@ -81,6 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
     import('./pages/bhw/remove-bhw.js');
   }
   else if (bodyClass.contains('households')) {
+    import('./pages/household/paginate.js');
     import('./pages/household/add-household.js');
   }
   else if (bodyClass.contains('spec-household')) {
@@ -95,9 +96,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   } else if (bodyClass.contains('residents')) {
     import('./pages/resident/add-resident');
+    import('./pages/resident/paginate.js');
   }
   else if (bodyClass.contains('family')) {
-    
+    import('./pages/family/paginate.js');
   }else if(bodyClass.contains('spec-family')){
     import('./pages/family/add-existing.js');
     import('./pages/family/add-resident.js');

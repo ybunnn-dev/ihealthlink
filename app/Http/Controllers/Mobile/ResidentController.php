@@ -30,101 +30,61 @@ class ResidentController extends Controller
 {   
     public function index(Request $request)
     {
-        $user = Auth::user();
-        
-        // Check if advanced mode is enabled
-        $isAdvanced = $request->boolean('is_advanced');
+        $personnel = Auth::user()->midwife;
 
-        \Log::info('hey');
-        \Log::info($isAdvanced);
-        
-        if (!$isAdvanced) {
-            // Standard mode: limit to user's barangay
-            // Determine personnel type (Midwife or BHW)
-            if ($user->bhwWeb && $user->bhwWeb->role_id == 4) {
-                $personnel = $user->bhwWeb;
-            } elseif ($user->bhw && $user->bhw->role_id == 3) {
-                $personnel = $user->bhw;
-            } else {
-                $personnel = $user->midwife;
-            }
-            
-            if (!$personnel) {
-                abort(403, 'Unauthorized access.');
-            }
-            
-            // Fetch barangay and puroks under the user
-            $barangay = Barangay::with('puroks')->find($personnel->brgy_id);
-            $puroks = $barangay?->puroks ?? collect();
-            
-            // Get households belonging to the user's puroks
-            $purokIds = $puroks->pluck('id');
-            $householdIds = Household::whereIn('purok_id', $purokIds)->pluck('id');
-            
-            // Families within those households
-            $familyIds = Family::whereIn('household_id', $householdIds)->pluck('id');
-            
-            // Base resident query limited to user's families
-            $residentsQuery = Resident::with('family.household.purok')
-                ->whereIn('family_id', $familyIds);
-        } else {
-            // Advanced mode: fetch from entire database
-            $residentsQuery = Resident::with('family.household.purok');
-            
-            // Fetch all puroks for filter dropdown
-            $puroks = Purok::all();
-        }
-        
-        /**
-         * FILTER BY PUROK
-         */
-        $residentsQuery->when($request->filled('purok_id'), function ($query) use ($request) {
-            $purokId = $request->purok_id;
-            $query->whereHas('family.household', function ($q) use ($purokId) {
-                $q->where('purok_id', $purokId);
+        // Find the barangay and the puroks that the user manages
+        $barangay = Barangay::with('puroks')->find($personnel->brgy_id);
+        $puroks = $barangay->puroks;
+
+        // Get the purok IDs
+        $purokIds = $puroks->pluck('id');
+
+        // Build the query
+        $query = Resident::with('family.household.purok')
+            ->whereHas('family.household', function($q) use ($purokIds) {
+                $q->whereIn('purok_id', $purokIds);
             });
-        });
-        
+
+        // Apply purok filter (this can be done at DB level)
+        if ($request->filled('purok_id')) {
+            $query->whereHas('family.household', function($q) use ($request) {
+                $q->where('purok_id', $request->purok_id);
+            });
+        }
+
         // Check if we need to filter in memory (search or age group)
         $needsMemoryFiltering = $request->filled('search') || 
-                            ($request->filled('age_group') && 
-                                $request->age_group !== 'All age group' && 
-                                $request->age_group !== '');
-        
+                                ($request->filled('age_group') && 
+                                    $request->age_group !== 'All Age Groups' && 
+                                    $request->age_group !== '');
+
         if ($needsMemoryFiltering) {
-            // Get all residents and filter in memory
-            $allResidents = $residentsQuery->get();
-            
-            // Apply search filter
+            // Get all residents for in-memory filtering
+            $allResidents = $query->get();
+
+            // Apply search filter (in PHP, after decryption)
             if ($request->filled('search')) {
-                $searchTerm = strtolower(trim($request->search));
-                
-                $allResidents = $allResidents->filter(function ($resident) use ($searchTerm) {
-                    $firstName = strtolower($resident->firstName ?? '');
-                    $lastName = strtolower($resident->lastName ?? '');
-                    $middleName = strtolower($resident->middleName ?? '');
-                    
-                    // Concatenate full name variations
-                    $fullName = $firstName . ' ' . $middleName . ' ' . $lastName;
-                    $fullNameAlt = $firstName . ' ' . $lastName; // Without middle name
-                    
-                    // Check if search contains multiple words
-                    if (str_contains($searchTerm, ' ')) {
-                        // Multi-word search: check against full name variations
-                        return str_contains($fullName, $searchTerm) || 
-                            str_contains($fullNameAlt, $searchTerm);
-                    } else {
-                        // Single word: check individual name parts
-                        return str_contains($firstName, $searchTerm) ||
-                            str_contains($lastName, $searchTerm) ||
-                            str_contains($middleName, $searchTerm);
+                $searchTerm = strtolower($request->search);
+                $allResidents = $allResidents->filter(function($resident) use ($searchTerm) {
+                    // Search by resident ID
+                    if (preg_match('/^R?-?(\d+)$/i', $searchTerm, $matches)) {
+                        $residentId = (int)$matches[1];
+                        if ($resident->id == $residentId) {
+                            return true;
+                        }
                     }
+                    
+                    // Search by full name (encrypted fields are auto-decrypted by accessor)
+                    $fullName = strtolower(trim($resident->firstName . ' ' . ($resident->middleName ?? '') . ' ' . $resident->lastName));
+                    $nameWithoutMiddle = strtolower($resident->firstName . ' ' . $resident->lastName);
+                    
+                    return str_contains($fullName, $searchTerm) || str_contains($nameWithoutMiddle, $searchTerm);
                 });
             }
 
             // Apply age group filter
             if ($request->filled('age_group') && 
-                $request->age_group !== 'All age group' && 
+                $request->age_group !== 'All Age Groups' && 
                 $request->age_group !== '') {
                 
                 $ageGroup = $request->age_group;
@@ -157,29 +117,39 @@ class ResidentController extends Controller
                     }
                 });
             }
-            
-            // Manual pagination
+
+            // Manually paginate the filtered collection
             $page = $request->get('page', 1);
-            $perPage = 20;
+            $perPage = 7;
             $total = $allResidents->count();
+            $results = $allResidents->forPage($page, $perPage);
             
             $residents = new \Illuminate\Pagination\LengthAwarePaginator(
-                $allResidents->forPage($page, $perPage)->values(),
-                $total,
-                $perPage,
-                $page,
+                $results, 
+                $total, 
+                $perPage, 
+                $page, 
                 ['path' => $request->url(), 'query' => $request->query()]
             );
         } else {
-            // Paginate residents normally
-            $residents = $residentsQuery->paginate(20)->withQueryString();
+            // No memory filtering needed, use database pagination
+            $residents = $query->paginate(7);
         }
-        
-        return response()->json([
-            'success' => true,
-            'data' => $residents,
-            'puroks' => $puroks ?? collect(),
-            'is_advanced' => $isAdvanced,
+
+        // Return JSON for AJAX requests
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'status' => 'success',
+                'html' => view('components.resident.table-rows', compact('residents'))->render(),
+                'pagination' => view('components.resident.pagination', compact('residents'))->render(),
+            ]);
+        }
+
+        // Return full view for initial page load
+        return view('midwife.resident-list', [
+            'barangay' => $barangay,
+            'puroks' => $puroks,
+            'residents' => $residents,
         ]);
     }
 
