@@ -35,7 +35,7 @@ class FortifyServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        // ✅ Custom authentication logic for encrypted emails
+        //  Custom authentication logic for encrypted emails
         Fortify::authenticateUsing(function (Request $request) {
             $email = $request->input('email');
             $password = $request->input('password');
@@ -74,7 +74,7 @@ class FortifyServiceProvider extends ServiceProvider
         });
 
         RateLimiter::for('heavy-req', function ($request) {
-            return Limit::perMinute(300)->by($request->user()->id);
+            return Limit::perMinute(100)->by($request->user()->id);
         });
 
         RateLimiter::for('sync', function ($request) {

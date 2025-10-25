@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use App\Helpers\ProjectCrypt;
+use Illuminate\Support\Str;
+
 
 
 class Resident extends Model

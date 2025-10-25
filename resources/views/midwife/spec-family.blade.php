@@ -176,4 +176,5 @@
             </div>
         </div>
         @include('components.modals.family.add-existing-resident')
+        @include('components.modals.resident.add-resident-modal')
 </x-app-layout>

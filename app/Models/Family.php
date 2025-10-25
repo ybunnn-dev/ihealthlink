@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Family extends Model
 {
@@ -25,6 +26,17 @@ class Family extends Model
     |--------------------------------------------------------------------------
     */
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($resident) {
+            if (empty($resident->client_uuid)) {
+                $resident->client_uuid = Str::uuid()->toString();
+            }
+        });
+    }
+    
     // A family belongs to one household
     public function household()
     {

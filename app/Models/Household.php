@@ -5,6 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+use Illuminate\Support\Str;
+
+
 class Household extends Model
 {
     use HasFactory;
@@ -24,7 +27,16 @@ class Household extends Model
     | Relationships
     |--------------------------------------------------------------------------
     */
+    protected static function boot()
+    {
+        parent::boot();
 
+        static::creating(function ($resident) {
+            if (empty($resident->client_uuid)) {
+                $resident->client_uuid = Str::uuid()->toString();
+            }
+        });
+    }
     // A household belongs to a purok
     public function purok()
     {

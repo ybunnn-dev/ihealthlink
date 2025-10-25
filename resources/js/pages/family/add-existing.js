@@ -1,7 +1,6 @@
 /* eslint-disable no-undef, no-unused-vars */
 
 const family = window.family; // Added this based on your payload
-console.log('Family data:', family);
 
 // --- Element Variables (Modal 1: Search) ---
 const addResidentModalEl = document.getElementById('addResidentModal');
@@ -13,11 +12,11 @@ const confirmAddResidentBtn = document.getElementById('confirmAddResidentBtn'); 
 const addExTrigger = document.getElementById('add-ex');
 
 // --- Element Variables (Modal 2: Confirm) ---
-const confirmAddResidentModalEl = document.getElementById('confirm-add-resident-modal');
-const confirmAddResidentCancelBtn = document.getElementById('confirm-add-resident-cancel');
-const confirmAddResidentSubmitBtn = document.getElementById('confirm-add-resident-submit'); // This is the *final* submit
-const confirmAddResidentCheckbox = document.getElementById('confirm-add-resident-checkbox');
-const selectedResidentNameConfirmEl = document.getElementById('selected-resident-name-confirm');
+const confirmAddResidentModalEl = document.getElementById('confirm-add-existing-resident-modal');
+const confirmAddResidentCancelBtn = document.getElementById('confirm-add-existing-resident-cancel');
+const confirmAddResidentSubmitBtn = document.getElementById('confirm-add-existing-resident-submit'); // This is the *final* submit
+const confirmAddResidentCheckbox = document.getElementById('confirm-add-existing-resident-checkbox');
+const selectedResidentNameConfirmEl = document.getElementById('selected-existing-resident-name-confirm');
 
 // --- Modal Initialization ---
 const modalOptions = {

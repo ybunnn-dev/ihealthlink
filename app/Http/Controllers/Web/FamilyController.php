@@ -136,7 +136,7 @@ class FamilyController extends Controller
    public function show(Family $family)
     {
         // Eager load household + purok + residents
-        $family->load(['household.purok', 'residents']);
+        $family->load(['household.purok.barangay', 'residents']);
 
         $residentCount = $family->residents->count(); // collection count
 
