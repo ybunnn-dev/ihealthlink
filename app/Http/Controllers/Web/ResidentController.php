@@ -8,16 +8,23 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
+
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use App\Models\Resident;
+use App\Models\ResidenceHistory;
+use App\Models\HealthSigns;
+use App\Models\ResidentMedicalHistory;
+use App\Models\BasicHealthRecord;
+use App\Models\ResidentFamilyHistory;
 use App\Models\Family;
 use App\Models\Household;
 use App\Models\Barangay;
-use App\Models\ResidenceHistory;
-use App\Models\HealthProgram;
-use App\Helpers\ProjectCrypt;
 use App\Models\ActivityLog;
+use App\Models\HealthProgram;
 use App\Models\EnrolledResident;
-use App\Models\BasicHealthRecord;
+use App\Models\Purok;
+
 
 class ResidentController extends Controller
 {  
@@ -496,6 +503,215 @@ class ResidentController extends Controller
         return response()->json([
             'residents' => $residents, 
         ]);
+    }
+
+    public function getAllResidents(Request $request)
+    {
+        // Base resident query - fetch all active residents
+        $residentsQuery = Resident::with('family.household.purok.barangay')
+            ->where('status', 'active'); // Assuming you have an is_active column
+        
+        // Check if we need to filter in memory (search or age group)
+        $needsMemoryFiltering = $request->filled('search') || 
+                            ($request->filled('age_group') && 
+                                $request->age_group !== 'All age group' && 
+                                $request->age_group !== '');
+        
+        if ($needsMemoryFiltering) {
+            // Get all active residents and filter in memory
+            $allResidents = $residentsQuery->get();
+            
+            // Apply search filter
+            if ($request->filled('search')) {
+                $searchTerm = strtolower(trim($request->search));
+                
+                $allResidents = $allResidents->filter(function ($resident) use ($searchTerm) {
+                    $firstName = strtolower($resident->firstName ?? '');
+                    $lastName = strtolower($resident->lastName ?? '');
+                    $middleName = strtolower($resident->middleName ?? '');
+                    
+                    // Concatenate full name variations
+                    $fullName = $firstName . ' ' . $middleName . ' ' . $lastName;
+                    $fullNameAlt = $firstName . ' ' . $lastName; // Without middle name
+                    
+                    // Check if search contains multiple words
+                    if (str_contains($searchTerm, ' ')) {
+                        // Multi-word search: check against full name variations
+                        return str_contains($fullName, $searchTerm) || 
+                            str_contains($fullNameAlt, $searchTerm);
+                    } else {
+                        // Single word: check individual name parts
+                        return str_contains($firstName, $searchTerm) ||
+                            str_contains($lastName, $searchTerm) ||
+                            str_contains($middleName, $searchTerm);
+                    }
+                });
+            }
+
+            // Apply age group filter
+            if ($request->filled('age_group') && 
+                $request->age_group !== 'All age group' && 
+                $request->age_group !== '') {
+                
+                $ageGroup = $request->age_group;
+                
+                $allResidents = $allResidents->filter(function ($resident) use ($ageGroup) {
+                    if (!$resident->birthdate) {
+                        return false;
+                    }
+                    
+                    try {
+                        $birthdate = \Carbon\Carbon::parse($resident->birthdate);
+                        $age = $birthdate->age;
+                        
+                        switch ($ageGroup) {
+                            case 'Infant (0-1)':
+                                return $age >= 0 && $age <= 1;
+                            case 'Child (2-12)':
+                                return $age >= 2 && $age <= 12;
+                            case 'Teen (13-17)':
+                                return $age >= 13 && $age <= 17;
+                            case 'Adult (18-59)':
+                                return $age >= 18 && $age <= 59;
+                            case 'Senior (60+)':
+                                return $age >= 60;
+                            default:
+                                return true;
+                        }
+                    } catch (\Exception $e) {
+                        return false;
+                    }
+                });
+            }
+            
+            // Take only first 20
+            $residents = $allResidents->take(20)->values();
+        } else {
+            // Take first 20 residents without filtering
+            $residents = $residentsQuery->limit(20)->get();
+        }
+        
+        return response()->json([
+            'success' => true,
+            'data' => $residents,
+        ]);
+    }
+
+    public function transfer(Request $request){
+        // Validate and log
+        $validated = $request->validate([
+            'resident_id' => 'required|integer',
+            'family_id' => 'required|integer',
+        ]);
+        
+        \Log::info('Validated transfer request', $validated);
+        
+        try {
+            // Find the resident with their current family and purok
+            $resident = Resident::with(['family.household.purok'])->findOrFail($validated['resident_id']);
+            
+            // Get the old purok ID (before transfer)
+            $oldPurokId = $resident->family?->household?->purok?->id;
+            
+            \Log::info('Current resident family', [
+                'resident_id' => $resident->id,
+                'current_family_id' => $resident->family_id,
+                'current_purok_id' => $oldPurokId,
+            ]);
+            
+            // Find the new family with its household and purok
+            $newFamily = Family::with(['household.purok'])->findOrFail($validated['family_id']);
+            $newPurokId = $newFamily->household?->purok?->id;
+            $newPurokName = $newFamily->household?->purok?->name ?? 'Unknown Purok';
+            
+            \Log::info('New family details', [
+                'new_family_id' => $newFamily->id,
+                'new_purok_id' => $newPurokId,
+                'new_purok_name' => $newPurokName,
+            ]);
+            
+            // Check if purok changed
+            if ($oldPurokId !== $newPurokId) {
+                \Log::info('Purok changed - updating residence history');
+                
+                // Find the current active residence history and mark as 'moved'
+                ResidenceHistory::where('resident_id', $resident->id)
+                    ->where('status', 'active')
+                    ->update([
+                        'status' => 'moved',
+                        'updated_at' => now(),
+                    ]);
+                
+                // Create new residence history for the new purok
+                ResidenceHistory::create([
+                    'resident_id' => $resident->id,
+                    'purok_id' => $newPurokId,
+                    'status' => 'active',
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+                
+                \Log::info('Residence history updated', [
+                    'old_purok_id' => $oldPurokId,
+                    'new_purok_id' => $newPurokId,
+                ]);
+            } else {
+                \Log::info('Purok unchanged - no residence history update needed');
+            }
+            
+            // Update the resident's family_id
+            $resident->family_id = $validated['family_id'];
+            $resident->save();
+            
+            \Log::info('Resident family_id updated', [
+                'resident_id' => $resident->id,
+                'new_family_id' => $validated['family_id'],
+            ]);
+            
+            // Build resident full name
+            $residentName = trim(
+                $resident->firstName . ' ' . 
+                ($resident->middleName ? $resident->middleName . ' ' : '') . 
+                $resident->lastName . 
+                ($resident->suffix ? ' ' . $resident->suffix : '')
+            );
+            
+            // Log the activity
+            ActivityLog::create([
+                'user_id' => auth()->id(),
+                'module_id' => 2,
+                'activity' => 'Transferred resident: ' . $residentName . ' to ' . ucfirst($newPurokName) . '.',
+            ]);
+            
+            \Log::info('Activity logged', [
+                'user_id' => auth()->id(),
+                'resident_name' => $residentName,
+                'purok_name' => $newPurokName,
+            ]);
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Resident transferred successfully',
+                'data' => [
+                    'resident_id' => $resident->id,
+                    'new_family_id' => $validated['family_id'],
+                    'new_purok_id' => $newPurokId,
+                    'new_purok_name' => $newPurokName,
+                    'purok_changed' => $oldPurokId !== $newPurokId,
+                ]
+            ], 200);
+            
+        } catch (\Exception $e) {
+            \Log::error('Transfer failed', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to transfer resident: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
 }   

@@ -1,5 +1,9 @@
-@section('title', 'Households | #134')
+@section('title', 'Family | #'.$family->id)
+@section('page-id', 'spec-family')
 <x-app-layout>
+    <script>
+        window.family = @json($family);
+    </script>
     <div class="py-12 px-5">
         <div class="max-w-[90rem] mx-auto sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 gap-4">
@@ -11,10 +15,11 @@
                         <span class="font-semibold">Return</span>
                     </div>
                 </a>
-
+                    
                 <div class="grid grid-cols-1 slg:grid-cols-3 gap-4">
-                    <div class="col-span-1 h-80 bg-f7 rounded-lg flex flex-col items-center justify-center p-4"> 
-                        <svg class="flex-shrink-0
+                    <div class="cols-span-1 grid grid-rows-6 gap-3">
+                        <div class="row-span-5 h-80 bg-f7 rounded-lg flex flex-col items-center justify-center p-4"> 
+                            <svg class="flex-shrink-0
                                     w-32 h-32 lg:w-40 lg:h-40 xl2:w-44 xl2:h-44 text-main_font" version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve" fill="currentColor">
                             <g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
                             <g id="SVGRepo_iconCarrier"> <style type="text/css"> .st0{fill:currentColor} </style> 
@@ -26,10 +31,24 @@
                                 </g> 
                             </g>
                         </svg>
-                        <h1 class="text-main_font font-bold mt-3 text-xl">{{ $family->head ? $family->head->full_name : 'TBD' }} Family</h1>
-                        <p class="text-main_font font-bold">Family #{{ $family->id }}</p> 
+                            <p class="text-main_font font-bold mt-2">Family #{{ $family->id }}</p> 
+                        </div>
+                        <div class="grid grid-cols-1 lg:grid-cols-2 w-full px-0 pb-0 row-span-1 gap-3"> 
+                            <button id="edit-fam-btn" 
+                                    type="button" 
+                                    class="edit-household col-span-1 px-5 py-3 text-sm font-medium text-white bg-mainblue rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300"
+                                >
+                                Edit
+                            </button>   
+                                            
+                            <button id="set-stat-btn" 
+                                    type="button" 
+                                    class=" col-span-1 px-5 py-3 text-sm font-medium text-mainblue bg-white border border-mainblue rounded-lg hover:bg-blue-50 focus:outline-none focus:ring-4 focus:ring-300">
+                                Set Status
+                            </button>
+                        </div>
                     </div>
-                    <div class="flex-grow h-80 bg-f7 rounded-lg px-12 py-8 col-span-2">
+                    <div class="flex-grow h-full bg-f7 rounded-lg px-12 py-8 col-span-2">
                         <h2 class="text-xl font-semibold text-main_font mb-6">Family Info</h2>
                         <div class="grid grid-cols-[auto_1fr] gap-x-24 gap-y-3 text-xs">
                             <p class="font-semibold text-main_font">PUROK NO.</p>
@@ -64,11 +83,15 @@
                         <div class="p-8 pt-10">
                             <div class="grid grid-cols-2 gap-1 mb-6 items-center">
                                 <h1 class="text-2xl font-semibold text-sub_blue">Family Members</h1>
+                                
                                 <!-- Flex container -->
                                 <div class="flex flex-col slg2:flex-row slg2:items-end gap-4 justify-end">  
                                     <!-- Add Household Button -->
+                                     <div class="w-full xs:w-40 pt-5 xs:pt-0">
+                                        <button id="add-ex" type="button" class="w-full h-[2.34rem] text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3">Transfer Resident</button>
+                                    </div>
                                     <div class="w-full xs:w-40 pt-5 xs:pt-0">
-                                        <button type="button" class="w-full h-[2rem] text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3">Add Member</button>
+                                        <button id="add-new" type="button" class="w-full h-[2.34rem] text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3">Add Member</button>
                                     </div>
                                 </div>
                             </div>
@@ -152,4 +175,5 @@
                 </div>
             </div>
         </div>
+        @include('components.modals.family.add-existing-resident')
 </x-app-layout>

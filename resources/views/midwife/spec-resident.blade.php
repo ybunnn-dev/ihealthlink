@@ -170,12 +170,6 @@
                             <div class="h-1 w-full bg-transparent mt-1"></div>
                         </div>
 
-                        <!-- Health Programs Tab (Active) -->
-                        <div class="flex flex-col items-center flex-grow sm:flex-grow-0 cursor-pointer" id="healthProgramsTab">
-                            <span class="font-semibold text-sub_blue text-sm">Health Programs</span>
-                            <div class="h-1 w-full bg-sub_blue mt-1"></div>
-                        </div>
-
                         <!-- Consultation History Tab -->
                         <div class="flex flex-col items-center flex-grow sm:flex-grow-0 cursor-pointer" id="consultHistoryTab">
                             <span class="font-semibold text-gray-500 text-sm">Consultation History</span>
@@ -189,93 +183,6 @@
                     <!-- Basic Health Information Card -->
                     <x-resident.health-info :resident="$resident" />
                  
-                </div>
-                <div id="healthProgramsCard" class="bg-f7 rounded-xl overflow-hidden">
-                    <div class="p-6 pt-6">
-                        <div class="grid grid-rows-1 gap-1">
-                            <div class="pb-6">
-                                <div class="flex flex-col slg2:flex-row slg2:items-end gap-4">
-                                    <div class="w-full slg2:w-64 slg2:flex-grow slg2:max-w-md">
-                                        <label for="default-search" class="mb-2 text-sm font-medium text-main_font mb-4">Search</label>
-                                        <div class="relative">
-                                            <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                                                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-                                                </svg>
-                                            </div>
-                                            <input type="search" id="default-search" class="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500" placeholder="Search..."/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="relative overflow-x-auto">
-                            <table class="w-full text-sm text-left text-main_font bg-col_tab_h">
-                                <thead class="text-xs text-main_font uppercase">
-                                    <tr>
-                                        <th scope="col" class="px-6 py-3">PROGRAM ID</th>
-                                        <th scope="col" class="px-6 py-3">PROGRAM NAME</th>
-                                        <th scope="col" class="px-6 py-3">DATE ENROLLED</th>
-                                        <th scope="col" class="px-6 py-3">LAST UPDATED</th>
-                                        <th scope="col" class="px-6 py-3">STATUS</th>
-                                        <th scope="col" class="px-6 py-3">ACTION</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr class="bg-white border-b bg-f7 text-normal_font">
-                                        <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">H001</th>
-                                        <td class="px-6 py-4">Child Immunization Program</td>
-                                        <td class="px-6 py-4">June 1, 2024</td>
-                                        <td class="px-6 py-4">July 15, 2025</td>
-                                        <td class="px-6 py-4">Active</td>
-                                        <td class="px-6 py-4">
-                                            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded text-xs">View</button>
-                                        </td>
-                                    </tr>
-                                    <tr class="bg-white border-b bg-f7 text-normal_font">
-                                        <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">H002</th>
-                                        <td class="px-6 py-4">Maternal & Prenatal Care</td>
-                                        <td class="px-6 py-4">July 10, 2024</td>
-                                        <td class="px-6 py-4">July 18, 2025</td>
-                                        <td class="px-6 py-4">Active</td>
-                                        <td class="px-6 py-4">
-                                            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded text-xs">View</button>
-                                        </td>
-                                    </tr>
-                                    <tr class="bg-white border-b bg-f7 text-normal_font">
-                                        <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">H003</th>
-                                        <td class="px-6 py-4">Diabetes Management Program</td>
-                                        <td class="px-6 py-4">August 22, 2024</td>
-                                        <td class="px-6 py-4">July 17, 2025</td>
-                                        <td class="px-6 py-4">Active</td>
-                                        <td class="px-6 py-4">
-                                            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded text-xs">View</button>
-                                        </td>
-                                    </tr>
-                                    <tr class="bg-white border-b bg-f7 text-normal_font">
-                                        <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">H004</th>
-                                        <td class="px-6 py-4">Hypertension Awareness Campaign</td>
-                                        <td class="px-6 py-4">September 5, 2024</td>
-                                        <td class="px-6 py-4">July 16, 2025</td>
-                                        <td class="px-6 py-4">Active</td>
-                                        <td class="px-6 py-4">
-                                            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded text-xs">View</button>
-                                        </td>
-                                    </tr>
-                                    <tr class="bg-white border-b bg-f7 text-normal_font">
-                                        <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">H005</th>
-                                        <td class="px-6 py-4">Nutrition and Healthy Lifestyle</td>
-                                        <td class="px-6 py-4">October 1, 2024</td>
-                                        <td class="px-6 py-4">July 19, 2025</td>
-                                        <td class="px-6 py-4">Active</td>
-                                        <td class="px-6 py-4">
-                                            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded text-xs">View</button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
                 </div>
                 <div id="consultationHistory" class="bg-f7 rounded-xl overflow-hidden">
                     <div class="p-6 pt-6">

@@ -98,6 +98,8 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   else if (bodyClass.contains('family')) {
     import('./pages/family/add-family.js');
+  }else if(bodyClass.contains('spec-family')){
+    import('./pages/family/add-existing.js');
   }
   else if (bodyClass.contains('health-programs')) {
     import('./pages/health-programs/add-health-program.js');

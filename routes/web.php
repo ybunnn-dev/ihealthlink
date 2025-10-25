@@ -316,6 +316,10 @@ Route::middleware([
     Route::get('/barangay/logs/{log}', [BarangayLogs::class, 'show'])->name('logs.show');
 
     Route::put('/barangay/household-head/set', [HouseholdController::class, 'setHead']);
+
+    Route::get('/barangay/residents/get/all' , [ResidentController::class, 'getAllResidents']);
+
+    Route::put('/barangay/resident/transfer', [ResidentController::class, 'transfer']);
 });
 
 
