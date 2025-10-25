@@ -234,39 +234,43 @@ class HouseholdController extends Controller
     public function show(Household $household)
     {
         $user = Auth::user();
-        
         $personnel = $user->bhwWeb ?? $user->midwife;
-        
+
         if (!$personnel) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'No associated personnel found for this user.'
             ], 404);
         }
-        
-        // Load related data with active residents count per family
+
+        // Load related data: purok, head, families (with residents + active residents count)
         $household = $household->load([
-                'purok',
-                'head',
-                'families' => function ($query) {
-                    $query->withCount([
-                        'residents' => function ($query) {
-                            $query->where('status', 'active');
-                        }
-                    ]);
-                }
-            ])
-            ->loadCount('families');
-        
+            'purok',
+            'head',
+            'families' => function ($query) {
+                $query->with([
+                    'residents' => function ($resQuery) {
+                        // Optional: filter or order residents if needed
+                        $resQuery->orderBy('lastName');
+                    },
+                ])->withCount([
+                    'residents' => function ($countQuery) {
+                        $countQuery->where('status', 'active');
+                    },
+                ]);
+            },
+        ])->loadCount('families');
+
         \Log::info($household);
-        
+
         return view('midwife.spec-household', [
             'household' => $household,
-            'purok'     => $household->purok,
-            'families'  => $household->families,
+            'purok' => $household->purok,
+            'families' => $household->families,
             'familiesCount' => $household->families_count,
         ]);
     }
+
 
     public function getHouseholdsJson(Request $request)
     {
@@ -330,5 +334,48 @@ class HouseholdController extends Controller
             'households' => $formattedHouseholds
         ]);
     }
+    
+    public function setHead(Request $request)
+    {
+        $user = Auth::user();
 
+        // Identify which type of personnel is logged in
+        $personnel = $user->bhw ?? $user->bhwWeb ?? $user->midwife;
+
+        if (!$personnel) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'No associated personnel found for this user.'
+            ], 404);
+        }
+
+        \Log::info($request['household_id']);
+        \Log::info($request['head_id']);
+
+        $household = Household::find($request['household_id']);
+
+        if (!$household) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Household not found.'
+            ], 404);
+        }
+
+        $household->update([
+            'head_id' => $request['head_id']
+        ]);
+
+        // Log the activity
+        ActivityLog::create([
+            'user_id'   => $user->id,
+            'module_id' => 5, // replace with correct module ID for households
+            'activity'  => 'Updated Household #' . $household->id . '.',
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Household head updated successfully.',
+            'household' => $household
+        ], 200);
+    }
 }

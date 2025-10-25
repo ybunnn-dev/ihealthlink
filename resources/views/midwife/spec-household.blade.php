@@ -4,6 +4,7 @@
     <div class="py-12 px-5">
         <script>
             window.household = @json($household);
+            window.families = @json($families);
         </script>
         <div class="max-w-[90rem] mx-auto sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 gap-4">

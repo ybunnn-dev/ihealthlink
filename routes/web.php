@@ -314,6 +314,8 @@ Route::middleware([
     Route::post('/barangay/health-program/update-child-record', [ChildcareController::class, 'updateChildRecord']);
 
     Route::get('/barangay/logs/{log}', [BarangayLogs::class, 'show'])->name('logs.show');
+
+    Route::put('/barangay/household-head/set', [HouseholdController::class, 'setHead']);
 });
 
 
