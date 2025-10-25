@@ -98,7 +98,7 @@
                                         Family #
                                     </th>
                                     <th scope="col" class="px-6 py-3">
-                                        Family Head
+                                        Members
                                     </th>
                                     <th scope="col" class="px-6 py-3">
                                         Purok
@@ -122,7 +122,7 @@
                                     @php
                                         // Prepare variables for display and masking
                                         $familyIdString = (string)$family->id;
-                                        $familyHead = $family->head ? $family->head->full_name : '—';
+                                        $memNum = (string)$family->active_residents_count;
                                         $purokName = $family->household->purok->name;
                                         $is4psText = $family->is_4ps ? 'Yes' : 'No';
                                         $isIndigentText = $family->is_indigent ? 'Yes' : 'No';
@@ -138,8 +138,8 @@
                                         </th>
 
                                         <td class="px-6 py-4 ">
-                                            <span x-show="showPrivacy">{{ $familyHead }}</span>
-                                            <span x-show="!showPrivacy">{{ str_repeat('*', strlen($familyHead)) }}</span>
+                                            <span x-show="showPrivacy">{{ $memNum }}</span>
+                                            <span x-show="!showPrivacy">{{ str_repeat('*', strlen($memNum)) }}</span>
                                         </td>
 
                                         <td class="px-6 py-4 ">

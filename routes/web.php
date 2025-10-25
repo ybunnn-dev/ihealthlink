@@ -322,6 +322,10 @@ Route::middleware([
     Route::put('/barangay/resident/transfer', [ResidentController::class, 'transfer']);
 
     Route::put('/barangay/family/update/{family}', [FamilyController::class, 'update']);
+
+    Route::put('/barangay/families/set-status', [FamilyController::class, 'setStatus'])
+    ->name('families.setStatus');
+
 });
 
 

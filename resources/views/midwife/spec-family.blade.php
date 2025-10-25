@@ -106,7 +106,7 @@
                                                 NAME
                                             </th>
                                             <th scope="col" class="px-6 py-3">
-                                                RELATIONSHIP WITH HEAD
+                                                AGE
                                             </th>
                                             <th scope="col" class="px-6 py-3">
                                                 STATUS
@@ -116,17 +116,37 @@
                                             </th>
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody>   
                                         @forelse($family->residents as $resident)
+                                            @php
+                                                // Parse dates safely
+                                                $birthdate = \Carbon\Carbon::parse($resident->birthdate);
+                                                $now = \Carbon\Carbon::now();
+
+                                                // Force integer age values
+                                                $years = (int) floor($birthdate->diffInYears($now, false));
+                                                $totalMonths = (int) floor($birthdate->diffInMonths($now, false));
+                                                $months = $totalMonths % 12;
+                                                $days = (int) floor($birthdate->diffInDays($now, false));
+                                            @endphp
                                             <tr class="bg-white border-b bg-f7 text-normal_font">
                                                 <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
-                                                    001
+                                                {{ $resident->id }}
                                                 </th>
                                                 <td class="px-6 py-4">
                                                     {{ $resident->firstName }} {{ $resident->middleName }} {{ $resident->lastName }} {{ $resident->suffix ? $resident->suffix : '' }} 
                                                 </td>
                                                 <td class="px-6 py-4">
-                                                    {{ $resident->family_relationship }}
+                                                    @if ($years >= 1)
+                                                        {{ $years }} year{{ $years > 1 ? 's' : '' }}
+                                                    @elseif ($months >= 1)
+                                                        {{ $months }} month{{ $months > 1 ? 's' : '' }}
+                                                    @elseif ($days < 30)
+                                                        Newborn
+                                                    @else
+                                                        0 months
+                                                    @endif
+
                                                 </td>
                                                 <td class="px-6 py-4 bg-f7">
                                                     @if($resident->status === 'active')
@@ -152,7 +172,6 @@
                                                 </td>
                                             </tr>
                                         @empty
-                                        
                                             <tr class="bg-white border-b">
                                                 <td colspan="6" class="px-6 py-4 text-center text-gray-500">
                                                     <div class="text-center py-10">
@@ -168,6 +187,7 @@
                                             </tr>
                                         @endforelse
                                     </tbody>
+
                                 </table>
                             </div>
                         </div>

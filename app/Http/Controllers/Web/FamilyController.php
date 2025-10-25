@@ -19,28 +19,36 @@ use App\Models\Purok;
 
 class FamilyController extends Controller
 {
-    public function index(){
-        //get the current user's personnel info
+    public function index()
+    {
+        // Get the current user's personnel info
         $personnel = Auth::user()->midwife;
 
-        //find the barangay and the puroks that the user manages
+        // Find the barangay and the puroks that the user manages
         $barangay = Barangay::with('puroks')->find($personnel->brgy_id);
         $puroks = $barangay->puroks;
 
-        //get the households that belongs to the puroks of that barangay
+        // Get the households that belong to the puroks of that barangay
         $purokIds = $puroks->pluck('id');
         $households = Household::whereIn('purok_id', $purokIds)->get();
 
-        //get the families
+        // Get the families with household + purok + count of active residents
         $householdIds = $households->pluck('id');
-        $families = Family::with('household.purok')
-        ->whereIn('household_id', $householdIds)
-        ->paginate(7); 
-        
+
+        $families = Family::with(['household.purok'])
+            ->withCount([
+                'residents as active_residents_count' => function ($query) {
+                    $query->where('status', 'active'); // adjust field name if needed
+                }
+            ])
+            ->whereIn('household_id', $householdIds)
+            ->paginate(7);
+
         return view('midwife.families', [
             'families' => $families
         ]);
     }
+
 
     public function store(Request $request)
     {
@@ -548,4 +556,91 @@ class FamilyController extends Controller
             'data'    => $family->fresh(),
         ], 200);
     }
+
+    public function setStatus(Request $request)
+    {
+        $user = Auth::user();
+
+        // Determine personnel type
+        if ($user->bhwWeb && $user->bhwWeb->role_id == 4) {
+            $personnel = $user->bhwWeb;
+        } else {
+            $personnel = $user->midwife;
+        }
+
+        if (!$personnel) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Unauthorized access. No associated personnel found.'
+            ], 403);
+        }
+        \Log::info('vakla');
+        // Validate the request
+        $request->validate([
+            'family_id' => 'required|exists:families,id',
+            'status' => 'required|in:active,inactive'
+        ]);
+        \Log::info('vaklas');
+        try {
+            DB::beginTransaction();
+
+            // Find the family
+            $family = Family::findOrFail($request->family_id);
+            
+            // Update family status
+            $family->status = $request->status;
+            $family->save();
+            \Log::info('vaklas2');
+            // If setting family to inactive, cascade the changes
+            if ($request->status === 'inactive') {
+                // Get all residents belonging to this family
+                $residents = Resident::where('family_id', $family->id)
+                    ->where('status', '!=', 'deceased') // Exclude deceased residents
+                    ->get();
+                \Log::info('vaklas21');
+                foreach ($residents as $resident) {
+                    // Update resident status to 'moved'
+                    $resident->status = 'moved';
+                    $resident->save();
+
+                    // Update all active residence histories for this resident
+                    ResidenceHistory::where('resident_id', $resident->id)
+                        ->where('status', 'active')
+                        ->update([
+                            'status' => 'moved',
+                            'updated_at' => now() // Optional: track when they moved
+                        ]);
+                }
+            }
+            \Log::info('vaklas215');
+            // Log the update
+            ActivityLog::create([
+                'user_id'   => $user->id,
+                'module_id' => 4,
+                'activity'  => 'Updated family ' . $request->family_id. '.',
+            ]);
+
+            DB::commit();
+
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Family status updated successfully',
+                'data' => [
+                    'family' => $family,
+                    'affected_residents' => isset($residents) ? $residents->count() : 0
+                ]
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to update family status',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
 }
