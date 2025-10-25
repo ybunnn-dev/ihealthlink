@@ -139,6 +139,7 @@ class HouseholdController extends Controller
         ]);
 
         return response()->json([
+            'result'  => 'success',
             'message'   => 'Household updated successfully!',
             'household' => $household,
             'history'   => $history,
@@ -224,6 +225,7 @@ class HouseholdController extends Controller
         ]);
 
         return response()->json([
+            'result'  => 'success',
             'message'   => 'Household created successfully!',
             'household' => $household,
             'history'   => $history,

@@ -184,6 +184,7 @@ Route::middleware([
     'active',
 ])->group(function () {
     
+    Route::put('/barangay/family/transfer', [FamilyController::class, 'transfer'])->name('family.transfer');
 
     Route::put('/barangay/household/update', [HouseholdController::class, 'update']);
 
@@ -209,6 +210,8 @@ Route::middleware([
 
     Route::get('/barangay/residents/load', [ResidentController::class, 'index'])->name('midwife.residents');
     
+    Route::get('barangay/resident/families/find', [FamilyController::class, 'getAllFamilies']);
+
     Route::get('barangay/resident/families/get', [FamilyController::class, 'getFamilies']);
     
     Route::get('/barangay/family/{family}', [FamilyController::class, 'show'])

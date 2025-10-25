@@ -197,4 +197,6 @@
         </div>
         @include('components.modals.household.edit-household');
          @include('components.modals.family.add-family-modal')
+         @include('components.modals.household.choose-family.choose-family-base')
+         @include('components.modals.household.choose-household-head')
 </x-app-layout>

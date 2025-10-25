@@ -84,8 +84,10 @@ document.addEventListener('DOMContentLoaded', () => {
     import('./pages/household/add-household.js');
   }
   else if (bodyClass.contains('spec-household')) {
+    import('./pages/household/choose-head.js');
     import('./pages/household/edit-household.js');
     import('./pages/household/add-family.js');
+    import('./pages/household/add-existing-fam.js');
   }
   else if (bodyClass.contains('spec-resident')) {
     import('./pages/resident/create-referral.js');
