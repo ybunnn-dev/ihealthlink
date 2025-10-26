@@ -6,11 +6,9 @@ use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Fortify\ResetUserPassword;
 use App\Actions\Fortify\UpdateUserPassword;
 use App\Actions\Fortify\UpdateUserProfileInformation;
-use App\Models\User;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
@@ -20,37 +18,16 @@ use Laravel\Fortify\Fortify;
 
 class FortifyServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
     public function register(): void
     {
         //
     }
 
-    /**
-     * Bootstrap any application services.
-     */
-
-
     public function boot(): void
     {
-        //  Custom authentication logic for encrypted emails
-        Fortify::authenticateUsing(function (Request $request) {
-            $email = $request->input('email');
-            $password = $request->input('password');
-
-            // Decrypt-aware email matching (since your model decrypts automatically)
-            $user = User::all()->first(function ($u) use ($email) {
-                return $u->email === $email;
-            });
-
-            if ($user && Hash::check($password, $user->password)) {
-                return $user;
-            }
-
-            return null;
-        });
+        // REMOVED: Custom authentication logic
+        // Now using default Jetstream/Fortify authentication
+        // which queries: User::where('email', $email)->first()
 
         // Fortify default setup
         Fortify::createUsersUsing(CreateNewUser::class);
@@ -118,6 +95,4 @@ class FortifyServiceProvider extends ServiceProvider
             };
         });
     }
-
 }
-
