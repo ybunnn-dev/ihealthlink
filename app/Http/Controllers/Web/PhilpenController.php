@@ -142,7 +142,6 @@ class PhilpenController extends Controller
                     // Create Health Signs (per consultation to track over time)
                     HealthSigns::create([
                         'consultation_id' => $consultationId,  // ← Add consultation_id
-                        'resident_id' => $residentId,
                         'chest_pain' => null,
                         'difficulty_in_breathing' => null,
                         'loss_of_consciousness' => null,
@@ -161,7 +160,6 @@ class PhilpenController extends Controller
                     // Create Family History (per consultation to track over time)
                     ResidentFamilyHistory::create([
                         'consultation_id' => $consultationId,  // ← Add consultation_id
-                        'resident_id' => $residentId,
                         'hypertension' => null,
                         'heart_diseases' => null,
                         'copd' => null,
@@ -178,7 +176,6 @@ class PhilpenController extends Controller
                     // Create Medical History (per consultation to track over time)
                     ResidentMedicalHistory::create([
                         'consultation_id' => $consultationId,  // ← Add consultation_id
-                        'resident_id' => $residentId,
                         'hypertension' => null,
                         'heart_diseases' => null,
                         'copd' => null,
@@ -196,7 +193,6 @@ class PhilpenController extends Controller
                     // Create Risk Assessment (per consultation to track over time)
                     RiskAssessment::create([
                         'consultation_id' => $consultationId,  // ← Add consultation_id
-                        'resident_id' => $residentId,
                         'polyphagia' => null,
                         'polydipsia' => null,
                         'polyuria' => null,
@@ -221,7 +217,6 @@ class PhilpenController extends Controller
                     // Create NCD Risk Factor (per consultation)
                     NcdRiskFactor::create([
                         'consultation_id' => $consultationId,
-                        'resident_id' => $residentId,
                         'tobacco_use' => null,
                         'alcohol_intake' => null,
                         'caffeine_intake' => null,

@@ -71,6 +71,7 @@ function fetchFamilies() {
     .then(data => {
         if (data.status === 'success') {
             tableBody.innerHTML = data.html;
+            Alpine.initTree(tableBody);
             paginationContainer.innerHTML = data.pagination;
             attachPaginationListeners();
         } else {

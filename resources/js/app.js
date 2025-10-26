@@ -6,6 +6,8 @@ import notificationHandler from './notification.js';
 import 'flowbite';
 import 'flowbite-datepicker';
 
+Alpine.data('sideMenu', sideMenu);
+Alpine.data('notificationHandler', notificationHandler);
 
 document.addEventListener('DOMContentLoaded', () => {
   const bodyClass = document.body.classList;

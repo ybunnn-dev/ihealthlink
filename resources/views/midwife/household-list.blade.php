@@ -16,10 +16,9 @@
                 <div class="p-6">
                     <div class="grid grid-rows-1 gap-1">
                         <div class="pb-6">
-                            <!-- Flex container -->
-                            <div class="flex flex-col slg2:flex-row slg2:items-end gap-4">
-                                <!-- Search bar -->
-                                <div class="w-full slg2:w-64 slg2:flex-grow slg2:max-w-md">
+                            <div class="grid grid-cols-1 md:grid-cols-2 slg:grid-cols-5 xl:grid-cols-6 xl3:grid-cols-7 gap-4 items-end">
+                                
+                                <div class="w-full md:col-span-1 slg:col-span-2 xl:col-span-3 xl3:col-span-4">
                                     <label for="default-search" class="mb-2 text-sm font-medium text-main_font">Search</label> 
                                     <div class="relative">
                                         <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
@@ -36,39 +35,37 @@
                                     </div>
                                 </div>
                                 
-                                <!-- Filters and button container -->
-                                <div class="flex flex-col xs:flex-row gap-4 slg2:items-end flex-none">
-                                    <!-- Purok Filter -->
-                                    <div class="w-full xs:w-48">
-                                        <label for="purokDropdown" class="mb-2 text-sm font-medium text-main_font">Filter by Purok</label> 
-                                        <button id="purokDropdown"
-                                            x-bind:disabled="!showPrivacy" 
-                                            x-bind:title="!showPrivacy ? 'Enable privacy view to use dropdown' : ''" 
-                                            data-dropdown-toggle="purokDropdownMenu" 
-                                            class="disabled:bg-gray-200 w-full text-main_font bg-f7 focus:outline-none font-medium border border-navboard rounded-lg text-sm px-4 py-2 text-center inline-flex items-center justify-between h-[2.375rem]" 
-                                            type="button">
-                                            All Purok
-                                            <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-                                            </svg>
-                                        </button>
-                                    </div>
-                                    
-                                    <!-- Add Household Button -->
-                                    <div class="w-full xs:w-40 pt-5 xs:pt-0">
-                                        <button type="button" id="open-add-household" class="w-full h-[2.375rem] text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3">Add Households</button>       
-                                    </div>
-                                    <x-hide-button />
-                                    @include('components.modals.household.add-household-modal')
-                                    @include('components.modals.existing-member-modal')
-                                    @include('components.modals.existing-family-head-modal')
-                                    @include('components.modals.household.existing-household-head-modal')
-                                    @include('components.modals.new-resident-modal')
+                                <div class="w-full">
+                                    <label for="purokDropdown" class="mb-2 text-sm font-medium text-main_font">Filter by Purok</label> 
+                                    <button id="purokDropdown"
+                                        x-bind:disabled="!showPrivacy" 
+                                        x-bind:title="!showPrivacy ? 'Enable privacy view to use dropdown' : ''" 
+                                        data-dropdown-toggle="purokDropdownMenu" 
+                                        class="disabled:bg-gray-200 w-full text-main_font bg-f7 focus:outline-none font-medium border border-navboard rounded-lg text-sm px-4 py-2 text-center inline-flex items-center justify-between h-[2.375rem]" 
+                                        type="button">
+                                        All Purok
+                                        <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                                        </svg>
+                                    </button>
                                 </div>
+                                
+                                <div class="w-full">
+                                    <button type="button" id="open-add-household" class="w-full h-[2.375rem] text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3">Add Households</button>       
+                                </div>
+
+                                <div class="w-full flex justify-start">
+                                    <x-hide-button />
+                                </div>
+
+                                @include('components.modals.household.add-household-modal')
+                                @include('components.modals.existing-member-modal')
+                                @include('components.modals.existing-family-head-modal')
+                                @include('components.modals.household.existing-household-head-modal')
+                                @include('components.modals.new-resident-modal')
                             </div>
                         </div>
 
-                        <!-- Dropdown menus -->
                         <div id="purokDropdownMenu" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
                             <ul class="py-2 text-sm text-normal_font">
                                 <li data-purok-id="" data-purok-name="" class="cursor-pointer px-4 py-2 hover:bg-gray-100">
@@ -83,7 +80,6 @@
                         </div>
                     </div>
 
-                    <!-- Loading indicator -->
                     <div id="loading-indicator" class="hidden text-center py-4">
                         <div class="inline-flex items-center px-4 py-2 font-semibold leading-6 text-sm text-gray-500">
                             <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

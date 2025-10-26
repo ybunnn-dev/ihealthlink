@@ -3,22 +3,12 @@
     @section('page-id', 'family')
     
     <script>
-        // Initialize Alpine store for privacy
-        document.addEventListener('alpine:init', () => {
-            Alpine.store('privacy', {
-                show: false,
-                toggle() {
-                    this.show = !this.show;
-                }
-            });
-        });
-        
+        // This is needed for your purok filter dropdown
         window.puroks = @json($puroks);
     </script>
 
     <div class="py-12 px-6">
-        <div class="max-w-[90rem] mx-auto sm:px-6 lg:px-8">
-            <h1 class="text-3xl font-semibold text-sub_blue mb-3">Household and Residents</h1>
+            <div class="max-w-[90rem] mx-auto sm:px-6 lg:px-8" x-data="{ showPrivacy: JSON.parse(localStorage.getItem('showPrivacy') || 'false') }">            <h1 class="text-3xl font-semibold text-sub_blue mb-3">Household and Residents</h1>
 
             <div class="mb-3">
                 <x-resident-module-nav></x-resident-module-nav>
@@ -28,9 +18,7 @@
                 <div class="p-6">
                     <div class="grid grid-rows-1 gap-1">
                         <div class="pb-6">
-                            <!-- Flex container -->
                             <div class="flex flex-col slg2:flex-row slg2:items-end gap-4">
-                                <!-- Search bar -->
                                 <div class="w-full slg2:w-64 slg2:flex-grow slg2:max-w-md">
                                     <label for="default-search" class="mb-2 text-sm font-medium text-main_font">Search</label> 
                                     <div class="relative">
@@ -40,22 +28,20 @@
                                             </svg>
                                         </div>
                                         <input type="search" 
-                                            :disabled="!$store.privacy.show" 
-                                            :title="!$store.privacy.show ? 'Enable privacy view to use search' : ''"
+                                            :disabled="!showPrivacy" 
+                                            :title="!showPrivacy ? 'Enable privacy view to use search' : ''"
                                             id="default-search" 
                                             class="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 disabled:bg-gray-200 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500" 
                                             placeholder="Search families, members, or purok..."/>
                                     </div>
                                 </div>
                                 
-                                <!-- Filters and button container -->
                                 <div class="flex flex-col xs:flex-row gap-4 slg2:items-end flex-none">
-                                    <!-- Purok Filter -->
                                     <div class="w-full xs:w-48">
                                         <label for="purokDropdown" class="mb-2 text-sm font-medium text-main_font">Filter by Purok</label> 
                                         <button id="purokDropdown" 
-                                            :disabled="!$store.privacy.show" 
-                                            :title="!$store.privacy.show ? 'Enable privacy view to use dropdown' : ''" 
+                                            :disabled="!showPrivacy" 
+                                            :title="!showPrivacy ? 'Enable privacy view to use dropdown' : ''" 
                                             data-dropdown-toggle="purokDropdownMenu" 
                                             class="w-full text-main_font bg-f7 disabled:bg-gray-200 focus:outline-none font-medium border border-navboard rounded-lg text-sm px-4 py-2 text-center inline-flex items-center justify-between h-[2.375rem]" 
                                             type="button">
@@ -66,12 +52,11 @@
                                         </button>
                                     </div>
                                     
-                                    <!-- Date Filter -->
                                     <div class="w-full xs:w-48">
                                         <label for="dateDropdown" class="mb-2 text-sm font-medium text-main_font">Sort By Date</label> 
                                         <button id="dateDropdown" 
-                                            :disabled="!$store.privacy.show" 
-                                            :title="!$store.privacy.show ? 'Enable privacy view to use dropdown' : ''" 
+                                            :disabled="!showPrivacy" 
+                                            :title="!showPrivacy ? 'Enable privacy view to use dropdown' : ''" 
                                             data-dropdown-toggle="dateDropdownMenu" 
                                             class="w-full text-main_font bg-f7 disabled:bg-gray-200 focus:outline-none font-medium border border-navboard rounded-lg text-sm px-4 py-2 text-center inline-flex items-center justify-between h-[2.375rem]" 
                                             type="button">
@@ -82,7 +67,6 @@
                                         </button>
                                     </div>
                                     
-                                    <!-- Add Family Button -->
                                     <div class="w-full xs:w-40 pt-5 xs:pt-0">
                                         <button id="add-family-trigger" 
                                             type="button" 
@@ -97,7 +81,6 @@
                             </div>
                         </div>
 
-                        <!-- Purok Dropdown Menu -->
                         <div id="purokDropdownMenu" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
                             <ul class="py-2 text-sm text-normal_font">
                                 <li data-purok-id="" data-purok-name="" class="cursor-pointer px-4 py-2 hover:bg-gray-100">
@@ -111,7 +94,6 @@
                             </ul>
                         </div>
 
-                        <!-- Date Dropdown Menu -->
                         <div id="dateDropdownMenu" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
                             <ul class="py-2 text-sm text-normal_font">
                                 <li data-date-sort="" data-date-sort-name="Date" class="cursor-pointer px-4 py-2 hover:bg-gray-100">
@@ -129,7 +111,6 @@
                             </ul>
                         </div>
 
-                        <!-- Loading indicator -->
                         <div id="family-loading-indicator" class="hidden text-center py-4">
                             <div class="inline-flex items-center px-4 py-2 font-semibold leading-6 text-sm text-gray-500">
                                 <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

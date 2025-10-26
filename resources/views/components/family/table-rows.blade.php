@@ -13,22 +13,22 @@
         onclick="window.location='{{ route('midwife.cur-fam', ['family' => $family->id]) }}'">
         
         <th scope="row" class="pl-6 py-4 font-medium text-normal_font whitespace-nowrap">
-            <span x-show="$store.privacy.show">{{ $familyIdString }}</span>
-            <span x-show="!$store.privacy.show">{{ str_repeat('*', strlen($familyIdString)) }}</span>
+            <span x-show="showPrivacy">{{ $familyIdString }}</span>
+            <span x-show="!showPrivacy">{{ str_repeat('*', strlen($familyIdString)) }}</span>
         </th>
 
         <td class="px-6 py-4">
-            <span x-show="$store.privacy.show">{{ $memNum }}</span>
-            <span x-show="!$store.privacy.show">{{ str_repeat('*', strlen($memNum)) }}</span>
+            <span x-show="showPrivacy">{{ $memNum }}</span>
+            <span x-show="!showPrivacy">{{ str_repeat('*', strlen($memNum)) }}</span>
         </td>
 
         <td class="px-6 py-4">
-            <span x-show="$store.privacy.show">{{ $purokName }}</span>
-            <span x-show="!$store.privacy.show">{{ str_repeat('*', strlen($purokName)) }}</span>
+            <span x-show="showPrivacy">{{ $purokName }}</span>
+            <span x-show="!showPrivacy">{{ str_repeat('*', strlen($purokName)) }}</span>
         </td>
 
         <td class="px-6 py-4">
-            <span x-show="$store.privacy.show">
+            <span x-show="showPrivacy">
                 @if($family->is_4ps)
                     <span class="inline-block px-4 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-700">
                         {{ $is4psText }}
@@ -39,13 +39,13 @@
                     </span>
                 @endif
             </span>
-            <span x-show="!$store.privacy.show">
+            <span x-show="!showPrivacy">
                 {{ str_repeat('*', strlen($is4psText)) }}
             </span>
         </td>
 
         <td class="px-6 py-4">
-            <span x-show="$store.privacy.show">
+            <span x-show="showPrivacy">
                 @if($family->is_indigent)
                     <span class="inline-block px-4 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-700">
                         {{ $isIndigentText }}
@@ -56,19 +56,19 @@
                     </span>
                 @endif
             </span>
-            <span x-show="!$store.privacy.show">
+            <span x-show="!showPrivacy">
                 {{ str_repeat('*', strlen($isIndigentText)) }}
             </span>
         </td>
 
         <td class="px-6 py-4">
-            <span x-show="$store.privacy.show">{{ $dateAdded }}</span>
-            <span x-show="!$store.privacy.show">{{ str_repeat('*', strlen($dateAdded)) }}</span>
+            <span x-show="showPrivacy">{{ $dateAdded }}</span>
+            <span x-show="!showPrivacy">{{ str_repeat('*', strlen($dateAdded)) }}</span>
         </td>
         
         <td class="px-6 py-4">
-            <span x-show="$store.privacy.show">{{ $dateUpdated }}</span>
-            <span x-show="!$store.privacy.show">{{ str_repeat('*', strlen($dateUpdated)) }}</span>
+            <span x-show="showPrivacy">{{ $dateUpdated }}</span>
+            <span x-show="!showPrivacy">{{ str_repeat('*', strlen($dateUpdated)) }}</span>
         </td>
     </tr>
 @empty
