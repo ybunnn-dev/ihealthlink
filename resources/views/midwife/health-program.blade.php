@@ -269,7 +269,6 @@
     <div id="program_type_content" class="hidden">{{ $healthProgram->category }}</div>
     <div class="hidden" id="hpdata">{{ $healthProgram->id }}</div>
     @include('components.modals.health-program.enroll-resident-modal')
-    @include('components.modals.qr-scanner')
     @if ($healthProgram->category === 'maternal_health_tcl')
         @include('components.modals.health-program.tcl-programs.enroll-maternity')
     @elseif ($healthProgram->category === 'child_healthcare_tcl')
@@ -279,6 +278,5 @@
     @else
         @include('components.modals.health-program.tcl-programs.enroll-family-planning')
     @endif
-    @vite('resources/js/modals/qr-scanner.js')
 </x-app-layout>
 

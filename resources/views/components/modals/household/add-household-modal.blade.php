@@ -70,5 +70,3 @@
 </div>
 
 @include('components.modals.household.add-household-confirmation')
-@include('components.modals.qr-scanner')
-@vite('resources/js/modals/qr-scanner.js')
