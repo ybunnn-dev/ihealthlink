@@ -326,6 +326,7 @@ Route::middleware([
     Route::put('/barangay/families/set-status', [FamilyController::class, 'setStatus'])
     ->name('families.setStatus');
 
+    Route::post('/barangay/consultation/create', [ConsultationController::class, 'createConsultation']);
 });
 
 

@@ -274,19 +274,78 @@ class ResidentController extends Controller
         ]);
     }
 
-    public function show(Resident $resident){
-
+    public function show(Request $request, Resident $resident)
+    {
         $resident->load([
             'family.household.purok.barangay',
             'basicHealthRecord',
-            'consultations'
         ]);
 
+        // Start with the consultations query
+        $query = $resident->consultations();
 
+        // Apply date filters based on request
+        $dateFilter = $request->input('date_filter');
+        $fromDate = $request->input('from_date');
+        $toDate = $request->input('to_date');
+
+        if ($dateFilter) {
+            switch ($dateFilter) {
+                case 'Last Week':
+                    $query->where('updated_at', '>=', \Carbon\Carbon::now()->subWeek());
+                    break;
+                case 'Month':
+                    $query->where('updated_at', '>=', \Carbon\Carbon::now()->subMonth());
+                    break;
+                case 'Last Year':
+                    $query->where('updated_at', '>=', \Carbon\Carbon::now()->subYear());
+                    break;
+            }
+        } elseif ($fromDate && $toDate) {
+            $query->whereBetween('updated_at', [$fromDate, $toDate]);
+        }
+
+        // Order by most recent and paginate
+        $consultations = $query->orderBy('updated_at', 'desc')->paginate(7)->withQueryString();
+
+        // Log the pagination data
+        \Log::info('Consultations pagination', [
+            'resident_id' => $resident->id,
+            'date_filter' => $dateFilter,
+            'from_date' => $fromDate,
+            'to_date' => $toDate,
+            'total' => $consultations->total(),
+            'current_page' => $consultations->currentPage(),
+        ]);
+
+        // If AJAX request, return only the table content
+        if ($request->ajax() || $request->wantsJson()) {
+            $html = view('components.resident.consultation-history-table', [
+                'history' => $consultations
+            ])->render();
+
+            return response()->json([
+                'success' => true,
+                'html' => $html,
+                'pagination' => [
+                    'current_page' => $consultations->currentPage(),
+                    'last_page' => $consultations->lastPage(),
+                    'per_page' => $consultations->perPage(),
+                    'total' => $consultations->total(),
+                    'from' => $consultations->firstItem(),
+                    'to' => $consultations->lastItem(),
+                ]
+            ]);
+        }
+
+        // Regular page load
         return view('midwife.spec-resident', [
             'resident' => $resident,
+            'consultations' => $consultations,
         ]);
     }
+
+
     public function ynToBoolOrNull($value)
     {
         if ($value === null) {

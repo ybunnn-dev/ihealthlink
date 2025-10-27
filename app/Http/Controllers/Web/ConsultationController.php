@@ -19,6 +19,8 @@ use App\Models\RiskAssessment;
 use App\Models\NcdRiskFactor;
 use App\Models\PhilpenManagement;
 use App\Models\ActivityLog;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 
 use Carbon\Carbon;
@@ -333,6 +335,195 @@ class ConsultationController extends Controller
             
             return response()->json([
                 'message' => 'Failed to create Philpen record.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function createConsultation(Request $request)
+    {
+        $user = Auth::user();
+
+        // Determine personnel type (Midwife or BHW)
+        if ($user->bhwWeb && $user->bhwWeb->role_id == 4) {
+            $personnel = $user->bhwWeb;
+        } else {
+            $personnel = $user->midwife;
+        }
+
+        if (!$personnel) {
+            abort(403, 'Unauthorized access.');
+        }
+
+        $validated = $request->validate([
+            'resident_id' => 'required|integer',
+            'consultation_date' => 'required|date',
+            'status' => 'required|string',
+            'chief_complaint' => 'nullable|string',
+            'treatment' => 'nullable|string',
+            'consultation_data' => 'required|array',
+            'consultation_data.weight' => 'nullable|numeric',
+            'consultation_data.height' => 'nullable|numeric',
+            'consultation_data.bp_systolic' => 'nullable|integer',
+            'consultation_data.bp_diastolic' => 'nullable|integer',
+            'consultation_data.temperature' => 'nullable|numeric',
+            'consultation_data.pulse_rate' => 'nullable|integer',
+            'consultation_data.respiratory_rate' => 'nullable|integer',
+            'consultation_data.is_pregnant' => 'nullable|boolean',
+            'consultation_data.is_lactating' => 'nullable|boolean',
+            'medicine_distributions' => 'nullable|array', // Changed to nullable
+            'medicine_distributions.*.medicine_id' => 'required|integer',
+            'medicine_distributions.*.quantity' => 'required|integer|min:1',
+        ]);
+
+        // Get resident and build full name
+        $resident = Resident::findOrFail($validated['resident_id']);
+        
+        $residentName = trim(
+            $resident->first_name . ' ' . 
+            ($resident->middle_name ? $resident->middle_name . ' ' : '') . 
+            $resident->last_name . 
+            ($resident->suffix ? ' ' . $resident->suffix : '')
+        );
+        
+        
+        DB::beginTransaction();
+        
+        try {
+            $consultationData = $validated['consultation_data'];
+            
+            // 1. Create the consultation record
+            $consultation = Consultation::create([
+                'resident_id' => $validated['resident_id'],
+                'consultation_date' => $validated['consultation_date'],
+                'status' => $validated['status'],
+                'is_pregnant' => $consultationData['is_pregnant'] ?? false,
+                'is_lactating' => $consultationData['is_lactating'] ?? false,
+                'updated_by' => auth()->id() ?? null,
+            ]);
+            
+
+            // 2. Create consultation data
+            ConsultationData::create([
+                'consultation_id' => $consultation->id,
+                'chief_complaint' => $validated['chief_complaint'],
+                'treatment' => $validated['treatment'],
+                'weight' => $consultationData['weight'],
+                'height' => $consultationData['height'],
+                'bp_systolic' => $consultationData['bp_systolic'],
+                'bp_diastolic' => $consultationData['bp_diastolic'],
+                'temperature' => $consultationData['temperature'],
+                'pr' => $consultationData['pulse_rate'],
+                'rr' => $consultationData['respiratory_rate'],
+            ]);
+            
+    
+
+            // 3. Handle medicine distributions and inventory reduction (ONLY IF PROVIDED)
+            $distributions = $validated['medicine_distributions'] ?? [];
+            
+            if (!empty($distributions)) {
+            
+                
+                foreach ($distributions as $index => $medicine) {
+                    $remainingQty = $medicine['quantity'];
+                    
+                    MedicineDistribution::create([
+                        'consultation_id' => $consultation->id,
+                        'medicine_id' => $medicine['medicine_id'],
+                        'quantity' => $medicine['quantity'],
+                        'distributed_by' => auth()->id() ?? null,
+                        'distributed_at' => now(),
+                    ]);
+                    
+                    
+                    $batches = MedicineInventory::where('medicine_id', $medicine['medicine_id'])
+                        ->whereDate('expiry_date', '>', now()->addMonth())
+                        ->where('stock', '>', 0)
+                        ->orderBy('expiry_date', 'asc')
+                        ->get();
+                    
+                    if ($batches->isEmpty()) {
+                        throw new \Exception(
+                            "Insufficient inventory for Medicine ID {$medicine['medicine_id']}. " .
+                            "No batches available or all batches expire within 1 month."
+                        );
+                    }
+                    
+                    foreach ($batches as $batch) {
+                        if ($remainingQty <= 0) break;
+                        
+                        if ($batch->stock >= $remainingQty) {
+                            $batch->stock -= $remainingQty;
+                            $batch->save();
+                            
+                            $remainingQty = 0;
+                        } else {
+                            $usedQty = $batch->stock;
+                            $remainingQty -= $batch->stock;
+                            $batch->stock = 0;
+                            $batch->save();
+                            
+                        }
+                    }
+                    
+                    if ($remainingQty > 0) {
+                        throw new \Exception(
+                            "Insufficient inventory for Medicine ID {$medicine['medicine_id']}. " .
+                            "Needed {$medicine['quantity']}, but only had " . ($medicine['quantity'] - $remainingQty) . " available."
+                        );
+                    }
+                }
+                
+            } else {
+                \Log::info('ℹ️ No medicine distributions to process');
+            }
+
+            // 4. Update or create basic health record (preserve existing values, only update non-null)
+            $healthRecord = BasicHealthRecord::firstOrNew(['resident_id' => $validated['resident_id']]);
+
+            // Only update fields that have non-null values
+            if ($consultationData['weight'] !== null) {
+                $healthRecord->weight = $consultationData['weight'];
+            }
+            if ($consultationData['height'] !== null) {
+                $healthRecord->height = $consultationData['height'];
+            }
+            if ($consultationData['bp_systolic'] !== null) {
+                $healthRecord->systolic_pressure = $consultationData['bp_systolic'];
+            }
+            if ($consultationData['bp_diastolic'] !== null) {
+                $healthRecord->diastolic_pressure = $consultationData['bp_diastolic'];
+            }
+
+            // Always update pregnant/lactating status (even if false)
+            $healthRecord->is_pregnant = $consultationData['is_pregnant'] ?? false;
+            $healthRecord->is_lactating = $consultationData['is_lactating'] ?? false;
+
+            $healthRecord->save();
+            
+
+            DB::commit();
+            
+            // Activity log
+            ActivityLog::create([
+                'user_id' => auth()->id(),
+                'module_id' => 7,
+                'activity' => "Created consultation for {$residentName}" . 
+                            (!empty($distributions) ? " with " . count($distributions) . " medicine distribution(s)" : ""),
+            ]);
+
+            return response()->json([
+                'message' => 'Consultation created successfully',
+                'consultation_id' => $consultation->id,
+            ], 201);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            
+            
+            return response()->json([
+                'message' => 'Failed to create consultation',
                 'error' => $e->getMessage()
             ], 500);
         }

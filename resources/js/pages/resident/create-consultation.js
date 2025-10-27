@@ -1,6 +1,8 @@
 // --- Existing Element Variables ---
 
 // Main Modal Elements
+const resident = window.resident;
+const record = window.resident.basic_health_record;
 const createConsultationModalEl = document.getElementById('create-consultation-modal');
 const consultationModalTitle = document.getElementById('consultation-modal-title');
 const consultationModalSubtitle = document.getElementById('consultation-modal-subtitle');
@@ -23,7 +25,10 @@ const successMesageHeader = document.getElementById('success-msg-head');
 const successMessage = document.getElementById('success-message');
 const closeSuccessModalButton = document.getElementById('close-success-modal-button');
 
+const pregnantSelect = document.getElementById('is_pregnant');
+const lactatingSelect = document.getElementById('is_lactating');
 
+console.log('yes',record);
 const successModal = new Modal(successModalEl, { backdrop: 'static', closable: true, });
 
 let currentConsultation = null;
@@ -320,6 +325,8 @@ medicineSearch.addEventListener('input', function () {
 });
 
 createBtn.addEventListener('click', async () => {
+    pregnantSelect.value = record.is_pregnant? '1' : '0';
+    lactatingSelect.value = record.is_lactating? '1' : '0';
     createConsultationModal.show();
 });
 
@@ -383,28 +390,48 @@ consultationCancelBtn.addEventListener('click', function () {
     createConsultationModal.hide();
 });
 
-
 saveConsultationBtn.addEventListener('click', function (event) {
-    event.preventDefault(); // prevent form submission
-    console.log('vakla');
+    event.preventDefault();
 
-    // Prepare the payload
-    payload = {
-        consultation_id: currentConsultationId,
-        consultation_date: consultationDate.value || null,
-        chief_complaint: chiefComplaint.value || '',
-        treatment: treatment.value || '',
-        weight: parseFloat(weight.value) || '',
-        height: parseFloat(height.value) || '',
-        temperature: parseFloat(temperature.value) || '',
-        pr: parseInt(pr.value) || '',
-        rr: parseInt(rr.value) || '',
-        bp_systolic: parseInt(bpSystolic.value) || '',
-        bp_diastolic: parseInt(bpDiastolic.value) || '',
-        distributed_medicines: distributedMedicines
+    // Helper function to convert empty string to null
+    const toNullOrNumber = (value, parser) => {
+        if (value === '' || value === null || value === undefined) {
+            return null;
+        }
+        const parsed = parser(value);
+        return isNaN(parsed) ? null : parsed;
     };
 
-    console.log('Payload ready for submission:', payload);
+    // Prepare the payload with NESTED structure
+    payload = {
+        resident_id: resident.id,
+        consultation_date: consultationDate.value || null,
+        status: 'completed',
+        chief_complaint: chiefComplaint.value || null,
+        treatment: treatment.value || null,
+   
+        
+        // ⭐ NESTED consultation_data object
+        consultation_data: {
+            weight: toNullOrNumber(weight.value, parseFloat),
+            height: toNullOrNumber(height.value, parseFloat),
+            temperature: toNullOrNumber(temperature.value, parseFloat),
+            pulse_rate: toNullOrNumber(pr.value, parseInt),  // Changed pr → pulse_rate
+            respiratory_rate: toNullOrNumber(rr.value, parseInt),  // Changed rr → respiratory_rate
+            bp_systolic: toNullOrNumber(bpSystolic.value, parseInt),
+            bp_diastolic: toNullOrNumber(bpDiastolic.value, parseInt),
+            is_pregnant: parseInt(pregnantSelect.value) === 1 ? 1 : 0,  // Convert to boolean
+            is_lactating: parseInt(lactatingSelect.value) === 1 ?1 : 0 , // Convert to boolean
+        },
+        
+        // ⭐ Map distributed_medicines to medicine_distributions with correct structure
+        medicine_distributions: distributedMedicines.map(med => ({
+            medicine_id: med.id,  // Make sure your distributedMedicines has 'id' field
+            quantity: med.quantity
+        }))
+    };
+
+    console.log('📤 Payload ready for submission:', payload);
 
     createConsultationModal.hide();
     confirmAddConsultationModal.show();
@@ -415,32 +442,71 @@ confirmConsultationCheckbox.addEventListener('change', function () {
 });
 
 confirmConsultationProceedBtn.addEventListener('click', async function () {
-    console.log(payload); // optional for debugging
-
+    confirmConsultationProceedBtn.disabled = true;
+    confirmConsultationProceedBtn.textContent = 'Submitting...';
+    
+    console.log('📤 Sending payload:', payload);
+    
     try {
-        const response = await fetch('/barangay/consultation/store', {
+        const response = await fetch('/barangay/consultation/create', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Accept': 'application/json',  // ⭐ This is CRITICAL - forces JSON responses
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
             },
             body: JSON.stringify(payload)
         });
 
-        if (!response.ok) throw new Error('Failed to submit consultation');
+        // Get response text first to debug
+        const responseText = await response.text();
+        console.log('📥 Raw response:', responseText);
+        console.log('📊 Status:', response.status);
+        
+        // Try to parse JSON
+        let data;
+        try {
+            data = JSON.parse(responseText);
+        } catch (jsonError) {
+            console.error('❌ Server returned HTML, not JSON!');
+            console.error('First 500 chars:', responseText.substring(0, 500));
+            throw new Error('Server error - check console for HTML response');
+        }
 
-        const data = await response.json();
-        console.log('Server response:', data);
+        // Handle validation errors (422 status)
+        if (response.status === 422) {
+            console.error('❌ Validation errors:', data.errors);
+            let errorMsg = 'Validation failed:\n';
+            for (let field in data.errors) {
+                errorMsg += `- ${field}: ${data.errors[field].join(', ')}\n`;
+            }
+            throw new Error(errorMsg);
+        }
 
-        successMesageHeader.textContent = "Consultation Updated";
-        successMessage.textContent = "You have succeessfully updated consultation";
+        // Handle other errors
+        if (!response.ok) {
+            throw new Error(data.message || data.error || 'Failed to submit consultation');
+        }
+
+        console.log('✅ Success:', data);
+
+        successMesageHeader.textContent = "Consultation Created";
+        successMessage.textContent = "You have successfully created the consultation";
         confirmAddConsultationModal.hide();
         successModal.show();
 
     } catch (error) {
-        console.error('Error submitting consultation:', error);
+        console.error('❌ Error:', error);
+        alert('Error: ' + error.message);
+        
+        // Re-enable button
+        confirmConsultationProceedBtn.disabled = false;
+        confirmConsultationProceedBtn.textContent = 'Proceed';
+        
+        console.log('Failed payload:', payload);
     }
 });
+
 
 confirmAddConsultationCancelBtn.addEventListener('click', function () {
     confirmAddConsultationModal.hide();

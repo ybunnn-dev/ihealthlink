@@ -40,6 +40,9 @@
                         </div>
 
                         <div class="flex flex-col gap-3 row-span-3 h-full">
+                            <button id="edit-resident-trigger" class="w-full text-center bg-mainblue h-full hover:bg-sky-500 text-white font-semibold py-3 px-6 rounded-lg text-sm transition">
+                                Edit Resident
+                            </button>
                             {{-- Added placeholder href="#" for navigation links --}}
                             <button id="create-consult-trigger" class="w-full h-full text-center bg-mainblue hover:bg-sky-500 text-white font-semibold py-3 px-6 rounded-lg text-sm transition">
                                 Create Consultation
@@ -49,9 +52,6 @@
                                 Create Referral
                             </button>
                             {{-- Added placeholder href="#" for navigation links --}}
-                            <button class="w-full text-center bg-mainblue h-full hover:bg-sky-500 text-white font-semibold py-3 px-6 rounded-lg text-sm transition">
-                                Edit Resident
-                            </button>
                         </div>
                           
                     </div>
@@ -182,53 +182,13 @@
                  
                 </div>
                 <div id="consultationHistory" class="bg-f7 rounded-xl overflow-hidden">
-                    <div class="p-6 pt-6">
-                        <div class="grid grid-rows-1 gap-1">
-                            <div class="pb-6">
-                                <div class="flex flex-col slg2:flex-row slg2:items-end gap-4">
-                                    <div class="w-full slg2:w-64 slg2:flex-grow slg2:max-w-md">
-                                        <label for="default-search" class="mb-2 text-sm font-medium text-main_font mb-4">Search</label>
-                                        <div class="relative">
-                                            <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                                                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-                                                </svg>
-                                            </div>
-                                            <input type="search" id="default-search" class="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500" placeholder="Search..."/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="relative overflow-x-auto">
-                            <table class="w-full text-sm text-left text-main_font bg-col_tab_h">
-                                <thead class="text-xs text-main_font uppercase">
-                                    <tr>
-                                        <th scope="col" class="px-6 py-3">CONSULTATION TYPE</th>
-                                        <th scope="col" class="px-6 py-3">DATE</th>
-                                        <th scope="col" class="px-6 py-3">MEDICINE GIVEN</th>
-                                        <th scope="col" class="px-6 py-3">FOLLOW UP</th>
-                                        <th scope="col" class="px-6 py-3">ACTION</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr class="bg-white border-b bg-f7 text-normal_font">
-                                        <td class="px-6 py-4">General Consulation</td>
-                                        <td class="px-6 py-4">June 1, 2024</td>
-                                        <td class="px-6 py-4">N/A</td>
-                                        <td class="px-6 py-4">N/A</td>
-                                        <td class="px-6 py-4">
-                                            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded text-xs">View</button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                    <x-resident.consultation-history :history="$consultations" />
                 </div>
             </div>
         </div>
         @include('components.modals.consultation.create-referral')
         @include('components.modals.consultation.create-consultation')
         @include('components.modals.consultation.distribute-medicine')
+        @include('components.modals.reports.filter-date')
+        @include('components.modals.resident.edit-resident')
 </x-app-layout>
