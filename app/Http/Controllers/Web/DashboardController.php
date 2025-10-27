@@ -33,10 +33,24 @@ class DashboardController extends Controller
                             });
 
         $totalResidents = $residents->count();
+        
+        $residentCollection = $residents->get(); // actually fetch the residents
 
-        $under5 = (clone $residents)->whereRaw("TIMESTAMPDIFF(YEAR, birthdate, CURDATE()) < 5")->count();
+        $under5 = $residentCollection->filter(function($resident) {
+            return \Carbon\Carbon::parse($resident->birthdate)->age < 5;
+        })->count();
 
-        $sixtyUp = (clone $residents)->whereRaw("TIMESTAMPDIFF(YEAR, birthdate, CURDATE()) >= 60")->count();
+        $sixtyUp = $residentCollection->filter(function($resident) {
+            return \Carbon\Carbon::parse($resident->birthdate)->age >= 60;
+        })->count();
+
+        $pregnantCount = Resident::whereHas('family.household.purok', function($q) use ($midwife) {
+            $q->where('brgy_id', $midwife->brgy_id);
+            })
+            ->whereHas('basicHealthRecord', function($q) {
+                $q->where('is_pregnant', 1);
+            })
+            ->count();
 
           return view('midwife.dashboard', [
             'barangay' => $barangay,
@@ -45,6 +59,7 @@ class DashboardController extends Controller
             'totalResidents' => $totalResidents,
             'under5' => $under5,
             'sixtyUp' => $sixtyUp,
+            'pregnant' => $pregnantCount,
         ]);
     }
 }

@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
-
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use App\Models\Resident;
@@ -633,6 +633,133 @@ class ResidentController extends Controller
             'residents' => $residents, 
         ]);
     }
+
+    public function updateResident(Request $request)
+    {
+        // Validate the incoming request
+        $validated = $request->validate([
+            'id' => 'required|integer|exists:residents,id',
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'middle_name' => 'nullable|string|max:255',
+            'suffix' => 'nullable|string|max:10',
+            'contact_no' => 'required|string|max:20',
+            'sex' => 'required|in:male,female',
+            'birthdate' => 'required|date',
+            'status' => 'required|in:active,deceased,moved',
+            'civil_status' => 'required|in:single,married,widowed,separated,divorced',
+            'religion' => 'required|string|max:100',
+            'ethnicity' => 'required|string|max:100',
+            'educational_attainment' => 'nullable|string|max:100',
+            'employment_status' => 'required|in:employed,unemployed,self-employed,retired,student',
+            'is_pwd' => 'required|boolean',
+            'pwd_id' => 'nullable|string|max:50',
+            'is_indigenous' => 'required|boolean',
+            'if_solo_parent' => 'required|boolean',
+            'if_philhealth' => 'required|boolean',
+            'philhealth_no' => 'nullable|string|max:50',
+            'emergency_contact_no' => 'nullable|string|max:20',
+        ]);
+
+        DB::beginTransaction();
+
+        try {
+            // Find the resident
+            $resident = Resident::findOrFail($validated['id']);
+            
+            // Store old status for comparison
+            $oldStatus = $resident->status;
+            $statusChanged = $oldStatus !== $validated['status'];
+
+            // Build full name for logging
+            $residentName = trim(
+                $validated['first_name'] . ' ' . 
+                ($validated['middle_name'] ? $validated['middle_name'] . ' ' : '') . 
+                $validated['last_name'] . 
+                ($validated['suffix'] ? ' ' . $validated['suffix'] : '')
+            );
+
+            Log::info("Updating resident: {$residentName} (ID: {$resident->id})");
+
+            // Update resident with mapped field names
+            $resident->update([
+                'firstName' => $validated['first_name'],
+                'lastName' => $validated['last_name'],
+                'middleName' => $validated['middle_name'],
+                'suffix' => $validated['suffix'],
+                'contact_no' => $validated['contact_no'],
+                'sex' => $validated['sex'],
+                'birthdate' => $validated['birthdate'],
+                'status' => $validated['status'],
+                'civil_status' => $validated['civil_status'],
+                'religion' => $validated['religion'],
+                'ethnicity' => $validated['ethnicity'],
+                'educational_attainment' => $validated['educational_attainment'],
+                'employment_status' => $validated['employment_status'],
+                'is_pwd' => $validated['is_pwd'],
+                'pwd_id' => $validated['pwd_id'],
+                'is_indigenous' => $validated['is_indigenous'],
+                'if_philhealth' => $validated['if_philhealth'],
+                'if_solo_parent' => $validated['if_solo_parent'],
+                'philhealth_no' => $validated['philhealth_no'],
+                'emergencyContactNo' => $validated['emergency_contact_no'],
+            ]);
+
+            Log::info('✅ Resident updated successfully');
+
+            // Handle residence history if status changed to deceased or moved
+            if ($statusChanged && in_array($validated['status'], ['deceased', 'moved'])) {
+                Log::info("Status changed from '{$oldStatus}' to '{$validated['status']}' - Updating residence history");
+
+                // Find the latest active residence history record
+                $latestHistory = ResidenceHistory::where('resident_id', $resident->id)
+                    ->where('status', 'active')
+                    ->latest('created_at')
+                    ->first();
+
+                if ($latestHistory) {
+                    // Update the status of the latest active record
+                    $latestHistory->update([
+                        'status' => $validated['status']
+                    ]);
+
+                    Log::info("✅ Updated residence history ID {$latestHistory->id} status to '{$validated['status']}'");
+                } else {
+                    Log::warning("⚠️ No active residence history found for resident ID {$resident->id}");
+                }
+            }
+
+            DB::commit();
+
+            // Activity log
+            ActivityLog::create([
+                'user_id' => auth()->id(),
+                'module_id' => 1, // Adjust module_id for residents
+                'activity' => "Updated resident: {$residentName}" . 
+                            ($statusChanged ? " (Status: {$oldStatus} → {$validated['status']})" : ""),
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Resident updated successfully',
+                'resident' => $resident,
+            ], 200);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            
+            Log::error('--- ❌ Error updating resident ---');
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to update resident',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
 
     public function getAllResidents(Request $request)
     {

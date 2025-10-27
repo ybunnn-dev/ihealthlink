@@ -67,7 +67,7 @@
                         <div class="flex items-center justify-center -gap-2">
                             <svg class="text-col_pink w-7 h-7 w-8 h-8 xl3:w-10 xl3:h-10" fill="currentColor" version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve" fill="currentColor"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <style type="text/css">  </style> <g> <path class="st0" d="M254.962,145.192c-38.209,36.682-47.168,80.782-47.168,80.782s-78.16,49.137-47.591,157.646h91.854 l13.549,102.607C267.553,500.985,280.129,512,295.004,512h5.189c16.379,0,29.656-13.273,29.656-29.652V383.62h12.053 c0,0,0-189.14,0-233.837C341.902,114.63,290.042,111.517,254.962,145.192z"></path> <path class="st0" d="M305.398,0c-29.542,0-53.493,23.955-53.493,53.493c0,29.546,23.951,53.493,53.493,53.493 c29.542,0,53.49-23.947,53.49-53.493C358.888,23.955,334.94,0,305.398,0z"></path> </g> </g></svg>  
                             <div class="flex flex-col">
-                                <h1 class="text-col_pink text-lg xl3:text-2xl font-bold mt-2">5,201</h1>
+                                <h1 class="text-col_pink text-lg xl3:text-2xl font-bold mt-2">{{ $pregnant }}</h1>
                                 <p class="text-col_pink text-fluid-xxs xl3:text-xs -mt-1 ">Pregnant Women</p>
                             </div>
                         </div>

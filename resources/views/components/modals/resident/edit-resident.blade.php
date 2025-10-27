@@ -200,3 +200,4 @@
         </div>
     </div>
 </div>
+@include('components.modals.resident.edit-resident-confirmation')
