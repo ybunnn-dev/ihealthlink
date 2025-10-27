@@ -95,6 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
   else if (bodyClass.contains('spec-resident')) {
     import('./pages/resident/create-referral.js');
     import('./pages/resident/spec-resident.js');
+    import('./pages/resident/create-consultation.js');
 
   } else if (bodyClass.contains('residents')) {
     import('./pages/resident/add-resident');

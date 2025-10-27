@@ -279,6 +279,7 @@ class ResidentController extends Controller
         $resident->load([
             'family.household.purok.barangay',
             'basicHealthRecord',
+            'consultations'
         ]);
 
 

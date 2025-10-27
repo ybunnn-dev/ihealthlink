@@ -74,12 +74,12 @@ class Consultation extends Model
         
     public function healthSigns()
     {
-        return $this->hasOne(HealthSigns::class, 'resident_id');
+        return $this->hasOne(HealthSigns::class, 'consultation_id');
     }
 
     public function medicalHistory()
     {
-        return $this->hasOne(ResidentMedicalHistory::class, 'resident_id');
+        return $this->hasOne(ResidentMedicalHistory::class, 'consultation_id');
     }
     
     public function familyHistory()

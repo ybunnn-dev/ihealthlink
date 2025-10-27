@@ -8,7 +8,6 @@
         <div class="max-w-[90rem] mx-auto sm:px-6 lg:px-8">
             <div class="grid grid-cols gap-3">
                 <div class="grid grid-cols-2 items-center gap-3">
-                    <!-- Left side: Return button -->
                     <a href="{{ request('return', route('midwife.residents')) }}">
                         <div class="flex items-center space-x-2">
                             <svg class="w-5 h-5" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -17,17 +16,14 @@
                             <span class="font-semibold">Return</span>
                         </div>
                     </a>
-                    <!-- Right side: Buttons aligned right -->
                     <div class="flex justify-end gap-3">
-                        <button class="w-40 h-9 bg-mainblue rounded-md text-xs font-semibold text-f7 px-6">Generate Card</button>
-                        <button id="create-referral-open" class="w-40 h-9 bg-mainblue rounded-md text-xs font-semibold text-f7 px-6">Create Referral</button>
+                        {{-- Buttons removed from here --}}
                     </div>
                 </div>
-                <div class="grid grid-cols-1 xl:grid-cols-3 gap-3">
-                    <!-- Left Column (Profile + Scheduled Activity) -->
-                    <div class="flex flex-col gap-2 col-span-1">
-                        <!-- Profile Card -->
-                        <div class="h-80 bg-f7 rounded-lg flex flex-col items-center justify-center p-4"> 
+                <div class="grid grid-cols-1 slg2:grid-cols-3 gap-3">
+                    <div class="grid grid-rows-5 gap-2 col-span-1 h-full">
+                        {{-- Removed h-80 to auto-fit content, added p-6 for padding --}}
+                        <div class="bg-f7 rounded-lg flex flex-col items-center justify-center p-6 row-span-3"> 
                             <svg class="flex-shrink-0 w-32 h-32 lg:w-40 lg:h-40 xl2:w-44 xl2:h-44 text-main_font" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                                 <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
@@ -43,17 +39,28 @@
                             <p class="text-main_font font-semibold">Resident #{{ $resident->id }}</p> 
                         </div>
 
+                        <div class="flex flex-col gap-3 row-span-3 h-full">
+                            {{-- Added placeholder href="#" for navigation links --}}
+                            <button id="create-consult-trigger" class="w-full h-full text-center bg-mainblue hover:bg-sky-500 text-white font-semibold py-3 px-6 rounded-lg text-sm transition">
+                                Create Consultation
+                            </button>
+                            {{-- Moved this button here and matched new style --}}
+                            <button id="create-referral-open" class="w-full h-full bg-mainblue hover:bg-sky-500 text-white font-semibold py-3 px-6 rounded-lg text-sm transition">
+                                Create Referral
+                            </button>
+                            {{-- Added placeholder href="#" for navigation links --}}
+                            <button class="w-full text-center bg-mainblue h-full hover:bg-sky-500 text-white font-semibold py-3 px-6 rounded-lg text-sm transition">
+                                Edit Resident
+                            </button>
+                        </div>
                           
                     </div>
 
-                    <!-- Right Column (Resident Info) -->
-                    <div class="col-span-1 xl:col-span-2 h-98 bg-f7 rounded-lg px-6 sm:px-10 lg:px-12 py-8">
-                        <!-- Header -->
+                    <div class="col-span-1 slg2:col-span-2 h-full bg-f7 rounded-lg px-6 sm:px-10 lg:px-12 py-8">
                         <div class="flex items-center gap-2 mb-6">
                             <h2 class="text-xl font-semibold text-main_font">Resident Info</h2>
                         </div>
 
-                        <!-- Info Grid -->
                         <div class="grid grid-cols-1 gap-y-4 text-xs">
                             <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
                                 <p class="font-semibold text-main_font">FIRST NAME:</p>
@@ -157,13 +164,11 @@
 
                <div class="bg-white rounded-xl p-3 px-4 sm:px-6">
                     <div class="flex flex-wrap justify-between sm:justify-start gap-2 sm:gap-6 pt-2">
-                        <!-- Health Record Tab -->
                         <div class="flex flex-col items-center flex-grow sm:flex-grow-0 cursor-pointer" id="medRecTab">
                             <span class="font-semibold text-gray-500 text-sm">Health Record</span>
                             <div class="h-1 w-full bg-transparent mt-1"></div>
                         </div>
 
-                        <!-- Consultation History Tab -->
                         <div class="flex flex-col items-center flex-grow sm:flex-grow-0 cursor-pointer" id="consultHistoryTab">
                             <span class="font-semibold text-gray-500 text-sm">Consultation History</span>
                             <div class="h-1 w-full bg-transparent mt-1"></div>
@@ -173,7 +178,6 @@
 
                 <div id="medRecContent" class="grid grid-col gap-3">
                     
-                    <!-- Basic Health Information Card -->
                     <x-resident.health-info :resident="$resident" />
                  
                 </div>
@@ -225,4 +229,6 @@
             </div>
         </div>
         @include('components.modals.consultation.create-referral')
+        @include('components.modals.consultation.create-consultation')
+        @include('components.modals.consultation.distribute-medicine')
 </x-app-layout>

@@ -1,8 +1,8 @@
 <div x-data="sideMenu()" class="relative flex flex-col min-h-screen hidden slg2:flex">
     {{-- Sidebar --}}
     <div
-        :class="{ 'w-60': open, 'w-20': !open }"
-        class="transition-all duration-300 bg-f7 text-white h-full flex flex-col pt-8"
+        {{-- Removed dynamic width, added fixed width and border --}}
+        class="w-60 transition-all duration-300 bg-f7 text-white h-full flex flex-col pt-8 border-r border-gray-200"
     >
         {{-- Logo --}}
         <div class="flex flex-col px-6">
@@ -11,23 +11,16 @@
                     <path d="M51.9356 40.3515L53.3692 43.9599L55.1231 40.496L58.2998 34.2206L60.3291 39.4364L60.7637 40.5517H81.9961L63.7647 57.5917C60.6229 60.528 56.8727 62.5495 52.8945 63.6601C44.0894 66.5725 33.8877 64.7375 26.8428 58.1532L8.01173 40.5517H39.8457L40.3545 39.6923L47.126 28.2489L51.9356 40.3515ZM7.32619 6.84755C17.0951 -2.28239 32.9335 -2.28265 42.7022 6.84755L45.0029 8.99892L47.2969 6.85537C57.0658 -2.27458 72.9042 -2.27483 82.6729 6.85537C91.4744 15.0821 92.3439 27.9135 85.2842 37.0517H63.1572L60.1406 29.2987L58.7197 25.6454L56.9492 29.1425L53.7539 35.4511L49.0635 23.6435L47.7471 20.33L45.9307 23.3983L37.8496 37.0517H4.71974C-2.34671 27.9128 -1.47841 15.0767 7.32619 6.84755ZM74.001 4.60244C72.8714 3.94228 71.4536 3.98197 70.3828 4.704C68.3681 6.06262 68.5602 9.01338 70.7383 10.1659L71.6865 10.6679C71.895 10.7782 72.0928 10.9067 72.2783 11.0507L72.9492 11.5712C75.03 13.1867 76.5836 15.3508 77.4180 17.7958L77.9024 19.2138C77.9673 19.4041 78.0145 19.5998 78.0449 19.7977L78.1113 20.2284C78.4751 22.6001 81.2939 23.7962 83.3125 22.4354C84.3704 21.7221 84.8944 20.4725 84.6533 19.2372L84.1406 16.6142C84.0465 16.1322 83.9036 15.6595 83.7129 15.204L83.2529 14.1044C82.2107 11.6147 80.5883 9.38565 78.5137 7.59267L77.8135 6.98818C77.4382 6.66391 77.0330 6.37349 76.6026 6.12197L74.0010 4.60244Z" fill="currentColor"/>
                 </svg>
                 <div class="flex items-center">
-                    <span class="text-maingreen font-semibold whitespace-nowrap text-2xl xl3:text-2xl lg:text-xl  transition-transform duration-300"
-                        :class="{ 'scale-x-0 opacity-0': !open }">
+                    {{-- Removed :class toggle --}}
+                    <span class="text-maingreen font-semibold whitespace-nowrap text-2xl xl3:text-2xl lg:text-xl  transition-transform duration-300">
                         iHealth
                     </span>
-                    <span class="text-mainblue font-semibold whitespace-nowrap text-2xl xl3:text-2xl lg:text-xl transition-transform duration-300"
-                        :class="{ 'scale-x-0 opacity-0': !open }">
+                     {{-- Removed :class toggle --}}
+                    <span class="text-mainblue font-semibold whitespace-nowrap text-2xl xl3:text-2xl lg:text-xl transition-transform duration-300">
                         Link
                     </span>
                 </div>
             </div>
-            <p class="whitespace-nowrap overflow-hidden transition-all duration-200 lg:opacity-0 2xl:opacity-100 opacity-100"
-            :class="{
-                'text-sub_blue font-medium text-fluid-xxs -mt-3 opacity-0 invisible': !open,
-                'text-sub_blue font-medium text-fluid-xxs -mt-3 opacity-100 visible delay-300': open
-            }">
-            Barangay Healthcare Management System
-            </p>
         </div>
 
         {{-- Navigation --}}
@@ -56,25 +49,21 @@
                         <path d="M13 5C13 4.44772 13.4477 4 14 4H19C19.5523 4 20 4.44772 20 5V7C20 7.55228 19.5523 8 19 8H14C13.4477 8 13 7.55228 13 7V5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
                     </svg>
 
-                    <span class="ml-3 whitespace-nowrap transition-all duration-200"
+                    {{-- Simplified :class, removed open/close logic --}}
+                    <span class="ml-3 whitespace-nowrap transition-all duration-200
+                            text-sm 
+                            lg:text-xs
+                            2xl:text-sm"
                         :class="{ 
-                            'opacity-0 invisible': !open, 
-                            'opacity-100 visible': open,
                             'font-bold text-mainblue': activeItem === 'dashboard',
                             'text-main_font': activeItem !== 'dashboard'
                         }"
-                        class="
-                            text-sm 
-                            lg:text-xs
-                            2xl:text-sm
-                        "
                     >
                         Dashboard
                     </span>
                 </a>
             </li>
             
-            <!-- Health Programs -->
             <li class="flex items-center group">
                 <a href="{{ route('mho.health-programs') }}"
                 class="flex items-center w-full py-3 pl-4 rounded-lg hover:bg-white/10 transition-colors"
@@ -98,12 +87,10 @@
                             <path fill-rule="evenodd" clip-rule="evenodd" d="M11.948 1.25C11.0495 1.24997 10.3003 1.24995 9.70552 1.32991C9.07773 1.41432 8.51093 1.59999 8.05546 2.05546C7.59999 2.51093 7.41432 3.07773 7.32991 3.70552C7.24995 4.3003 7.24997 5.04952 7.25 5.948L7.25 6.02572C5.22882 6.09185 4.01511 6.32803 3.17157 7.17158C2 8.34315 2 10.2288 2 14C2 17.7712 2 19.6569 3.17157 20.8284C4.34314 22 6.22876 22 9.99998 22H14C17.7712 22 19.6569 22 20.8284 20.8284C22 19.6569 22 17.7712 22 14C22 10.2288 22 8.34315 20.8284 7.17158C19.9849 6.32803 18.7712 6.09185 16.75 6.02572L16.75 5.94801C16.75 5.04954 16.7501 4.3003 16.6701 3.70552C16.5857 3.07773 16.4 2.51093 15.9445 2.05546C15.4891 1.59999 14.9223 1.41432 14.2945 1.32991C13.6997 1.24995 12.9505 1.24997 12.052 1.25H11.948ZM15.25 6.00189V6C15.25 5.03599 15.2484 4.38843 15.1835 3.9054C15.1214 3.44393 15.0142 3.24644 14.8839 3.11612C14.7536 2.9858 14.5561 2.87858 14.0946 2.81654C13.6116 2.7516 12.964 2.75 12 2.75C11.036 2.75 10.3884 2.7516 9.90539 2.81654C9.44393 2.87858 9.24643 2.9858 9.11612 3.11612C8.9858 3.24644 8.87858 3.44393 8.81654 3.9054C8.75159 4.38843 8.75 5.03599 8.75 6V6.00189C9.14203 6 9.55807 6 10 6H14C14.4419 6 14.858 6 15.25 6.00189ZM16 14C16 16.2091 14.2091 18 12 18C9.79086 18 8 16.2091 8 14C8 11.7909 9.79086 10 12 10C14.2091 10 16 11.7909 16 14Z" fill="currentColor"></path>
                         </g>
                     </svg>
+                    {{-- Simplified :class, removed open/close logic --}}
                     <span class="ml-3 whitespace-nowrap transition-all duration-200 text-main_font text-medium"
                         :class="{ 
-                            'opacity-0 invisible': !open, 
-                            'opacity-100 visible': open, 
-                            'font-bold': activeItem === 'health-programs',
-                            'text-mainblue': activeItem === 'health-programs',
+                            'font-bold text-mainblue': activeItem === 'health-programs'
                         }"
                     >
                         Health Programs
@@ -111,7 +98,6 @@
                 </a>
             </li>
 
-            <!-- Barangays -->
             <li class="flex items-center group">
                 <a href="{{ route('mho.barangays') }}"
                 class="flex items-center w-full py-3 pl-4 rounded-lg hover:bg-white/10 transition-colors"
@@ -133,12 +119,10 @@
                             <path d="M22 21.2488H21V9.97875C21 9.35875 20.72 8.77875 20.23 8.39875L19 7.43875L18.98 4.98875C18.98 4.43875 18.53 3.99875 17.98 3.99875H14.57L13.23 2.95875C12.51 2.38875 11.49 2.38875 10.77 2.95875L3.77 8.39875C3.28 8.77875 3 9.35875 3 9.96875L2.95 21.2488H2C1.59 21.2488 1.25 21.5888 1.25 21.9988C1.25 22.4088 1.59 22.7488 2 22.7488H22C22.41 22.7488 22.75 22.4088 22.75 21.9988C22.75 21.5888 22.41 21.2488 22 21.2488ZM6.5 12.7487V11.2487C6.5 10.6987 6.95 10.2487 7.5 10.2487H9.5C10.05 10.2487 10.5 10.6987 10.5 11.2487V12.7487C10.5 13.2987 10.05 13.7487 9.5 13.7487H7.5C6.95 13.7487 6.5 13.2987 6.5 12.7487ZM14.5 21.2488H9.5V18.4987C9.5 17.6687 10.17 16.9987 11 16.9987H13C13.83 16.9987 14.5 17.6687 14.5 18.4987V21.2488ZM17.5 12.7487C17.5 13.2987 17.05 13.7487 16.5 13.7487H14.5C13.95 13.7487 13.5 13.2987 13.5 12.7487V11.2487C13.5 10.6987 13.95 10.2487 14.5 10.2487H16.5C17.05 10.2487 17.5 10.6987 17.5 11.2487V12.7487Z" fill="currentColor"></path>
                         </g>
                     </svg>
+                    {{-- Simplified :class, removed open/close logic --}}
                     <span class="ml-3 whitespace-nowrap transition-all duration-200 text-main_font text-medium"
                         :class="{ 
-                            'opacity-0 invisible': !open, 
-                            'opacity-100 visible': open, 
-                            'font-bold': activeItem === 'barangays',
-                            'text-mainblue': activeItem === 'barangays',
+                            'font-bold text-mainblue': activeItem === 'barangays'
                         }"
                     >
                         Barangays
@@ -146,7 +130,6 @@
                 </a>
             </li>
 
-            <!-- Midwives-->
             <li class="flex items-center group">
                 <a href="{{ route('mho.midwives') }}"
                 class="flex items-center w-full py-3 pl-4 rounded-lg hover:bg-white/10 transition-colors"
@@ -171,12 +154,10 @@
                                 <path d="M.947 57.293h61.73v5.873H.947v-5.873z" fill="currentColor"></path>
                             </g>
                     </svg>
+                    {{-- Simplified :class, removed open/close logic --}}
                     <span class="ml-3 whitespace-nowrap transition-all duration-200 text-main_font text-medium"
                         :class="{ 
-                            'opacity-0 invisible': !open, 
-                            'opacity-100 visible': open, 
-                            'font-bold': activeItem === 'midwives',
-                            'text-mainblue': activeItem === 'midwives'
+                            'font-bold text-mainblue': activeItem === 'midwives'
                         }"
                     >
                         Midwives
@@ -184,8 +165,7 @@
                 </a>
             </li>
 
-             <!-- Reports -->
-            <li class="flex items-center group">
+             <li class="flex items-center group">
                 <a href="{{ route('mho.reports') }}"
                 class="flex items-center w-full py-3 pl-4 rounded-lg hover:bg-white/10 transition-colors"
                 :class="{
@@ -208,12 +188,10 @@
                                 <rect x="23.76" y="14.16" width="5.76" height="15.36" rx="1" ry="1"></rect>
                             </g>
                     </svg>
+                    {{-- Simplified :class, removed open/close logic --}}
                     <span class="ml-3 whitespace-nowrap transition-all duration-200 text-main_font text-medium"
                         :class="{ 
-                            'opacity-0 invisible': !open, 
-                            'opacity-100 visible': open, 
-                            'font-bold': activeItem === 'reports' ,
-                            'text-mainblue': activeItem === 'reports'
+                            'font-bold text-mainblue': activeItem === 'reports'
                         }"
                     >
                         Reports
@@ -221,7 +199,6 @@
                 </a>
             </li>
 
-            <!-- FAQs -->
             <li class="flex items-center group">
                 <a href="{{ route('mho.faq') }}"
                 class="flex items-center w-full py-3 pl-4 rounded-lg hover:bg-white/10 transition-colors"
@@ -243,12 +220,10 @@
                                 <path d="M5,22H19a1,1,0,0,0,1-1V6.414a1,1,0,0,0-.293-.707L16.293,2.293A1,1,0,0,0,15.586,2H5A1,1,0,0,0,4,3V21A1,1,0,0,0,5,22Zm8-5a1,1,0,0,1-2,0V16a1,1,0,0,1,2,0ZM10.127,5.682a2.927,2.927,0,0,1,2.418-.631,3.084,3.084,0,0,1,2.409,2.52,3.142,3.142,0,0,1-1.79,3.421.407.407,0,0,0-.164.359V12a1,1,0,0,1-2,0v-.649A2.359,2.359,0,0,1,12.363,9.16,1.144,1.144,0,0,0,12.981,7.9a1.067,1.067,0,0,0-.8-.879.913.913,0,0,0-.775.2,1.155,1.155,0,0,0-.4.9,1,1,0,1,1-2,0A3.151,3.151,0,0,1,10.127,5.682Z"></path>
                             </g>
                     </svg>
+                    {{-- Simplified :class, removed open/close logic --}}
                     <span class="ml-3 whitespace-nowrap transition-all duration-200 text-main_font text-medium"
                         :class="{ 
-                            'opacity-0 invisible': !open, 
-                            'opacity-100 visible': open, 
-                            'font-bold': activeItem === 'faqs',
-                            'text-mainblue': activeItem === 'faqs'
+                            'font-bold text-mainblue': activeItem === 'faqs'
                         }"
                     >
                         FAQs
@@ -257,16 +232,6 @@
             </li>
         </ul>
 
-        <button
-            @click="toggleSidebar"
-            class="absolute right-0 bottom-10 -mr-4 transform translate-y-1/2 z-20 bg-f7 text-white p-1 rounded-full transition-all hover:bg-f7/90 shadow-md"
-            aria-label="Toggle Sidebar"
-        >
-            <div :class="{ 'rotate-180': !open }" class="transition-transform duration-300">
-                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-mainblue">
-                    <path d="M7.82054 20.7313C8.21107 21.1218 8.84423 21.1218 9.23476 20.7313L15.8792 14.0868C17.0505 12.9155 17.0508 11.0167 15.88 9.84497L9.3097 3.26958C8.91918 2.87905 8.28601 2.87905 7.89549 3.26958C7.50497 3.6601 7.50497 4.29327 7.89549 4.68379L14.4675 11.2558C14.8581 11.6464 14.8581 12.2795 14.4675 12.67L7.82054 19.317C7.43002 19.7076 7.43002 20.3407 7.82054 20.7313Z" fill="currentColor"/>
-                </svg>
-            </div>
-        </button>
+        {{-- Removed toggle button --}}
     </div>
 </div>
