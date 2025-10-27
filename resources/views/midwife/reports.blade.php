@@ -3,33 +3,83 @@
 <x-app-layout>
     <div class="py-12 px-5">
         <script>
-            // Expose PHP variables to JS
+            // Basic counts
             window.residents = @json($residents);
             window.families = @json($families);
             window.households = @json($households);
-            // Per purok data
+            
+            // Per purok demographic data
             window.residentsPerPurok = @json($residentsPerPurok);
             window.householdsPerPurok = @json($householdsPerPurok);
             window.familiesPerPurok = @json($familiesPerPurok);
             window.families4PsPerPurok = @json($families4PsPerPurok);
             window.familiesIndigentPerPurok = @json($familiesIndigentPerPurok);
-
-            //  Age group data
+            
+            // Gender per purok
+            window.malesPerPurok = @json($malesPerPurok);
+            window.femalesPerPurok = @json($femalesPerPurok);
+            
+            // PWD data per purok
+            window.pwdsPerPurok = @json($pwdsPerPurok);
+            window.nonPwdsPerPurok = @json($nonPwdsPerPurok);
+            window.malePwdsPerPurok = @json($malePwdsPerPurok);
+            window.femalePwdsPerPurok = @json($femalePwdsPerPurok);
+            
+            // Age group data (barangay-wide)
             window.ageGroups = @json($ageGroups);
             window.maleData = @json($maleData);
             window.femaleData = @json($femaleData);
-
-            window.malesPerPurok = @json($malesPerPurok);
-            window.femalesPerPurok = @json($femalesPerPurok);
-
-            window.pwdsPerPurok = @json($pwdsPerPurok);
-            window.nonPwdsPerPurok = @json($nonPwdsPerPurok);
-
+            
+            // Age group data per purok
+            window.ageGroupMalePerPurok = @json($ageGroupMalePerPurok);
+            window.ageGroupFemalePerPurok = @json($ageGroupFemalePerPurok);
+            window.maleAgePerPurok = @json($maleAgePerPurok);
+            window.femaleAgePerPurok = @json($femaleAgePerPurok);
+            
+            // Sanitary data
             window.waterSource = @json($waterSource);
             window.wasteDisposal = @json($wasteDisposal);
             window.sanitaryData = @json($sanitaryData);
-            window.programId = @json($programId);
+            
+            // Women's health data per purok
+            window.wraPerPurok = @json($wraPerPurok);
+            window.pregnantPerPurok = @json($pregnantPerPurok);
+            window.lactatingPerPurok = @json($lactatingPerPurok);
+            
+            // Women's health data (barangay-wide)
+            window.wra = @json($wra);
+            window.pregnantWomen = @json($pregnantWomen);
+            window.teenPregnancies = @json($teenPregnancies);
+            window.totalLactating = @json($totalLactating);
+             
+            window.primis = @json($primis);
+            window.multiPara = @json($multiPara);
+            window.pregnancyOthers = @json($pregnancyOthers);
+ 
+            
+            // Family planning data
+            window.familyPlanningMethods = @json($familyPlanningMethods);
+            window.totalFamilyPlanningEnrollees = @json($totalFamilyPlanningEnrollees);
+            
+            // Child healthcare data
+            window.totalChildrenEnrolled = @json($totalChildrenEnrolled);
+            window.ficCount = @json($ficCount);
+            window.cicCount = @json($cicCount);
+            window.childrenWithWeightHeight = @json($childrenWithWeightHeight);
+            window.normalWeight = @json($normalWeight);
+            window.underweight = @json($underweight);
+            window.severelyUnderweight = @json($severelyUnderweight);
+            window.overweight = @json($overweight);
+            window.obese = @json($obese);
+            
+            // Senior citizens data
+            window.seniors = @json($seniors);
+            
+            // Purok list
+            window.puroks = @json($puroks);
+            
         </script>
+
         <div class="max-w-[90rem] mx-auto sm:px-6 lg:px-8">
             <!-- Title -->
             <h1 class="text-3xl font-semibold text-sub_blue mb-3">Reports</h1>
@@ -52,6 +102,7 @@
             </div>
            <div>
                 <x-report-blades.demographical-data 
+                    :puroks="$puroks"
                     :residents="$residents"
                     :households="$households"
                     :families="$families"
@@ -72,6 +123,18 @@
                     :waste-disposal="$wasteDisposal"
                     :water-source="$waterSource"
                     :sanitary-data="$sanitaryData"
+                    :wra-per-purok="$wraPerPurok"
+                    :pregnant-per-purok="$pregnantPerPurok"
+                    :lactating-per-purok="$lactatingPerPurok"
+                    :family-planning-enrollees="$totalFamilyPlanningEnrollees"
+                    :family-planning-methods="$familyPlanningMethods"
+                    :child-weight-height="$childrenWithWeightHeight"
+                    :total-children-enrolled="$totalChildrenEnrolled"
+                    :normal-weight="$normalWeight"
+                    :underweight="$underweight"
+                    :severely-underweight="$severelyUnderweight"
+                    :overweight="$overweight"
+                    :obese="$obese"
                 />
             </div>
         </div>

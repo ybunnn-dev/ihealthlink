@@ -18,18 +18,12 @@
                     </g>
                 </svg>
                 <div class="flex flex-col">
-                    <h1 class="text-wood_or text-lg slg3:text-xl xl3:text-3xl font-bold mt-2">5,201</h1>
+                    <h1 class="text-wood_or text-lg slg3:text-xl xl3:text-3xl font-bold mt-2">{{ $familyPlanningEnrollees }}</h1>
                     <p class="text-wood_or text-xs -mt-1 slg3:text-fluid-xxs xl:text-xs 2xl:text-xs">Family Planning</p>
                 </div>
             </div>
         </div>
-        <div class="bg-white rounded-xl shadow-sm p-6 px-10 h-80">
-            <h3 class="text-lg font-semibold text-main_font">Enrolled v Non-Enrolled</h3>
-            <div class="flex items-center justify-center h-full pb-10">
-                <canvas id="famPlan" class="w-full h-full"></canvas>
-            </div>
-        </div>
-         <div class="bg-white rounded-xl shadow-sm p-6 h-96 overflow-y-auto">
+        <div class="bg-white rounded-xl shadow-sm p-6 h-96 overflow-y-auto">
             <h3 class="text-lg font-semibold text-main_font mb-4">Method Breakdown</h3>
 
             <table class="min-w-full text-sm text-left text-gray-700 rounded">
@@ -39,34 +33,23 @@
                         <th class="py-2 px-4">Count</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr class="border-b">
-                        <td class="py-2 px-4">Pills</td>
-                        <td class="py-2 px-4">12</td>
-                    </tr>
-                    <tr class="border-b">
-                        <td class="py-2 px-4">IUD</td>
-                        <td class="py-2 px-4">8</td>
-                    </tr>
-                    <tr class="border-b">
-                        <td class="py-2 px-4">Condom</td>
-                        <td class="py-2 px-4">15</td>
-                    </tr>
-                    <tr class="border-b">
-                        <td class="py-2 px-4">Implant</td>
-                        <td class="py-2 px-4">5</td>
-                    </tr>
-                    <tr class="border-b">
-                        <td class="py-2 px-4">Injection</td>
-                        <td class="py-2 px-4">10</td>
-                    </tr>
-                    <tr>
-                        <td class="py-2 px-4">Natural</td>
-                        <td class="py-2 px-4">6</td>
-                    </tr>
+                <tbody class>
+                    @forelse($familyPlanningMethods as $method => $count)
+                        <tr class="border-b">
+                            <td class="py-2 px-4 capitalize">{{ ucfirst(str_replace('_', ' ', $method)) }}</td>
+                            <td class="py-2 px-4">{{ $count }}</td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="2" class="py-4 px-4 text-center text-gray-500">
+                                No family planning data available
+                            </td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>
+
     </div>
 
     <div class="bg-white rounded-xl shadow-sm p-6 col-span-1 xl:col-span-4">

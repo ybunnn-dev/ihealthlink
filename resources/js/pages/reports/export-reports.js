@@ -57,13 +57,7 @@ const renderPage = num => {
     });
 };
 
-function checkIfNull(){
-    if(programId === null){
-        document.getElementById('report-source').value = "Demographic Data";
-    }
-}
 
-checkIfNull();
 /**
  * Fetches and loads the PDF document from the server.
  */
@@ -78,7 +72,7 @@ const updatePdfPreview = () => {
     // Build the URL for the preview route
     const baseUrl = '/reports/preview-community-report';
     const queryParams = new URLSearchParams({
-         programId: programId, startDate: fromDate, endDate: toDate
+         startDate: fromDate, endDate: toDate
     }).toString();
     const fullUrl = `${baseUrl}?${queryParams}`;
 

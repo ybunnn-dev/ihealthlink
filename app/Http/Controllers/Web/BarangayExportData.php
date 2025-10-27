@@ -36,7 +36,6 @@ class BarangayExportData extends Controller
         $reportController = app(BarangayReportsController::class);
         $data = $reportController->returnDemographic($startDate, $endDate);
 
-
         $page2 = [
             'summary' => [
                 [
@@ -73,7 +72,6 @@ class BarangayExportData extends Controller
             'projected_population' => number_format($data['residents']),
         ];
 
-        
         // Define headers dynamically based on age groups
         $headers = [
             '0-11 months' => 'No. of Infants',
@@ -95,16 +93,14 @@ class BarangayExportData extends Controller
             '60+ years' => '60+ years',
         ];
 
-
-      $page3 = [
+        $page3 = [
             'page3' => 1,
-            'puroks' => $data['puroks'], // array of purok names
-            'ages' => range(1, 100),     // ages 1 to 100
+            'puroks' => $data['puroks'],
+            'ages' => range(1, 100),
             'malePerPurok' => [],
             'femalePerPurok' => [],
         ];
 
-        // Loop through each purok name
         foreach ($data['puroks'] as $purokName) {
             $page3['malePerPurok'][$purokName] = [];
             $page3['femalePerPurok'][$purokName] = [];
@@ -114,10 +110,9 @@ class BarangayExportData extends Controller
                 $page3['femalePerPurok'][$purokName][$age] = $data['femaleAgePerPurok'][$purokName][$age] ?? 0;
             }
         }
-        // Track which headers we've already added
+
         $addedHeaders = [];
 
-        // Loop through age groups
         foreach ($data['ageGroups'] as $index => $ageRange) {
             $headerKey = $ageGroupMapping[$ageRange] ?? null;
             if ($headerKey && !in_array($headerKey, $addedHeaders)) {
@@ -131,14 +126,12 @@ class BarangayExportData extends Controller
             $malePurokData = array_values(array_map(fn($v) => $v[$index] ?? 0, $data['ageGroupMalePerPurok']));
             $femalePurokData = array_values(array_map(fn($v) => $v[$index] ?? 0, $data['ageGroupFemalePerPurok']));
 
-            // Male row
             $page2['age_grouping'][] = [
                 'label' => 'Male ' . $ageRange,
                 'purok_data' => $malePurokData,
                 'total' => array_sum($malePurokData),
             ];
 
-            // Female row
             $page2['age_grouping'][] = [
                 'label' => 'Female ' . $ageRange,
                 'purok_data' => $femalePurokData,
@@ -146,15 +139,31 @@ class BarangayExportData extends Controller
             ];
         }
 
-        // Add WRA as final section dynamically
+        // Add WRA
         $page2['age_grouping'][] = ['is_header' => true, 'label' => 'No. of WRA'];
         $page2['age_grouping'][] = [
             'label' => 'Actual',
-            'purok_data' => array_values($data['wraPerPurok']), // <-- use $data
+            'purok_data' => array_values($data['wraPerPurok']),
             'total' => array_sum($data['wraPerPurok']),
         ];
 
+        // Add Pregnant Women
+        $page2['age_grouping'][] = ['is_header' => true, 'label' => 'No. of Pregnant Women'];
+        $page2['age_grouping'][] = [
+            'label' => 'Actual',
+            'purok_data' => array_values($data['pregnantPerPurok']),
+            'total' => array_sum($data['pregnantPerPurok']),
+        ];
 
+        // Add Lactating Mothers
+        $page2['age_grouping'][] = ['is_header' => true, 'label' => 'No. of Lactating Mothers'];
+        $page2['age_grouping'][] = [
+            'label' => 'Actual',
+            'purok_data' => array_values($data['lactatingPerPurok']),
+            'total' => array_sum($data['lactatingPerPurok']),
+        ];
+
+        // Add PWDs
         $page2['age_grouping'][] = ['is_header' => true, 'label' => 'No. of PWDs'];
         $page2['age_grouping'][] = [
             'label' => 'Male',
@@ -166,7 +175,6 @@ class BarangayExportData extends Controller
             'purok_data' => array_values($data['femalePwdsPerPurok']),
             'total' => array_sum($data['femalePwdsPerPurok']),
         ];
-
 
         return [
             'page1' => [
@@ -192,9 +200,30 @@ class BarangayExportData extends Controller
                 ],
                 'wra' => $data['wra'],
                 'pregnant' => [
-                    'total' => null, // placeholder (fetch from DB later)
+                    'total' => $data['pregnantWomen'],           // UPDATED
+                    'teen' => $data['teenPregnancies'],          // ADDED
+                    'primis' => $data['primis'],                 // ADDED
+                    'multiPara' => $data['multiPara'],          // ADDED
+                    'others' => $data['pregnancyOthers'],       // ADDED
                 ],
-                'lactating' => null, // placeholder
+                'lactating' => $data['totalLactating'],         // UPDATED
+                'family_planning' => [                          // ADDED
+                    'total' => $data['totalFamilyPlanningEnrollees'],
+                    'methods' => $data['familyPlanningMethods'],
+                ],
+                'child_health' => [                             // ADDED
+                    'total_enrolled' => $data['totalChildrenEnrolled'],
+                    'fic' => $data['ficCount'],
+                    'cic' => $data['cicCount'],
+                    'with_weight_height' => $data['childrenWithWeightHeight'],
+                    'nutrition' => [
+                        'normal' => $data['normalWeight'],
+                        'underweight' => $data['underweight'],
+                        'severely_underweight' => $data['severelyUnderweight'],
+                        'overweight' => $data['overweight'],
+                        'obese' => $data['obese'],
+                    ],
+                ],
                 'age_sex_distribution' => collect($data['ageGroups'])->map(function ($group, $i) use ($data) {
                     return [
                         'group' => $group,
@@ -222,6 +251,7 @@ class BarangayExportData extends Controller
             'endDate' => $endDate ? Carbon::parse($endDate)->format('F d, Y') : null,
         ];
     }
+
     public function exportCommunityReportExcel(Request $request)
     {
         $startDate = $request->query('startDate'); 

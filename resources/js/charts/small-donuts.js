@@ -1,4 +1,10 @@
 
+const totalFemales = window.femaleData.reduce((sum, count) => sum + count, 0);
+// Women of Reproductive Age (2 groups)
+const wraCount = window.wra || 0;
+const nonWRA = totalFemales - wraCount;
+
+
 function renderDoughnutChart({ elementId, labels, data, colors }) {
     const canvas = document.getElementById(elementId);
     if (!canvas) {
@@ -114,48 +120,44 @@ renderDoughnutChart({
     colors: ['#4DFFBE', '#9ECAD6']
 });
 
-// Pregnant Women (4 groups)
 renderDoughnutChart({
     elementId: 'pregnantChart',
     labels: ['Teenage Pregnancy', 'Primis', 'Multi-Para', 'Others'],
-    data: [25, 30, 20, 10],
+    data: [
+        window.teenPregnancies || 0,
+        window.primis || 0,
+        window.multiPara || 0,
+        window.pregnancyOthers || 0
+    ],
     colors: ['#FFA07A', '#FFB347', '#FFD700', '#90EE90']
 });
 
-// Lactating Mothers (2 groups)
-renderDoughnutChart({
-    elementId: 'lactatingChart',
-    labels: ['Lactating', 'Non-Lactating'],
-    data: [70, 30],
-    colors: ['#FF69B4', '#E0E0E0']
-});
-
-// Women of Reproductive Age (2 groups)
 renderDoughnutChart({
     elementId: 'reproductiveChart',
     labels: ['WRA', 'Non-WRA'],
-    data: [80, 20],
+    data: [wraCount, nonWRA],
     colors: ['#9370DB', '#D8BFD8']
 });
 
-renderDoughnutChart({
-    elementId: 'famPlan',
-    labels: ['Enrolled', 'Non-Enrolled'],
-    data: [80, 20],
-    colors: ['#FFA673', '#FFE0CC']  // Wood Orange + light
-});
+// Lactating Mothers (2 groups)
+const lactatingCount = window.totalLactating || 0;
+const nonLactating = wraCount - lactatingCount;
 
 renderDoughnutChart({
-    elementId: 'childWeight',
-    labels: ['Weighted', 'Not Weighted'],
-    data: [80, 20],
-    colors: ['#328E6E', '#B9DBCD']  // Green + light
+    elementId: 'lactatingChart',
+    labels: ['Lactating', 'Non-Lactating'],
+    data: [lactatingCount, nonLactating],
+    colors: ['#FF69B4', '#E0E0E0']
 });
+
 
 renderDoughnutChart({
     elementId: 'childImmunizationChart',
-    labels: ['FIC', 'MIC'],
-    data: [55, 18],
+    labels: ['FIC', 'CIC'],  // Changed MIC to CIC (Completely Immunized Child)
+    data: [
+        window.ficCount || 0,
+        window.cicCount || 0
+    ],
     colors: ['#187756ff', '#72bb9dff']  // green and soft green
 });
 // Sanitary Toilets

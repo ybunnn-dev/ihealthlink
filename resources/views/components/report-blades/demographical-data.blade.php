@@ -253,32 +253,62 @@
         title2="Lactating Mothers" id2="lactatingChart"
         title3="Women of Reproductive Age" id3="reproductiveChart"
     />
+
+    @php
+        // Build the headers dynamically from $puroks
+        $headers = [''];
+        foreach ($puroks as $purokName) {
+            $headers[] = $purokName;
+        }
+        $headers[] = 'Total';
+
+        // Build the pregnant women row
+        $pregnantValues = [];
+        $pregnantTotal = 0;
+        foreach ($puroks as $purokName) {
+            $count = $pregnantPerPurok[$purokName] ?? 0;
+            $pregnantValues[] = $count;
+            $pregnantTotal += $count;
+        }
+        $pregnantValues[] = $pregnantTotal;
+
+        // Build the lactating mothers row
+        $lactatingValues = [];
+        $lactatingTotal = 0;
+        foreach ($puroks as $purokName) {
+            $count = $lactatingPerPurok[$purokName] ?? 0;
+            $lactatingValues[] = $count;
+            $lactatingTotal += $count;
+        }
+        $lactatingValues[] = $lactatingTotal;
+
+        // Build the WRA row
+        $wraValues = [];
+        $wraTotal = 0;
+        foreach ($puroks as $purokName) {
+            $count = $wraPerPurok[$purokName] ?? 0;
+            $wraValues[] = $count;
+            $wraTotal += $count;
+        }
+        $wraValues[] = $wraTotal;
+
+        // Combine into rows array
+        $rows = [
+            ['label' => 'Pregnant Women', 'values' => $pregnantValues],
+            ['label' => 'Lactating Mothers', 'values' => $lactatingValues],
+            ['label' => 'WRA', 'values' => $wraValues],
+        ];
+    @endphp
+
     <x-tables.purok-breakdown
         title="Reproductive Health Coverage"
-        :headers="[
-            'Purok 1', 'Purok 2', 'Purok 3', 'Purok 4', 'Purok 5',
-            'Purok 6', 'Purok 7', 'Purok 8', 'Purok 9', 'Purok 10', 'Total'
-        ]"
-        :rows="[
-            ['label' => 'Pregnant Women', 'values' => [2, 3, 1, 2, 1, 2, 1, 3, 2, 2, 19]],
-            ['label' => 'Lactating Mothers', 'values' => [1, 2, 1, 1, 1, 2, 1, 1, 2, 1, 13]],
-            ['label' => 'WRA', 'values' => [5, 6, 5, 4, 5, 6, 5, 4, 6, 5, 51]],
-        ]"
+        :headers="$headers"
+        :rows="$rows"
     />
-    <x-tables.purok-breakdown
-        title="Types of Pregnancy"
-        :headers="[
-            'Purok 1', 'Purok 2', 'Purok 3', 'Purok 4', 'Purok 5',
-            'Purok 6', 'Purok 7', 'Purok 8', 'Purok 9', 'Purok 10', 'Total'
-        ]"
-        :rows="[
-            ['label' => 'Teenage Pregnancy', 'values' => [1, 0, 2, 1, 0, 1, 2, 0, 1, 1, 9]],
-            ['label' => 'Primis', 'values' => [2, 1, 1, 2, 2, 2, 1, 2, 1, 1, 15]],
-            ['label' => 'Multi-Para', 'values' => [1, 2, 1, 1, 2, 1, 1, 1, 2, 2, 14]],
-            ['label' => 'Others', 'values' => [0, 1, 0, 1, 1, 0, 0, 1, 0, 1, 5]],
-        ]"
-    />
-    <x-chart-layouts.family-planning></x-chart-layouts-family-planning>
+    <x-chart-layouts.family-planning
+    :family-planning-enrollees="$familyPlanningEnrollees"
+    :family-planning-methods="$familyPlanningMethods"
+    ></x-chart-layouts-family-planning>
         
     <x-chart-layouts.inverse-donut-table 
         chartTitle="Household Sanitary"
@@ -390,54 +420,15 @@
         </x-slot:tbody>
     </x-chart-layouts.inverse-donut-table>
 
-    <x-chart-layouts.malnutrition-layout></x-chart-layouts.malnutrition-layout>
+    <x-chart-layouts.malnutrition-layout
+        :total-children-enrolled="$totalChildrenEnrolled"
+        :child-weight-height="$childWeightHeight"
+        :normal-weight="$normalWeight"
+        :underweight="$underweight"
+        :severely-underweight="$severelyUnderweight"
+        :overweight="$overweight"
+        :obese="$obese"
+    />
 
-   <x-chart-layouts.donut-table-combo 
-        chartTitle="Child Immunization Coverage"
-        canvasId="childImmunizationChart"
-        tableTitle="Coverage Per Purok">
-
-        <x-slot:thead>
-            <tr>
-                <th class="px-6 py-3 font-medium text-main_font border-b border-r">Status</th>
-                <th class="px-6 py-3 font-medium text-main_font border-b border-r text-center">Purok 1</th>
-                <th class="px-6 py-3 font-medium text-main_font border-b border-r text-center">Purok 2</th>
-                <th class="px-6 py-3 font-medium text-main_font border-b border-r text-center">Purok 3</th>
-                <th class="px-6 py-3 font-medium text-main_font border-b text-center">Total</th>
-            </tr>
-        </x-slot:thead>
-
-        <x-slot:tbody>
-            <tr class="border-t">
-                <td class="px-6 py-3 font-medium border-r">Fully Immuned Child</td>
-                <td class="px-6 py-3 text-center border-r">30</td>
-                <td class="px-6 py-3 text-center border-r">25</td>
-                <td class="px-6 py-3 text-center border-r">28</td>
-                <td class="px-6 py-3 text-center">83</td>
-            </tr>   
-            <tr class="border-t">
-                <td class="px-6 py-3 font-medium border-r">Completely Immuned Child</td>
-                <td class="px-6 py-3 text-center border-r">12</td>
-                <td class="px-6 py-3 text-center border-r">10</td>
-                <td class="px-6 py-3 text-center border-r">15</td>
-                <td class="px-6 py-3 text-center">37</td>
-            </tr>
-            <tr class="border-t">
-                <td class="px-6 py-3 font-medium border-r">Not Completed</td>
-                <td class="px-6 py-3 text-center border-r">5</td>
-                <td class="px-6 py-3 text-center border-r">8</td>
-                <td class="px-6 py-3 text-center border-r">6</td>
-                <td class="px-6 py-3 text-center">19</td>
-            </tr>
-            <tr class="bg-gray-100 font-semibold border-t">
-                <td class="px-6 py-3 border-r">Total Children</td>
-                <td class="px-6 py-3 text-center border-r">47</td>
-                <td class="px-6 py-3 text-center border-r">43</td>
-                <td class="px-6 py-3 text-center border-r">49</td>
-                <td class="px-6 py-3 text-center">139</td>
-            </tr>
-        </x-slot:tbody>
-
-    </x-chart-layouts.donut-table-combo>
 
 </div>

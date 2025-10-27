@@ -120,6 +120,9 @@ class EnrolledResident extends Model
             'date'   => $date->format('M d, Y'),
         ];
     }
+    public function familyPlanningData(){
+        return $this->hasOne(FamilyPlanningData::class);
+    }
     public function childHealthcare(){
         return $this->hasOne(ChildHealthcare::class);
     }

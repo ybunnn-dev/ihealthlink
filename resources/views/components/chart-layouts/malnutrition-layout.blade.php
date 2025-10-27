@@ -24,49 +24,55 @@
             </div>
         </div>
         <div class="bg-white rounded-xl shadow-sm p-6 px-10 h-80">
-            <h3 class="text-lg font-semibold text-main_font">Weighted Children</h3>
+            <h3 class="text-lg font-semibold text-main_font">Child Immunization Coverage</h3>
             <div class="flex items-center justify-center h-full">
-                <canvas id="childWeight" class="w-full h-full max-h-32"></canvas>
+                <canvas id="childImmunizationChart" class="w-full h-full max-h-32"></canvas>
             </div>
         </div>
-         <div class="bg-white rounded-xl shadow-sm p-6 h-96 overflow-y-auto">
-            <h3 class="text-lg font-semibold text-main_font mb-4">Method Breakdown</h3>
+         
+        <div class="bg-white rounded-xl shadow-sm p-6 h-96 overflow-y-auto">
+            <h3 class="text-lg font-semibold text-main_font mb-4">Classification</h3>
 
             <table class="min-w-full text-sm text-left text-gray-700 rounded">
-               <thead class="text-xs text-gray-500 uppercase border-b bg-gray-100">
+                <thead class="text-xs text-gray-500 uppercase border-b bg-gray-100">
                     <tr>
                         <th class="py-2 px-4">Weight Classification</th>
                         <th class="py-2 px-4">Count</th>
                     </tr>
                 </thead>
                 <tbody>
+                    @php
+                        $notWeighted = $totalChildrenEnrolled - $childWeightHeight;
+                        $total = $normalWeight + $underweight + $severelyUnderweight + $overweight + $obese + $notWeighted;
+                    @endphp
+                    
                     <tr class="border-b">
                         <td class="py-2 px-4">Normal</td>
-                        <td class="py-2 px-4">12</td>
+                        <td class="py-2 px-4">{{ $normalWeight }}</td>
                     </tr>
                     <tr class="border-b">
                         <td class="py-2 px-4">Underweight</td>
-                        <td class="py-2 px-4">8</td>
+                        <td class="py-2 px-4">{{ $underweight }}</td>
                     </tr>
                     <tr class="border-b">
                         <td class="py-2 px-4">Severely Underweight</td>
-                        <td class="py-2 px-4">5</td>
+                        <td class="py-2 px-4">{{ $severelyUnderweight }}</td>
                     </tr>
                     <tr class="border-b">
                         <td class="py-2 px-4">Overweight</td>
-                        <td class="py-2 px-4">10</td>
+                        <td class="py-2 px-4">{{ $overweight }}</td>
                     </tr>
                     <tr class="border-b">
                         <td class="py-2 px-4">Obese</td>
-                        <td class="py-2 px-4">6</td>
+                        <td class="py-2 px-4">{{ $obese }}</td>
                     </tr>
                     <tr class="border-b">
                         <td class="py-2 px-4">Not Weighted</td>
-                        <td class="py-2 px-4">20</td>
+                        <td class="py-2 px-4">{{ $notWeighted }}</td>
                     </tr>
                     <tr class="font-semibold text-main_font">
                         <td class="py-2 px-4">Total</td>
-                        <td class="py-2 px-4">61</td>
+                        <td class="py-2 px-4">{{ $total }}</td>
                     </tr>
                 </tbody>
             </table>

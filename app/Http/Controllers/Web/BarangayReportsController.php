@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use App\Models\Midwife;
 use App\Models\Resident;
 use App\Models\Household;
+use App\Models\HealthProgram;
+use App\Models\EnrolledResident;
 use App\Models\Family;
 use App\Models\Purok;
 use App\Models\ResidenceHistory;
@@ -241,6 +243,8 @@ class BarangayReportsController extends Controller
         $ageGroupFemalePerPurok = [];
         $malePerAgePerPurok = [];
         $femalePerAgePerPurok = [];
+        $pregnantPerPurok = [];      // ADD THIS
+        $lactatingPerPurok = [];      // ADD THIS
 
     foreach ($puroks as $purok) {
         $purokName = $purok->name;
@@ -290,6 +294,30 @@ class BarangayReportsController extends Controller
             if (!$resident->birthdate) return false;
             $age = \Carbon\Carbon::parse($resident->birthdate)->diffInYears($end);
             return $age >= 10 && $age <= 49;
+        })->count();
+
+        // ADD THIS: Count pregnant women in this purok
+        $pregnantPerPurok[$purokName] = $femaleResidents->filter(function($resident) use ($endDate) {
+            // Get the latest consultation for this resident up to the end date
+            $latestConsultation = $resident->consultations()
+                ->when($endDate, fn($q) => $q->whereDate('created_at', '<=', $endDate))
+                ->orderBy('created_at', 'desc')
+                ->first();
+            
+            // Check if they are pregnant based on latest consultation
+            return $latestConsultation && $latestConsultation->is_pregnant == true;
+        })->count();
+
+        // ADD THIS: Count lactating mothers in this purok
+        $lactatingPerPurok[$purokName] = $femaleResidents->filter(function($resident) use ($endDate) {
+            // Get the latest consultation for this resident up to the end date
+            $latestConsultation = $resident->consultations()
+                ->when($endDate, fn($q) => $q->whereDate('created_at', '<=', $endDate))
+                ->orderBy('created_at', 'desc')
+                ->first();
+            
+            // Check if they are lactating based on latest consultation
+            return $latestConsultation && $latestConsultation->is_lactating == true;
         })->count();
 
         // Initialize age group arrays for this purok
@@ -369,8 +397,7 @@ class BarangayReportsController extends Controller
        $residentsCollection = ResidenceHistory::with('resident') // eager load the related resident
             ->whereHas('purok', function ($q) use ($brgyId) {
                 $q->where('brgy_id', $brgyId); // filter by purok's barangay
-            })
-            ->where('status', 'active'); // only active histories
+            });
 
         if ($startDate) {
             $residentsCollection->whereDate('updated_at', '>=', $startDate);
@@ -480,7 +507,224 @@ class BarangayReportsController extends Controller
             ->get()
             ->map(fn($p) => $p->name)
             ->toArray();
+        
+        
+        // Get the maternal health program
+        $maternalHealthProgram = HealthProgram::where('category', 'maternal_health_tcl')->first();
 
+        $pregnantWomen = 0;
+        $teenPregnancies = 0;
+        $totalLactating = 0;
+
+        // NEW: Pregnancy type breakdown
+        $primis = 0;      // First pregnancy (para = 0)
+        $multiPara = 0;   // Multiple pregnancies (para >= 2)
+        $others = 0;      // Other cases
+
+        if ($maternalHealthProgram) {
+            // Get enrolled residents in maternal health program from filtered residents
+            $enrolledInMaternal = EnrolledResident::where('program_id', $maternalHealthProgram->id)
+                ->whereIn('resident_id', $residents->pluck('id'))
+                ->with(['resident', 'maternalRecord'])
+                ->get()
+                ->filter(function($enrollment) use ($endDate) {
+                    // Get the enrollment date closest to end date
+                    if ($endDate) {
+                        return \Carbon\Carbon::parse($enrollment->created_at)->lte(\Carbon\Carbon::parse($endDate));
+                    }
+                    return true;
+                })
+                ->groupBy('resident_id')
+                ->map(function($enrollments) use ($endDate) {
+                    // Get the latest enrollment for this resident up to the end date
+                    return $enrollments->sortByDesc('created_at')->first();
+                });
+
+            $pregnantWomen = $enrolledInMaternal->count();
+
+            // Count teen pregnancies (age <= 19 at time of enrollment)
+            $teenPregnancies = $enrolledInMaternal->filter(function($enrollment) {
+                if (!$enrollment->resident || !$enrollment->resident->birthdate) {
+                    return false;
+                }
+                
+                // Calculate age at enrollment
+                $enrollmentDate = \Carbon\Carbon::parse($enrollment->created_at);
+                $birthdate = \Carbon\Carbon::parse($enrollment->resident->birthdate);
+                $ageAtEnrollment = $birthdate->diffInYears($enrollmentDate);
+                
+                return $ageAtEnrollment <= 19;
+            })->count();
+            
+            // NEW: Calculate pregnancy type breakdown
+            foreach ($enrolledInMaternal as $enrollment) {
+                $maternalRecord = $enrollment->maternalRecord;
+                
+                if ($maternalRecord && isset($maternalRecord->para)) {
+                    $para = $maternalRecord->para;
+                    
+                    if ($para == 0) {
+                        // First pregnancy (Primis/Primigravida)
+                        $primis++;
+                    } elseif ($para >= 2) {
+                        // Multiple pregnancies (Multipara)
+                        $multiPara++;
+                    } else {
+                        // Other cases (para = 1 or null/invalid)
+                        $others++;
+                    }
+                } else {
+                    // No maternal record or para data
+                    $others++;
+                }
+            }
+        }
+        $totalLactating = $residents->filter(function($resident) use ($endDate) {
+            // Get the latest consultation for this resident up to the end date
+            $latestConsultation = $resident->consultations()
+                ->when($endDate, fn($q) => $q->whereDate('created_at', '<=', $endDate))
+                ->orderBy('created_at', 'desc')
+                ->first();
+            
+            // Check if they are lactating based on latest consultation
+            return $latestConsultation && $latestConsultation->is_lactating == true;
+        })->count();
+
+
+        $familyPlanningProgram = HealthProgram::where('category', 'family_planning_tcl')->first();
+
+        $familyPlanningMethods = [];
+        $totalFamilyPlanningEnrollees = 0;
+
+        if ($familyPlanningProgram) {
+            // Get enrolled residents in family planning program from filtered residents
+            $enrolledInFP = EnrolledResident::where('program_id', $familyPlanningProgram->id)
+                ->whereIn('resident_id', $residents->pluck('id'))
+                ->with(['resident', 'familyPlanningData'])
+                ->get()
+                ->filter(function($enrollment) use ($endDate) {
+                    // Get enrollments created before or on the end date
+                    if ($endDate) {
+                        return \Carbon\Carbon::parse($enrollment->created_at)->lte(\Carbon\Carbon::parse($endDate));
+                    }
+                    return true;
+                })
+                ->groupBy('resident_id')
+                ->map(function($enrollments) use ($endDate) {
+                    // Get the latest enrollment for this resident up to the end date
+                    return $enrollments->sortByDesc('created_at')->first();
+                });
+
+            $totalFamilyPlanningEnrollees = $enrolledInFP->count();
+
+            // Extract family planning data and group by previous_method
+            $familyPlanningMethods = $enrolledInFP
+                ->map(function($enrollment) {
+                    return $enrollment->familyPlanningData;
+                })
+                ->filter() // Remove null values (enrollments without family planning data)
+                ->groupBy('previous_method')
+                ->map(function($group) {
+                    return $group->count();
+                })
+                ->toArray();
+        }
+
+        // Get the child healthcare program
+        $childHealthcareProgram = HealthProgram::where('category', 'child_healthcare_tcl')->first();
+
+        $totalChildrenEnrolled = 0;
+        $ficCount = 0;
+        $cicCount = 0;
+        $childrenWithWeightHeight = 0;
+
+        // NEW: Nutritional status classification
+        $normalWeight = 0;
+        $underweight = 0;
+        $severelyUnderweight = 0;
+        $overweight = 0;
+        $obese = 0;
+
+        if ($childHealthcareProgram) {
+            // Get enrolled residents in child healthcare program from filtered residents
+            $enrolledInChildHealth = EnrolledResident::where('program_id', $childHealthcareProgram->id)
+                ->whereIn('resident_id', $residents->pluck('id'))
+                ->with(['resident', 'childHealthcare'])
+                ->get()
+                ->filter(function($enrollment) use ($endDate) {
+                    if ($endDate) {
+                        return \Carbon\Carbon::parse($enrollment->created_at)->lte(\Carbon\Carbon::parse($endDate));
+                    }
+                    return true;
+                })
+                ->groupBy('resident_id')
+                ->map(function($enrollments) use ($endDate) {
+                    return $enrollments->sortByDesc('created_at')->first();
+                });
+
+            $totalChildrenEnrolled = $enrolledInChildHealth->count();
+
+            // Process each enrolled child
+            foreach ($enrolledInChildHealth as $enrollment) {
+                $childHealthData = $enrollment->childHealthcare;
+
+                if ($childHealthData) {
+                    $hasFic = !empty($childHealthData->fic_date);
+                    $hasCic = !empty($childHealthData->cic_date);
+
+                    if ($hasCic) {
+                        $cicCount++;
+                    } elseif ($hasFic) {
+                        $ficCount++;
+                    }
+                }
+
+                // Get latest consultation with weight and height
+                $latestConsultation = $enrollment->consultations()
+                    ->with('consultationData')
+                    ->when($endDate, fn($q) => $q->whereDate('created_at', '<=', $endDate))
+                    ->whereHas('consultationData', function($q) {
+                        $q->whereNotNull('weight')
+                        ->whereNotNull('height');
+                    })
+                    ->orderBy('created_at', 'desc')
+                    ->first();
+
+                if ($latestConsultation && $latestConsultation->consultationData) {
+                    $childrenWithWeightHeight++;
+                    
+                    // Calculate nutritional status for children under 2 years
+                    $resident = $enrollment->resident;
+                    if ($resident && $resident->birthdate) {
+                        $ageInMonths = \Carbon\Carbon::parse($resident->birthdate)->diffInMonths($endDate ?? now());
+                        
+                        // Only classify children 0-23 months (under 2 years)
+                        if ($ageInMonths <= 23) {
+                            $weight = $latestConsultation->consultationData->weight; // in kg
+                            $height = $latestConsultation->consultationData->height; // in cm
+                            
+                            // Calculate BMI (Weight in kg / (Height in meters)^2)
+                            $heightInMeters = $height / 100;
+                            $bmi = $weight / ($heightInMeters * $heightInMeters);
+                            
+                            // Classify based on WHO BMI-for-age standards for children 0-2 years
+                            // These are approximate thresholds - adjust based on your health standards
+                            if ($bmi < 13.0) {
+                                $severelyUnderweight++;
+                            } elseif ($bmi < 14.5) {
+                                $underweight++;
+                            } elseif ($bmi <= 17.5) {
+                                $normalWeight++;
+                            } elseif ($bmi <= 19.0) {
+                                $overweight++;
+                            } else {
+                                $obese++;
+                            }
+                        }
+                    }
+                }
+            }
+        }
         $data = [
             'residents' => $totalResidents,
             'families' => $families,
@@ -515,7 +759,30 @@ class BarangayReportsController extends Controller
             'puroks' => $puroks,
             'maleAgePerPurok' => $malePerAgePerPurok,
             'femaleAgePerPurok' => $femalePerAgePerPurok,
-            'programId' => null
+            'programId' => null,
+            'pregnantPerPurok' => $pregnantPerPurok,      // ADD THIS
+            'lactatingPerPurok' => $lactatingPerPurok,    // ADD THIS
+
+            'pregnantWomen' => $pregnantWomen,           // ADD THIS
+            'teenPregnancies' => $teenPregnancies,       // ADD THIS
+            'totalLactating' => $totalLactating,         // ADD THIS
+            'primis' => $primis,              // ADD THIS
+            'multiPara' => $multiPara,        // ADD THIS
+            'pregnancyOthers' => $others,     // ADD THIS
+
+            'familyPlanningMethods' => $familyPlanningMethods,           // ADD THIS
+            'totalFamilyPlanningEnrollees' => $totalFamilyPlanningEnrollees,  // ADD THIS
+
+            'totalChildrenEnrolled' => $totalChildrenEnrolled,      // ADD THIS
+            'ficCount' => $ficCount,                                // ADD THIS
+            'cicCount' => $cicCount,                                // ADD THIS
+            'childrenWithWeightHeight' => $childrenWithWeightHeight, // ADD THIS
+
+            'normalWeight' => $normalWeight,
+            'underweight' => $underweight,
+            'severelyUnderweight' => $severelyUnderweight,
+            'overweight' => $overweight,
+            'obese' => $obese,
         ];
 
         return $data;
