@@ -21,6 +21,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Force HTTPS in production
+        if (env('APP_ENV') === 'production') {
+            URL::forceScheme('https');
+        }
         View::composer('*', function ($view) {
             if (Auth::check() && (Auth::user()->role_id === 2 || Auth::user()->role_id === 3 || Auth::user()->role_id === 4)) {
                 $view->with([
