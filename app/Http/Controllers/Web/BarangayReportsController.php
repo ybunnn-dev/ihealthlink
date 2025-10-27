@@ -44,17 +44,7 @@ class BarangayReportsController extends Controller
 
         $brgyId = $personnel->brgy_id;
 
-        $generalFilter = function ($query) use ($startDate, $endDate) {
-            $query->where('status', 'active');
-
-            if ($startDate) {
-                $query->whereDate('created_at', '>=', $startDate);
-            }
-
-            if ($endDate) {
-                $query->whereDate('created_at', '<=', $endDate);
-            }
-        };
+       
 
         $end = $endDate ? \Carbon\Carbon::parse($endDate) : now();
 
@@ -64,8 +54,7 @@ class BarangayReportsController extends Controller
         $residenceHistories = ResidenceHistory::with('resident') // eager load the related resident
             ->whereHas('purok', function ($q) use ($brgyId) {
                 $q->where('brgy_id', $brgyId); // filter by barangay via purok
-            })
-            ->where('status', 'active'); // only active residence histories
+            });
 
         if ($startDate) {
             $residenceHistories->whereDate('updated_at', '>=', $startDate); // still active after start
@@ -82,49 +71,94 @@ class BarangayReportsController extends Controller
 
         $totalResidents = $residents->count();
 
-        $households = Household::whereHas('purok', function ($q) use ($brgyId) {
-            $q->where('brgy_id', $brgyId);
-        })->where($generalFilter)->count();
+        $households = Household::whereHas('householdResidenceHistory', function ($q) use ($brgyId, $startDate, $endDate) {
+            $q->whereHas('purok', function ($q2) use ($brgyId) {
+                $q2->where('brgy_id', $brgyId);
+            });
+            
+            if ($endDate) {
+                $q->whereDate('created_at', '<=', $endDate);
+            }
+            if ($startDate) {
+                $q->whereDate('created_at', '>=', $startDate);
+            }
+        })
+        ->get()
+        ->filter(function($household) use ($brgyId, $endDate) {
+            // Get the latest history for this household up to the end date
+            $latestHistory = $household->householdResidenceHistory()
+                ->when($endDate, fn($q) => $q->whereDate('created_at', '<=', $endDate))
+                ->orderBy('created_at', 'desc')
+                ->first();
+            
+            // Only include if latest history is in this barangay
+            return $latestHistory && $latestHistory->purok && $latestHistory->purok->brgy_id == $brgyId;
+        })
+        ->count();
 
-        $households4sanitary = Household::whereHas('purok', function ($q) use ($brgyId) {
-            $q->where('brgy_id', $brgyId);
-        })->where($generalFilter)->get(); // <-- get() returns a collection
+        $households4sanitary = Household::whereHas('householdResidenceHistory', function ($q) use ($brgyId, $startDate, $endDate) {
+            $q->whereHas('purok', function ($q2) use ($brgyId) {
+                $q2->where('brgy_id', $brgyId);
+            });
+            
+            if ($endDate) {
+                $q->whereDate('created_at', '<=', $endDate);
+            }
+            if ($startDate) {
+                $q->whereDate('created_at', '>=', $startDate);
+            }
+        })
+        ->get()
+        ->filter(function($household) use ($brgyId, $endDate) {
+            $latestHistory = $household->householdResidenceHistory()
+                ->when($endDate, fn($q) => $q->whereDate('created_at', '<=', $endDate))
+                ->orderBy('created_at', 'desc')
+                ->first();
+            
+            return $latestHistory && $latestHistory->purok && $latestHistory->purok->brgy_id == $brgyId;
+        })
+        ->map(function($household) use ($endDate) {
+            // Get the latest history and attach its data to the household
+            $latestHistory = $household->householdResidenceHistory()
+                ->when($endDate, fn($q) => $q->whereDate('created_at', '<=', $endDate))
+                ->orderBy('created_at', 'desc')
+                ->first();
+            
+            // Attach the sanitary data from the latest history
+            $household->water_source = $latestHistory->water_source ?? null;
+            $household->waste_disposal = $latestHistory->waste_disposal ?? null;
+            $household->sanitary_toilet = $latestHistory->sanitary_toilet ?? null;
+            
+            return $household;
+        });
 
-        $families = Family::whereHas('household.purok', function ($q) use ($brgyId) {
-            $q->where('brgy_id', $brgyId);
-        })->where($generalFilter)->count();
 
-        $puroks = Purok::where('brgy_id', $brgyId)
-            ->with([
-                'households' => function ($h) use ($generalFilter, $startDate, $endDate, $brgyId) {
-                    $h->where($generalFilter)
-                    ->with([
-                        'families' => function ($f) use ($generalFilter, $startDate, $endDate, $brgyId) {
-                            $f->where($generalFilter)
-                                ->with(['residents' => function ($r) use ($startDate, $endDate, $brgyId) {
-                                    // Filter residents by their residence histories
-                                    $r->whereHas('residenceHistory', function ($q) use ($startDate, $endDate, $brgyId) {
-                                        $q->whereHas('purok', function ($q2) use ($brgyId) {
-                                            $q2->where('brgy_id', $brgyId);
-                                        })
-                                        ->where('status', 'active');
+      $families = Family::whereHas('familyResidenceHistory', function ($q) use ($brgyId, $startDate, $endDate) {
+            $q->whereHas('purok', function ($q2) use ($brgyId) {
+                $q2->where('brgy_id', $brgyId);
+            });
+            
+            if ($endDate) {
+                $q->whereDate('created_at', '<=', $endDate);
+            }
+            if ($startDate) {
+                $q->whereDate('created_at', '>=', $startDate);
+            }
+        })
+        ->get()
+        ->filter(function($family) use ($brgyId, $endDate) {
+            // Get the latest history for this family up to the end date
+            $latestHistory = $family->familyResidenceHistory()
+                ->when($endDate, fn($q) => $q->whereDate('created_at', '<=', $endDate))
+                ->orderBy('created_at', 'desc')
+                ->first();
+            
+            // Only include if latest history is in this barangay
+            return $latestHistory && $latestHistory->purok && $latestHistory->purok->brgy_id == $brgyId;
+        })
+        ->count();
 
-                                        if ($startDate) {
-                                            $q->whereDate('updated_at', '>=', $startDate);
-                                        }
-
-                                        if ($endDate) {
-                                            $q->whereDate('created_at', '<=', $endDate);
-                                        }
-                                    });
-                                }]);
-                        }
-                    ]);
-                }
-            ])->orderBy('created_at')
-            ->get();
-
-        $ageGroups = [
+          $ageGroups = [
             '0-6 months',
             '6-11 months',
             '1-4 years',      // 12-59 months
@@ -134,8 +168,12 @@ class BarangayReportsController extends Controller
             '20-59 years',
             '60+ years',
         ];
-
-
+        
+        
+        $puroks = Purok::where('brgy_id', $brgyId)
+        ->orderBy('created_at')
+        ->get();
+      
         $householdsPerPurok = [];
         $familiesPerPurok = [];
         $families4PsPerPurok = [];
@@ -143,15 +181,52 @@ class BarangayReportsController extends Controller
 
         foreach ($puroks as $purok) {
             $purokName = $purok->name;
-
-            // Count households in this purok
-            $householdsPerPurok[$purokName] = $purok->households->count();
-
-            // Collect and count families in this purok
-            $familiesCollection = $purok->households->flatMap->families;
-            $familiesPerPurok[$purokName] = $familiesCollection->count();
-            $families4PsPerPurok[$purokName] = $familiesCollection->where('is_4ps', true)->count();
-            $familiesIndigentPerPurok[$purokName] = $familiesCollection->where('is_indigent', true)->count();
+            $purokId = $purok->id;
+            
+            // Get households with latest history in this purok
+            $householdsInPurok = Household::whereHas('householdResidenceHistory', function($query) use ($purokId, $startDate, $endDate) {
+                $query->where('purok_id', $purokId);
+                if ($endDate) $query->whereDate('created_at', '<=', $endDate);
+                if ($startDate) $query->whereDate('created_at', '>=', $startDate);
+            })
+            ->get()
+            ->filter(function($household) use ($purokId, $endDate) {
+                $latestHistory = $household->householdResidenceHistory()
+                    ->when($endDate, fn($q) => $q->whereDate('created_at', '<=', $endDate))
+                    ->orderBy('created_at', 'desc')
+                    ->first();
+                return $latestHistory && $latestHistory->purok_id == $purokId;
+            });
+            
+            $householdsPerPurok[$purokName] = $householdsInPurok->count();
+            
+            // Get families with latest history in this purok
+            $familiesInPurok = Family::whereHas('familyResidenceHistory', function($query) use ($purokId, $startDate, $endDate) {
+                $query->where('purok_id', $purokId);
+                if ($endDate) $query->whereDate('created_at', '<=', $endDate);
+                if ($startDate) $query->whereDate('created_at', '>=', $startDate);
+            })
+            ->get()
+            ->filter(function($family) use ($purokId, $endDate) {
+                $latestHistory = $family->familyResidenceHistory()
+                    ->when($endDate, fn($q) => $q->whereDate('created_at', '<=', $endDate))
+                    ->orderBy('created_at', 'desc')
+                    ->first();
+                return $latestHistory && $latestHistory->purok_id == $purokId;
+            })
+            ->map(function($family) use ($endDate) {
+                $latestHistory = $family->familyResidenceHistory()
+                    ->when($endDate, fn($q) => $q->whereDate('created_at', '<=', $endDate))
+                    ->orderBy('created_at', 'desc')
+                    ->first();
+                $family->is_4ps = $latestHistory->is_4ps ?? false;
+                $family->is_indigent = $latestHistory->is_indigent ?? false;
+                return $family;
+            });
+            
+            $familiesPerPurok[$purokName] = $familiesInPurok->count();
+            $families4PsPerPurok[$purokName] = $familiesInPurok->where('is_4ps', true)->count();
+            $familiesIndigentPerPurok[$purokName] = $familiesInPurok->where('is_indigent', true)->count();
         }
 
         $residentsPerPurok = [];
@@ -171,15 +246,27 @@ class BarangayReportsController extends Controller
         $purokName = $purok->name;
         $purokId = $purok->id;
 
-        // Collect active residents for this purok based on their purok_id and residence history
-        $residentsCollection = Resident::where('purok_id', $purokId)
-            ->whereHas('residenceHistory', function($query) use ($startDate, $endDate, $brgyId) {
-                $query->whereHas('purok', fn($q) => $q->where('brgy_id', $brgyId))
-                    ->where('status', 'active')
-                    ->when($startDate, fn($q) => $q->whereDate('updated_at', '>=', $startDate))
-                    ->when($endDate, fn($q) => $q->whereDate('created_at', '<=', $endDate));
-            })
-            ->get();
+        $residentsCollection = Resident::whereHas('residenceHistory', function($query) use ($purokId, $startDate, $endDate) {
+            $query->where('purok_id', $purokId);
+            
+            if ($endDate) {
+                $query->whereDate('created_at', '<=', $endDate);
+            }
+            if ($startDate) {
+                $query->whereDate('created_at', '>=', $startDate);
+            }
+        })
+        ->get()
+        ->filter(function($resident) use ($purokId, $endDate) {
+            // For each resident, get their latest residence history up to the end date
+            $latestHistory = $resident->residenceHistory()
+                ->when($endDate, fn($q) => $q->whereDate('created_at', '<=', $endDate))
+                ->orderBy('created_at', 'desc')
+                ->first();
+            
+            // Only include this resident if their latest history is in this purok
+            return $latestHistory && $latestHistory->purok_id == $purokId;
+        });
 
         // Count total residents
         $residentsPerPurok[$purokName] = $residentsCollection->count();

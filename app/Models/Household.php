@@ -60,4 +60,8 @@ class Household extends Model
     {
         return $this->belongsTo(Resident::class, 'head_id');
     }
+
+    public function householdResidenceHistory(){
+        return $this->hasMany(HouseholdResidenceHistory::class, 'household_id');
+    }
 }

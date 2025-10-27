@@ -37,6 +37,9 @@ class Family extends Model
         });
     }
     
+    public function familyResidenceHistory(){
+        return $this->hasMany(FamilyResidenceHistory::class, 'family_id');
+    }
     // A family belongs to one household
     public function household()
     {

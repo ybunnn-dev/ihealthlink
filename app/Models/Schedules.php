@@ -18,7 +18,7 @@ class Schedules extends Model
         'time',
         'activity',
         'venue',
-        'status', // since you added it
+        'status', 
     ];
 
     // Optional: if your table name is not the default plural 'schedules'
