@@ -1,4 +1,4 @@
-<div x-data="sideMenu()" class="relative flex flex-col h-screen hidden xl:flex">
+<div x-data="sideMenu()" class="relative flex flex-col h-screen xl:flex">
     {{-- Sidebar --}}
     <div class="xl:w-60 border-r border-gray-200 bg-f7 text-white h-full flex flex-col pt-5 min-h-0">
 
