@@ -52,7 +52,7 @@ class MedicineController extends Controller
         }
 
         // Sort by latest (you can change to 'asc' if needed)
-        $medicines = $query->orderBy('id', 'desc')->get();
+        $medicines = $query->orderBy('id', 'desc')->paginate(20);
 
         // Compute remaining stock (only non-expired)
         $medicinesWithStock = $medicines->map(function ($medicine) {
