@@ -21,11 +21,12 @@ class ReportsController extends Controller
     {
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
-        $hpId = $request->input('program_id');
 
-        if (empty($hpId)) {
-            $reportData = $this->returnDemographic($startDate, $endDate);
-        }
+        
+        $reportData = $this->returnDemographic($startDate, $endDate);
+        
+
+        \Log::info('Report Data:', $reportData);
 
         return view('mho.reports', $reportData);
     }
@@ -324,7 +325,7 @@ class ReportsController extends Controller
                 })
                 ->count();
             
-            $householdsPerBarangay[] = $householdsInBarangay;
+            $householdsPerBarangay[$barangay->name] = $householdsInBarangay;
 
             /**
              * FAMILIES PER BARANGAY - Based on latest residence history
@@ -361,7 +362,7 @@ class ReportsController extends Controller
                     return true;
                 });
             
-            $familiesPerBarangay[] = $allFamilies->count();
+            $familiesPerBarangay[$barangay->name] = $allFamilies->count();
 
             /**
              * 4Ps FAMILIES PER BARANGAY
@@ -370,7 +371,7 @@ class ReportsController extends Controller
                 return $family->is_4ps == true || $family->is_4ps == 1;
             })->count();
             
-            $families4PsPerBarangay[] = $families4Ps;
+            $families4PsPerBarangay[$barangay->name] = $families4Ps;
 
             /**
              * INDIGENT FAMILIES PER BARANGAY
@@ -379,7 +380,7 @@ class ReportsController extends Controller
                 return $family->is_indigent == true || $family->is_indigent == 1;
             })->count();
             
-            $familiesIndigentPerBarangay[] = $familiesIndigent;
+            $familiesIndigentPerBarangay[$barangay->name] = $familiesIndigent;
         }
 
 
@@ -909,7 +910,7 @@ class ReportsController extends Controller
         if ($childHealthcareProgram) {
             // Get enrolled residents in child healthcare program from filtered residents
             $enrolledInChildHealth = EnrolledResident::where('program_id', $childHealthcareProgram->id)
-                ->whereIn('resident_id', $residentsCollection->pluck('id'))  // 👈 Changed from $residents
+                ->whereIn('resident_id', $residentsCollection->pluck('id'))  
                 ->with(['resident', 'childHealthcare'])
                 ->get()
                 ->filter(function($enrollment) use ($endDate) {
@@ -1035,7 +1036,7 @@ class ReportsController extends Controller
             'multiPara' => $multiPara,
             'pregnancyOthers' => $others,
             
-            'totalFamilyPlanningEnrollees' => $totalFamilyPlanningEnrollees,
+            'familyPlanningEnrollees' => $totalFamilyPlanningEnrollees,
             'familyPlanningMethods' => $familyPlanningMethods,
             
             'totalChildrenEnrolled' => $totalChildrenEnrolled,

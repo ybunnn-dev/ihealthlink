@@ -51,7 +51,7 @@
             window.multiPara = @json($multiPara);
             window.pregnancyOthers = @json($pregnancyOthers);
             
-            window.totalFamilyPlanningEnrollees = @json($totalFamilyPlanningEnrollees);
+            window.familyPlanningEnrollees = @json($familyPlanningEnrollees);
             window.familyPlanningMethods = @json($familyPlanningMethods);
             
             window.totalChildrenEnrolled = @json($totalChildrenEnrolled);
@@ -123,18 +123,21 @@
                 :primis="$primis"
                 :multiPara="$multiPara"
                 :pregnancyOthers="$pregnancyOthers"
-                :totalFamilyPlanningEnrollees="$totalFamilyPlanningEnrollees"
+                :familyPlanningEnrollees="$familyPlanningEnrollees"
                 :familyPlanningMethods="$familyPlanningMethods"
                 :totalChildrenEnrolled="$totalChildrenEnrolled"
                 :ficCount="$ficCount"
                 :cicCount="$cicCount"
-                :childrenWithWeightHeight="$childrenWithWeightHeight"
-                :normalWeight="$normalWeight"
+                :child-weight-height="$childrenWithWeightHeight"
+                :total-children-enrolled="$totalChildrenEnrolled"
+                :normal-weight="$normalWeight"
                 :underweight="$underweight"
-                :severelyUnderweight="$severelyUnderweight"
+                :severely-underweight="$severelyUnderweight"
                 :overweight="$overweight"
                 :obese="$obese"
             />
         </div>
     </div>
 </x-app-layout>
+@include('components.modals.print-report-modal')
+@include('components.modals.reports.filter-date')

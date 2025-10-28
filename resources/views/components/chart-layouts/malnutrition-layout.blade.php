@@ -18,7 +18,7 @@
                     </g>
                 </svg>
                 <div class="flex flex-col">
-                    <h1 class="text-maingreen text-lg slg3:text-xl xl3:text-3xl font-bold mt-2">5,201</h1>
+                    <h1 class="text-maingreen text-lg slg3:text-xl xl3:text-3xl font-bold mt-2">{{ $totalChildrenEnrolled }}</h1>
                     <p class="text-maingreen text-xs -mt-1 slg3:text-fluid-xxs xl:text-xs 2xl:text-xs">Total Weighted</p>
                 </div>
             </div>

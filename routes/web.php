@@ -28,6 +28,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\FirebaseController;
 use App\Http\Controllers\Web\PhilpenController;
 use App\Http\Controllers\Web\ReportsController;
+use App\Http\Controllers\Web\ExportController;
 
 Route::middleware('guest')->group(function () {
     Route::get('/', function () {
@@ -53,7 +54,6 @@ Route::middleware([
         return view('mho.dashboard');
     })->name('mho.dashboard');
 
-  
     Route::get('/mho/health-programs', [HealthProgramController::class, 'index'])->name('mho.health-programs');
 
     Route::get('/mho/health-programs/{healthProgram}', [HealthProgramController::class, 'show'])->name('mho.spec-hprog');
@@ -103,13 +103,15 @@ Route::middleware([
     //route for mho reports
     Route::get('/mho/reports', [ReportsController::class, 'index'])->name('mho.reports');
 
-    Route::get('/mho/logs', function () {
-        return view('mho.logs');
-    })->name('mho.logs');
 
     Route::get('/mho/faq', function () {
         return view('mho.faq');
     })->name('mho.faq');
+
+    Route::get('/mho/reports/community-report-pdf', [ExportController::class, 'downloadCommunityReport']);
+    Route::get('/mho/reports/preview-community-report', [ExportController::class, 'previewCommunityReport']);
+    Route::get('/mho/reports/export-excel', [ExportController::class, 'exportCommunityReportExcel']);
+
 
 });
 
@@ -270,7 +272,7 @@ Route::middleware([
     Route::get('/barangay/reports/community-report-pdf', [BarangayExportData::class, 'downloadCommunityReport']);
     Route::get('/reports/preview-community-report', [BarangayExportData::class, 'previewCommunityReport']);
     Route::get('/barangay/reports/export-excel', [BarangayExportData::class, 'exportCommunityReportExcel']);
-    Route::get('/barangay/reports/export-csv', [BarangayExportData::class, 'exportCommunityReportCsv']);
+
 
     Route::post('/barangay/health-program/{healthProgramId}/enroll/{residentId}',[BarangayHealthProgramController::class, 'enrollResident'])->name('barangay.health-program.enroll');
     

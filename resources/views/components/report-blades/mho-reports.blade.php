@@ -117,4 +117,292 @@
 
     </x-chart-layouts.donut-table-combo>
 
+     <x-chart-layouts.donut-table-combo 
+        chartTitle="Sex Distribution"
+        canvasId="genderChart"
+        tableTitle="Sex Distribution Per Barangay">
+
+        <x-slot:thead>
+            <tr>
+                <th class="px-6 py-3 font-medium text-main_font border-b border-r">Type</th>
+                @foreach ($barangays as $barangay)
+                    <th class="px-6 py-3 font-medium text-main_font border-b border-r text-center">{{ $barangay }}</th>
+                @endforeach
+                <th class="px-6 py-3 font-medium text-main_font border-b text-center">Total</th>
+            </tr>
+        </x-slot:thead>
+
+        <x-slot:tbody>
+            {{-- MALE ROW --}}
+            <tr class="border-t">
+                <td class="px-6 py-3 font-medium border-r">Male</td>
+                @foreach ($malesPerBarangay as $count)
+                    <td class="px-6 py-3 text-center border-r">{{ $count }}</td>
+                @endforeach
+                <td class="px-6 py-3 text-center" id="total-males">0</td>
+            </tr>
+
+            {{-- FEMALE ROW --}}
+            <tr class="border-t">
+                <td class="px-6 py-3 font-medium border-r">Female</td>
+                @foreach ($femalesPerBarangay as $count)
+                    <td class="px-6 py-3 text-center border-r">{{ $count }}</td>
+                @endforeach
+                <td class="px-6 py-3 text-center" id="total-females">0</td>
+            </tr>
+
+            {{-- TOTAL ROW --}}
+            <tr class="bg-gray-100 font-semibold border-t">
+                <td class="px-6 py-3 border-r">Total</td>
+
+                {{-- CHANGE: Loop over the keys again to create the placeholder cells --}}
+                @foreach (array_keys($malesPerBarangay) as $purokName)
+                    <td class="px-6 py-3 text-center border-r" id="total-purok-{{ Str::slug($purokName) }}">0</td>
+                @endforeach
+
+                <td class="px-6 py-3 text-center" id="grand-total">0</td>
+            </tr>
+        </x-slot:tbody>
+
+    </x-chart-layouts.donut-table-combo>
+
+    <x-chart-layouts.donut-table-combo 
+        chartTitle="PWDs"
+        canvasId="pwdChart"
+        tableTitle="PWDs Per Barangay">
+
+        @php
+            // Extract purok names
+            $puroks = array_keys($malePwdsPerBarangay);
+
+            // Compute totals
+            $maleTotal = array_sum($malePwdsPerBarangay);
+            $femaleTotal = array_sum($femalePwdsPerBarangay);
+
+            $purokTotals = [];
+            foreach ($puroks as $purok) {
+                $purokTotals[$purok] = ($malePwdsPerBarangay[$purok] ?? 0) + ($femalePwdsPerBarangay[$purok] ?? 0);
+            }
+
+            $grandTotal = $maleTotal + $femaleTotal;
+        @endphp
+
+        <x-slot:thead>
+            <tr>
+                <th class="px-6 py-3 font-medium text-main_font border-b border-r">Sex</th>
+                @foreach ($puroks as $purok)
+                    <th class="px-6 py-3 font-medium text-main_font border-b border-r text-center">{{ $purok }}</th>
+                @endforeach
+                <th class="px-6 py-3 font-medium text-main_font border-b text-center">Total</th>
+            </tr>
+        </x-slot:thead>
+
+        <x-slot:tbody>
+            {{-- Male Row --}}
+            <tr class="border-t">
+                <td class="px-6 py-3 font-medium border-r">Male</td>
+                @foreach ($puroks as $purok)
+                    <td class="px-6 py-3 text-center border-r">{{ $malePwdsPerBarangay[$purok] ?? 0 }}</td>
+                @endforeach
+                <td class="px-6 py-3 text-center">{{ $maleTotal }}</td>
+            </tr>
+
+            {{-- Female Row --}}
+            <tr class="border-t">
+                <td class="px-6 py-3 font-medium border-r">Female</td>
+                @foreach ($puroks as $purok)
+                    <td class="px-6 py-3 text-center border-r">{{ $femalePwdsPerBarangay[$purok] ?? 0 }}</td>
+                @endforeach
+                <td class="px-6 py-3 text-center">{{ $femaleTotal }}</td>
+            </tr>
+
+            {{-- Total Row --}}
+            <tr class="bg-gray-100 font-semibold border-t">
+                <td class="px-6 py-3 border-r">Total</td>
+                @foreach ($puroks as $purok)
+                    <td class="px-6 py-3 text-center border-r">{{ $purokTotals[$purok] }}</td>
+                @endforeach
+                <td class="px-6 py-3 text-center">{{ $grandTotal }}</td>
+            </tr>
+        </x-slot:tbody>
+    </x-chart-layouts.donut-table-combo>
+    <x-chart-layouts.three-chart-donut 
+        title1="Pregnant Women" id1="pregnantChart"
+        title2="Lactating Mothers" id2="lactatingChart"
+        title3="Women of Reproductive Age" id3="reproductiveChart"
+    />
+    @php
+        // Build the headers dynamically from $puroks
+        $headers = [''];
+        foreach ($barangays as $purokName) {
+            $headers[] = $purokName;
+        }
+        $headers[] = 'Total';
+
+        // Build the pregnant women row
+        $pregnantValues = [];
+        $pregnantTotal = 0;
+        foreach ($puroks as $purokName) {
+            $count = $pregnantPerBarangay[$purokName] ?? 0;
+            $pregnantValues[] = $count;
+            $pregnantTotal += $count;
+        }
+        $pregnantValues[] = $pregnantTotal;
+
+        // Build the lactating mothers row
+        $lactatingValues = [];
+        $lactatingTotal = 0;
+        foreach ($puroks as $purokName) {
+            $count = $lactatingPerBarangay[$purokName] ?? 0;
+            $lactatingValues[] = $count;
+            $lactatingTotal += $count;
+        }
+        $lactatingValues[] = $lactatingTotal;
+
+        // Build the WRA row
+        $wraValues = [];
+        $wraTotal = 0;
+        foreach ($puroks as $purokName) {
+            $count = $wraPerBarangay[$purokName] ?? 0;
+            $wraValues[] = $count;
+            $wraTotal += $count;
+        }
+        $wraValues[] = $wraTotal;
+
+        // Combine into rows array
+        $rows = [
+            ['label' => 'Pregnant Women', 'values' => $pregnantValues],
+            ['label' => 'Lactating Mothers', 'values' => $lactatingValues],
+            ['label' => 'WRA', 'values' => $wraValues],
+        ];
+    @endphp
+
+    <x-tables.purok-breakdown
+        title="Reproductive Health Coverage"
+        :headers="$headers"
+        :rows="$rows"
+    />
+     <x-chart-layouts.family-planning
+    :family-planning-enrollees="$familyPlanningEnrollees"
+    :family-planning-methods="$familyPlanningMethods"
+    ></x-chart-layouts-family-planning>
+
+    <x-chart-layouts.inverse-donut-table 
+        chartTitle="Household Sanitary"
+        canvasId="sanitaryHousehold"
+        tableTitle="Household Sanitary">
+
+        <x-slot:thead>
+            <th class="px-6 py-3 font-medium text-main_font border-b border-r text-center"></th>
+            <th class="px-6 py-3 font-medium text-main_font border-b border-r text-center"></th>
+        </x-slot:thead>
+
+        <x-slot:tbody>
+            {{-- Loop through the data, getting both the key ($header) and the value ($count) --}}
+            <tr class="border-t">
+            @foreach($sanitaryData as $header => $count)
+                @php
+                    $header_data;
+
+                    switch($header){
+                        case 'with_sanitary_toilet':
+                            $header_data = "With Sanitary Toilet";
+                            break;
+                        case 'with_unsanitary_toilet':
+                            $header_data = "With Unsanitary Toilet";
+                            break;
+                        default:
+                            $header_data = "Without Toilet";
+                            break;
+                    }
+                @endphp
+                <tr class="border-t">
+                    {{-- The first cell of each row is now the header --}}
+                    <td class="px-6 py-3 font-semibold text-left border-r">{{ $header_data }}</td>
+
+                    {{-- The second cell is the data --}}
+                    <td class="px-6 py-3 text-center">{{ $count }}</td>
+                </tr>
+            @endforeach
+            
+            {{-- The final row for the total --}}
+            <tr class="bg-gray-100 font-semibold border-t">
+                <td class="px-6 py-3 text-left border-r">Total</td>
+                <td class="px-6 py-3 text-center">{{ array_sum($sanitaryData) }}</td>
+            </tr>
+        </x-slot:tbody>
+
+    </x-chart-layouts.inverse-donut-table>
+
+    <x-chart-layouts.inverse-donut-table 
+        chartTitle="Waste Disposal"
+        canvasId="waste-disposal"
+        tableTitle="Waste">
+        
+        <x-slot:thead>
+            <tr>
+                <th class="px-6 py-3 font-medium text-main_font border-b border-r text-center">Waste Disposal</th>
+                <th class="px-6 py-3 font-medium text-main_font border-b border-r text-center">Total</th>
+                <th class="px-6 py-3 font-medium text-main_font border-b border-r text-center">%</th>
+            </tr>
+        </x-slot:thead>
+
+        <x-slot:tbody>
+            @php
+                $grandTotal = array_sum($wasteDisposal); 
+            @endphp
+
+            @foreach($wasteDisposal as $type => $count)
+                <tr class="border-t">
+                    <td class="px-6 py-3 text-center border-r">{{ $type }}</td>
+                    <td class="px-6 py-3 text-center border-r">{{ $count }}</td>
+                    <td class="px-6 py-3 text-center border-r">
+                        {{ $grandTotal > 0 ? number_format(($count / $grandTotal) * 100, 1) . '%' : '0%' }}
+                    </td>
+                </tr>
+            @endforeach
+        </x-slot:tbody>
+
+    </x-chart-layouts.inverse-donut-table>
+
+
+    <x-chart-layouts.inverse-donut-table 
+        chartTitle="Water Source"
+        canvasId="water-source"
+        tableTitle="Water Source">
+        
+        <x-slot:thead>
+            <tr>
+                <th class="px-6 py-3 font-medium text-main_font border-b border-r text-center">Water Source</th>
+                <th class="px-6 py-3 font-medium text-main_font border-b border-r text-center">Total</th>
+                <th class="px-6 py-3 font-medium text-main_font border-b border-r text-center">%</th>
+            </tr>
+        </x-slot:thead>
+
+        <x-slot:tbody>
+            @php
+                $grandTotal = array_sum($waterSource);
+            @endphp
+
+            @foreach ($waterSource as $source => $count)
+                @php
+                    $percentage = $grandTotal > 0 ? number_format(($count / $grandTotal) * 100, 1) : 0;
+                @endphp
+                <tr class="border-t">
+                    <td class="px-6 py-3 text-center border-r">{{ $source }}</td>
+                    <td class="px-6 py-3 text-center border-r">{{ $count }}</td>
+                    <td class="px-6 py-3 text-center border-r">{{ $percentage }}%</td>
+                </tr>
+            @endforeach
+        </x-slot:tbody>
+        </x-chart-layouts.inverse-donut-table>
+        <x-chart-layouts.malnutrition-layout
+            :total-children-enrolled="$totalChildrenEnrolled"
+            :child-weight-height="$childWeightHeight"
+            :normal-weight="$normalWeight"
+            :underweight="$underweight"
+            :severely-underweight="$severelyUnderweight"
+            :overweight="$overweight"
+            :obese="$obese"
+        />
 </div>
