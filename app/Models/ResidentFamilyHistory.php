@@ -9,7 +9,7 @@ class ResidentFamilyHistory extends Model
     protected $table = 'resident_family_histories';
 
     protected $fillable = [
-        'resident_id',
+        'consultation_id',
         'hypertension',
         'heart_diseases',
         'copd',

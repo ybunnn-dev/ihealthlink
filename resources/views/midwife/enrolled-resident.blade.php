@@ -231,4 +231,5 @@
     @include('components.modals.health-program.tcl-programs.update-family-planning-record')
     @include('components.modals.health-program.tcl-programs.update-child-immunization')
     @include('components.modals.health-program.tcl-programs.create-philpen-record')
+    @include('components.modals.health-program.tcl-programs.view-philpen-details')
 </x-app-layout>

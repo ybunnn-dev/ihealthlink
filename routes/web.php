@@ -202,6 +202,7 @@ Route::middleware([
     })->name('midwife.spechouse');*/
     Route::get('/barangay/households/get', [HouseholdController::class, 'getHouseholdsJson'])
                                                                                                 ->name('households.json'); 
+    Route::get('philpen/get/{consultation}', [PhilpenController::class, 'getPhilpen'])->name('philpen.get');
 
     Route::get('/barangay/residents/load', [ResidentController::class, 'index'])->name('midwife.residents');
     
@@ -249,7 +250,7 @@ Route::middleware([
     //inside view 
     Route::get('/barangay/medicines/{id}', [MedicineController::class, 'show'])->name('midwife.medicines.show');
 
-    
+    Route::get('/philpen/print/{consultation}', [BarangayExportData::class, 'printPhilpen']);
 
     //delete a medicine
     Route::put('/midwife/medicine/delete={id}', [MedicineController::class, 'delete']);

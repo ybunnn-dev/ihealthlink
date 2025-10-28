@@ -150,7 +150,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     else if (programTypeDefine === 'philpen_tcl') {
       import('./pages/health-programs/philpen.js');
-      console.log('hello 2');
+      import('./pages/health-programs/view-philpen-data.js');
+  
     } else {
       import('./pages/health-programs/view-consultation.js');
       import('./pages/health-programs/update-consultation.js');

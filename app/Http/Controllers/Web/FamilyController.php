@@ -22,7 +22,15 @@ class FamilyController extends Controller
     public function index(Request $request)
     {
         // Get the current user's personnel info
-        $personnel = Auth::user()->midwife;
+        $user = Auth::user();
+
+        // Determine personnel type
+        if ($user->bhwWeb && $user->bhwWeb->role_id == 4) {
+            $personnel = $user->bhwWeb;
+        } else {
+            $personnel = $user->midwife;
+        }
+
 
         // Find the barangay and the puroks that the user manages
         $barangay = Barangay::with('puroks')->find($personnel->brgy_id);
@@ -333,8 +341,6 @@ class FamilyController extends Controller
         // Determine personnel type (Midwife or BHW)
         if ($user->bhwWeb && $user->bhwWeb->role_id == 4) {
             $personnel = $user->bhwWeb;
-        } elseif ($user->bhw && $user->bhw->role_id == 3) {
-            $personnel = $user->bhw;
         } else {
             $personnel = $user->midwife;
         }

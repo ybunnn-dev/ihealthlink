@@ -322,6 +322,7 @@ class ConsultationController extends Controller
                 'status' => 'completed'
             ]);
             return response()->json([
+                'result' => 'success',
                 'message' => 'Philpen record created successfully.',
                 'data' => [
                     'consultation_id' => $consultation->id,

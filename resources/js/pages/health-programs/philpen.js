@@ -625,6 +625,10 @@ confirmUpdatePhilpenBtn.addEventListener('click', function() {
     .then(response => response.json())
     .then(data => {
         console.log('Server Response:', data);
+        if(data.result === 'success'){
+            alert('PhilPEN record has been successfully updated');
+            window.location.reload();
+        }
     })
     .catch(error => console.error('Error:', error));
 });

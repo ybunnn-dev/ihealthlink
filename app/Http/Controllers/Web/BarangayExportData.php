@@ -11,7 +11,12 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Style\Font;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
+use Illuminate\Support\Facades\Auth;
+
 use Carbon\Carbon;
+use App\Models\Barangay; // Assuming you have a Barangay model
+use App\Models\Resident; // Assuming you have a Resident model
+use App\Models\Consultation; // Added Consultation model
 
 use Barryvdh\DomPDF\Facade\Pdf;
 
@@ -516,6 +521,55 @@ class BarangayExportData extends Controller
         $pdf = Pdf::loadView('reports.child-care-pdf', $data);
 
         // Download the PDF
+        return $pdf->download($fileName);
+    }
+
+    public function printPhilpen(Consultation $consultation)
+    {
+        $user = Auth::user();
+
+        // Determine personnel type
+        if ($user->bhwWeb && $user->bhwWeb->role_id == 4) {
+            $personnel = $user->bhwWeb;
+        } else {
+            $personnel = $user->midwife;
+        }
+
+        // Load personnel's barangay relationship to get health center name
+        $personnel->load('barangay');
+
+        // Ensure all necessary relationships are loaded
+        $consultation->load(
+            'enrolledResident.resident.family.household.purok.barangay',
+            'healthSigns',
+            'medicalHistory',
+            'familyHistory',
+            'riskAssessment',
+            'ncdRiskFactor',
+            'philpenManagement'
+        );
+
+        // Calculate accurate age from birthdate to consultation updated_at
+        $resident = $consultation->enrolledResident->resident;
+        $age = null;
+        if ($resident && $resident->birthdate && $consultation->updated_at) {
+            $birthDate = new \DateTime($resident->birthdate);
+            $consultationDate = new \DateTime($consultation->updated_at);
+            $diff = $consultationDate->diff($birthDate);
+            $age = $diff->y;
+        }
+
+        // Get health center from personnel's barangay
+        $healthCenter = $personnel->barangay->name ?? 'N/A';
+
+        // Load the Blade view with the data
+        $pdf = Pdf::loadView('reports.philpen_assessment', compact('consultation', 'personnel', 'age', 'healthCenter'));
+
+        // Set paper size and orientation
+        $pdf->setPaper('A4', 'portrait');
+
+        $fileName = 'philpen-assessment-' . ($consultation->enrolledResident->resident->lastName ?? $consultation->id) . '-' . now()->format('Ymd') . '.pdf';
+
         return $pdf->download($fileName);
     }
 }

@@ -12,7 +12,7 @@ class RiskAssessment extends Model
     protected $table = 'risk_assessment';
 
     protected $fillable = [
-        'resident_id',
+        'consultation_id',
         'polyphagia',
         'polydipsia',
         'polyuria',

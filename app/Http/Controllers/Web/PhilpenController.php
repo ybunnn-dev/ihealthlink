@@ -284,6 +284,37 @@ class PhilpenController extends Controller
         }
     }
 
+    public function getPhilpen(Consultation $consultation)
+    {
+        $user = auth()->user();
+
+        // Determine personnel: BHW with role 4 or Midwife
+        if ($user->bhwWeb && $user->bhwWeb->role_id == 4) {
+            $personnel = $user->bhwWeb;
+        } else {
+            $personnel = $user->midwife;
+        }
+
+        if (!$personnel) {
+            abort(403, 'Unauthorized access.');
+        }
+
+        
+        // Eager-load all the relationships you listed
+        $consultation->load(
+            'enrolledResident.resident.family.household.purok.barangay', // Nested: Consultation -> EnrolledResident -> Resident
+            'healthSigns',
+            'medicalHistory',
+            'familyHistory',
+            'riskAssessment',
+            'ncdRiskFactor',
+            'philpenManagement'
+        );
+        
+        // Return the consultation data as JSON.
+        // It will now contain all the loaded relationships.
+        return response()->json($consultation);
+    }
 
     private function notifyBarangayPersonnel($brgyId)
     {

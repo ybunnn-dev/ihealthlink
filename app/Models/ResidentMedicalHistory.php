@@ -11,7 +11,7 @@ class ResidentMedicalHistory extends Model
 
     // Mass-assignable fields
     protected $fillable = [
-        'resident_id',
+        'consultation_id',
         'hypertension',
         'heart_diseases',
         'copd',

@@ -11,7 +11,7 @@ class HealthSigns extends Model
 
     // Fillable fields (mass-assignable)
     protected $fillable = [
-        'resident_id',
+        'consultation_id',
         'chest_pain',
         'difficulty_in_breathing',
         'loss_of_consciousness',
