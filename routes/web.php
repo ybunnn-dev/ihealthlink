@@ -27,6 +27,7 @@ use App\Http\Controllers\Web\BarangayLogs;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\FirebaseController;
 use App\Http\Controllers\Web\PhilpenController;
+use App\Http\Controllers\Web\ReportsController;
 
 Route::middleware('guest')->group(function () {
     Route::get('/', function () {
@@ -80,13 +81,7 @@ Route::middleware([
     //removing a purok
     Route::put('/mho/puroks/remove/{id}', [PurokController::class, 'remove'])->name('mho.puroks.remove');
 
-    //fitler, search, and sort functions for the barangay module
-    Route::get('/mho/barangays/search', [BarangayController::class, 'search'])->name('mho.barangays.search');
-
-
     Route::post('/add-purok', [PurokController::class, 'addPurok'])->name('puroks.add');
-
-    Route::get('/mho/barangays/{barangay}/search', [PurokController::class, 'search'])->name('puroks.search');
 
     Route::get('/mho/midwives', [MidwifeController::class, 'index'])->name('mho.midwives');
 
@@ -106,9 +101,7 @@ Route::middleware([
     Route::put('/mho/midwife/{user}/remove', [MidwifeController::class, 'remove']);
 
     //route for mho reports
-    Route::get('/mho/reports', function () {
-        return view('mho.reports');
-    })->name('mho.reports');
+    Route::get('/mho/reports', [ReportsController::class, 'index'])->name('mho.reports');
 
     Route::get('/mho/logs', function () {
         return view('mho.logs');

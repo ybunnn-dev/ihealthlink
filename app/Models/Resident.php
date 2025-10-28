@@ -157,6 +157,11 @@ class Resident extends Model
     {
         return $this->hasMany(ResidenceHistory::class, 'resident_id');
     }
+
+    public function residenceHistories()
+    {
+        return $this->hasMany(ResidenceHistory::class, 'resident_id');
+    }
     
     public function basicHealthRecord()
     {

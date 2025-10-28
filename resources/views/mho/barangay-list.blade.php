@@ -26,7 +26,7 @@
                                     <div class="w-full sm:w-48">
                                         <label for="sortByDropdownBrgy" class="mb-2 text-sm font-medium text-main_font">Sort By</label>
                                         <button id="sortByDropdownBrgy" data-dropdown-toggle="sortByDropdownBrgyMenu" class="w-full text-main_font bg-f7 focus:outline-none font-medium border border-navboard rounded-lg text-sm px-4 py-2 text-center inline-flex items-center justify-between h-[2.375rem]" type="button">
-                                            Name
+                                            Name (A-Z)
                                             <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
                                             </svg>
@@ -35,10 +35,10 @@
                                     <div id="sortByDropdownBrgyMenu" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
                                         <ul class="py-2 text-sm text-normal_font" aria-labelledby="sortByDropdownBrgy">
                                             <li>
-                                                <a href="#" data-value="all" class="block px-4 py-2 hover:bg-gray-100">All</a>
+                                                <a href="#" data-value="alpha_asc" class="block px-4 py-2 hover:bg-gray-100">Name (A-Z)</a>
                                             </li>
                                             <li>
-                                                <a href="#" data-value="name" class="block px-4 py-2 hover:bg-gray-100">Name</a>
+                                                <a href="#" data-value="alpha_desc" class="block px-4 py-2 hover:bg-gray-100">Name (Z-A)</a>
                                             </li>
                                             <li>
                                                 <a href="#" data-value="puroks_count" class="block px-4 py-2 hover:bg-gray-100">Puroks</a>
@@ -61,12 +61,14 @@
                                     </div>
                                     <div id="dateDropdownMenu" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
                                         <ul class="py-2 text-sm text-gray-700" aria-labelledby="dateDropdown">
-                                            <li><a href="#" data-value="all" class="block px-4 py-2 hover:bg-gray-100">All Date</a></li>
+                                            <li><a href="#" data-value="" class="block px-4 py-2 hover:bg-gray-100">All Date</a></li>
                                             <li><a href="#" data-value="week" class="block px-4 py-2 hover:bg-gray-100">Last Week</a></li>
                                             <li><a href="#" data-value="month" class="block px-4 py-2 hover:bg-gray-100">Last Month</a></li>
-                                            <li><a href="#" data-a-value="year" class="block px-4 py-2 hover:bg-gray-100">Last Year</a></li>
+                                            <li><a href="#" data-value="year" class="block px-4 py-2 hover:bg-gray-100">Last Year</a></li>
                                         </ul>
                                     </div>
+                                </div>
+
 
                                     <div class="w-full sm:w-40 pt-5 sm:pt-0">
                                         <button type="button" id="page-add-barangay-button" class="w-full h-[2.375rem] text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3">Add Barangay</button>

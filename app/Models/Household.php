@@ -49,11 +49,6 @@ class Household extends Model
         return $this->hasMany(Family::class);
     }
 
-    // A household can have many residents (through families OR directly if you allow it)
-    public function residents()
-    {
-        return $this->hasManyThrough(Resident::class, Family::class);
-    }
 
     // A household may have one "head" (resident), nullable
     public function head()

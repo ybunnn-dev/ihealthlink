@@ -13,6 +13,7 @@ use Illuminate\Validation\Rule;
 use App\Models\Barangay;
 use App\Models\Midwife;
 use App\Models\Medicine;
+use Illuminate\Support\Facades\DB;
 
 class BarangayController extends Controller
 {
@@ -21,86 +22,73 @@ class BarangayController extends Controller
      */
     public function listView(Request $request)
     {
-        // Start query with purok count
-        $query = Barangay::withCount('puroks')->where('status', 'active');;
+        $query = Barangay::withCount([
+            'puroks as puroks_count' => function ($q) {
+                $q->withoutGlobalScopes()->where('puroks.status', 'active');
+            },
+        ])
+        ->where('barangays.status', 'active');
 
-        // --- Search Logic ---
+        // --- Search ---
         $query->when($request->filled('search'), function ($q) use ($request) {
             $searchTerm = $request->input('search');
-            return $q->where('name', 'like', "%{$searchTerm}%");
+            return $q->where('barangays.name', 'like', "%{$searchTerm}%");
         });
 
-        // --- Sorting Logic ---
+        // --- Sorting ---
         $filter = $request->input('filter', 'alpha_asc');
         if ($filter === 'alpha_asc') {
-            $query->orderBy('name', 'asc');
+            $query->orderBy('barangays.name', 'asc');
         } elseif ($filter === 'alpha_desc') {
-            $query->orderBy('name', 'desc');
+            $query->orderBy('barangays.name', 'desc');
+        } elseif ($filter === 'puroks_count') {
+            $query->orderBy('puroks_count', 'desc');  // 👈 Sort by purok count
         }
 
-        // --- Date Sorting Logic ---
+        // --- Date Sorting ---
         $dateSort = $request->input('sort_date');
-        if ($dateSort === 'newest') {
-            $query->orderBy('created_at', 'desc');
-        } elseif ($dateSort === 'oldest') {
-            $query->orderBy('created_at', 'asc');
+        if ($dateSort === 'week') {
+            $query->where('barangays.created_at', '>=', now()->subWeek());
+        } elseif ($dateSort === 'month') {
+            $query->where('barangays.created_at', '>=', now()->subMonth());
+        } elseif ($dateSort === 'year') {
+            $query->where('barangays.created_at', '>=', now()->subYear());
         }
 
-        // Paginate results
+        // Handle newest/oldest separately if needed
+        if ($dateSort === 'newest') {
+            $query->orderBy('barangays.created_at', 'desc');
+        } elseif ($dateSort === 'oldest') {
+            $query->orderBy('barangays.created_at', 'asc');
+        }
+
         $barangays = $query->paginate(15)->appends($request->query());
 
-        // Add random residents count for now
-        foreach ($barangays as $barangay) {
-            $barangay->residents_count = rand(1200, 4500);
+        // --- Count residents separately ---
+        $barangays->getCollection()->transform(function ($barangay) {
+            $barangay->residents_count = DB::table('residents')
+                ->join('families', 'residents.family_id', '=', 'families.id')
+                ->join('households', 'families.household_id', '=', 'households.id')
+                ->join('puroks', 'households.purok_id', '=', 'puroks.id')
+                ->where('puroks.brgy_id', $barangay->id)
+                ->where('residents.status', 'active')
+                ->count();
+            
+            return $barangay;
+        });
+
+        // 👇 Sort by residents_count after fetching (since it's appended)
+        if ($filter === 'residents_count') {
+            $sorted = $barangays->getCollection()->sortByDesc('residents_count')->values();
+            $barangays->setCollection($sorted);
+        }
+
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json($barangays);
         }
 
         return view('mho.barangay-list', compact('barangays'));
     }
-
-    // --- Other API/CRUD methods remain the same ---
-    public function search(Request $request)
-    {
-        // Get and Validate Query Parameters
-        $searchQuery = $request->input('search');
-        $sortBy = $request->input('sort_by', 'name');
-        $dateFilter = $request->input('date_filter');
-
-        // Include puroks_count directly in the query
-        $query = Barangay::withCount('puroks')
-            ->where('status', 'active'); //  Only active barangays
-
-        // Apply search and date filter logic
-        $query->when($searchQuery, fn($q) => $q->where('name', 'like', "%{$searchQuery}%"));
-        $query->when($dateFilter, function ($q, $dateFilter) {
-            switch ($dateFilter) {
-                case 'week': return $q->where('created_at', '>=', now()->subWeek());
-                case 'month': return $q->where('created_at', '>=', now()->subMonth());
-                case 'year': return $q->where('created_at', '>=', now()->subYear());
-            }
-        });
-
-        // Database-level sorting
-        if (in_array($sortBy, ['name', 'created_at', 'puroks_count'])) {
-            $query->orderBy($sortBy, 'asc');
-        }
-
-        $barangays = $query->paginate(15)->withQueryString();
-
-        // Add Temporary Residents Count
-        $barangays->getCollection()->transform(function ($barangay) {
-            $barangay->residents_count = rand(1200, 4500);
-            return $barangay;
-        });
-
-        // Collection-level sorting for temporary fields
-        if ($sortBy === 'residents_count') {
-            $sortedItems = $barangays->getCollection()->sortBy('residents_count')->values();
-            $barangays->setCollection($sortedItems);
-        }
-
-        return response()->json($barangays);
-    }
-
 
     public function index()
     {
