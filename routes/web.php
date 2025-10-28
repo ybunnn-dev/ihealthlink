@@ -29,6 +29,7 @@ use App\Http\Controllers\FirebaseController;
 use App\Http\Controllers\Web\PhilpenController;
 use App\Http\Controllers\Web\ReportsController;
 use App\Http\Controllers\Web\ExportController;
+use App\Http\Controllers\Web\FaqController;
 
 Route::middleware('guest')->group(function () {
     Route::get('/', function () {
@@ -104,9 +105,7 @@ Route::middleware([
     Route::get('/mho/reports', [ReportsController::class, 'index'])->name('mho.reports');
 
 
-    Route::get('/mho/faq', function () {
-        return view('mho.faq');
-    })->name('mho.faq');
+    Route::get('/mho/faq', [FaqController::class, 'index'])->name('mho.faq');
 
     Route::get('/mho/reports/community-report-pdf', [ExportController::class, 'downloadCommunityReport']);
     Route::get('/mho/reports/preview-community-report', [ExportController::class, 'previewCommunityReport']);
@@ -327,6 +326,3 @@ Route::middleware([
     Route::post('/barangay/resident/update', [ResidentController::class, 'updateResident']);
 
 });
-
-
-

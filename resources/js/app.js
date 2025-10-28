@@ -3,6 +3,7 @@ import Alpine from 'alpinejs';
 import sideMenu from './components/side-menu-bhc.js';
 import notificationHandler from './notification.js';
 import { medicineFilter } from './pages/medicines/paginator.js'; // ADD THIS
+import { faqFilter } from './pages/faq/paginator.js';
 
 import 'flowbite';
 import 'flowbite-datepicker';
@@ -10,6 +11,9 @@ import 'flowbite-datepicker';
 Alpine.data('sideMenu', sideMenu);
 Alpine.data('notificationHandler', notificationHandler);
 Alpine.data('medicineFilter', medicineFilter); // REGISTER IT HERE
+Alpine.data('faqFilter', faqFilter);
+
+
 
 window.Alpine = Alpine;
 
@@ -94,6 +98,8 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   else if (bodyClass.contains('health-programs')) {
     import('./pages/health-programs/add-health-program.js');
+  }else if(bodyClass.contains('faqs')){
+    import('./pages/faq/faq-management.js');
   }
   else if (bodyClass.contains('health-program-brgy')) {
     import('./pages/health-programs/change-program.js');
