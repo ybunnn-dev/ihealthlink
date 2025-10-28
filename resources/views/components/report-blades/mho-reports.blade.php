@@ -49,4 +49,72 @@
             </div>
         </div>
     </div>
+    <x-tables.barangay-breakdown
+        title="Households, Families, and Residents Per Barangay"
+        :headers="array_merge(['Category'], $barangays, ['Total'])"
+        :rows="[
+            ['label' => 'Residents', 'values' => array_merge(array_values($residentsPerBarangay), [array_sum($residentsPerBarangay)])],
+            ['label' => 'Households', 'values' => array_merge(array_values($householdsPerBarangay), [array_sum($householdsPerBarangay)])],
+            ['label' => 'Families', 'values' => array_merge(array_values($familiesPerBarangay), [array_sum($familiesPerBarangay)])],
+            ['label' => '4Ps-Members', 'values' => array_merge(array_values($families4PsPerBarangay), [array_sum($families4PsPerBarangay)])],
+        ]"
+    />
+
+    </div>
+        <x-chart-layouts.donut-table-combo 
+        chartTitle="Indigent Families"
+        canvasId="mhoIndigentChart"
+        tableTitle="Indigent v Non-Indigent">
+
+        <x-slot:thead>
+            <tr>
+                <th class="px-6 py-3 font-medium text-main_font border-b border-r">Type</th>
+                @foreach ($barangays as $barangay)
+                    <th class="px-6 py-3 font-medium text-main_font border-b border-r text-center">{{ $barangay }}</th>
+                @endforeach
+                <th class="px-6 py-3 font-medium text-main_font border-b text-center">Total</th>
+            </tr>
+        </x-slot:thead>
+
+         <x-slot:tbody>
+            {{-- Indigent Row --}}
+            <tr class="border-t">
+                <td class="px-6 py-3 font-medium border-r">Indigent</td>
+                @php $totalIndigent = 0; @endphp
+                @foreach ($familiesIndigentPerBarangay as $barangay => $count)
+                    @php $totalIndigent += $count; @endphp
+                    <td class="px-6 py-3 text-center border-r">{{ $count }}</td>
+                @endforeach
+                <td class="px-6 py-3 text-center">{{ $totalIndigent }}</td>
+            </tr>
+
+            {{-- Non-Indigent Row --}}
+            <tr class="border-t">
+                <td class="px-6 py-3 font-medium border-r">Non-Indigent</td>
+                @php $totalNonIndigent = 0; @endphp
+                @foreach ($familiesPerBarangay as $barangay => $total)
+                    @php
+                        $indigent = $familiesIndigentPerBarangay[$barangay] ?? 0;
+                        $nonIndigent = $total - $indigent;
+                        $totalNonIndigent += $nonIndigent;
+                    @endphp
+                    <td class="px-6 py-3 text-center border-r">{{ $nonIndigent }}</td>
+                @endforeach
+                <td class="px-6 py-3 text-center">{{ $totalNonIndigent }}</td>
+            </tr>
+
+            {{-- Total Row --}}
+            <tr class="bg-gray-100 font-semibold border-t">
+                <td class="px-6 py-3 border-r">Total</td>
+                @php $grandTotal = 0; @endphp
+                @foreach ($familiesPerBarangay as $barangay => $total)
+                    @php $grandTotal += $total; @endphp
+                    <td class="px-6 py-3 text-center border-r">{{ $total }}</td>
+                @endforeach
+                <td class="px-6 py-3 text-center">{{ $grandTotal }}</td>
+            </tr>
+        </x-slot:tbody>
+
+    </x-chart-layouts.donut-table-combo>
+
 </div>

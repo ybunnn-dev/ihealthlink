@@ -60,7 +60,7 @@ function getMhoIndigentData() {
     const totalFamilies = window.families; // total number of families
     const indigentData = window.familiesIndigentPerBarangay;
 
-    // Sum all indigent families from each purok
+    // Sum all indigent families from each barangay
     const totalIndigentFamilies = Object.values(indigentData).reduce((sum, count) => sum + count, 0);
 
     // Non-indigent = total - indigent
@@ -74,9 +74,9 @@ function getMhoIndigentData() {
 
 function getIndigentData() {
     const totalFamilies = window.families; // total number of families
-    const indigentData = window.familiesIndigentPerPurok;
+    const indigentData = window.familiesIndigentPerBarangay;
 
-    // Sum all indigent families from each purok
+    // Sum all indigent families from each barangay
     const totalIndigentFamilies = Object.values(indigentData).reduce((sum, count) => sum + count, 0);
 
     // Non-indigent = total - indigent
@@ -96,24 +96,30 @@ function getSexDistribution() {
     const totalMales = maleData.reduce((sum, count) => sum + (Number(count) || 0), 0);
     const totalFemales = femaleData.reduce((sum, count) => sum + (Number(count) || 0), 0);
 
-    const malePerPurok = window.malesPerPurok;
-    const femalePerPurok = window.femalesPerPurok;
+    const malePerBarangay = window.malesPerBarangay;
+    const femalePerBarangay = window.femalesPerBarangay;
 
     return { totalMales, totalFemales };
 }
 
 function getPwd() {
-    const pwdPerPurokData = window.pwdsPerPurok || {};
-    const nonPwdPerPurokData = window.nonPwdsPerPurok || {};
+    const pwdPerBarangayData = window.pwdsPerBarangay || {};
+    const nonPwdPerBarangayData = window.nonPwdsPerBarangay || {};
 
     // Get an array of the values from the object and sum them up
-    const totalPwd = Object.values(pwdPerPurokData).reduce((sum, count) => sum + count, 0);
-    const totalNonPwd = Object.values(nonPwdPerPurokData).reduce((sum, count) => sum + count, 0);
+    const totalPwd = Object.values(pwdPerBarangayData).reduce((sum, count) => sum + count, 0);
+    const totalNonPwd = Object.values(nonPwdPerBarangayData).reduce((sum, count) => sum + count, 0);
     
 
     return {totalPwd, totalNonPwd};
 }
 
+renderDoughnutChart({
+    elementId: 'mhoIndigentChart',
+    labels: ['Indigent', 'Non-Idigent'],
+    data: [getMhoIndigentData().totalIndigentFamilies, getMhoIndigentData().totalNonIndigentFamilies],
+    colors: ['#4DFFBE', '#9ECAD6']
+});
 // Example usage
 renderDoughnutChart({
     elementId: 'genderChart',
@@ -127,13 +133,6 @@ renderDoughnutChart({
     labels: ['PWDs', 'Non-PWD'],
     data: [getPwd().totalPwd, getPwd().totalNonPwd],
     colors: ['#fd6e69ff', '#F0BB78']
-});
-
-renderDoughnutChart({
-    elementId: 'indigentChart',
-    labels: ['Indigent', 'Non-Idigent'],
-    data: [getIndigentData().totalIndigentFamilies, getIndigentData().totalNonIndigentFamilies],
-    colors: ['#4DFFBE', '#9ECAD6']
 });
 
 

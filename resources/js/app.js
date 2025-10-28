@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
     import('./charts/per-purok-pie.js');
     import('./charts/age-group-bar.js');
     import('./charts/families-4ps.js');
-    import('./charts/small-donuts.js');
+    import('./charts/mho-donuts.js');
     import('./charts/radar.js');
     //import('./resident.js');
 
@@ -43,7 +43,6 @@ document.addEventListener('DOMContentLoaded', () => {
     import('./pages/barangay/spec-barangay.js');
     import('./pages/barangay/purok.js');
     import('./pages/barangay/spec-purok.js');
-    import('./pages/barangay/components/purok-sort.js');
 
   } else if (bodyClass.contains('midwives')) {
     import('./pages/midwife/add-midwife.js');

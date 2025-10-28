@@ -19,8 +19,14 @@ use App\Http\Controllers\Mobile\ConsultationController;
 use App\Http\Controllers\Mobile\PhilpenController;
 use App\Http\Controllers\Mobile\SyncController;
 use App\Http\Controllers\FirebaseController;
+use App\Http\Controllers\Mobile\PasswordResetController;
 
-Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:login'); ;
+
+Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:login'); 
+
+Route::post('/password/request', [PasswordResetController::class, 'requestPassChangeChange'])->middleware('throttle:reset'); 
+Route::post('/password/verify', [PasswordResetController::class, 'verifyCode'])->middleware('throttle:reset'); 
+Route::post('/password/reset', [PasswordResetController::class, 'resetPassword'])->middleware('throttle:reset'); 
 
 // Protected routes (require Sanctum token)
 Route::middleware(['auth:sanctum',
@@ -120,10 +126,8 @@ Route::middleware(['auth:sanctum',
 
     Route::put('/barangay/family/transfer', [FamilyController::class, 'transfer']);
     Route::put('/barangay/resident/transfer', [ResidentController::class, 'transfer']);
-
-
-    
 });
+
 
 Route::middleware([
     'auth:sanctum',
