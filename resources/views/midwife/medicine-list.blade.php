@@ -5,21 +5,28 @@
         <div class="max-w-[90rem] mx-auto sm:px-6 lg:px-8">
             <h1 class="text-3xl font-semibold text-sub_blue mb-3">Medicines</h1>
 
-            <div class="bg-f7 rounded-xl h-full max-h[80vh]">
+            <div class="bg-f7 rounded-xl h-full max-h[80vh]" 
+                x-data="medicineFilter('{{ route('midwife.medicines') }}')" 
+                x-init="init()">
                 <div class="p-6">
                     <div class="grid grid-rows-1 gap-1">
                         <div class="pb-6">
                             <div class="flex flex-col slg2:flex-row slg2:flex-nowrap items-end gap-4">
-                                <!-- Search bar: Allow it to grow and shrink, but give it a max-width. -->
+                                <!-- Search bar -->
                                 <div class="w-full slg2:flex-grow slg2:max-w-md">
                                     <label for="default-search" class="mb-2 text-sm font-medium text-main_font">Search for a medicine?</label> 
                                     <div class="relative">
                                         <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                                            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                            <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                                             </svg>
                                         </div>
-                                        <input type="search" id="default-search" class="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500" placeholder="Search..."/>
+                                        <input type="search" 
+                                            x-model="filters.search" 
+                                            @input.debounce.500ms="fetchResults()"
+                                            id="default-search" 
+                                            class="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500" 
+                                            placeholder="Search..."/>
                                     </div>
                                 </div>
                                 
@@ -27,34 +34,103 @@
                                     <!-- Category Filter -->
                                     <div class="w-full sm:w-48">
                                         <label for="categoryDropdown" class="mb-2 text-sm font-medium text-main_font">Filter by Category</label> 
-                                        <button id="categoryDropdown" data-dropdown-toggle="categoryDropdownMenu" class="w-full text-main_font bg-f7 focus:outline-none font-medium border border-navboard rounded-lg text-sm px-4 py-2 text-center inline-flex items-center justify-between h-[2.375rem]" type="button">
-                                        All
-                                        <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-                                        </svg>
+                                        <button 
+                                            id="categoryDropdown" 
+                                            data-dropdown-toggle="categoryDropdownMenu" 
+                                            class="w-full text-main_font bg-f7 focus:outline-none font-medium border border-navboard rounded-lg text-sm px-4 py-2 text-center inline-flex items-center justify-between h-[2.375rem]" 
+                                            type="button">
+                                            <span x-text="categoryLabel"></span>
+                                            <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                                            </svg>
                                         </button>
+                                        <!-- Dropdown menu -->
+                                        <div id="categoryDropdownMenu" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-48 dark:bg-gray-700">
+                                            <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="categoryDropdown">
+                                                <li>
+                                                    <a href="#" @click.prevent="selectCategory('', 'All')" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">All</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#" @click.prevent="selectCategory('Regular Medicine', 'Regular Medicine')" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Regular Medicine</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#" @click.prevent="selectCategory('Deworming Tablet', 'Deworming Tablet')" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Deworming Tablet</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#" @click.prevent="selectCategory('Iron with Folic Acid', 'Iron with Folic Acid')" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Iron with Folic Acid</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#" @click.prevent="selectCategory('Iron', 'Iron')" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Iron</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#" @click.prevent="selectCategory('Vitamin A', 'Vitamin A')" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Vitamin A</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#" @click.prevent="selectCategory('Calcium Carbonate', 'Calcium Carbonate')" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Calcium Carbonate</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#" @click.prevent="selectCategory('Iodine Capsule', 'Iodine Capsule')" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Iodine Capsule</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#" @click.prevent="selectCategory('Vaccine', 'Vaccine')" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Vaccine</a>
+                                                </li>
+                                            </ul>
+                                        </div>
                                     </div>
 
-                                    <!-- Name Filter -->
+                                    <!-- Name Sort -->
                                     <div class="w-full sm:w-48">
-                                        <label for="dateDropdown" class="mb-2 text-sm font-medium text-main_font">Sort By Name</label> 
-                                        <button id="dateDropdown" data-dropdown-toggle="dateDropdownMenu" class="w-full text-main_font bg-f7 focus:outline-none font-medium border border-navboard rounded-lg text-sm px-4 py-2 text-center inline-flex items-center justify-between h-[2.375rem]" type="button">
-                                        Ascending
-                                        <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-                                        </svg>
+                                        <label for="nameDropdown" class="mb-2 text-sm font-medium text-main_font">Sort By Name</label> 
+                                        <button 
+                                            id="nameDropdown" 
+                                            data-dropdown-toggle="nameDropdownMenu" 
+                                            class="w-full text-main_font bg-f7 focus:outline-none font-medium border border-navboard rounded-lg text-sm px-4 py-2 text-center inline-flex items-center justify-between h-[2.375rem]" 
+                                            type="button">
+                                            <span x-text="nameSortLabel"></span>
+                                            <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                                            </svg>
                                         </button>
+                                        <!-- Dropdown menu -->
+                                        <div id="nameDropdownMenu" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-48 dark:bg-gray-700">
+                                            <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="nameDropdown">
+                                                <li>
+                                                    <a href="#" @click.prevent="selectNameSort('asc', 'Ascending')" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Ascending</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#" @click.prevent="selectNameSort('desc', 'Descending')" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Descending</a>
+                                                </li>
+                                            </ul>
+                                        </div>
                                     </div>
                                     
-                                    <!-- Date Filter -->
+                                    <!-- Date Sort -->
                                     <div class="w-full sm:w-48">
                                         <label for="dateDropdown" class="mb-2 text-sm font-medium text-main_font">Sort By Date</label> 
-                                        <button id="dateDropdown" data-dropdown-toggle="dateDropdownMenu" class="w-full text-main_font bg-f7 focus:outline-none font-medium border border-navboard rounded-lg text-sm px-4 py-2 text-center inline-flex items-center justify-between h-[2.375rem]" type="button">
-                                        Date
-                                        <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-                                        </svg>
+                                        <button 
+                                            id="dateDropdown" 
+                                            data-dropdown-toggle="dateDropdownMenu" 
+                                            class="w-full text-main_font bg-f7 focus:outline-none font-medium border border-navboard rounded-lg text-sm px-4 py-2 text-center inline-flex items-center justify-between h-[2.375rem]" 
+                                            type="button">
+                                            <span x-text="dateSortLabel"></span>
+                                            <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                                            </svg>
                                         </button>
+                                        <!-- Dropdown menu -->
+                                        <div id="dateDropdownMenu" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-48 dark:bg-gray-700">
+                                            <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dateDropdown">
+                                                <li>
+                                                    <a href="#" @click.prevent="selectDateSort('', 'None')" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">None</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#" @click.prevent="selectDateSort('desc', 'Newest First')" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Newest First</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#" @click.prevent="selectDateSort('asc', 'Oldest First')" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Oldest First</a>
+                                                </li>
+                                            </ul>
+                                        </div>
                                     </div>
                                     
                                     <!-- Add Medicine Button -->
@@ -64,88 +140,35 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- Dropdown menus -->
-                        <div id="categoryDropdownMenu" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700">
-                        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200">
-                            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Option 1</a></li>
-                            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Option 2</a></li>
-                        </ul>
-                        </div>
 
-                        <div id="dateDropdownMenu" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700">
-                        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200">
-                            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Last Week</a></li>
-                            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Last Year</a></li>
-                        </ul>
-                        </div>
-                        <div class="relative overflow-x-auto">
+                        <div class="relative overflow-x-auto" x-show="!loading">
                             <table class="w-full text-sm text-left text-main_font bg-col_tab_h">
-                                <thead class="text-xs text-main_font uppercase" >
+                                <thead class="text-xs text-main_font uppercase">
                                     <tr>
-                                        <th scope="col" class="px-6 py-3">
-                                            MEDICINE #
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            MEDICINE NAME
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            TOTAL QUANTITY
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            CATEGORY
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            FORM
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            DATE UPDATED
-                                        </th>
+                                        <th scope="col" class="px-6 py-3">MEDICINE #</th>
+                                        <th scope="col" class="px-6 py-3">MEDICINE NAME</th>
+                                        <th scope="col" class="px-6 py-3">TOTAL QUANTITY</th>
+                                        <th scope="col" class="px-6 py-3">CATEGORY</th>
+                                        <th scope="col" class="px-6 py-3">FORM</th>
+                                        <th scope="col" class="px-6 py-3">DATE UPDATED</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    @forelse($medicines as $medicine)
-                                        <tr class="bg-white border-b bg-f7 text-normal_font" onclick="window.location='{{ route('midwife.medicines.show', $medicine->id) }}'" class="cursor-pointer hover:bg-gray-100">
-                                            <th scope="row" class="px-6 py-4 font-medium text-normal_font whitespace-nowrap">
-                                                {{ $medicine->id }}
-                                            </th>
-                                            <td class="px-6 py-4">
-                                                {{ $medicine->medicine_name }}
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                {{-- If you don’t yet track quantity, just show 0 or leave blank --}}
-                                                {{ $medicine->remaining_stock }}
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                {{ $medicine->category }}
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                {{ $medicine->form }}
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                {{ $medicine->updated_at->format('M d, Y') }}
-                                            </td>
-                                        </tr>
-                                    @empty
-                                         <tr class="border-b bg-f7 text-normal_font text-center cursor-pointer hover:bg-gray-100">
-                                            {{-- This cell will span all 6 columns of your table --}}
-                                            <td colspan="6">
-                                                <div class="text-center py-10">
-                                                    <img src="{{ asset('images/illustrations/empty.png') }}" alt="No barangays found" class="mx-auto w-64">
-                                                    <p class="mt-5 text-lg font-medium text-gray-700">
-                                                        {{ $message ?? "Oops! You haven't added any barangay yet." }}
-                                                    </p>
-                                                    <p class="mt-2 text-sm text-gray-500">
-                                                        Click the "Add Medicine" button to get started.
-                                                    </p>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    @endforelse
+                                <tbody id="medicine-table-body">
+                                    @include('components.medicine.medicine-table', ['medicines' => $medicines])
                                 </tbody>
                             </table>
                         </div>
-                         <div class="mt-6">
-                         {{ $medicines->links() }}
+
+                        <!-- Loading indicator -->
+                        <div x-show="loading" class="text-center py-10">
+                            <svg class="animate-spin h-8 w-8 mx-auto text-mainblue" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                        </div>
+
+                        <div class="mt-6" id="pagination-links">
+                            {{ $medicines->links() }}
                         </div>
                     </div>
                 </div>

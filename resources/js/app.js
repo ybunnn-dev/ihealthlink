@@ -2,12 +2,16 @@ import './bootstrap';
 import Alpine from 'alpinejs';
 import sideMenu from './components/side-menu-bhc.js';
 import notificationHandler from './notification.js';
+import { medicineFilter } from './pages/medicines/paginator.js'; // ADD THIS
 
 import 'flowbite';
 import 'flowbite-datepicker';
 
 Alpine.data('sideMenu', sideMenu);
 Alpine.data('notificationHandler', notificationHandler);
+Alpine.data('medicineFilter', medicineFilter); // REGISTER IT HERE
+
+window.Alpine = Alpine;
 
 document.addEventListener('DOMContentLoaded', () => {
   const bodyClass = document.body.classList;
@@ -19,7 +23,6 @@ document.addEventListener('DOMContentLoaded', () => {
     import('./charts/age-group-bar.js');
     import('./charts/mho-donuts.js');
     import('./charts/radar.js');
-    //import('./resident.js');
 
   } else if (bodyClass.contains('brgy-reports')) {
     import('./pages/reports/filter-date.js');
@@ -31,48 +34,29 @@ document.addEventListener('DOMContentLoaded', () => {
     import('./charts/radar.js');
   }
   else if (bodyClass.contains('dashboard')) {
-
     import('./charts/dash-health-programs.js');
-
   } else if (bodyClass.contains('barangay')) {
     import('./pages/barangay/barangay.js');
     import('./pages/barangay/components/search-sort.js');
-
   } else if (bodyClass.contains('spec-brgy')) {
     import('./pages/barangay/spec-barangay.js');
     import('./pages/barangay/purok.js');
     import('./pages/barangay/spec-purok.js');
-
   } else if (bodyClass.contains('midwives')) {
     import('./pages/midwife/add-midwife.js');
     import('./pages/midwife/components/search-sort.js');
-
   } else if (bodyClass.contains('spec-midwife')) {
     import('./pages/midwife/edit-midwife.js');
     import('./pages/midwife/remove-midwife.js');
-
   } else if (bodyClass.contains('health-programs')) {
     import('./pages/health-programs/add-health-program.js');
-
   } else if (bodyClass.contains('medicines')) {
-
+    // REMOVE the dynamic import from here
+    // import('./pages/medicines/paginator.js'); // DELETE THIS LINE
     import('./pages/medicines/add-medicine.js');
-
   } else if (bodyClass.contains('spec-med')) {
     import('./pages/medicines/edit-medicine.js');
     import('./pages/medicines/remove-medicine.js');
-
-  } else if (bodyClass.contains('sched')) {
-    import('./pages/schedules/tab-switch.js');
-    import('./pages/schedules/add-schedule.js');
-    import('./pages/schedules/edit-schedule.js');
-    import('./pages/schedules/remove-schedule.js');
-    import('./pages/schedules/calendar.js');
-    // Dynamically import your modal script and then call the function
-    import('./pages/schedules/edit-daily-activity.js').then(module => {
-      module.initDailyActivityModal();
-    });
-
   } else if (bodyClass.contains('bhw')) {
     import('./pages/bhw/add-bhw.js');
   }
@@ -96,14 +80,13 @@ document.addEventListener('DOMContentLoaded', () => {
     import('./pages/resident/spec-resident.js');
     import('./pages/resident/create-consultation.js');
     import('./pages/resident/edit-resident.js');
-
   } else if (bodyClass.contains('residents')) {
     import('./pages/resident/add-resident');
     import('./pages/resident/paginate.js');
   }
   else if (bodyClass.contains('family')) {
     import('./pages/family/paginate.js');
-  }else if(bodyClass.contains('spec-family')){
+  } else if(bodyClass.contains('spec-family')){
     import('./pages/family/add-existing.js');
     import('./pages/family/add-resident.js');
     import('./pages/family/edit-family.js');
@@ -111,7 +94,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   else if (bodyClass.contains('health-programs')) {
     import('./pages/health-programs/add-health-program.js');
-
   }
   else if (bodyClass.contains('health-program-brgy')) {
     import('./pages/health-programs/change-program.js');
@@ -151,7 +133,6 @@ document.addEventListener('DOMContentLoaded', () => {
     else if (programTypeDefine === 'philpen_tcl') {
       import('./pages/health-programs/philpen.js');
       import('./pages/health-programs/view-philpen-data.js');
-  
     } else {
       import('./pages/health-programs/view-consultation.js');
       import('./pages/health-programs/update-consultation.js');
@@ -163,8 +144,6 @@ document.addEventListener('DOMContentLoaded', () => {
   else {
     console.log('Not on reports page - charts not loaded');
   }
-
-
 
   // Datepicker styling fix
   document.addEventListener('show.datepicker', () => {
@@ -182,6 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
 document.addEventListener('alpine:init', () => {
   Alpine.data('sideMenu', sideMenu);
   Alpine.data('notificationHandler', notificationHandler);
+  Alpine.data('medicineFilter', medicineFilter); // REGISTER HERE TOO
 });
 
 Alpine.start();

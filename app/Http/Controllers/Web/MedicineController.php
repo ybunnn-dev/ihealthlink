@@ -16,7 +16,7 @@ use App\Models\Midwife;
 class MedicineController extends Controller
 {
     // Show all medicines
-    public function index()
+    public function index(Request $request)
     {
         $user = auth()->user();
 
@@ -32,24 +32,61 @@ class MedicineController extends Controller
         }
 
         $brgyId = $personnel->brgy_id;
-        $perPage = 8; // Items per page
+        $perPage = 8;
 
-        // Fetch medicines with remaining non-expired stock calculated in the query
-        $medicines = Medicine::with(['inventories' => function($q) {
+        // Get filter parameters from request
+        $search = $request->input('search', '');
+        $category = $request->input('category', '');
+        $nameSort = $request->input('name_sort', 'asc');
+        $dateSort = $request->input('date_sort', '');
+
+        // Build query with filters
+        $query = Medicine::with(['inventories' => function($q) {
                 $q->where('expiry_date', '>', now());
             }])
             ->where('brgy_id', $brgyId)
             ->where('status', 'active')
             ->withSum(['inventories as remaining_stock' => function($q){
                 $q->where('expiry_date', '>', now());
-            }], 'stock')
-            ->orderBy('id', 'asc')
-            ->paginate($perPage);
+            }], 'stock');
+
+        // Apply search filter (case-insensitive)
+        if ($search) {
+            $query->where(function($q) use ($search) {
+                $lowerSearch = strtolower($search);
+                $q->whereRaw('LOWER(medicine_name) LIKE ?', ["%{$lowerSearch}%"])
+                ->orWhereRaw('LOWER(category) LIKE ?', ["%{$lowerSearch}%"])
+                ->orWhereRaw('LOWER(form) LIKE ?', ["%{$lowerSearch}%"]);
+            });
+        }
+
+        // Apply category filter
+        if ($category) {
+            $query->where('category', $category);
+        }
+
+        // Apply sorting
+        if ($dateSort) {
+            $query->orderBy('updated_at', $dateSort);
+        } else {
+            $query->orderBy('medicine_name', $nameSort);
+        }
+
+        $medicines = $query->paginate($perPage)->appends($request->except('page'));
+
+        // If AJAX request, return only the table rows
+        if ($request->ajax()) {
+            return response()->json([
+                'html' => view('components.medicine.medicine-table', compact('medicines'))->render(),
+                'pagination' => $medicines->links()->render()
+            ]);
+        }
 
         return view('midwife.medicine-list', [
             'medicines' => $medicines
         ]);
     }
+
 
     public function show($id) // Show specific medicine details
     {

@@ -81,6 +81,7 @@ class MedicineController extends Controller
             'vit-a' => 'Vitamin A',
             'cc' => 'Calcium Carbonate',
             'iodine' => 'Iodine Capsule',
+            'vaccine' => 'Vaccine'
         ];
 
         return $map[strtolower($category)] ?? ucfirst($category);
