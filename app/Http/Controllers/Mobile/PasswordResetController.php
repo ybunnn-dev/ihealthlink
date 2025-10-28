@@ -86,7 +86,7 @@ class PasswordResetController extends Controller
     {
         $request->validate([
             'code' => 'required|string',
-            'new_password' => 'required|string|min:8|confirmed',
+            'new_password' => 'required|string|min:8',
         ]);
 
         // Find the record that matches the provided code
