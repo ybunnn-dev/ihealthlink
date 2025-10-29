@@ -13,8 +13,6 @@ Alpine.data('notificationHandler', notificationHandler);
 Alpine.data('medicineFilter', medicineFilter); // REGISTER IT HERE
 Alpine.data('faqFilter', faqFilter);
 
-
-
 window.Alpine = Alpine;
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -61,7 +59,19 @@ document.addEventListener('DOMContentLoaded', () => {
   } else if (bodyClass.contains('spec-med')) {
     import('./pages/medicines/edit-medicine.js');
     import('./pages/medicines/remove-medicine.js');
-  } else if (bodyClass.contains('bhw')) {
+  }else if(bodyClass.contains('sched')){
+    import('./pages/schedules/tab-switch.js');
+    import('./pages/schedules/add-schedule.js');
+    import('./pages/schedules/edit-schedule.js');
+    import('./pages/schedules/remove-schedule.js');
+    import('./pages/schedules/calendar.js');
+     // Dynamically import your modal script and then call the function
+    import('./pages/schedules/edit-daily-activity.js').then(module => {
+        module.initDailyActivityModal();
+    });
+
+  }
+  else if (bodyClass.contains('bhw')) {
     import('./pages/bhw/add-bhw.js');
   }
   else if (bodyClass.contains('spec-bhw')) {
@@ -119,7 +129,10 @@ document.addEventListener('DOMContentLoaded', () => {
     else {
       import('./pages/health-programs/enroll-resident.js');
     }
+  }else if(bodyClass.contains('efaq')){
+    import('./pages/faq/manuals.js');
   }
+
   else if (bodyClass.contains('spec-enrolled')) {
     const programTypeDefine = document.getElementById('program_type_content').textContent;
 
