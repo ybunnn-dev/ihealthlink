@@ -110,7 +110,7 @@
                
                 const answerContent = document.createElement('p');
                 answerContent.className = 'text-gray-800 leading-relaxed';
-                answerContent.textContent = item.content;
+                answerContent.innerHTML = item.content.replace(/\n/g, '<br>');
 
                 
                 answerCard.appendChild(moduleName); // Moved moduleName here
