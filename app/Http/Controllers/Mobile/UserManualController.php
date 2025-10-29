@@ -11,8 +11,10 @@ class UserManualController extends Controller
 {
     public function index()
     {
-        // Get all manuals, maybe with related modules if you set relationships
-        $manuals = UserManual::with('module')->get();
+        // Get only active manuals, including their related modules
+        $manuals = UserManual::with('module')
+            ->where('action_type', 'active')
+            ->get();
 
         return response()->json([
             'success' => true,

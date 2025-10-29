@@ -17,7 +17,6 @@ class PreloadController extends Controller
 {
     public function index(Request $request)
     {
-        \Log::info('this api has been triggered');
         
         // Assuming your user model has a `brgy_id` or similar relation
         $user = $request->user();
@@ -55,7 +54,7 @@ class PreloadController extends Controller
 
         $schedules = Schedules::where('brgy_id', $barangay->id)->get();
         $dailyActivities = DailyActivities::where('brgy_id', $barangay->id)->get();
-        $userManuals = UserManual::all();
+        $userManuals = UserManual::where('action_type', 'active');
         $health_programs = HealthProgram::where('status', 'active')->get();
         // Return all in one payload
         return response()->json([
