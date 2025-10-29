@@ -15,6 +15,7 @@ class UserManual extends Model
         'question',
         'category',
         'content',
+        'action_type'
     ];
 
     // A user manual belongs to a module

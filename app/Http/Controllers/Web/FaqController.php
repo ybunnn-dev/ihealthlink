@@ -17,8 +17,9 @@ class FaqController extends Controller
         $search = $request->input('search', '');
         $moduleId = $request->input('module', '');
 
-        // Build query
+        // Build query - only fetch active FAQs
         $query = UserManual::with(['module', 'addedBy'])
+            ->where('action_type', 'active')
             ->orderBy('created_at', 'desc');
 
         // Apply search filter
@@ -26,8 +27,8 @@ class FaqController extends Controller
             $query->where(function($q) use ($search) {
                 $lowerSearch = strtolower($search);
                 $q->whereRaw('LOWER(question) LIKE ?', ["%{$lowerSearch}%"])
-                  ->orWhereRaw('LOWER(content) LIKE ?', ["%{$lowerSearch}%"])
-                  ->orWhereRaw('LOWER(category) LIKE ?', ["%{$lowerSearch}%"]);
+                ->orWhereRaw('LOWER(content) LIKE ?', ["%{$lowerSearch}%"])
+                ->orWhereRaw('LOWER(category) LIKE ?', ["%{$lowerSearch}%"]);
             });
         }
 
@@ -51,4 +52,79 @@ class FaqController extends Controller
 
         return view('mho.faq', compact('faqs', 'modules'));
     }
+   public function fetchFaq(UserManual $manual)
+    {
+        return response()->json([
+            'success' => true,
+            'faq' => $manual
+        ]);
+    }
+
+    // Update FAQ
+    public function update(Request $request, UserManual $manual)
+    {
+        $validated = $request->validate([
+            'module_id' => 'required',
+            'category' => 'required|string|max:255',
+            'question' => 'required|string',
+            'content' => 'required|string'
+        ]);
+
+        $manual->update($validated);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'FAQ updated successfully',
+            'faq' => $manual
+        ]);
+    }
+
+    // Soft delete FAQ (set to inactive)
+    public function deactivate(UserManual $manual)
+    {
+        $manual->update(['action_type' => 'inactive']);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'FAQ deactivated successfully'
+        ]);
+    }
+
+    // Optional: Reactivate FAQ
+    public function activate(UserManual $manual)
+    {
+        $manual->update(['action_type' => 'active']);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'FAQ activated successfully'
+        ]);
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'module_id' => 'required',
+            'category' => 'required|string|max:255',
+            'question' => 'required|string',
+            'content' => 'required|string'
+        ]);
+
+        // Set action_type to active by default
+        $validated['action_type'] = 'active';
+        
+        // Add the authenticated user's ID
+        $validated['added_by'] = auth()->id();
+        $validated['action_type'] = 'active';
+
+        $faq = UserManual::create($validated);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'FAQ created successfully',
+            'faq' => $faq
+        ], 201);
+    }
+
+
 }

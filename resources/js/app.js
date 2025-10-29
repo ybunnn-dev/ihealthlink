@@ -99,6 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
   else if (bodyClass.contains('health-programs')) {
     import('./pages/health-programs/add-health-program.js');
   }else if(bodyClass.contains('faqs')){
+    import('./pages/faq/add-faq.js');
     import('./pages/faq/faq-management.js');
   }
   else if (bodyClass.contains('health-program-brgy')) {

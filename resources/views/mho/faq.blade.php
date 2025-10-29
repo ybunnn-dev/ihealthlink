@@ -93,4 +93,7 @@
             </div>
         </div>
     </div>
+    @include('components.modals.faq.create-faq')
+    @include('components.modals.faq.edit-faq')
+    @include('components.modals.faq.delete-faq')
 </x-app-layout>

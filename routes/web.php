@@ -111,7 +111,12 @@ Route::middleware([
     Route::get('/mho/reports/preview-community-report', [ExportController::class, 'previewCommunityReport']);
     Route::get('/mho/reports/export-excel', [ExportController::class, 'exportCommunityReportExcel']);
 
+    Route::post('/mho/faq/create', [FaqController::class, 'store'])->name('faqs.store');
 
+    Route::get('/faqs/{manual}', [FaqController::class, 'fetchFaq'])->name('faqs.show');
+    Route::put('/faqs/{manual}', [FaqController::class, 'update'])->name('faqs.update');
+    Route::put('/faqs/{manual}/deactivate', [FaqController::class, 'deactivate'])->name('faqs.deactivate');
+    Route::patch('/faqs/{manual}/activate', [FaqController::class, 'activate'])->name('faqs.activate');
 });
 
 
@@ -324,5 +329,8 @@ Route::middleware([
     Route::post('/barangay/consultation/create', [ConsultationController::class, 'createConsultation']);
 
     Route::post('/barangay/resident/update', [ResidentController::class, 'updateResident']);
+
+
+
 
 });
