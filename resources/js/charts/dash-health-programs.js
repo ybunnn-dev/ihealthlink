@@ -1,69 +1,46 @@
 const healthPrograms = window.enrolledResidents;
+const medicines = window.medicines;
 
-console.log(healthPrograms);
+console.log(medicines);
 
 Chart.defaults.font.family = 'Poppins, sans-serif';
 Chart.defaults.font.size = 14; 
 Chart.defaults.color = '#566A7F';
 
-// Transform the data for Chart.js
-// First, get all unique months across all programs
-const allMonths = new Set();
-healthPrograms.forEach(program => {
-    program.monthly_data.forEach(month => {
-        allMonths.add(month.month);
-    });
-});
-
-// Convert to array and sort by date
-const monthLabels = Array.from(allMonths).sort((a, b) => {
-    return new Date(a) - new Date(b);
-});
-
-// Format labels to short form (e.g., "Jun 2025" -> "Jun")
-const formattedLabels = monthLabels.map(month => {
-    return month.split(' ')[0].substring(0, 3); // Get first 3 letters of month
-});
-
-// Define colors for each program
-const colors = [
-    { border: '#279EFF', background: 'rgba(39,158,255,0.1)' },    // Blue
-    { border: '#328E6E', background: 'rgba(50,142,110,0.1)' },    // Green
-    { border: '#F0BB78', background: 'rgba(240,187,120,0.1)' },   // Orange
-];
-
-// Create datasets from health programs
-const datasets = healthPrograms.map((program, index) => {
-    // Create a map of month -> count for this program
-    const monthCountMap = {};
-    program.monthly_data.forEach(month => {
-        monthCountMap[month.month] = month.count;
-    });
-    
-    // Build data array matching the month labels
-    const data = monthLabels.map(month => monthCountMap[month] || 0);
-    
-    return {
-        label: program.program_name,
-        data: data,
-        borderColor: colors[index % colors.length].border,
-        backgroundColor: colors[index % colors.length].background,
-        tension: 0
-    };
-});
-
 // Chart 1: Residents Line Chart
 const ctx = document.getElementById('residentsLineChart');
 if (!ctx) {
-    console.error('Canvas #residentsLineChart not found');
+    console.error(' Canvas #residentsLineChart not found');
 } else {
-    console.log('Creating residents line chart...');
+    console.log(' Creating residents line chart...');
     
     new Chart(ctx, {
         type: 'line',
         data: {
-            labels: formattedLabels,
-            datasets: datasets
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            datasets: [
+                {
+                    label: 'Nutrition Program',
+                    data: [120, 150, 180, 170, 200, 230],
+                    borderColor: '#279EFF',
+                    backgroundColor: 'rgba(39,158,255,0.1)',
+                    tension: 0
+                },
+                {
+                    label: 'Vaccination',
+                    data: [90, 110, 160, 140, 180, 210],
+                    borderColor: '#328E6E',
+                    backgroundColor: 'rgba(50,142,110,0.1)',
+                    tension: 0
+                },
+                {
+                    label: 'Maternal Care',
+                    data: [60, 80, 100, 120, 130, 140],
+                    borderColor: '#F0BB78',
+                    backgroundColor: 'rgba(240,187,120,0.1)',
+                    tension: 0
+                }
+            ]
         },
         options: {
             responsive: true,
@@ -72,8 +49,7 @@ if (!ctx) {
                 y: {
                     beginAtZero: true,
                     ticks: {
-                        color: '#566A7F',
-                        stepSize: 1  // Use whole numbers for counts
+                        color: '#566A7F'
                     }
                 },
                 x: {
@@ -94,6 +70,7 @@ if (!ctx) {
     
     console.log('✅ Residents line chart created');
 }
+
 // Chart 2: Residents Per Purok Chart
 const residentsPerPurokChartCtx = document.getElementById('residentsPerPurokChart');
 if (!residentsPerPurokChartCtx) {
@@ -258,15 +235,11 @@ if (!container) {
 } else {
     console.log('✅ Creating medicine stocks chart...');
     
-    const medicineStocks = [
-        { name: 'Medicine 1', stock: 21 },
-        { name: 'Medicine 2', stock: 50 },
-        { name: 'Medicine 3', stock: 101 },
-        { name: 'Medicine 4', stock: 201 },
-        { name: 'A Very Long Medicine Name That Needs Truncating', stock: 201 },
-        { name: 'Medicine 6', stock: 201 },
-        { name: 'Medicine 7', stock: 201 },
-    ];
+    // Transform the medicines data
+    const medicineStocks = medicines.map(medicine => ({
+        name: medicine.medicine_name,
+        stock: medicine.total_stock || 0
+    }));
 
     const maxStock = Math.max(...medicineStocks.map(item => item.stock));
     const barColorClass = 'bg-mainblue';
@@ -280,6 +253,7 @@ if (!container) {
         const nameDiv = document.createElement('div');
         nameDiv.className = 'w-1/4 text-sm pr-2 overflow-hidden text-ellipsis whitespace-nowrap';
         nameDiv.textContent = medicine.name;
+        nameDiv.title = medicine.name; // Add tooltip for full name on hover
         medicineItemDiv.appendChild(nameDiv);
 
         const barWrapperDiv = document.createElement('div');
@@ -302,5 +276,3 @@ if (!container) {
     
     console.log('✅ Medicine stocks chart created');
 }
-
-console.log('🎉 dash-health-programs.js execution completed!');

@@ -5,7 +5,8 @@
         <div class="max-w-[90rem] mx-auto sm:px-6 lg:px-8">
         <!-- Title -->
          <script>
-            window.enrolledResidents = @json($enrolledStats)
+            window.enrolledResidents = @json($enrolledStats);
+            window.medicines = @json($medicines);
          </script>
         <h1 class="text-3xl font-semibold text-sub_blue mb-3">Dashboard</h1>
 

@@ -66,11 +66,12 @@ class DashboardController extends Controller
         $medicines = Medicine::withSum('activeInventories as total_stock', 'stock')
             ->where('brgy_id', $personnel->brgy_id)
             ->orderByDesc('total_stock')
+            ->limit(10)
             ->get();
 
         // Call the private method
         $enrolledStats = $this->getEnrolledResidentStats($personnel);
-
+        \Log::info($medicines);
         return view('midwife.dashboard', [
             'barangay' => $barangay,
             'scheduledActivities' => $schedules,
