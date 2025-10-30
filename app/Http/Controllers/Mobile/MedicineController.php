@@ -13,7 +13,7 @@ use App\Models\ActivityLog;
 
 class MedicineController extends Controller
 {
-   public function index(Request $request)
+    public function index(Request $request)
     {
         $user = Auth::user();
 
@@ -38,7 +38,7 @@ class MedicineController extends Controller
             ->where('status', 'active');
 
         // Apply search filter
-       if (!empty($search)) {
+        if (!empty($search)) {
             $query->where(function ($q) use ($search) {
                 $lowerSearch = strtolower($search);
                 $q->whereRaw('LOWER(medicine_name) LIKE ?', ['%' . $lowerSearch . '%'])
@@ -51,11 +51,11 @@ class MedicineController extends Controller
             $query->where('category', $category);
         }
 
-        // Sort by latest (you can change to 'asc' if needed)
+        // Sort by latest and paginate
         $medicines = $query->orderBy('id', 'desc')->paginate(20);
 
-        // Compute remaining stock (only non-expired)
-        $medicinesWithStock = $medicines->map(function ($medicine) {
+        // Use through() to compute remaining stock while maintaining pagination
+        $medicines->through(function ($medicine) {
             $remainingStock = $medicine->inventories
                 ->filter(fn($inventory) => \Carbon\Carbon::parse($inventory->expiry_date)->isFuture())
                 ->sum('stock');
@@ -66,7 +66,7 @@ class MedicineController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'medicines' => $medicinesWithStock
+            'medicines' => $medicines
         ]);
     }
 
