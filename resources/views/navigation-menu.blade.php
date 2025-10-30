@@ -2,13 +2,14 @@
     <div class="w-full mx-auto px-4 sm:px-6 lg:px-8 py-1">
         <div class="flex justify-between h-16">
             
-            <div class="flex items-center"> {{-- Removed flex-col px-6 --}}
+             <!-- Logo section (hidden on mobile) -->
+            <div class="flex items-center hidden xl:flex">
                 <div class="flex items-center gap-1"> 
                     <svg class="w-7 text-mainblue flex-shrink-0" viewBox="0 0 90 70" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M51.9356 40.3515L53.3692 43.9599L55.1231 40.496L58.2998 34.2206L60.3291 39.4364L60.7637 40.5517H81.9961L63.7647 57.5917C60.6229 60.528 56.8727 62.5495 52.8945 63.6601C44.0894 66.5725 33.8877 64.7375 26.8428 58.1532L8.01173 40.5517H39.8457L40.3545 39.6923L47.126 28.2489L51.9356 40.3515ZM7.32619 6.84755C17.0951 -2.28239 32.9335 -2.28265 42.7022 6.84755L45.0029 8.99892L47.2969 6.85537C57.0658 -2.27458 72.9042 -2.27483 82.6729 6.85537C91.4744 15.0821 92.3439 27.9135 85.2842 37.0517H63.1572L60.1406 29.2987L58.7197 25.6454L56.9492 29.1425L53.7539 35.4511L49.0635 23.6435L47.7471 20.33L45.9307 23.3983L37.8496 37.0517H4.71974C-2.34671 27.9128 -1.47841 15.0767 7.32619 6.84755ZM74.001 4.60244C72.8714 3.94228 71.4536 3.98197 70.3828 4.704C68.3681 6.06262 68.5602 9.01338 70.7383 10.1659L71.6865 10.6679C71.895 10.7782 72.0928 10.9067 72.2783 11.0507L72.9492 11.5712C75.03 13.1867 76.5836 15.3508 77.4180 17.7958L77.9024 19.2138C77.9673 19.4041 78.0145 19.5998 78.0449 19.7977L78.1113 20.2284C78.4751 22.6001 81.2939 23.7962 83.3125 22.4354C84.3704 21.7221 84.8944 20.4725 84.6533 19.2372L84.1406 16.6142C84.0465 16.1322 83.9036 15.6595 83.7129 15.204L83.2529 14.1044C82.2107 11.6147 80.5883 9.38565 78.5137 7.59267L77.8135 6.98818C77.4382 6.66391 77.0330 6.37349 76.6026 6.12197L74.0010 4.60244Z" fill="currentColor"/>
                     </svg>
                     <div class="flex items-center">
-                        <span class="text-maingreen font-semibold whitespace-nowrap text-2xl  transition-transform duration-300">
+                        <span class="text-maingreen font-semibold whitespace-nowrap text-2xl transition-transform duration-300">
                             iHealth
                         </span>
                         <span class="text-mainblue font-semibold whitespace-nowrap text-2xl transition-transform duration-300">
@@ -18,7 +19,17 @@
                 </div>
             </div>
 
-            <div class="hidden sm:flex sm:items-center sm:gap-3">
+            <!-- the burger - UPDATED -->
+            <div class="-me-2 flex items-center xl:hidden">
+                <button @click="$store.sidebar.toggle()" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
+                    <svg class="size-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                        <path :class="{'hidden': $store.sidebar.open, 'inline-flex': !$store.sidebar.open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        <path :class="{'hidden': !$store.sidebar.open, 'inline-flex': $store.sidebar.open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <!-- the burger -->
+            <div class="flex items-center gap-3">
                 <div class="flex items-center gap-2 text-gray-600 dark:text-gray-300 hidden xl:flex">
                     <svg 
                         version="1.1" 
@@ -107,7 +118,7 @@
                                                     <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="#292D32" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
                                                 </g>
                                             </svg>
-                                            <div class="flex flex-col items-start justify-start">
+                                            <div class="flex flex-col items-start justify-start hidden xl:flex">
                                                 <div class="flex items-center gap-6">
                                                     <p class="font-semibold text-main_font">{{ Auth::user()->firstName }} {{ Auth::user()->lastName }}</p>
                                                     <svg class="ms-2 -me-0.5 size-4 ml-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -137,11 +148,6 @@
                                 {{ __('FAQs') }}
                             </x-dropdown-link>
 
-                            <x-dropdown-link data-modal-target="change-language-modal" data-modal-toggle="change-language-modal" class="flex flex-cols-2 items-center gap-2">
-                                <svg class="text-main_font w-4 h-4" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--twemoji" preserveAspectRatio="xMidYMid meet" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path fill="#00247D" d="M0 9.059V13h5.628zM4.664 31H13v-5.837zM23 25.164V31h8.335zM0 23v3.941L5.63 23zM31.337 5H23v5.837zM36 26.942V23h-5.631zM36 13V9.059L30.371 13zM13 5H4.664L13 10.837z"></path><path fill="#CF1B2B" d="M25.14 23l9.712 6.801a3.977 3.977 0 0 0 .99-1.749L28.627 23H25.14zM13 23h-2.141l-9.711 6.8c.521.53 1.189.909 1.938 1.085L13 23.943V23zm10-10h2.141l9.711-6.8a3.988 3.988 0 0 0-1.937-1.085L23 12.057V13zm-12.141 0L1.148 6.2a3.994 3.994 0 0 0-.991 1.749L7.372 13h3.487z"></path><path fill="#EEE" d="M36 21H21v10h2v-5.836L31.335 31H32a3.99 3.99 0 0 0 2.852-1.199L25.14 23h3.487l7.215 5.052c.093-.337.158-.686.158-1.052v-.058L30.369 23H36v-2zM0 21v2h5.63L0 26.941V27c0 1.091.439 2.078 1.148 2.8l9.711-6.8H13v.943l-9.914 6.941c.294.07.598.116.914.116h.664L13 25.163V31h2V21H0zM36 9a3.983 3.983 0 0 0-1.148-2.8L25.141 13H23v-.943l9.915-6.942A4.001 4.001 0 0 0 32 5h-.663L23 10.837V5h-2v10h15v-2h-5.629L36 9.059V9zM13 5v5.837L4.664 5H4a3.985 3.985 0 0 0-2.852 1.2l9.711 6.8H7.372L.157 7.949A3.968 3.968 0 0 0 0 9v.059L5.628 13H0v2h15V5h-2z"></path><path fill="#CF1B2B" d="M21 15V5h-6v10H0v6h15v10h6V21h15v-6z"></path></g></svg>
-                                {{ __('Language') }}
-                            </x-dropdown-link>
-                                
                             <div class="border-t border-gray-200"></div>
 
                             <form method="POST" action="{{ route('logout') }}" x-data>
@@ -156,114 +162,6 @@
                         </x-slot>
                     </x-dropdown>
                 </div>
-            </div>
-
-            <div class="-me-2 flex items-center sm:hidden">
-                <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
-                    <svg class="size-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                        <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                        <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
-        <div class="pt-4 pb-1 border-t border-gray-200">
-            <div class="flex items-center px-4">
-                @if (Laravel\Jetstream\Jetstream::managesProfilePhotos())
-                    <div class="shrink-0 me-3">
-                        <img class="size-10 rounded-full object-cover" src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->name }}" />
-                    </div>
-                @endif
-
-                <div>
-                    <div class="font-medium text-base text-gray-800">{{ Auth::user()->name }}</div>
-                    <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
-                </div>
-            </div>
-
-            <div class="mt-4 space-y-1">
-                <div class="ms-3 relative" x-data="notificationHandler">
-                    <x-dropdown align="right" width="128">
-                        <x-slot name="trigger">
-                            <button class="relative inline-flex items-center p-2 text-gray-400 bg-white hover:text-gray-500 focus:outline-none focus:text-gray-500 transition duration-150 ease-in-out">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
-                                </svg>
-                                <span x-show="unreadCount > 0" 
-                                    x-text="unreadCount" 
-                                    class="absolute -top-0.5 -right-0.5 inline-flex items-center justify-center px-1.5 py-0.5 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">
-                                </span>
-                            </button>
-                        </x-slot>
-
-                        <x-slot name="content">
-                            <div class="flex items-center justify-between px-4 py-2 text-xs text-gray-400 border-b border-gray-200">
-                                <span>{{ __('Notifications') }}</span>
-                                <button @click="markAllRead()" 
-                                        x-show="unreadCount > 0" 
-                                        class="text-blue-600 hover:text-blue-500 text-xs">
-                                    Mark all read
-                                </button>
-                            </div>
-
-                            <div class="max-h-96 overflow-y-auto">
-                                <template x-for="notification in notifications" :key="notification.id">
-                                    <a :href="'#'" 
-                                    @click="markAsRead(notification.id)"
-                                    class="flex items-start py-3 px-4 hover:bg-gray-50 border-b border-gray-100"
-                                    :class="{ 'bg-blue-50': !notification.is_read }">
-                                        <div class="flex-1">
-                                            <p class="text-sm font-medium text-gray-900" x-text="notification.subject"></p>
-                                            <p class="text-xs text-gray-500 mt-1" x-text="notification.message"></p>
-                                            <p class="text-xs text-gray-400 mt-1" x-text="formatTime(notification.created_at)"></p>
-                                        </div>
-                                        <span x-show="!notification.is_read" class="ml-2 w-2 h-2 bg-blue-600 rounded-full"></span>
-                                    </a>
-                                </template>
-
-                                <div x-show="notifications.length === 0" class="px-4 py-8 text-center text-gray-500 text-sm">
-                                    No notifications yet
-                                </div>
-                            </div>
-
-                            <div class="border-t border-gray-200"></div>
-
-                            <a href="#" class="block text-center px-4 py-2 text-sm text-blue-600 hover:text-blue-500 hover:bg-gray-50">
-                                {{ __('View All Notifications') }}
-                            </a>
-                        </x-slot>
-                    </x-dropdown>
-                </div>
-                <x-responsive-nav-link href="#" class="flex items-center">
-                    <svg class="w-5 h-5 mr-3" viewBox="0 0 24 24" fill="none">
-                        <rect width="24" height="24" rx="2" fill="#012169"/>
-                        <path d="M0 0L24 16H18L0 4V0Z" fill="#FFFFFF"/>
-                        <path d="M24 0L0 16H6L24 4V0Z" fill="#FFFFFF"/>
-                        <path d="M10 0H14V24H10V0Z" fill="#FFFFFF"/>
-                        <path d="M0 10H24V14H0V10Z" fill="#FFFFFF"/>
-                        <path d="M0 0L24 16H20L0 3V0Z" fill="#C8102E"/>
-                        <path d="M24 0L0 16H4L24 3V0Z" fill="#C8102E"/>
-                        <path d="M11 0H13V24H11V0Z" fill="#C8102E"/>
-                        <path d="M0 11H24V13H0V11Z" fill="#C8102E"/>
-                    </svg>
-                    {{ __('Language') }}
-                </x-responsive-nav-link>
-
-                <x-responsive-nav-link href="{{ route('profile.show') }}" :active="request()->routeIs('profile.show')">
-                    {{ __('Profile') }}
-                </x-responsive-nav-link>
-
-                <form method="POST" action="{{ route('logout') }}" x-data>
-                    @csrf
-
-                    <x-responsive-nav-link href="{{ route('logout') }}"
-                                   @click.prevent="$root.submit();">
-                        {{ __('Log Out') }}
-                    </x-responsive-nav-link>
-                </form>
             </div>
         </div>
     </div>

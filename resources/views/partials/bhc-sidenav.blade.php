@@ -1,11 +1,50 @@
-<div x-data="sideMenu()" class="relative flex flex-col h-screen hidden xl:flex">
-    {{-- Sidebar --}}
-    <div class="xl:w-60 border-r border-gray-200 bg-f7 text-white h-full flex flex-col pt-5 min-h-0">
+<div x-data="sideMenu()" class="relative">
+    <!-- Backdrop overlay for mobile (only visible when sidebar is open) -->
+    <div 
+        x-show="$store.sidebar.open" 
+        @click="$store.sidebar.close()"
+        x-transition:enter="transition-opacity ease-linear duration-300"
+        x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100"
+        x-transition:leave="transition-opacity ease-linear duration-300"
+        x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0"
+        class="fixed inset-0 bg-gray-600 bg-opacity-75 z-40 xl:hidden"
+        style="display: none;">
+    </div>
 
+    <!-- Sidebar -->
+    <div 
+        :class="$store.sidebar.open ? 'translate-x-0' : '-translate-x-full' "
+        class="fixed xl:relative xl:translate-x-0 inset-y-0 left-0 z-50 xl:z-0 w-60 border-r border-gray-200 bg-f7 text-white flex flex-col pt-5 min-h-0 transform transition-transform duration-300 ease-in-out xl:flex">
+        <div class="flex items-center xl:hidden">
+                <div class="flex items-center gap-1"> 
+                    <svg class="w-7 text-mainblue flex-shrink-0" viewBox="0 0 90 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M51.9356 40.3515L53.3692 43.9599L55.1231 40.496L58.2998 34.2206L60.3291 39.4364L60.7637 40.5517H81.9961L63.7647 57.5917C60.6229 60.528 56.8727 62.5495 52.8945 63.6601C44.0894 66.5725 33.8877 64.7375 26.8428 58.1532L8.01173 40.5517H39.8457L40.3545 39.6923L47.126 28.2489L51.9356 40.3515ZM7.32619 6.84755C17.0951 -2.28239 32.9335 -2.28265 42.7022 6.84755L45.0029 8.99892L47.2969 6.85537C57.0658 -2.27458 72.9042 -2.27483 82.6729 6.85537C91.4744 15.0821 92.3439 27.9135 85.2842 37.0517H63.1572L60.1406 29.2987L58.7197 25.6454L56.9492 29.1425L53.7539 35.4511L49.0635 23.6435L47.7471 20.33L45.9307 23.3983L37.8496 37.0517H4.71974C-2.34671 27.9128 -1.47841 15.0767 7.32619 6.84755ZM74.001 4.60244C72.8714 3.94228 71.4536 3.98197 70.3828 4.704C68.3681 6.06262 68.5602 9.01338 70.7383 10.1659L71.6865 10.6679C71.895 10.7782 72.0928 10.9067 72.2783 11.0507L72.9492 11.5712C75.03 13.1867 76.5836 15.3508 77.4180 17.7958L77.9024 19.2138C77.9673 19.4041 78.0145 19.5998 78.0449 19.7977L78.1113 20.2284C78.4751 22.6001 81.2939 23.7962 83.3125 22.4354C84.3704 21.7221 84.8944 20.4725 84.6533 19.2372L84.1406 16.6142C84.0465 16.1322 83.9036 15.6595 83.7129 15.204L83.2529 14.1044C82.2107 11.6147 80.5883 9.38565 78.5137 7.59267L77.8135 6.98818C77.4382 6.66391 77.0330 6.37349 76.6026 6.12197L74.0010 4.60244Z" fill="currentColor"/>
+                    </svg>
+                    <div class="flex items-center">
+                        <span class="text-maingreen font-semibold whitespace-nowrap text-2xl transition-transform duration-300">
+                            iHealth
+                        </span>
+                        <span class="text-mainblue font-semibold whitespace-nowrap text-2xl transition-transform duration-300">
+                            Link
+                        </span>
+                    </div>
+                </div>
+            </div>
+        <!-- Close button (only visible on mobile) -->
+        <div class="flex items-center justify-end px-4 pb-3 xl:hidden">
+            <button @click="$store.sidebar.close()" class="text-gray-400 hover:text-gray-500">
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
 
-        {{-- Navigation --}}
+        <!-- Navigation -->
         <ul class="flex-1 min-h-0 text-fluid-sm xl3:text-sm px-3 overflow-y-auto">
 
+            <!-- Dashboard -->
             <li class="flex items-start group">
                 <a href="{{ route('midwife.dashboard', ['barangay' => $barangayName]) }}"
                     class="flex items-center w-full py-3 pl-4 hover:bg-white/10 transition-colors rounded-lg"
@@ -13,9 +52,8 @@
                         'bg-nav_active text-f7 font-semibold': activeItem === 'dashboard',
                         'text-mainblue': activeItem !== 'dashboard'
                     }"
-                    @click="setActive('dashboard')">
-                    <svg class="flex-shrink-0
-                            w-4 h-4"
+                    @click="setActive('dashboard'); if (window.innerWidth < 1280) $store.sidebar.close()">
+                    <svg class="flex-shrink-0 w-4 h-4"
                         :class="{
                             'text-mainblue': activeItem === 'dashboard',
                             'text-main_font': activeItem !== 'dashboard'
@@ -34,8 +72,6 @@
                             d="M13 5C13 4.44772 13.4477 4 14 4H19C19.5523 4 20 4.44772 20 5V7C20 7.55228 19.5523 8 19 8H14C13.4477 8 13 7.55228 13 7V5Z"
                             stroke="currentColor" stroke-width="2" stroke-linecap="round" />
                     </svg>
-
-                    {{-- Simplified :class, removed open/close logic --}}
                     <span class="ml-3 whitespace-nowrap transition-all duration-200 text-fluid-sm"
                         :class="{
                             'font-semibold text-mainblue': activeItem === 'dashboard',
@@ -45,6 +81,8 @@
                     </span>
                 </a>
             </li>
+
+            <!-- Demographics -->
             <li class="flex items-center group">
                 <a href="{{ route('midwife.households') }}"
                     class="flex items-center w-full py-3 pl-4 hover:bg-white/10 transition-colors rounded-lg"
@@ -52,9 +90,8 @@
                         'bg-nav_active text-f7 font-semibold': activeItem === 'residents',
                         'text-mainblue': activeItem !== 'residents'
                     }"
-                    @click="setActive('residents')">
-                    <svg class="flex-shrink-0
-                            w-4 h-4"
+                    @click="setActive('residents'); if (window.innerWidth < 1280) $store.sidebar.close()">
+                    <svg class="flex-shrink-0 w-4 h-4"
                         :class="{
                             'text-mainblue': activeItem === 'residents',
                             'text-main_font': activeItem !== 'residents'
@@ -68,7 +105,6 @@
                                 fill="currentColor"></path>
                         </g>
                     </svg>
-                    {{-- Simplified :class, removed open/close logic --}}
                     <span class="ml-3 whitespace-nowrap transition-all duration-200 text-main_font text-fluid-sm"
                         :class="{
                             'font-semibold text-mainblue': activeItem === 'residents'
@@ -78,19 +114,19 @@
                 </a>
             </li>
 
+            <!-- Health Programs -->
             <li class="flex items-center group">
                 <a href="{{ route('midwife.health-program') }}"
                     class="flex items-center w-full py-3 pl-4 hover:bg-white/10 transition-colors rounded-lg"
                     :class="{
-                        'bg-nav_active text-f7 font-semibold': activeItem === 'health-program', {{-- Changed to 'health-program' (singular) --}}
-                        'text-white': activeItem !== 'health-program' {{-- Changed to 'health-program' (singular) --}}
+                        'bg-nav_active text-f7 font-semibold': activeItem === 'health-program',
+                        'text-white': activeItem !== 'health-program'
                     }"
-                    @click="setActive('health-program')">
-                    <svg class="flex-shrink-0
-                                w-4 h-4"
+                    @click="setActive('health-program'); if (window.innerWidth < 1280) $store.sidebar.close()">
+                    <svg class="flex-shrink-0 w-4 h-4"
                         :class="{
-                            'text-mainblue': activeItem === 'health-program', {{-- Changed to 'health-program' (singular) --}}
-                            'text-main_font': activeItem !== 'health-program' {{-- Changed to 'health-program' (singular) --}}
+                            'text-mainblue': activeItem === 'health-program',
+                            'text-main_font': activeItem !== 'health-program'
                         }"
                         viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -104,7 +140,6 @@
                                 fill="currentColor"></path>
                         </g>
                     </svg>
-                    {{-- Simplified :class, removed open/close logic --}}
                     <span class="ml-3 whitespace-nowrap transition-all duration-200 text-main_font text-fluid-sm"
                         :class="{
                             'font-semibold text-mainblue': activeItem === 'health-program'
@@ -114,6 +149,7 @@
                 </a>
             </li>
 
+            <!-- Medicines -->
             <li class="flex items-center group">
                 <a href="{{ route('midwife.medicines') }}"
                     class="flex items-center w-full py-3 pl-4 hover:bg-white/10 transition-colors rounded-lg"
@@ -121,9 +157,8 @@
                         'bg-nav_active text-f7 font-semibold': activeItem === 'medicines',
                         'text-mainblue': activeItem !== 'medicines'
                     }"
-                    @click="setActive('medicines')">
-                    <svg class="flex-shrink-0
-                            w-4 h-4 lg:w-4"
+                    @click="setActive('medicines'); if (window.innerWidth < 1280) $store.sidebar.close()">
+                    <svg class="flex-shrink-0 w-4 h-4 lg:w-4"
                         :class="{
                             'text-mainblue': activeItem === 'medicines',
                             'text-main_font': activeItem !== 'medicines'
@@ -142,7 +177,6 @@
                             </polygon>
                         </g>
                     </svg>
-                    {{-- Simplified :class, removed open/close logic --}}
                     <span class="ml-3 whitespace-nowrap transition-all duration-200 text-main_font text-fluid-sm"
                         :class="{
                             'font-semibold text-mainblue': activeItem === 'medicines'
@@ -152,6 +186,7 @@
                 </a>
             </li>
 
+            <!-- Reports -->
             <li class="flex items-center group">
                 <a href="{{ route('midwife.reports') }}"
                     class="flex items-center w-full py-3 pl-4 hover:bg-white/10 transition-colors rounded-lg"
@@ -159,9 +194,8 @@
                         'bg-nav_active text-f7 font-semibold': activeItem === 'reports',
                         'text-white': activeItem !== 'reports'
                     }"
-                    @click="setActive('reports')">
-                    <svg class="flex-shrink-0
-                            w-4 h-4"
+                    @click="setActive('reports'); if (window.innerWidth < 1280) $store.sidebar.close()">
+                    <svg class="flex-shrink-0 w-4 h-4"
                         :class="{
                             'text-mainblue': activeItem === 'reports',
                             'text-main_font': activeItem !== 'reports'
@@ -178,7 +212,6 @@
                             </rect>
                         </g>
                     </svg>
-                    {{-- Simplified :class, removed open/close logic --}}
                     <span class="ml-3 whitespace-nowrap transition-all duration-200 text-main_font text-fluid-sm"
                         :class="{
                             'font-semibold text-mainblue': activeItem === 'reports'
@@ -188,6 +221,7 @@
                 </a>
             </li>
 
+            <!-- Schedules (Only for Midwife - role_id == 2) -->
             @auth
                 @if (Auth::user()->role_id == 2)
                     <li class="flex items-center group">
@@ -197,7 +231,7 @@
                                 'bg-nav_active text-f7 font-semibold': activeItem === 'schedules',
                                 'text-white': activeItem !== 'schedules'
                             }"
-                            @click="setActive('schedules')">
+                            @click="setActive('schedules'); if (window.innerWidth < 1280) $store.sidebar.close()">
                             <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"
                                 class="flex-shrink-0 w-4 h-4"
                                 :class="{
@@ -209,7 +243,6 @@
                                     d="M2 2h16v4H2V2zm0 10V8h4v4H2zm6-2V8h4v2H8zm6 3V8h4v5h-4zm-6 5v-6h4v6H8zm-6 0v-4h4v4H2zm12 0v-3h4v3h-4z">
                                 </path>
                             </svg>
-                            {{-- Simplified :class, removed open/close logic --}}
                             <span class="ml-3 whitespace-nowrap transition-all duration-200 text-main_font text-fluid-sm"
                                 :class="{
                                     'font-semibold text-mainblue': activeItem === 'schedules'
@@ -221,6 +254,7 @@
                 @endif
             @endauth
 
+            <!-- BHWs (Only for Midwife - role_id == 2) -->
             @auth
                 @if (Auth::user()->role_id == 2)
                     <li class="flex items-center group">
@@ -230,7 +264,7 @@
                                 'bg-nav_active text-f7 font-semibold': activeItem === 'bhws',
                                 'text-white': activeItem !== 'bhws'
                             }"
-                            @click="setActive('bhws')">
+                            @click="setActive('bhws'); if (window.innerWidth < 1280) $store.sidebar.close()">
                             <svg class="flex-shrink-0 w-4 h-4 lg:w-4 lg:h-4"
                                 :class="{
                                     'text-mainblue': activeItem === 'bhws',
@@ -249,7 +283,6 @@
                                 </path>
                                 <path d="M.947 57.293h61.73v5.873H.947v-5.873z"></path>
                             </svg>
-                            {{-- Simplified :class, removed open/close logic --}}
                             <span class="ml-3 whitespace-nowrap transition-all duration-200 text-main_font text-fluid-sm"
                                 :class="{
                                     'font-semibold text-mainblue': activeItem === 'bhws'
@@ -261,17 +294,17 @@
                 @endif
             @endauth
 
-
+            <!-- Logs (Only for Midwife - role_id == 2) -->
             @auth
                 @if (Auth::user()->role_id == 2)
-                    <li class="flex items-center group ">
+                    <li class="flex items-center group">
                         <a href="{{ route('midwife.logs') }}"
                             class="flex items-center w-full py-3 pl-4 hover:bg-white/10 transition-colors rounded-lg"
                             :class="{
                                 'bg-nav_active text-f7 font-semibold': activeItem === 'logs',
                                 'text-mainblue': activeItem !== 'logs'
                             }"
-                            @click="setActive('logs')">
+                            @click="setActive('logs'); if (window.innerWidth < 1280) $store.sidebar.close()">
                             <svg class="flex-shrink-0 w-4 h-4 lg:w-4 lg:h-4"
                                 :class="{
                                     'text-mainblue': activeItem === 'logs',
@@ -282,7 +315,6 @@
                                     d="M0 24q0 0.832 0.576 1.44t1.44 0.576h1.984q0 2.496 1.76 4.224t4.256 1.76h6.688q-2.144-1.504-3.456-4h-3.232q-0.832 0-1.44-0.576t-0.576-1.408v-20q0-0.832 0.576-1.408t1.44-0.608h16q0.8 0 1.408 0.608t0.576 1.408v7.232q2.496 1.312 4 3.456v-10.688q0-2.496-1.76-4.256t-4.224-1.76h-16q-2.496 0-4.256 1.76t-1.76 4.256h-1.984q-0.832 0-1.44 0.576t-0.576 1.408 0.576 1.44 1.44 0.576h1.984v4h-1.984q-0.832 0-1.44 0.576t-0.576 1.408 0.576 1.44 1.44 0.576h1.984v4h-1.984q-0.832 0-1.44 0.576t-0.576 1.408zM10.016 24h2.080q0-0.064-0.032-0.416t-0.064-0.576 0.064-0.544 0.032-0.448h-2.080v1.984zM10.016 20h2.464q0.288-1.088 0.768-1.984h-3.232v1.984zM10.016 16h4.576q0.992-1.216 2.112-1.984h-6.688v1.984zM10.016 12h16v-1.984h-16v1.984zM10.016 8h16v-1.984h-16v1.984zM14.016 23.008q0 1.824 0.704 3.488t1.92 2.88 2.88 1.92 3.488 0.704 3.488-0.704 2.88-1.92 1.92-2.88 0.704-3.488-0.704-3.488-1.92-2.88-2.88-1.92-3.488-0.704-3.488 0.704-2.88 1.92-1.92 2.88-0.704 3.488zM18.016 23.008q0-2.080 1.44-3.52t3.552-1.472 3.52 1.472 1.472 3.52q0 2.080-1.472 3.52t-3.52 1.472-3.552-1.472-1.44-3.52zM22.016 23.008q0 0.416 0.288 0.704t0.704 0.288h1.984q0.416 0 0.704-0.288t0.32-0.704-0.32-0.704-0.704-0.288h-0.992v-0.992q0-0.416-0.288-0.704t-0.704-0.32-0.704 0.32-0.288 0.704v1.984z">
                                 </path>
                             </svg>
-                            {{-- Simplified :class, removed open/close logic --}}
                             <span
                                 class="ml-3 whitespace-nowrap transition-all duration-200 text-main_font text-fluid-sm rounded-lg"
                                 :class="{
@@ -298,5 +330,17 @@
         </ul>
 
     </div>
-    vakla
 </div>
+
+<script>
+    function sideMenu() {
+        return {
+            activeItem: localStorage.getItem('activeMenuItem') || 'dashboard',
+            
+            setActive(item) {
+                this.activeItem = item;
+                localStorage.setItem('activeMenuItem', item);
+            }
+        }
+    }
+</script>

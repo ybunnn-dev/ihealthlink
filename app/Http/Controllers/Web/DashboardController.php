@@ -9,27 +9,34 @@ use App\Models\DailyActivities;
 use App\Models\Schedules;
 use App\Models\Midwife;
 use App\Models\Resident;
+use App\Models\Medicine;
 
 class DashboardController extends Controller
 {
     // Method to show the dashboard
     public function index($barangay)
     {   
-        $midwife = Midwife::where('user_id', auth()->id())->first();
-        $dailyActivities = collect(); // default empty collection
+        $user = auth()->user();
 
-        $dailyActivities = DailyActivities::where('brgy_id', $midwife->brgy_id)
-                                              ->with('icon')
-                                              ->get();
+        // Determine personnel: BHW with role 4 or Midwife
+        if ($user->bhwWeb && $user->bhwWeb->role_id == 4) {
+            $personnel = $user->bhwWeb;
+        } else {
+            $personnel = $user->midwife;
+        }
 
-        $schedules = Schedules::where('brgy_id', $midwife->brgy_id)
+        if (!$personnel) {
+            abort(403, 'Unauthorized access.');
+        }
+
+        $schedules = Schedules::where('brgy_id', $personnel->brgy_id)
                                             ->where('status', 'active')
-                                            ->with('healthProgram', 'barangay')
+                                            ->whereDate('date', '>=', \Carbon\Carbon::today())
+                                            ->with('barangay')
                                             ->get();
 
-        // Resident statistics
-        $residents = Resident::whereHas('family.household.purok', function($q) use ($midwife) {
-                                $q->where('brgy_id', $midwife->brgy_id);
+        $residents = Resident::whereHas('family.household.purok', function($q) use ($personnel) {
+                                $q->where('brgy_id', $personnel->brgy_id);
                             });
 
         $totalResidents = $residents->count();
@@ -44,22 +51,27 @@ class DashboardController extends Controller
             return \Carbon\Carbon::parse($resident->birthdate)->age >= 60;
         })->count();
 
-        $pregnantCount = Resident::whereHas('family.household.purok', function($q) use ($midwife) {
-            $q->where('brgy_id', $midwife->brgy_id);
+        $pregnantCount = Resident::whereHas('family.household.purok', function($q) use ($personnel) {
+            $q->where('brgy_id', $personnel->brgy_id);
             })
             ->whereHas('basicHealthRecord', function($q) {
                 $q->where('is_pregnant', 1);
             })
             ->count();
+        $medicines = Medicine::withSum('activeInventories as total_stock', 'stock')
+            ->where('brgy_id', $personnel->brgy_id)
+            ->orderByDesc('total_stock')
+            ->get();
 
-          return view('midwife.dashboard', [
+        return view('midwife.dashboard', [
             'barangay' => $barangay,
-            'dailyActivities' => $dailyActivities,
             'scheduledActivities' => $schedules,
             'totalResidents' => $totalResidents,
             'under5' => $under5,
             'sixtyUp' => $sixtyUp,
             'pregnant' => $pregnantCount,
+            'medicines' => $medicines,
         ]);
     }
+
 }

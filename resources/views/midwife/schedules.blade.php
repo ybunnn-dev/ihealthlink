@@ -11,7 +11,7 @@
             <div class="grid grid-cols-1 gap-3">
                 <h1 class="text-3xl font-semibold text-sub_blue mb-3 col-span-full">Schedules</h1>
                 <x-schedules.sched-tab />
-                <div id="scheduledContent" class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <div id="scheduledContent" class="grid grid-cols-1 slg:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3 gap-3">
                     <x-schedules.schedule-calendar />
 
                     <!-- Current Date Schedule Card -->

@@ -51,9 +51,16 @@ class Medicine extends Model
      */
     public function getTotalStockAttribute(): int
     {
-        return $this->inventories()->sum('stock');
+        return $this->inventories()
+            ->where('expiry_date', '>', now())
+            ->sum('stock');
     }
 
+    public function activeInventories()
+    {
+        return $this->hasMany(MedicineInventory::class, 'medicine_id')
+            ->where('expiry_date', '>', now());
+    }
     /**
      * Get expired batches
      */

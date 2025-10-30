@@ -1,4 +1,4 @@
-<div class="bg-white rounded-xl py-6 px-10 cols-span-1 md:col-span-2">
+<div class="bg-white rounded-xl py-6 px-10 cols-span-1 md:col-span-2 overflow-x-auto">
     <div class="flex items-center justify-between flex-wrap gap-3 mb-3">
         <h2 id="schedule-date-header" class="text-xl font-semibold text-main_font flex items-center gap-2">
             <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">

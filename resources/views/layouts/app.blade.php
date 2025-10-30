@@ -34,8 +34,10 @@
                 
                 @auth
                     @if(Auth::user()->role_id == 1)
-                        @include('partials.mho-sidenav') @else
-                        @include('partials.bhc-sidenav') @endif
+                        @include('partials.mho-sidenav') 
+                    @else
+                        @include('partials.bhc-sidenav') 
+                    @endif
                 @endauth
 
                 <main class="flex-1 overflow-y-auto bg-bg_col">
@@ -49,6 +51,25 @@
         @include('components.modals.success-modal')
         
         @livewireScripts
+        
+        {{-- Alpine.js Global Store --}}
+        <script>
+            document.addEventListener('alpine:init', () => {
+                // Global store for sidebar state
+                Alpine.store('sidebar', {
+                    open: false,
+                    
+                    toggle() {
+                        this.open = !this.open;
+                    },
+                    
+                    close() {
+                        this.open = false;
+                    }
+                });
+            });
+        </script>
+        
         @stack('scripts')
     </body>
 </html>
