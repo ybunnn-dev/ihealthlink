@@ -16,7 +16,6 @@ use App\Models\ActivityLog;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
-
 class HouseholdController extends Controller
 {
     public function index(Request $request)

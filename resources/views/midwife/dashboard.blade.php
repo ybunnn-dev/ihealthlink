@@ -4,6 +4,9 @@
     <div class="py-12 px-6">
         <div class="max-w-[90rem] mx-auto sm:px-6 lg:px-8">
         <!-- Title -->
+         <script>
+            window.enrolledResidents = @json($enrolledStats)
+         </script>
         <h1 class="text-3xl font-semibold text-sub_blue mb-3">Dashboard</h1>
 
         <div class="grid grid-cols-1 xl:grid-cols-4 gap-3 mb-3"> 
