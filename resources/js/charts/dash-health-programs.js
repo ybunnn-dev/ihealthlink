@@ -1,7 +1,10 @@
 const healthPrograms = window.enrolledResidents;
 const medicines = window.medicines;
+const dewormed = window.deworming;
+const waterSource = window.waterSource;
+const philpen = window.philpen;
 
-console.log(medicines);
+console.log(dewormed);
 
 Chart.defaults.font.family = 'Poppins, sans-serif';
 Chart.defaults.font.size = 14; 
@@ -95,23 +98,32 @@ if (!ctx) {
     
     console.log('✅ Residents line chart created');
 }
-// Chart 2: Residents Per Purok Chart
+// Chart 2: Water Source Distribution Chart
 const residentsPerPurokChartCtx = document.getElementById('residentsPerPurokChart');
 if (!residentsPerPurokChartCtx) {
     console.error('❌ Canvas #residentsPerPurokChart not found');
 } else {
-    console.log('✅ Creating residents per purok chart...');
+    console.log('✅ Creating water source distribution chart...');
+    
+    // Transform water source data
+    const waterSourceLabels = waterSource.map(item => item.water_source);
+    const waterSourceValues = waterSource.map(item => item.total);
+    
+    // Generate colors dynamically
+    const colors = [
+        '#fd6e69ff',
+        '#F0BB78',
+        '#4DA1A9',
+        '#B7B1F2',
+        '#279EFF',
+        '#328E6E'
+    ];
     
     const residentsPerPurokData = {
-        labels: ['Purok 1', 'Purok 2', 'Purok 3', 'Purok 4'],
+        labels: waterSourceLabels,
         datasets: [{
-            data: [50, 40, 5, 5],
-            backgroundColor: [
-                '#fd6e69ff',
-                '#F0BB78',
-                '#4DA1A9',
-                '#B7B1F2'
-            ],
+            data: waterSourceValues,
+            backgroundColor: colors.slice(0, waterSourceLabels.length),
             hoverOffset: 4,
             borderRadius: 8 
         }]
@@ -135,7 +147,7 @@ if (!residentsPerPurokChartCtx) {
                                 label += ': ';
                             }
                             if (context.parsed !== null) {
-                                label += context.parsed + '%';
+                                label += context.parsed + ' households';
                             }
                             return label;
                         }
@@ -146,7 +158,7 @@ if (!residentsPerPurokChartCtx) {
     };
 
     new Chart(residentsPerPurokChartCtx.getContext('2d'), residentsPerPurokConfig);
-    console.log('✅ Residents per purok chart created');
+    console.log('✅ Water source distribution chart created');
 }
 
 // Chart 3: Deworming Chart
@@ -156,13 +168,24 @@ if (!dewormingChartCtx) {
 } else {
     console.log('✅ Creating deworming chart...');
     
+    // Calculate total dewormed (sum of all age groups)
+    const totalDewormed = dewormed.reduce((sum, item) => sum + item.count, 0);
+    
+    // You'll need to pass total residents from backend, or calculate "Not Dewormed"
+    // For now, showing only dewormed count
     const dewormingData = {
-        labels: ['Dewormed', 'Not Dewormed'],
+        labels: dewormed.map(item => item.age_group),
         datasets: [{
-            data: [60, 40],
+            data: dewormed.map(item => item.count),
             backgroundColor: [
                 '#fd6e69ff',
                 '#F0BB78',
+                '#4DA1A9',
+                '#B7B1F2',
+                '#279EFF',
+                '#328E6E',
+                '#9B59B6',
+                '#E74C3C'
             ],
             hoverOffset: 4,
             borderRadius: 8 
@@ -187,7 +210,7 @@ if (!dewormingChartCtx) {
                                 label += ': ';
                             }
                             if (context.parsed !== null) {
-                                label += context.parsed + '%';
+                                label += context.parsed + ' residents';
                             }
                             return label;
                         }
@@ -208,11 +231,12 @@ if (!philpenMetricsChartCtx) {
     console.log('✅ Creating PhilPEN metrics chart...');
     
     const philpenMetricsData = {
-        labels: ['Completed', 'Missing'],
+        labels: ['Completed', 'Incomplete', 'No Consultation'],
         datasets: [{
-            data: [90, 10],
+            data: [philpen.complete, philpen.incomplete, philpen.no_consultation],
             backgroundColor: [
                 '#279EFF',
+                '#F0BB78',
                 '#697A8D'
             ],
             hoverOffset: 4,
@@ -238,7 +262,7 @@ if (!philpenMetricsChartCtx) {
                                 label += ': ';
                             }
                             if (context.parsed !== null) {
-                                label += context.parsed + '%';
+                                label += context.parsed + ' residents';
                             }
                             return label;
                         }
@@ -251,7 +275,6 @@ if (!philpenMetricsChartCtx) {
     new Chart(philpenMetricsChartCtx.getContext('2d'), philpenMetricsConfig);
     console.log('✅ PhilPEN metrics chart created');
 }
-
 // Medicine Stocks Chart (Custom HTML-based chart)
 const container = document.getElementById('medicineStocksChartContainer');
 if (!container) {

@@ -15,6 +15,8 @@ use App\Models\Resident;
 use App\Models\Medicine;
 use App\Models\HealthProgram;
 use App\Models\EnrolledResident;
+use App\Models\Household;
+use App\Models\MedicineDistribution;
 
 class DashboardController extends Controller
 {
@@ -69,8 +71,21 @@ class DashboardController extends Controller
             ->limit(10)
             ->get();
 
+       $waterSources = Household::whereHas('purok', function ($q) use ($personnel) {
+                $q->where('brgy_id', $personnel->brgy_id);
+            })
+            ->whereNotNull('water_source')
+            ->where('water_source', '!=', '')
+            ->get()
+            ->groupBy('water_source')
+            ->map(fn($group) => ['water_source' => $group->first()->water_source, 'total' => $group->count()])
+            ->sortByDesc('total')
+            ->values();
+
         // Call the private method
         $enrolledStats = $this->getEnrolledResidentStats($personnel);
+        $dewormed = $this->getDewormingStats($personnel);
+        $philpenStats = $this->getPhilpenConsultationStats($personnel);
         \Log::info($medicines);
         return view('midwife.dashboard', [
             'barangay' => $barangay,
@@ -81,6 +96,9 @@ class DashboardController extends Controller
             'pregnant' => $pregnantCount,
             'medicines' => $medicines,
             'enrolledStats' => $enrolledStats,
+            'waterSource' => $waterSources,
+            'deworming' => $dewormed,
+            'philpen' => $philpenStats,
         ]);
     }
 
@@ -159,5 +177,90 @@ class DashboardController extends Controller
         })->values();
         
         return $result;
+    }
+    private function getDewormingStats($personnel)
+    {
+        $ageGroups = [
+            '0-6 months' => [0, 0.5],
+            '6-11 months' => [0.5, 1],
+            '1-4 years' => [1, 5],
+            '5-9 years' => [5, 10],
+            '10-14 years' => [10, 15],
+            '15-19 years' => [15, 20],
+            '20-59 years' => [20, 60],
+            '60+ years' => [60, 200],
+        ];
+
+        // Get distinct residents who received deworming medicine
+        $residentIds = MedicineDistribution::whereHas('consultation.resident.family.household.purok', function($q) use ($personnel) {
+                $q->where('brgy_id', $personnel->brgy_id);
+            })
+            ->whereHas('medicine', function($q) {
+                $q->where('category', 'deworming');
+            })
+            ->with('consultation')
+            ->get()
+            ->pluck('consultation.resident_id')
+            ->unique();
+
+        // Get the actual resident objects with birthdate
+        $residents = Resident::whereIn('id', $residentIds)
+            ->select('id', 'birthdate')
+            ->get();
+
+        // Group recipients by age
+        $result = [];
+        foreach ($ageGroups as $label => $range) {
+            $count = $residents->filter(function($resident) use ($range) {
+                $age = \Carbon\Carbon::parse($resident->birthdate)->age;
+                return $age >= $range[0] && $age < $range[1];
+            })->count();
+            
+            $result[] = [
+                'age_group' => $label,
+                'count' => $count
+            ];
+        }
+
+        return collect($result);
+    }
+
+
+
+    private function getPhilpenConsultationStats($personnel)
+    {
+        // Get all residents enrolled in philpen_tcl program in the barangay
+        $philpenResidents = EnrolledResident::whereHas('program', function($q) {
+                $q->where('category', 'philpen_tcl');
+            })
+            ->whereHas('resident.family.household.purok', function($q) use ($personnel) {
+                $q->where('brgy_id', $personnel->brgy_id);
+            })
+            ->with(['resident', 'consultations' => function($q) {
+                $q->orderBy('consultation_date', 'desc');
+            }])
+            ->get();
+
+        // Count residents with complete and incomplete latest consultations
+        $stats = [
+            'complete' => 0,
+            'incomplete' => 0,
+            'no_consultation' => 0,
+        ];
+
+        foreach ($philpenResidents as $enrolledResident) {
+            // Get the latest consultation for this enrolled resident
+            $latestConsultation = $enrolledResident->consultations->first();
+            
+            if (!$latestConsultation) {
+                $stats['no_consultation']++;
+            } elseif ($latestConsultation->status === 'completed') {
+                $stats['complete']++;
+            } else {
+                $stats['incomplete']++;
+            }
+        }
+
+        return $stats;
     }
 }

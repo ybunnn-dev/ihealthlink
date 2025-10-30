@@ -7,6 +7,9 @@
          <script>
             window.enrolledResidents = @json($enrolledStats);
             window.medicines = @json($medicines);
+            window.waterSource = @json($waterSource);
+            window.philpen = @json($philpen);
+            window.deworming = @json($deworming);
          </script>
         <h1 class="text-3xl font-semibold text-sub_blue mb-3">Dashboard</h1>
 
@@ -114,7 +117,7 @@
         <!-- Charts / Stats Cards -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
             <div class="bg-white rounded-xl p-6">
-                <div class="text-sm font-semibold mb-4 text-sub_blue pt-2">Residents Per Purok</div>
+                <div class="text-sm font-semibold mb-4 text-sub_blue pt-2">Water Source</div>
                 <div class="h-40 bg-gray-50 rounded-lg flex items-center justify-center text-gray-400">
                     <canvas id="residentsPerPurokChart"></canvas>
                 </div>
