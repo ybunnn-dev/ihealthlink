@@ -30,13 +30,12 @@ class Family extends Model
     {
         parent::boot();
 
-        static::creating(function ($resident) {
-            if (empty($resident->client_uuid)) {
-                $resident->client_uuid = Str::uuid()->toString();
+        static::creating(function ($family) {
+            if (empty($family->client_uuid)) {
+                $family->client_uuid = Str::uuid()->toString();
             }
         });
-    }
-    
+}
     public function familyResidenceHistory(){
         return $this->hasMany(FamilyResidenceHistory::class, 'family_id');
     }

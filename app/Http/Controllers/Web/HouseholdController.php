@@ -20,6 +20,7 @@ class HouseholdController extends Controller
 {
     public function index(Request $request)
     {
+        
         $user = Auth::user();
         $personnel = $user->bhwWeb ?? $user->midwife;
 

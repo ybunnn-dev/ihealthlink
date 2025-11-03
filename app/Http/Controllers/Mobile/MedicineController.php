@@ -46,10 +46,12 @@ class MedicineController extends Controller
             });
         }
 
-        // Apply category filter
+        \Log::info($category);
+
         if (!empty($category)) {
             $query->where('category', $category);
         }
+
 
         // Sort by latest and paginate
         $medicines = $query->orderBy('id', 'desc')->paginate(20);
@@ -75,6 +77,7 @@ class MedicineController extends Controller
     {
         $map = [
             'reg-med' => 'Regular Medicine',
+            'reg-med' => "Regular medicine",
             'deworming' => 'Deworming Tablet',
             'iron-w-fa' => 'Iron with Folic Acid',
             'iron' => 'Iron',

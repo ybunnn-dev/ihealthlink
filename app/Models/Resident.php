@@ -60,6 +60,7 @@ class Resident extends Model
     |--------------------------------------------------------------------------
     */
     
+    
     /* 🔒 Automatically Encrypt Before Saving */
     public function setAttribute($key, $value)
     {

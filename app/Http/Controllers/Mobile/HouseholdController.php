@@ -13,6 +13,7 @@ use App\Models\ActivityLog;
 use App\Models\HouseholdResidenceHistory;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
+use Carbon\Carbon;
 
 class HouseholdController extends Controller
 {
@@ -452,6 +453,7 @@ class HouseholdController extends Controller
             'households.*.is_indigent' => 'nullable|integer',
             'households.*.status' => 'required|string',
             'households.*.updated_at' => 'required|string',
+            'households.*.head_id' => 'nullable|integer'
         ]);
 
         $syncedHouseholds = [];
@@ -490,6 +492,7 @@ class HouseholdController extends Controller
                     'status' => $householdData['status'],
                     'updated_at' => $householdData['updated_at'],
                     'created_at' => now(),
+                    'head_id' => $householdData['head_id']
                 ];
             }
 
@@ -499,7 +502,7 @@ class HouseholdController extends Controller
                     $householdsToUpsert,
                     ['client_uuid'], // Unique constraint
                     ['purok_id', 'water_source', 'waste_disposal', 'sanitary_toilet', 
-                    'is_iwas_gutom_enrolled', 'is_indigent', 'status', 'updated_at'] // Columns to update
+                    'is_iwas_gutom_enrolled', 'is_indigent', 'status', 'updated_at', 'head_id'] // Columns to update
                 );
             }
 

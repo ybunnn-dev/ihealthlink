@@ -18,7 +18,7 @@ use App\Models\ActivityLog;
 use App\Models\Purok;
 
 class FamilyController extends Controller
-{
+{  
     public function index(Request $request)
     {
         // Get the current user's personnel info

@@ -24,10 +24,10 @@ use App\Models\ActivityLog;
 use App\Models\HealthProgram;
 use App\Models\EnrolledResident;
 use App\Models\Purok;
-
+use App\Models\Consultation;
 
 class ResidentController extends Controller
-{  
+{   
     public function index(Request $request)
     {
         $personnel = Auth::user()->midwife ?? Auth::user()->bhwWeb;
