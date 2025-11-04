@@ -75,34 +75,38 @@ class MedicineController extends Controller
 
     private function normalizeCategory($category)
     {
+        // Map FROM display names TO shortcodes
         $map = [
-            'reg-med' => 'Regular Medicine',
-            'reg-med' => "Regular medicine",
-            'deworming' => 'Deworming Tablet',
-            'iron-w-fa' => 'Iron with Folic Acid',
-            'iron' => 'Iron',
-            'vit-a' => 'Vitamin A',
-            'cc' => 'Calcium Carbonate',
-            'iodine' => 'Iodine Capsule',
-            'vaccine' => 'Vaccine'
+            'regular medicine' => 'reg-med',
+            'deworming tablet' => 'deworming',
+            'iron with folic acid' => 'iron-w-fa',
+            'iron' => 'iron',
+            'vitamin a' => 'vit-a',
+            'calcium carbonate' => 'cc',
+            'iodine capsule' => 'iodine',
+            'vaccine' => 'vaccine'
         ];
 
-        return $map[strtolower($category)] ?? ucfirst($category);
+        $lowercased = strtolower($category);
+        return $map[$lowercased] ?? strtolower($category);
     }
 
     private function normalizeForm($form)
     {
+        // Map FROM display names TO shortcodes/standardized form
         $map = [
-            'tablet' => 'Tablet',
-            'capsule' => 'Capsule',
-            'syrup' => 'Syrup',
-            'vaccine' => 'Vaccine',
-            'iron' => 'Iron',
-            'non-medicine' => 'Non-Medicine',
+            'tablet' => 'tablet',
+            'capsule' => 'capsule',
+            'syrup' => 'syrup',
+            'vaccine' => 'vaccine',
+            'iron' => 'iron',
+            'non-medicine' => 'non-medicine',
         ];
 
-        return $map[strtolower($form)] ?? ucfirst($form);
+        $lowercased = strtolower($form);
+        return $map[$lowercased] ?? strtolower($form);
     }
+
 
     public function store(Request $request)
     {
@@ -175,6 +179,15 @@ class MedicineController extends Controller
         // Find the medicine by ID
         $medicine = Medicine::findOrFail($id);
 
+        \Log::info('before normalization');
+
+        \Log::info($validated['category']);
+
+        $validated['category'] = $this->normalizeCategory(strtolower($validated['category']));
+        $validated['form'] = $this->normalizeForm(strtolower($validated['form']));
+
+        \Log::info('after normalization');
+        \Log::info($validated['category']);
         // Update with validated data
         $medicine->update($validated);
 
@@ -184,9 +197,62 @@ class MedicineController extends Controller
             'medicine' => $medicine
         ]);
     }
-    public function show($id) 
+
+    private function denormalizeCategory($category)
     {
+        // Map FROM shortcodes TO display names
+        $map = [
+            'reg-med' => 'Regular Medicine',
+            'deworming' => 'Deworming Tablet',
+            'iron-w-fa' => 'Iron with Folic Acid',
+            'iron' => 'Iron',
+            'vit-a' => 'Vitamin A',
+            'cc' => 'Calcium Carbonate',
+            'iodine' => 'Iodine Capsule',
+            'vaccine' => 'Vaccine'
+        ];
+
+        return $map[strtolower($category)] ?? ucfirst($category);
+    }
+
+    private function denormalizeForm($form)
+    {
+        // Map FROM shortcodes TO display names
+        $map = [
+            'tablet' => 'Tablet',
+            'capsule' => 'Capsule',
+            'syrup' => 'Syrup',
+            'vaccine' => 'Vaccine',
+            'iron' => 'Iron',
+            'non-medicine' => 'Non-Medicine',
+        ];
+
+        return $map[strtolower($form)] ?? ucfirst($form);
+    }
+
+    public function show($id) // Show specific medicine details
+    {
+        $user = auth()->user();
+
+        // Determine personnel: BHW with role 4 or Midwife
+        if ($user->bhwWeb && $user->bhwWeb->role_id == 4) {
+            $personnel = $user->bhwWeb;
+        } else if($user->bhw){
+            $personnel = $user->bhw;
+        }
+        else {
+            $personnel = $user->midwife;
+        }
+
+        if (!$personnel) {
+            abort(403, 'Unauthorized access.');
+        }
+        
         $medicine = Medicine::with(['inventories.addedBy'])->findOrFail($id);
+
+        // ✅ Convert shortcodes to display names
+        $medicine->category = $this->denormalizeCategory($medicine->category);
+        $medicine->form = $this->denormalizeForm($medicine->form);
 
         return response()->json([
             'medicine'    => $medicine,
@@ -248,4 +314,6 @@ class MedicineController extends Controller
 
         return response()->json($medicinesWithStock);
     }
+
+    
 }
