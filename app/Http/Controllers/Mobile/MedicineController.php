@@ -167,7 +167,9 @@ class MedicineController extends Controller
 
     public function updateMedicine(Request $request, $id)
     {
-        // Validate input (optional but good practice)
+        $user = Auth::user();
+
+        // Validate input
         $validated = $request->validate([
             'medicine_name' => 'required|string|max:255',
             'generic_name'  => 'nullable|string|max:255',
@@ -179,17 +181,18 @@ class MedicineController extends Controller
         // Find the medicine by ID
         $medicine = Medicine::findOrFail($id);
 
-        \Log::info('before normalization');
-
-        \Log::info($validated['category']);
-
         $validated['category'] = $this->normalizeCategory(strtolower($validated['category']));
         $validated['form'] = $this->normalizeForm(strtolower($validated['form']));
 
-        \Log::info('after normalization');
-        \Log::info($validated['category']);
         // Update with validated data
         $medicine->update($validated);
+
+        // Log the activity
+        ActivityLog::create([
+            'user_id' => $user->id,
+            'module_id' => 8, // Same module ID as your store method
+            'activity' => 'Updated medicine "' . ucfirst($medicine->medicine_name) . '" in the inventory.',
+        ]);
 
         return response()->json([
             'result' => 'success',
@@ -197,6 +200,7 @@ class MedicineController extends Controller
             'medicine' => $medicine
         ]);
     }
+
 
     private function denormalizeCategory($category)
     {
