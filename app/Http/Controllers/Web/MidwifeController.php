@@ -32,7 +32,7 @@ class MidwifeController extends Controller
         $midwivesPaginator = Midwife::with(['user', 'barangay'])
             ->where('status', 'active') 
             ->latest() // Orders by 'created_at' descending
-            ->paginate(15);
+            ->paginate(8);
 
 
         // Use through() to apply your mapping logic to the paginated collection.

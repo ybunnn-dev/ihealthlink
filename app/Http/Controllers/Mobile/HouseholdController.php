@@ -105,10 +105,17 @@ class HouseholdController extends Controller
                 'status' => 'error',
                 'message' => 'No associated personnel found for this user.'
             ], 404);
-        }; 
+        }
 
-        $household = $household->load(['purok.barangay', 'families', 'head'])
-                            ->loadCount('families'); 
+        // ✅ This should work now
+        $household = $household->load([
+            'purok.barangay', 
+            'families' => function ($query) {
+                $query->withCount('residents');  // Count residents per family
+            },
+            'head'
+        ])
+        ->loadCount('families');  // Count total families
         
         return response()->json([
             'household' => $household,
@@ -116,6 +123,7 @@ class HouseholdController extends Controller
             'families'  => $household->families,
         ]);
     }
+
 
     public function storeOrUpdateHouseholdSyc(Request $request){
         //here

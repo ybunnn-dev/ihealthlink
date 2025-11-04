@@ -13,6 +13,9 @@ use Illuminate\Validation\Rule;
 use App\Models\Barangay;
 use App\Models\Midwife;
 use App\Models\Medicine;
+use App\Models\Household;
+use App\Models\Resident;
+use App\Models\Family;
 use Illuminate\Support\Facades\DB;
 
 class BarangayController extends Controller
@@ -334,8 +337,7 @@ class BarangayController extends Controller
 }
 
 
-    // No changes needed here! This method already works with the new route.
-    public function show(Barangay $barangay)
+   public function show(Barangay $barangay)
     {
         // Load barangay with its puroks
         $barangay->load('puroks');
@@ -343,16 +345,34 @@ class BarangayController extends Controller
         // Query for the current midwife assigned to this barangay
         $midwife = Midwife::with('user')
             ->where('brgy_id', $barangay->id)
-            ->where('status', 'active') // optional filter
+            ->where('status', 'active')
             ->first();
 
-        // Add counts (still sample/random for now)
-        $barangay->residents_count  = rand(1200, 4500);
-        $barangay->households_count = rand(300, 800);
-        $barangay->families_count   = rand(350, 950);
+        // ✅ Count active households for this barangay
+        $barangay->households_count = Household::whereHas('purok', function ($query) use ($barangay) {
+            $query->where('brgy_id', $barangay->id);
+        })
+        ->where('status', 'active')
+        ->count();
 
-        // Assign midwife (will be null if none is found)
-        $barangay->assigned_midwife = $midwife ? $midwife->name : null;
+        // ✅ Count active families for this barangay (through households)
+        $barangay->families_count = Family::whereHas('household.purok', function ($query) use ($barangay) {
+            $query->where('brgy_id', $barangay->id);
+        })
+        ->where('status', 'active')
+        ->count();
+
+        // ✅ Count active residents for this barangay (through families -> households -> puroks)
+        $barangay->residents_count = Resident::whereHas('family.household.purok', function ($query) use ($barangay) {
+            $query->where('brgy_id', $barangay->id);
+        })
+        ->where('status', 'active')
+        ->count();
+
+        // ✅ Fix midwife name - use the relationship method
+        $barangay->assigned_midwife = $midwife && $midwife->user 
+            ? trim("{$midwife->user->firstName} {$midwife->user->lastName} " . ($midwife->user->suffix ?? ''))
+            : null;
 
         \Log::info('Assigned midwife: ' . ($barangay->assigned_midwife ?? 'None'));
 
