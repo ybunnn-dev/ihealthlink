@@ -25,12 +25,8 @@ use App\Models\Midwife;
 
 class BHWController extends Controller
 {
-    /**
-     * Display a listing of the BHWs for the authenticated midwife's barangay.
-     */
-    public function index()
+    public function index(Request $request)
     {
-        // 1. Get the authenticated user (the midwife).
         $user = Auth::user();
 
         $midwifePersonnel = Midwife::where('user_id', $user->id)
@@ -38,25 +34,108 @@ class BHWController extends Controller
             ->first();
 
         if (!$midwifePersonnel || !$midwifePersonnel->brgy_id) {
-            // Return the view with an empty collection. The @forelse loop in the view will handle this gracefully.
+            if ($request->ajax()) {
+                return response()->json(['html' => '', 'status' => 'no_data']);
+            }
             return view('midwife.BHWs', ['bhws' => collect()]);
         }
 
-        // 4. Fetch the BHWs assigned to the midwife's barangay.
-    $bhws = Personnel::where('personnel.brgy_id', $midwifePersonnel->brgy_id)
-        ->where('personnel.status', 'active')
-        ->whereHas('user', function ($query) {
-            $query->whereIn('role_id', [3, 4]);
-        })
-        ->join('users', 'personnel.user_id', '=', 'users.id')
-        ->orderBy('users.lastName')
-        ->with('user')
-        ->select('personnel.*')
-        ->paginate(8);
+        // Get all BHWs for this barangay
+        $query = Personnel::where('personnel.brgy_id', $midwifePersonnel->brgy_id)
+            ->where('personnel.status', 'active')
+            ->whereHas('user', function ($q) {
+                $q->whereIn('role_id', [3, 4]);
+            })
+            ->with('user');
 
+        // Date filtering at DB level (before fetching)
+        $sortDate = $request->input('sort_date', 'all');
+        if ($sortDate === 'last_week') {
+            $query->where('personnel.created_at', '>=', now()->subWeek());
+        } elseif ($sortDate === 'last_month') {
+            $query->where('personnel.created_at', '>=', now()->subMonth());
+        } elseif ($sortDate === 'last_year') {
+            $query->where('personnel.created_at', '>=', now()->subYear());
+        }
 
+        // Fetch all records
+        $allBhws = $query->get();
+
+        // Apply search filter in PHP (after decryption)
+        if ($request->filled('search')) {
+            $searchTerm = strtolower($request->search);
+            $allBhws = $allBhws->filter(function($bhw) use ($searchTerm) {
+                // Search by BHW ID
+                $bhwId = 'BHW-' . str_pad($bhw->id, 3, '0', STR_PAD_LEFT);
+                if (str_contains(strtolower($bhwId), $searchTerm)) {
+                    return true;
+                }
+                
+                // Search by full name (encrypted fields are auto-decrypted by accessor)
+                $fullName = strtolower($bhw->user->firstName . ' ' . $bhw->user->middleName . ' ' . $bhw->user->lastName);
+                $nameWithoutMiddle = strtolower($bhw->user->firstName . ' ' . $bhw->user->lastName);
+                
+                return str_contains($fullName, $searchTerm) || str_contains($nameWithoutMiddle, $searchTerm);
+            });
+        }
+
+        // Apply sorting in PHP (since birthdate is encrypted)
+        $sortBy = $request->input('sort_by', 'alphabetical');
+        
+        if ($sortBy === 'age_asc') {
+            $allBhws = $allBhws->sortBy(function($bhw) {
+                return $this->calculateAge($bhw->user->birthdate);
+            })->values();
+        } elseif ($sortBy === 'age_desc') {
+            $allBhws = $allBhws->sortByDesc(function($bhw) {
+                return $this->calculateAge($bhw->user->birthdate);
+            })->values();
+        } else {
+            // Alphabetical
+            $allBhws = $allBhws->sortBy(function($bhw) {
+                return $bhw->user->lastName . ' ' . $bhw->user->firstName;
+            })->values();
+        }
+
+        // Manually paginate the filtered collection
+        $page = $request->get('page', 1);
+        $perPage = 8;
+        $total = $allBhws->count();
+        $results = $allBhws->forPage($page, $perPage);
+        
+        $bhws = new \Illuminate\Pagination\LengthAwarePaginator(
+            $results, 
+            $total, 
+            $perPage, 
+            $page, 
+            ['path' => $request->url(), 'query' => $request->query()]
+        );
+
+        // Return JSON for AJAX requests
+        if ($request->ajax()) {
+            return response()->json([
+                'html' => view('components.bhw.bhw-table', ['bhws' => $bhws])->render(),
+                'pagination' => (string)$bhws->links(),
+                'status' => 'success'
+            ]);
+        }
 
         return view('midwife.BHWs', compact('bhws'));
+    }
+
+    // Helper method to calculate age from encrypted birthdate
+    private function calculateAge($birthdate)
+    {
+        if (!$birthdate) {
+            return 0;
+        }
+
+        try {
+            $date = \Carbon\Carbon::parse($birthdate);
+            return $date->age;
+        } catch (\Exception $e) {
+            return 0;
+        }
     }
 
     public function show(Personnel $personnel)

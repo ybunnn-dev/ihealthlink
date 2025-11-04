@@ -72,6 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   }
   else if (bodyClass.contains('bhw')) {
+    import('./pages/bhw/paginator.js');
     import('./pages/bhw/add-bhw.js');
   }
   else if (bodyClass.contains('spec-bhw')) {

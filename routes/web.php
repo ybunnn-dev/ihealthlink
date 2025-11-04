@@ -141,7 +141,7 @@ Route::middleware([
     Route::put('/barangay/bhw/{id}/remove', [BhwController::class, 'remove']);
 
       //bhw routes
-    Route::get('/midwife/bhws/', [BHWController::class, 'index'])->name('midwife.bhws');
+    Route::get('/barangay/bhws/', [BHWController::class, 'index'])->name('midwife.bhws');
 
     // Midwife-specific dashboard
     Route::get('/barangay/logs', [BarangayLogs::class, 'index'])->name('midwife.logs');
