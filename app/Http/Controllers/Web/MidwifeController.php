@@ -79,7 +79,7 @@ class MidwifeController extends Controller
             'civilStatus' => 'required|string|in:Single,Married,Divorced,Widowed',
             'religion' => 'required|string|max:50',
             'contactNo' => 'required|string|max:20',
-            'barangayId' => 'required|integer|exists:barangay,id',
+            'barangayId' => 'required|integer|exists:barangays,id',
             'email' => 'required|email|unique:users,email'
         ]);
 
