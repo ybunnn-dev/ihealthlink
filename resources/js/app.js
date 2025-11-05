@@ -34,6 +34,8 @@ document.addEventListener('DOMContentLoaded', () => {
     import('./charts/families-4ps.js');
     import('./charts/small-donuts.js');
     import('./charts/radar.js');
+  }else if(bodyClass.contains('mho-dash')){
+    import('./charts/mho-dash.js');
   }
   else if (bodyClass.contains('dashboard')) {
     import('./charts/dash-health-programs.js');

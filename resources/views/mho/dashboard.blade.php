@@ -1,4 +1,4 @@
-@section('page-id', 'dashboard')
+@section('page-id', 'mho-dash')
 <x-app-layout>
     @section('title', 'Dashboard')
     <div class="py-12 px-6">
@@ -9,6 +9,7 @@
         <div class="grid grid-cols-1 gap-3 mb-3"> 
             <div class="col-span-1 flex flex-col gap-3"> 
                 <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                    <!-- Total Residents -->
                     <div class="bg-f7 rounded-xl p-4 text-center">
                         <div class="flex items-center justify-center gap-4">
                             <svg class="text-sub_blue w-10 h-10" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 273.052 273.052" xml:space="preserve" fill="currentColor">
@@ -22,13 +23,14 @@
                                 </g>
                              </svg>   
                             <div class="flex flex-col">
-                                <h1 class="text-sub_blue text-lg slg3:text-xl xl:text-xl 2xl:text-2xl font-bold mt-2">5,201</h1>
+                                <h1 class="text-sub_blue text-lg slg3:text-xl xl:text-xl 2xl:text-2xl font-bold mt-2">{{ number_format($totalResidents) }}</h1>
                                 <p class="text-sub_blue text-xs -mt-1 slg3:text-fluid-xxs xl:text-xs 2xl:text-xs">Residents</p>
                             </div>
                         </div>
                     </div>
 
-                     <div class="bg-f7 rounded-xl p-4 text-center">
+                     <!-- Under 5 Years Old -->
+                    <div class="bg-f7 rounded-xl p-4 text-center">
                         <div class="flex items-center justify-center gap-2">
                             <svg class="text-maingreen w-10 h-10" fill="currentColor" viewBox="-64 0 512 512" xmlns="http://www.w3.org/2000/svg">
                                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
@@ -37,13 +39,14 @@
                                 </g>
                             </svg> 
                             <div class="flex flex-col">
-                                <h1 class="text-maingreen text-2xl font-bold mt-2">5,201</h1>
+                                <h1 class="text-maingreen text-2xl font-bold mt-2">{{ number_format($under5) }}</h1>
                                 <p class="text-maingreen text-xs -mt-1 ">Early Childhood</p>
                             </div>
                         </div>
                     </div>
 
-                     <div class="bg-f7 rounded-xl p-4 text-center">
+                     <!-- 60+ Years Old -->
+                    <div class="bg-f7 rounded-xl p-4 text-center">
                         <div class="flex items-center justify-center -gap-1">
                             <svg class="text-col_orange w-10 h-10" fill="currentColor" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 124.539 124.539" xml:space="preserve">
                                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -57,82 +60,78 @@
                                 </g>
                             </svg> 
                             <div class="flex flex-col">
-                                <h1 class="text-col_orange text-2xl font-bold mt-2">5,201</h1>
+                                <h1 class="text-col_orange text-2xl font-bold mt-2">{{ number_format($sixtyUp) }}</h1>
                                 <p class="text-col_orange text-xs -mt-1 ">Senior Citizen</p>
                             </div>
                         </div>
                     </div>
 
-                     <div class="bg-f7 rounded-xl p-4 text-center">
+                     <!-- Pregnant Women -->
+                    <div class="bg-f7 rounded-xl p-4 text-center">
                         <div class="flex items-center justify-center -gap-2">
                             <svg class="text-col_pink w-10 h-10" fill="currentColor" version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve" fill="currentColor"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <style type="text/css">  </style> <g> <path class="st0" d="M254.962,145.192c-38.209,36.682-47.168,80.782-47.168,80.782s-78.16,49.137-47.591,157.646h91.854 l13.549,102.607C267.553,500.985,280.129,512,295.004,512h5.189c16.379,0,29.656-13.273,29.656-29.652V383.62h12.053 c0,0,0-189.14,0-233.837C341.902,114.63,290.042,111.517,254.962,145.192z"></path> <path class="st0" d="M305.398,0c-29.542,0-53.493,23.955-53.493,53.493c0,29.546,23.951,53.493,53.493,53.493 c29.542,0,53.49-23.947,53.49-53.493C358.888,23.955,334.94,0,305.398,0z"></path> </g> </g></svg>  
                             <div class="flex flex-col">
-                                <h1 class="text-col_pink text-2xl font-bold mt-2">5,201</h1>
+                                <h1 class="text-col_pink text-2xl font-bold mt-2">{{ number_format($pregnant) }}</h1>
                                 <p class="text-col_pink text-xs -mt-1 ">Pregnant Women</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
+                <!-- Enrolled Residents Chart (Last 5 Months) -->
                 <div class="bg-white rounded-xl p-6">
-                    <div class="text-sm font-semibold mb-4 text-sub_blue -pt-2">Enrolled Residents in Health Programs</div>
+                    <div class="text-sm font-semibold mb-4 text-sub_blue -pt-2">Enrolled Residents in Health Programs (Last 5 Months)</div>
                     <div class="h-64 bg-gray-50 rounded-lg flex items-center justify-center text-gray-400">
                         <canvas id="residentsLineChart" class="w-full h-full"></canvas>
                     </div>
                 </div>
+
+                <!-- Pass data to JavaScript -->
+                <script>
+                    const enrolledStatsData = @json($enrolledStats);
+                    const philpenStatsData = @json($philpen);
+                    const barangayStatsData = @json($barangayStats);
+                </script>
             </div>
         </div>
 
         <!-- Charts / Stats Cards -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
-            <div class="bg-white rounded-xl p-6">
-                <div class="text-sm font-semibold mb-4 text-sub_blue pt-2">Residents Per Purok</div>
-                <div class="h-40 bg-gray-50 rounded-lg flex items-center justify-center text-gray-400">
-                    <canvas id="residentsPerPurokChart"></canvas>
+            <!-- Residents Per Barangay (Scrollable) -->
+            <div class="md:col-span-2 bg-white rounded-xl p-6">
+                <div class="text-sm font-semibold mb-4 text-sub_blue pt-2">Residents by Barangay</div>
+                <div class="overflow-x-auto max-h-96">
+                    <table class="w-full text-sm">
+                        <thead class="bg-f7 sticky top-0">
+                            <tr>
+                                <th class="px-4 py-2 text-left text-sub_blue font-semibold">Barangay</th>
+                                <th class="px-4 py-2 text-center text-sub_blue font-semibold">Total</th>
+                                <th class="px-4 py-2 text-center text-sub_blue font-semibold">Under 5</th>
+                                <th class="px-4 py-2 text-center text-sub_blue font-semibold">60+</th>
+                                <th class="px-4 py-2 text-center text-sub_blue font-semibold">Pregnant</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($barangayStats as $stats)
+                            <tr class="border-b hover:bg-f7">
+                                <td class="px-4 py-3 text-gray-700">{{ $stats['barangay_name'] }}</td>
+                                <td class="px-4 py-3 text-center font-semibold">{{ number_format($stats['total_residents']) }}</td>
+                                <td class="px-4 py-3 text-center text-maingreen">{{ number_format($stats['under_5']) }}</td>
+                                <td class="px-4 py-3 text-center text-col_orange">{{ number_format($stats['sixty_plus']) }}</td>
+                                <td class="px-4 py-3 text-center text-col_pink">{{ number_format($stats['pregnant']) }}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
             </div>
-            <div class="bg-white rounded-xl p-6">
-                <div class="text-sm font-semibold mb-4 text-sub_blue pt-2">Deworming</div>
-                <div class="h-40 bg-gray-50 rounded-lg flex items-center justify-center text-gray-400">
-                    <canvas id="dewormingChart"></canvas>
-                </div>
-            </div>
+
+            <!-- PhilPEN Donut Chart -->
             <div class="bg-white rounded-xl p-6">
                 <div class="text-sm font-semibold mb-4 text-sub_blue pt-2">PhilPEN Metrics</div>
-                <div class="h-40 bg-gray-50 rounded-lg flex items-center justify-center text-gray-400">
+                <div class="h-64 bg-gray-50 rounded-lg flex items-center justify-center text-gray-400">
                     <canvas id="philpenMetricsChart"></canvas>
                 </div>
-            </div>
-        </div>
-
-        <!-- Bottom Cards -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
-            <div class="bg-white rounded-xl p-10">
-                <div class="text-sm font-semibold mb-4 text-sub_blue -pt-12">Medicine Stocks</div>
-                <div class="space-y-2" id="medicineStocksChartContainer"></div>
-            </div>
-            <div class="bg-white rounded-xl p-6 shadow">
-                <div class="text-sub_blue font-medium mb-2">Residents with Delayed Consultations</div>
-               <table class="w-full text-sm mt-3">
-                    <thead>
-                        <tr class="text-left text-normal_font bg-gray-100">
-                            <th class="p-2">Name</th>          <th class="p-2">Program</th>       <th class="p-2">Expected Date</th> </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="p-2">Ron Peter Mortega</td> <td class="p-2">Deworming</td>       <td class="p-2">Feb 10, 2025</td>    </tr>
-                        <tr>
-                            <td class="p-2">Ron Peter Mortega</td>
-                            <td class="p-2">Deworming</td>
-                            <td class="p-2">Feb 10, 2025</td>
-                        </tr>
-                        <tr>
-                            <td class="p-2">Ron Peter Mortega</td>
-                            <td class="p-2">Deworming</td>
-                            <td class="p-2">Feb 10, 2025</td>
-                        </tr>
-                    </tbody>
-                </table>
             </div>
         </div>
     </div>

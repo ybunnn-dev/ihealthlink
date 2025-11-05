@@ -30,6 +30,7 @@ use App\Http\Controllers\Web\PhilpenController;
 use App\Http\Controllers\Web\ReportsController;
 use App\Http\Controllers\Web\ExportController;
 use App\Http\Controllers\Web\FaqController;
+use App\Http\Controllers\Web\MhoDashboardController;
 
 Route::middleware('guest')->group(function () {
     Route::get('/', function () {
@@ -51,9 +52,7 @@ Route::middleware([
     'active'
 ])->group(function(){
      // MHO-specific dashboard
-    Route::get('/mho/dashboard', function () {
-        return view('mho.dashboard');
-    })->name('mho.dashboard');
+    Route::get('/mho/dashboard', [MhoDashboardController::class, 'index'])->name('mho.dashboard');
 
     Route::get('/mho/health-programs', [HealthProgramController::class, 'index'])->name('mho.health-programs');
 

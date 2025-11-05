@@ -21,47 +21,93 @@ use App\Models\Personnel;
 
 class MidwifeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(Request $request)
     {
-        $emptyBrgy = Barangay::whereDoesntHave('midwives')->get();
+        $searchQuery = $request->input('search');
+        $filterBy = $request->input('filter_by', 'filter-alphabetical');
+        $dateFilter = $request->input('date_filter');
 
-        // The query now includes latest() for sorting and paginate() for pagination.
-        $midwivesPaginator = Midwife::with(['user', 'barangay'])
-            ->where('status', 'active') 
-            ->latest() // Orders by 'created_at' descending
-            ->paginate(8);
+        $query = Midwife::query()
+            ->with(['user', 'barangay'])
+            ->where('personnel.status', 'active');
 
-
-        // Use through() to apply your mapping logic to the paginated collection.
-        $rows = $midwivesPaginator->through(function ($m) {
-            $user = $m->users ?? $m->user ?? null;
-            $barangay = $m->barangay ?? $m->barangay ?? null;
-
-            $parts = array_filter([
-                $user->firstName ?? null,
-                $user->middleName ?? null,
-                $user->lastName ?? null,
-                $user->suffix ?? null,
-            ]);
-            $fullName = $parts ? implode(' ', $parts) : ($user->name ?? 'N/A');
-
-            return [
-                'midwife_no'   => $m->id,
-                'name'         => $fullName,
-                'barangay'     => $barangay->name ?? 'N/A',
-                'date_added'   => optional($m->created_at)->format('M d, Y'),
-                'date_updated' => optional($m->updated_at)->format('M d, Y'),
-            ];
+        // --- Date Filter ---
+        $query->when($dateFilter, function ($q, $dateFilter) {
+            switch ($dateFilter) {
+                case 'week':
+                    return $q->where('personnel.created_at', '>=', now()->subWeek());
+                case 'month':
+                    return $q->where('personnel.created_at', '>=', now()->subMonth());
+                case 'year':
+                    return $q->where('personnel.created_at', '>=', now()->subYear());
+            }
         });
 
+        // --- Sorting ---
+        switch ($filterBy) {
+            case 'filter-age-asc':
+                $query->join('users', 'personnel.user_id', '=', 'users.id') // ← Fix here
+                    ->select('personnel.*')
+                    ->orderBy('users.birthdate', 'asc');
+                break;
+
+            case 'filter-age-desc':
+                $query->join('users', 'personnel.user_id', '=', 'users.id') // ← Fix here
+                    ->select('personnel.*')
+                    ->orderBy('users.birthdate', 'desc');
+                break;
+
+            case 'filter-alphabetical':
+            default:
+                $query->join('users', 'personnel.user_id', '=', 'users.id') // ← Fix here
+                    ->select('personnel.*')
+                    ->orderBy('users.lastName', 'asc')
+                    ->orderBy('users.firstName', 'asc');
+                break;
+        }
+
+        // --- Paginate ---
+        $midwives = $query->paginate(8)->appends($request->query());
+
+        // --- SEARCH: Filter by decrypted names IN PHP ---
+        if ($searchQuery) {
+            $searchLower = strtolower($searchQuery);
+            $filtered = $midwives->getCollection()->filter(function ($midwife) use ($searchLower) {
+                $user = $midwife->user;
+                if (!$user) return false;
+                
+                $fullName = trim(implode(' ', array_filter([
+                    $user->firstName,
+                    $user->middleName,
+                    $user->lastName,
+                    $user->suffix
+                ])));
+                
+                return strpos(strtolower($fullName), $searchLower) !== false
+                    || strpos(strtolower($user->firstName ?? ''), $searchLower) !== false
+                    || strpos(strtolower($user->lastName ?? ''), $searchLower) !== false
+                    || strpos(strtolower($user->middleName ?? ''), $searchLower) !== false;
+            })->values();
+            
+            $midwives->setCollection($filtered);
+        }
+
+        // Check for AJAX/JSON request
+        if ($request->wantsJson() || $request->ajax() || $request->header('X-Requested-With') === 'XMLHttpRequest') {
+            return response()->json([
+                'data' => $midwives->items(), // Returns full Midwife objects
+                'links' => $midwives->links()->render()
+            ]);
+        }
+
+        $emptyBrgy = Barangay::whereDoesntHave('midwives')->get();
+
         return view('mho.midwives', [
-            'midwives'   => $rows, // Pass the paginator with transformed items to the view.
-            'emptyBrgy'  => $emptyBrgy,
+            'midwives' => $midwives,
+            'emptyBrgy' => $emptyBrgy,
         ]);
     }
+
     /**
      * Store a newly created resource in storage.
      */
@@ -187,68 +233,6 @@ class MidwifeController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function search(Request $request)
-    {
-        // Get and Validate Query Parameters
-        $searchQuery = $request->input('search');
-        $sortBy = $request->input('sort_by', 'alphabetical'); // default alphabetical
-        $dateFilter = $request->input('date_filter');
-
-        \Log::info($searchQuery);
-
-        $query = Midwife::query()->with(['users', 'barangay']);
-
-        // --- Search ---
-        $query->when($searchQuery, function ($q, $searchQuery) {
-            $q->whereHas('users', function ($sub) use ($searchQuery) {
-                $sub->where('firstName', 'like', "%{$searchQuery}%")
-                    ->orWhere('lastName', 'like', "%{$searchQuery}%")
-                    ->orWhere('middleName', 'like', "%{$searchQuery}%")
-                    ->orWhere('suffix', 'like', "%{$searchQuery}%")
-                    // Full name search
-                    ->orWhereRaw("CONCAT_WS(' ', firstName, middleName, lastName, suffix) LIKE ?", ["%{$searchQuery}%"]);
-            });
-        });
-
-        // --- Date Filter ---
-        $query->when($dateFilter, function ($q, $dateFilter) {
-            switch ($dateFilter) {
-                case 'week': return $q->where('personnel.created_at', '>=', now()->subWeek());
-                case 'month': return $q->where('personnel.created_at', '>=', now()->subMonth());
-                case 'year': return $q->where('personnel.created_at', '>=', now()->subYear());
-            }
-        });
-
-        // --- Sorting ---
-        switch ($sortBy) {
-            case 'age-asc':
-                $query->join('users', 'personnel.user_id', '=', 'users.id')
-                    ->select('personnel.*')
-                    ->orderBy('users.birthdate', 'asc');
-                break;
-
-            case 'age-desc':
-                $query->join('users', 'personnel.user_id', '=', 'users.id')
-                    ->select('personnel.*')
-                    ->orderBy('users.birthdate', 'desc');
-                break;
-
-            case 'alphabetical':
-            default:
-                $query->join('users', 'personnel.user_id', '=', 'users.id')
-                    ->select('personnel.*')
-                    ->orderBy('users.lastName', 'asc')
-                    ->orderBy('users.firstName', 'asc');
-                break;
-        }
-
-        // --- Paginate ---
-        
-        $midwives = $query->paginate(15)->withQueryString();
-       
-        return response()->json($midwives);
-    }
-
     public function update(Request $request, $userId)
     {
         // Log payload for debugging

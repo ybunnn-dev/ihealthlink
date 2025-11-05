@@ -56,7 +56,6 @@ const datasets = healthPrograms.map((program, index) => {
     };
 });
 
-// Chart 1: Residents Line Chart
 const ctx = document.getElementById('residentsLineChart');
 if (!ctx) {
     console.error('Canvas #residentsLineChart not found');
@@ -67,30 +66,63 @@ if (!ctx) {
         type: 'line',
         data: {
             labels: formattedLabels,
-            datasets: datasets
+            datasets: datasets.map((dataset, index) => {
+                const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];
+                return {
+                    ...dataset,
+                    borderColor: colors[index % colors.length],
+                    backgroundColor: colors[index % colors.length] + '20',
+                    borderWidth: 2,
+                    tension: 0.4,
+                    fill: false,
+                    pointRadius: 4,
+                    pointBackgroundColor: colors[index % colors.length],
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointHoverRadius: 6
+                };
+            })
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
+            interaction: {
+                mode: 'index',
+                intersect: false
+            },
             scales: {
                 y: {
                     beginAtZero: true,
                     ticks: {
                         color: '#566A7F',
-                        stepSize: 1  // Use whole numbers for counts
+                        stepSize: 1
+                    },
+                    grid: {
+                        color: '#e5e7eb'
                     }
                 },
                 x: {
                     ticks: {
                         color: '#566A7F'
+                    },
+                    grid: {
+                        display: false
                     }
                 }
             },
             plugins: {
                 legend: {
+                    position: 'bottom',
                     labels: {
-                        color: '#252F6C'
+                        color: '#252F6C',
+                        padding: 16,
+                        font: {
+                            size: 12
+                        }
                     }
+                },
+                filler: {
+                    propagate: true
                 }
             }
         }
@@ -98,6 +130,7 @@ if (!ctx) {
     
     console.log('✅ Residents line chart created');
 }
+
 // Chart 2: Water Source Distribution Chart
 const residentsPerPurokChartCtx = document.getElementById('residentsPerPurokChart');
 if (!residentsPerPurokChartCtx) {
