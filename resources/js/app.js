@@ -50,8 +50,6 @@ document.addEventListener('DOMContentLoaded', () => {
   } else if (bodyClass.contains('spec-midwife')) {
     import('./pages/midwife/edit-midwife.js');
     import('./pages/midwife/remove-midwife.js');
-  } else if (bodyClass.contains('health-programs')) {
-    import('./pages/health-programs/add-health-program.js');
   } else if (bodyClass.contains('medicines')) {
     // REMOVE the dynamic import from here
     // import('./pages/medicines/paginator.js'); // DELETE THIS LINE
@@ -107,8 +105,9 @@ document.addEventListener('DOMContentLoaded', () => {
     import('./pages/family/edit-family.js');
     import('./pages/family/set-status.js');
   }
-  else if (bodyClass.contains('health-programs')) {
+  else if (bodyClass.contains('health-programs')) { //app.js
     import('./pages/health-programs/add-health-program.js');
+    import('./pages/health-programs/paginator.js');
   }else if(bodyClass.contains('faqs')){
     import('./pages/faq/add-faq.js');
     import('./pages/faq/faq-management.js');

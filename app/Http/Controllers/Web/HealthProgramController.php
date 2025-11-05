@@ -20,10 +20,58 @@ class HealthProgramController extends Controller
         ]);
     }
 
-    public function index(){
-        $programs = HealthProgram::withCount('enrolledResidents')
-        ->paginate(8);
-
+    public function index(Request $request)
+    {
+        $query = HealthProgram::withCount('enrolledResidents');
+        
+        // Search functionality
+        if ($request->has('search') && $request->search != '') {
+            $query->where('name', 'LIKE', '%' . $request->search . '%');
+        }
+        
+        // Sort functionality
+        if ($request->has('sort_by') && $request->sort_by != 'all') {
+            $sortField = $request->sort_by;
+            $sortOrder = $request->get('sort_order', 'asc');
+            
+            if ($sortField == 'residents_count') {
+                $query->orderBy('enrolled_residents_count', $sortOrder);
+            } else {
+                $query->orderBy($sortField, $sortOrder);
+            }
+        }
+        
+        // Date filter
+        if ($request->has('date_filter') && $request->date_filter != 'all') {
+            switch ($request->date_filter) {
+                case 'week':
+                    $query->where('created_at', '>=', now()->subWeek());
+                    break;
+                case 'month':
+                    $query->where('created_at', '>=', now()->subMonth());
+                    break;
+                case 'year':
+                    $query->where('created_at', '>=', now()->subYear());
+                    break;
+            }
+        }
+        
+        $programs = $query->paginate(8);
+        
+        // Check for AJAX with multiple detection methods
+        $isAjax = $request->ajax() || 
+                $request->header('X-Requested-With') === 'XMLHttpRequest' || 
+                $request->wantsJson();
+        
+        if ($isAjax) {
+            return response()->json([
+                'html' => view('components.health-program.table', [
+                    'healthPrograms' => $programs
+                ])->render(),
+                'pagination' => $programs->links()->render()
+            ]);
+        }
+        
         return view('mho.health-program-list', [
             'healthPrograms' => $programs
         ]);

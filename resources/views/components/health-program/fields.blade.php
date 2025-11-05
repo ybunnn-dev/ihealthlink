@@ -1,7 +1,6 @@
 @props(['programfields', 'name'])
 
 <div class="col-span-1">
-    <p>bat ayaw</p>
     <div class="flex justify-between items-center mt-4 mb-4">
         <h2 class="text-2xl font-semibold text-main_font">Fields for {{ $name }}</h2>
         <div class="w-full sm:w-40">

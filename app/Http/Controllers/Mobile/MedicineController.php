@@ -254,6 +254,14 @@ class MedicineController extends Controller
         
         $medicine = Medicine::with(['inventories.addedBy'])->findOrFail($id);
 
+        // --- ADD THIS COMPUTATION 庁 ---
+        $remainingStock = $medicine->inventories
+            ->filter(fn($inventory) => \Carbon\Carbon::parse($inventory->expiry_date)->isFuture())
+            ->sum('stock');
+        
+        $medicine->remaining_stock = $remainingStock;
+        // ---END OF FIX 庁 ---
+
         // ✅ Convert shortcodes to display names
         $medicine->category = $this->denormalizeCategory($medicine->category);
         $medicine->form = $this->denormalizeForm($medicine->form);

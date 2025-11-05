@@ -97,7 +97,7 @@
                         </div>
                     </div>
                 </div>
-                 <x-healthProgram.fields :programfields="$healthProgram->programFields" :name="$healthProgram->name" />
+                 <x-health-program.fields :programfields="$healthProgram->programFields" :name="$healthProgram->name" />
             </div>
         </div>
     </div>

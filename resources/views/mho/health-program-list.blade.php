@@ -6,7 +6,7 @@
             <!-- Title -->
             <h1 class="text-3xl font-semibold text-sub_blue mb-3">Health Programs</h1>
 
-           <div class="bg-f7 rounded-xl overflow-hidden">
+            <div class="bg-f7 rounded-xl overflow-hidden">
                 <div class="p-6">
                     <div class="grid grid-rows-1 gap-1">
                         <div class="pb-6">
@@ -43,10 +43,7 @@
                                                 <a href="#" data-value="name" class="block px-4 py-2 hover:bg-gray-100">Name</a>
                                             </li>
                                             <li>
-                                                <a href="#" data-value="puroks_count" class="block px-4 py-2 hover:bg-gray-100">Puroks</a>
-                                            </li>
-                                            <li>
-                                                <a href="#" data-value="residents_count" class="block px-4 py-2 hover:bg-gray-100">Residents</a>
+                                                <a href="#" data-value="residents_count" class="block px-4 py-2 hover:bg-gray-100">Enrolled Count</a>
                                             </li>
                                         </ul>
                                     </div>
@@ -66,7 +63,7 @@
                                             <li><a href="#" data-value="all" class="block px-4 py-2 hover:bg-gray-100">All Date</a></li>
                                             <li><a href="#" data-value="week" class="block px-4 py-2 hover:bg-gray-100">Last Week</a></li>
                                             <li><a href="#" data-value="month" class="block px-4 py-2 hover:bg-gray-100">Last Month</a></li>
-                                            <li><a href="#" data-a-value="year" class="block px-4 py-2 hover:bg-gray-100">Last Year</a></li>
+                                            <li><a href="#" data-value="year" class="block px-4 py-2 hover:bg-gray-100">Last Year</a></li>
                                         </ul>
                                     </div>
 
@@ -76,69 +73,14 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="relative overflow-x-auto">
-                            <table class="w-full text-sm text-left text-main_font bg-col_tab_h">
-                                <thead class="text-xs text-main_font uppercase text-start" >
-                                    <tr class="text-start">
-                                        <th scope="col" class="px-6 py-3 text-start">Program #</th>
-                                        <th scope="col" class="px-6 py-3 text-start">NAME</th>
-                                        <th scope="col" class="px-6 py-3 text-start">Age Range</th>
-                                        <th scope="col" class="px-6 py-3 text-start">No. of Enrolled</th>
-                                        <th scope="col" class="px-6 py-3 text-start">DATE ADDED</th>
-                                        <th scope="col" class="px-6 py-3 text-start">DATE UPDATED</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="healthProgram-table-body">
-                                    @forelse ($healthPrograms as $healthProgram)
-                                        <tr class="bg-white border-b bg-f7 text-normal_font text-start cursor-pointer hover:bg-gray-100" 
-                                            onclick="window.location='{{ route('mho.spec-hprog', ['healthProgram' => $healthProgram->id]) }}'"
-                                            >                                            
-                                            <th scope="row" class="px-6 py-4 font-medium text-start text-normal_font whitespace-nowrap">
-                                                {{ $healthProgram->id }}
-                                            </th>
-                                            <td class="px-6 py-4">
-                                                {{ $healthProgram->name }}
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                {{-- Make sure this matches your controller variable --}}
-                                                {{ $healthProgram->age_min ? $healthProgram->age_min : 'Undefined'}} - {{ $healthProgram->age_max ? $healthProgram->age_max : 'Undefined' }}
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                {{-- Make sure this matches your controller variable --}}
-                                                {{ number_format($healthProgram->residents_count ?? $healthProgram->residents_count) }}
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                {{ $healthProgram->created_at->format('M d, Y') }}
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                {{ $healthProgram->updated_at->format('M d, Y') }}
-                                            </td>
-                                        </tr>
-                                    @empty
-                                        <tr class="border-b bg-f7 text-normal_font text-center cursor-pointer hover:bg-gray-100">
-                                            {{-- This cell will span all 6 columns of your table --}}
-                                            <td colspan="6">
-                                                <div class="text-center py-10">
-                                                    <img src="{{ asset('images/illustrations/empty.png') }}" alt="No health programs found" class="mx-auto w-64">
-                                                    <p class="mt-5 text-lg font-medium text-gray-700">
-                                                        {{ $message ?? "Oops! You haven't added any health programs yet." }}
-                                                    </p>
-                                                    <p class="mt-2 text-sm text-gray-500">
-                                                        Click the "Add  Program" button to get started.
-                                                    </p>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    @endforelse
-                                </tbody>
-                            </table>
-                        </div>
 
-                        {{-- PAGINATION LINKS ADDED HERE --}}
+                        {{-- Include the table component --}}
+                        <x-health-program.table :healthPrograms="$healthPrograms" />
+
+                        {{-- PAGINATION LINKS --}}
                         <div class="mt-4" id="pagination-links">
                             {{ $healthPrograms->links() }}
                         </div>
-
                     </div>
                 </div>
             </div>
