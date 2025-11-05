@@ -65,7 +65,7 @@ Route::middleware([
         ->where(['barangay' => '[0-9]+', 'name' => '[a-zA-Z0-9-]+']);
 
     //Route for barangays
-    Route::get('/mho/barangays', [BarangayController::class, 'listView'])->name('mho.barangays');
+    Route::get('/mho/barangays', [BarangayController::class, 'index'])->name('mho.barangays');
 
     //Route for adding barangays
     Route::post('/add-brgy', [BarangayController::class, 'store'])->name('barangays.store');

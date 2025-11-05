@@ -16,17 +16,18 @@
 
         <div class="relative overflow-x-auto rounded-lg">
             <table class="w-full text-sm text-left text-main_font">
-                <thead class="text-xs text-main_font uppercase bg-col_tab_h text-start">
+                <thead class="text-xs text-main_font uppercase bg-col_tab_h">
                     <tr>
                         <th scope="col" class="px-6 py-3">PUROK ID</th>
                         <th scope="col" class="px-6 py-3">NAME</th>
                         <th scope="col" class="px-6 py-3">NO. OF HOUSEHOLDS</th>
+                        <th scope="col" class="px-6 py-3">NO. OF FAMILIES</th>
                         <th scope="col" class="px-6 py-3">NO. OF RESIDENTS</th>
                         <th scope="col" class="px-6 py-3">DATE ADDED</th>
-                        <th scope="col" class="px-6 py-3">ACTIONS</th>
+                        <th scope="col" class="pl-10 py-3">ACTIONS</th>
                     </tr>
                 </thead>
-                <tbody class="text-center" id="purok-table-body">
+                <tbody id="purok-table-body">
                     @forelse ($puroks as $purok)
                         <tr class="bg-white border-b text-normal_font hover:bg-gray-50">
                             <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
@@ -34,6 +35,7 @@
                             </th>
                             <td class="px-6 py-4">{{ $purok->name }}</td>
                             <td class="px-6 py-4">{{ $purok->households_count }}</td>
+                            <td class="px-6 py-4">{{ $purok->families_count }}</td>
                             <td class="px-6 py-4">{{ $purok->residents_count }}</td>
                             <td class="px-6 py-4">{{ $purok->created_at->format('M d, Y') }}</td>
                             <td class="px-6 py-4">
