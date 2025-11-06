@@ -28,6 +28,14 @@ class ScheduleController extends Controller
         $activityIcons = ActivityIcons::all();
 
         if ($midwife) {
+            // Check if daily activities exist for this barangay
+            $existingActivities = DailyActivities::where('brgy_id', $midwife->brgy_id)->count();
+            
+            // If no daily activities exist, create default ones
+            if ($existingActivities === 0) {
+                $this->createDefaultDailyActivities($midwife->brgy_id);
+            }
+
             // FIXED: Added 'user' relationship to activeBhws
             $schedules = Schedules::where('brgy_id', $midwife->brgy_id)
                 ->where('status', 'active')
@@ -35,7 +43,6 @@ class ScheduleController extends Controller
                     'barangay'
                 ])
                 ->get();
-
 
             $dailyActivities = DailyActivities::where('brgy_id', $midwife->brgy_id)
                 ->with('icon')
@@ -46,6 +53,27 @@ class ScheduleController extends Controller
 
         return view('midwife.schedules', compact('schedules', 'dailyActivities', 'activityIcons'));
     }
+
+    /**
+     * Create default daily activities for a barangay
+     */
+    private function createDefaultDailyActivities($brgyId)
+    {
+        $days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+        foreach ($days as $day) {
+            DailyActivities::create([
+                'day' => $day,
+                'brgy_id' => $brgyId,
+                'icon_id' => null,
+                'updated_by' => auth()->id(),
+                'activities' => json_encode([]),
+            ]);
+        }
+
+        Log::info("Default daily activities created for barangay: {$brgyId}");
+    }
+
 
 
     public function updateDailyActivity(Request $request)
