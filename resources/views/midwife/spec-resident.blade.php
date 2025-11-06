@@ -191,4 +191,5 @@
         @include('components.modals.consultation.distribute-medicine')
         @include('components.modals.reports.filter-date')
         @include('components.modals.resident.edit-resident')
+        @include('components.modals.consultation.view-consultation')
 </x-app-layout>

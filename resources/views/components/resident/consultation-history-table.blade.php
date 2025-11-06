@@ -24,7 +24,11 @@
                         </span>
                     </td>
                     <td class="px-6 py-4">
-                        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded text-xs">View</button>
+                        <button 
+                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded text-xs js-view-consultation-btn" 
+                            data-consultation-id="{{ $consultation->id }}">
+                            View
+                        </button>
                     </td>
                 </tr>
             @empty
@@ -36,7 +40,6 @@
                         </p>
                         <p class="mt-2 text-sm text-gray-500">
                             Try adjusting your search or filters.
-                            
                         </p>
                     </td>
                 </tr>

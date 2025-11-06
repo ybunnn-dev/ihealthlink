@@ -95,6 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
     import('./pages/resident/spec-resident.js');
     import('./pages/resident/create-consultation.js');
     import('./pages/resident/edit-resident.js');
+    import('./pages/consultations/view-consultation.js');
   } else if (bodyClass.contains('residents')) {
     import('./pages/resident/add-resident');
     import('./pages/resident/paginate.js');
