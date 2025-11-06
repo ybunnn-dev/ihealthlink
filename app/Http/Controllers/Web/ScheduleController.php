@@ -65,7 +65,7 @@ class ScheduleController extends Controller
             DailyActivities::create([
                 'day' => $day,
                 'brgy_id' => $brgyId,
-                'icon_id' => null,
+                'icon_id' => 1,
                 'updated_by' => auth()->id(),
                 'activities' => json_encode([]),
             ]);
