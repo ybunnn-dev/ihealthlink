@@ -117,7 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
   else if (bodyClass.contains('health-program-brgy')) {
     import('./pages/health-programs/change-program.js');
     import('./pages/health-programs/enrolled-residents-filter.js');
-    
+
     const programTypeDefine = document.getElementById('program_type_content').textContent;
 
     if (programTypeDefine === 'maternal_health_tcl') {
@@ -163,6 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   else if (bodyClass.contains('brgy-logs')) {
     import('./pages/logs/brgy-logs.js');
+    import('./pages/logs/filter-logs.js');
   }
   else {
     console.log('Not on reports page - charts not loaded');
