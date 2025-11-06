@@ -6,7 +6,7 @@
     @endphp
 
     <tr class="bg-white border-b text-normal_font hover:bg-gray-50 cursor-pointer" 
-        onclick="window.location='/midwife/enrolled-resident/{{ $enrollment->id }}'">
+        onclick="window.location='/barangay/health-programs/enrolled/resident/{{ $enrollment->id }}'">
         
         <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
             <span x-show="showPrivacy">{{ $residentId }}</span>

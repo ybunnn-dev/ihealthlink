@@ -131,6 +131,8 @@ if (!ctx) {
     console.log('✅ Residents line chart created');
 }
 
+console.log(waterSource);
+
 // Chart 2: Water Source Distribution Chart
 const residentsPerPurokChartCtx = document.getElementById('residentsPerPurokChart');
 if (!residentsPerPurokChartCtx) {

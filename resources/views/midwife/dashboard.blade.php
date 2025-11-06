@@ -115,13 +115,7 @@
         </div>
 
         <!-- Charts / Stats Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
-            <div class="bg-white rounded-xl p-6">
-                <div class="text-sm font-semibold mb-4 text-sub_blue pt-2">Water Source</div>
-                <div class="h-40 bg-gray-50 rounded-lg flex items-center justify-center text-gray-400">
-                    <canvas id="residentsPerPurokChart"></canvas>
-                </div>
-            </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
             <div class="bg-white rounded-xl p-6">
                 <div class="text-sm font-semibold mb-4 text-sub_blue pt-2">Deworming</div>
                 <div class="h-40 bg-gray-50 rounded-lg flex items-center justify-center text-gray-400">
@@ -135,6 +129,50 @@
                 </div>
             </div>
         </div>
+
+        <!-- Water Source Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 mb-3">
+            <div class="bg-white rounded-xl p-6">
+                <div class="text-sm font-semibold mb-4 text-sub_blue pt-2">Water Source</div>
+                <div class="h-40 bg-gray-50 rounded-lg flex items-center justify-center text-gray-400">
+                    <canvas id="residentsPerPurokChart"></canvas>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl p-6">
+                <div class="text-sm font-semibold mb-4 text-sub_blue pt-2">Water Source Breakdown</div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-left text-main_font">
+                        <thead class="text-xs font-semibold bg-gray-50 text-main_font uppercase">
+                            <tr>
+                                <th scope="col" class="px-4 py-2">Water Source</th>
+                                <th scope="col" class="px-4 py-2 text-center">Households</th>
+                                <th scope="col" class="px-4 py-2 text-center">Percentage</th>
+                            </tr>
+                        </thead>
+                        <tbody id="waterSourceTableBody">
+                            @forelse($waterSource as $source)
+                                <tr class="bg-white border-b hover:bg-gray-50">
+                                    <td class="px-4 py-2 font-medium">{{ $source['water_source'] ?? 'Unknown' }}</td>
+                                    <td class="px-4 py-2 text-center font-semibold">{{ $source['total'] ?? 0 }}</td>
+                                    <td class="px-4 py-2 text-center">
+                                        <span class="px-2 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">
+                                            {{ $source['percentage'] ?? '0' }}%
+                                        </span>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr class="bg-white border-b">
+                                    <td colspan="3" class="px-4 py-3 text-center text-gray-500">
+                                        No water source data available.
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
 
         <!-- Bottom Cards -->
         <div class="grid grid-cols-1 ">
