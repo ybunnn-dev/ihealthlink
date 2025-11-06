@@ -18,39 +18,58 @@ use App\Models\FamilyPlanningData;
 use Illuminate\Support\Facades\Auth;
 class BarangayHealthProgramController extends Controller
 {
-    public function index(HealthProgram $healthProgram = null)
+    public function index(Request $request, HealthProgram $healthProgram = null)
     {
         $personnel = Auth::user()->midwife;
-        $barangayId = $personnel->brgy_id; 
+        $barangayId = $personnel->brgy_id;
 
         if (!$healthProgram) {
             $healthProgram = HealthProgram::latest()->first();
         }
 
-        // Get enrolled residents for this health program and midwife's barangay
-        $enrolledResidents = EnrolledResident::with(['consultations' => function ($q) {
-                $q->orderBy('consultation_date'); // optional: sort consultations
+        $query = EnrolledResident::with(['resident', 'consultations' => function ($q) {
+                $q->orderBy('consultation_date');
             }])
             ->where('program_id', $healthProgram->id)
             ->whereHas('resident.family.household.purok', function ($q) use ($barangayId) {
                 $q->where('brgy_id', $barangayId);
-            })
-            ->get();
+            });
 
-        // Filter consultations to only those matching the enrolled resident
+        // AJAX request - apply filters
+        if ($request->ajax()) {
+            $enrolledResidents = $query->get();
+            $enrolledResidents->each(function ($enrollment) {
+                $enrollment->consultations = $enrollment->consultations
+                    ->where('enrolled_resident_id', $enrollment->id);
+            });
+
+            $totalEnrolled = $enrolledResidents->count();
+            $completed = $enrolledResidents->where('status', 'completed')->count();
+            $overdue = $enrolledResidents->filter(function ($enrollment) {
+                return $enrollment->resident->consultations->contains(function ($consultation) {
+                    return $consultation->status === 'pending'
+                        && Carbon::parse($consultation->consultation_date)->isBefore(Carbon::today());
+                });
+            })->count();
+
+            return $this->applyFiltersWithPagination($enrolledResidents, $request, $totalEnrolled, $completed, $overdue);
+        }
+
+        // Initial page load - get paginated data
+        $perPage = 10;
+        $enrolledResidents = $query->paginate($perPage);
+
         $enrolledResidents->each(function ($enrollment) {
             $enrollment->consultations = $enrollment->consultations
                 ->where('enrolled_resident_id', $enrollment->id);
         });
 
-        $totalEnrolled = $enrolledResidents->count();
-
+        $totalEnrolled = $enrolledResidents->total();
         $completed = $enrolledResidents->where('status', 'completed')->count();
-
         $overdue = $enrolledResidents->filter(function ($enrollment) {
             return $enrollment->resident->consultations->contains(function ($consultation) {
                 return $consultation->status === 'pending'
-                    && \Carbon\Carbon::parse($consultation->consultation_date)->isBefore(\Carbon\Carbon::today());
+                    && Carbon::parse($consultation->consultation_date)->isBefore(Carbon::today());
             });
         })->count();
 
@@ -62,6 +81,104 @@ class BarangayHealthProgramController extends Controller
             'overdue'
         ));
     }
+
+    private function applyFiltersWithPagination($enrolledResidents, $request, $totalEnrolled, $completed, $overdue)
+    {
+        // Apply search filter (on encrypted fields)
+        if ($request->filled('search')) {
+            $searchTerm = strtolower($request->search);
+            $enrolledResidents = $enrolledResidents->filter(function ($enrollment) use ($searchTerm) {
+                $resident = $enrollment->resident;
+                $firstName = strtolower($resident->firstName ?? '');
+                $lastName = strtolower($resident->lastName ?? '');
+                $middleName = strtolower($resident->middleName ?? '');
+                $residentId = strtolower((string)$resident->id);
+
+                return strpos($firstName, $searchTerm) !== false ||
+                       strpos($lastName, $searchTerm) !== false ||
+                       strpos($middleName, $searchTerm) !== false ||
+                       strpos($residentId, $searchTerm) !== false;
+            });
+        }
+
+        // Apply date filter
+        if ($request->filled('date_filter')) {
+            $dateFilter = $request->date_filter;
+            $enrolledResidents = $enrolledResidents->filter(function ($enrollment) use ($dateFilter, $request) {
+                $createdDate = Carbon::parse($enrollment->created_at);
+
+                if ($dateFilter === 'last_week') {
+                    return $createdDate->gte(Carbon::now()->subWeek());
+                } elseif ($dateFilter === 'last_month') {
+                    return $createdDate->gte(Carbon::now()->subMonth());
+                } elseif ($dateFilter === 'last_year') {
+                    return $createdDate->gte(Carbon::now()->subYear());
+                } elseif ($dateFilter === 'custom' && $request->filled('from_date') && $request->filled('to_date')) {
+                    $fromDate = Carbon::parse($request->from_date)->startOfDay();
+                    $toDate = Carbon::parse($request->to_date)->endOfDay();
+                    return $createdDate->between($fromDate, $toDate);
+                }
+                return true;
+            });
+        }
+
+        // Apply sorting
+        $sortBy = $request->get('sort_by', 'name');
+        $sortOrder = $request->get('sort_order', 'asc');
+
+        if ($sortBy === 'name') {
+            $enrolledResidents = $enrolledResidents->sort(function ($a, $b) use ($sortOrder) {
+                $nameA = trim($a->resident->firstName . ' ' . $a->resident->lastName);
+                $nameB = trim($b->resident->firstName . ' ' . $b->resident->lastName);
+                $comparison = strcasecmp($nameA, $nameB);
+                return $sortOrder === 'desc' ? -$comparison : $comparison;
+            });
+        } elseif ($sortBy === 'age') {
+            $enrolledResidents = $enrolledResidents->sort(function ($a, $b) use ($sortOrder) {
+                try {
+                    $ageA = Carbon::parse($a->resident->birthdate)->age;
+                    $ageB = Carbon::parse($b->resident->birthdate)->age;
+                    $comparison = $ageA <=> $ageB;
+                    return $sortOrder === 'desc' ? -$comparison : $comparison;
+                } catch (\Exception $e) {
+                    return 0;
+                }
+            });
+        }
+
+        // Pagination
+        $perPage = $request->get('per_page', 10);
+        $page = $request->get('page', 1);
+        $total = $enrolledResidents->count();
+        $totalPages = ceil($total / $perPage);
+
+        $paginated = $enrolledResidents->slice(($page - 1) * $perPage, $perPage)->values();
+
+        $formattedResidents = $paginated->map(function ($enrollment) {
+            $info = $enrollment->getNextConsultationAttribute($enrollment->id);
+            return [
+                'id' => $enrollment->id,
+                'resident_id' => $enrollment->resident->id,
+                'resident_name' => $enrollment->resident->firstName . ' ' . $enrollment->resident->lastName . ' ' . $enrollment->resident->middleName,
+                'status_text' => $info['status'],
+                'status_color' => $info['color'],
+                'date_enrolled' => Carbon::parse($enrollment->created_at)->format('M d, Y'),
+                'next_schedule' => $info['date']
+            ];
+        });
+
+        return response()->json([
+            'enrolledResidents' => $formattedResidents,
+            'totalEnrolled' => $totalEnrolled,
+            'completed' => $completed,
+            'overdue' => $overdue,
+            'totalPages' => $totalPages,
+            'currentPage' => $page,
+            'perPage' => $perPage,
+            'total' => $total
+        ]);
+    }
+
 
     public function show(EnrolledResident $enrolledResident)
     {
