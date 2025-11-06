@@ -33,7 +33,7 @@
                 
                 <tr id="midwife-row-{{ $id }}"
                     class="bg-white border-b bg-f7 text-normal_font text-start cursor-pointer hover:bg-gray-100" 
-                    onclick="window.location='/mho/midwife/{{ $id }}/{{ $slug }}'">
+                    onclick="window.location='/mho/midwife/{{ $slug }}/{{ $id }}'">
                     <th id="midwife-no-{{ $id }}" scope="row" class="px-6 py-4 font-medium text-normal_font whitespace-nowrap text-start">
                         {{ $id }}
                     </th>
