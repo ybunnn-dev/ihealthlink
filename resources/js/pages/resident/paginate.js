@@ -63,7 +63,7 @@ function debounceSearch() {
     }, 500);
 }
 
-// Fetch residents via AJAX
+/// After fetching residents via AJAX
 function fetchResidents() {
     toggleLoading(true);
     
@@ -98,7 +98,13 @@ function fetchResidents() {
         if (data.status === 'success') {
             tableBody.innerHTML = data.html;
             paginationContainer.innerHTML = data.pagination;
-            applyPrivacyState(); // Apply privacy state to new content
+            
+            // Reinitialize Alpine on new content
+            Alpine.initTree(tableBody);
+            
+            // Reapply privacy state to new content
+            applyPrivacyState();
+            
             attachPaginationListeners();
         } else {
             console.error('Error:', data.message);
@@ -118,7 +124,6 @@ function fetchResidents() {
         toggleLoading(false);
     });
 }
-
 // Rest of your code...
 
 // Attach event listeners to pagination links
