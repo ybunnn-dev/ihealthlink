@@ -61,7 +61,7 @@
                             <p>{{ $medicine->generic_name ?? 'N/A' }}</p>
 
                             <p class="font-medium">CATEGORY:</p>
-                            <p>{{ $medicine->category }}</p>
+                            <p>{{ $medicine->category_display }}</p>
 
                             <p class="font-medium">FORM:</p>
                             <p>{{ $medicine->form }}</p>

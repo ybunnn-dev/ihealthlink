@@ -11,7 +11,7 @@
             {{ $medicine->remaining_stock }}
         </td>
         <td class="px-6 py-4">
-            {{ $medicine->category }}
+            {{ $medicine->category_display }}
         </td>
         <td class="px-6 py-4">
             {{ $medicine->form }}

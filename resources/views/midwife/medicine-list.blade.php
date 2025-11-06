@@ -51,33 +51,41 @@
                                                     <a href="#" @click.prevent="selectCategory('', 'All')" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">All</a>
                                                 </li>
                                                 <li>
-                                                    <a href="#" @click.prevent="selectCategory('Regular Medicine', 'Regular Medicine')" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Regular Medicine</a>
+                                                    <a href="#" @click.prevent="selectCategory('reg-med', 'Regular Medicine')" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Regular Medicine</a>
                                                 </li>
                                                 <li>
-                                                    <a href="#" @click.prevent="selectCategory('Deworming Tablet', 'Deworming Tablet')" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Deworming Tablet</a>
+                                                    <a href="#" @click.prevent="selectCategory('deworming', 'Deworming Tablet')" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Deworming Tablet</a>
                                                 </li>
                                                 <li>
-                                                    <a href="#" @click.prevent="selectCategory('Iron with Folic Acid', 'Iron with Folic Acid')" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Iron with Folic Acid</a>
+                                                    <a href="#" @click.prevent="selectCategory('iron-w-fa', 'Iron with Folic Acid')" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Iron with Folic Acid</a>
                                                 </li>
                                                 <li>
-                                                    <a href="#" @click.prevent="selectCategory('Iron', 'Iron')" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Iron</a>
+                                                    <a href="#" @click.prevent="selectCategory('iron', 'Iron')" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Iron</a>
                                                 </li>
                                                 <li>
-                                                    <a href="#" @click.prevent="selectCategory('Vitamin A', 'Vitamin A')" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Vitamin A</a>
+                                                    <a href="#" @click.prevent="selectCategory('vit-a', 'Vitamin A')" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Vitamin A</a>
                                                 </li>
                                                 <li>
-                                                    <a href="#" @click.prevent="selectCategory('Calcium Carbonate', 'Calcium Carbonate')" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Calcium Carbonate</a>
+                                                    <a href="#" @click.prevent="selectCategory('cc', 'Calcium Carbonate')" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Calcium Carbonate</a>
                                                 </li>
                                                 <li>
-                                                    <a href="#" @click.prevent="selectCategory('Iodine Capsule', 'Iodine Capsule')" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Iodine Capsule</a>
+                                                    <a href="#" @click.prevent="selectCategory('iodine', 'Iodine Capsule')" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Iodine Capsule</a>
                                                 </li>
                                                 <li>
-                                                    <a href="#" @click.prevent="selectCategory('Vaccine', 'Vaccine')" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Vaccine</a>
+                                                    <a href="#" @click.prevent="selectCategory('vaccine', 'Vaccine')" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Vaccine</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#" @click.prevent="selectCategory('bcg', 'BCG Vaccine')" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">BCG Vaccine</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#" @click.prevent="selectCategory('dpt-hepb-hib', 'DPT-HepB-Hib Vaccine')" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">DPT-HepB-Hib Vaccine</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#" @click.prevent="selectCategory('hepa-b-bd', 'Hepatitis B Birth Dose')" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Hepatitis B Birth Dose</a>
                                                 </li>
                                             </ul>
                                         </div>
                                     </div>
-
                                     <!-- Name Sort -->
                                     <div class="w-full sm:w-48">
                                         <label for="nameDropdown" class="mb-2 text-sm font-medium text-main_font">Sort By Name</label> 

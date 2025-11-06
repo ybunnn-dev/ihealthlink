@@ -74,6 +74,12 @@ class MedicineController extends Controller
 
         $medicines = $query->paginate($perPage)->appends($request->except('page'));
 
+        // Denormalize category for each medicine
+        $medicines->getCollection()->transform(function ($medicine) {
+            $medicine->category_display = $this->denormalizeCategory($medicine->category);
+            return $medicine;
+        });
+
         // If AJAX request, return only the table rows
         if ($request->ajax()) {
             return response()->json([
@@ -86,7 +92,6 @@ class MedicineController extends Controller
             'medicines' => $medicines
         ]);
     }
-
 
     public function show($id) // Show specific medicine details
     {
@@ -102,12 +107,33 @@ class MedicineController extends Controller
         if (!$personnel) {
             abort(403, 'Unauthorized access.');
         }
+        
         $medicine = Medicine::with(['inventories.addedBy'])->findOrFail($id);
+        
+        // Denormalize category
+        $medicine->category_display = $this->denormalizeCategory($medicine->category);
 
         return view('midwife.spec-medicine', [
             'medicine'    => $medicine,
             'inventories' => $medicine->inventories
         ]);
+    }
+
+    private function denormalizeCategory($category)
+    {
+        // Map FROM shortcodes TO display names
+        $map = [
+            'reg-med' => 'Regular Medicine',
+            'deworming' => 'Deworming Tablet',
+            'iron-w-fa' => 'Iron with Folic Acid',
+            'iron' => 'Iron',
+            'vit-a' => 'Vitamin A',
+            'cc' => 'Calcium Carbonate',
+            'iodine' => 'Iodine Capsule',
+            'vaccine' => 'Vaccine'
+        ];
+
+        return $map[strtolower($category)] ?? ucfirst($category);
     }
 
     // Store a new medicine
