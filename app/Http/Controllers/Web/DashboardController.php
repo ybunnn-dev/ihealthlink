@@ -82,6 +82,17 @@ class DashboardController extends Controller
             ->sortByDesc('total')
             ->values();
 
+        // Calculate total households for percentage
+        $totalHouseholds = $waterSources->sum('total');
+
+        // Add percentage to each water source
+        $waterSources = $waterSources->map(function($item) use ($totalHouseholds) {
+            $item['percentage'] = $totalHouseholds > 0 
+                ? number_format(($item['total'] / $totalHouseholds) * 100, 1)
+                : 0;
+            return $item;
+        })->toArray();
+
         // Call the private method
         $enrolledStats = $this->getEnrolledResidentStats($personnel);
         $dewormed = $this->getDewormingStats($personnel);
