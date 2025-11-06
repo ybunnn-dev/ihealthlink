@@ -7,6 +7,13 @@ const loadingIndicator = document.getElementById('loading-indicator');
 const sortLabel = document.getElementById('sort-label');
 const dateLabel = document.getElementById('date-label');
 
+// Modal elements
+const filterDateModal = document.getElementById('filter-date-modal');
+const filterFromDate = document.getElementById('filterFromDate');
+const filterToDate = document.getElementById('filterToDate');
+const applyFilterDateBtn = document.getElementById('apply-filter-date');
+const cancelFilterDateBtn = document.getElementById('cancel-filter-date');
+
 let searchTimeout;
 let currentFilters = {
     search: '',
@@ -19,8 +26,8 @@ let currentFilters = {
 };
 
 const healthProgramId = window.currentProgram;
+let modalInstance;
 
-// Debounced search
 function debounceSearch() {
     clearTimeout(searchTimeout);
     searchTimeout = setTimeout(() => {
@@ -30,7 +37,6 @@ function debounceSearch() {
     }, 500);
 }
 
-// Fetch residents with filters
 function fetchResidents() {
     const params = new URLSearchParams();
     if (currentFilters.search) params.append('search', currentFilters.search);
@@ -52,98 +58,33 @@ function fetchResidents() {
         .then(response => response.json())
         .then(data => {
             loadingIndicator.classList.add('hidden');
-            
-            if (data.enrolledResidents) {
-                renderTable(data.enrolledResidents);
-                renderPagination(data);
+            if (data.status === 'success') {
+                tableBody.innerHTML = data.html;
+                paginationContainer.innerHTML = data.pagination;
                 
-                // Update stats
-                document.getElementById('total-enrolled').textContent = data.totalEnrolled;
-                document.getElementById('total-completed').textContent = data.completed;
-                document.getElementById('total-overdue').textContent = data.overdue;
+                Alpine.initTree(tableBody);
+                Alpine.initTree(paginationContainer);
+                
+                attachPaginationListeners();
             }
         })
         .catch(error => {
-            console.error('Error fetching residents:', error);
+            console.error('Error:', error);
             loadingIndicator.classList.add('hidden');
         });
 }
 
-// Render table
-function renderTable(residents) {
-    if (residents.length === 0) {
-        tableBody.innerHTML = `
-            <tr class="border-b bg-f7 text-normal_font">
-                <td colspan="5" class="text-center py-10">
-                    <p class="mt-5 text-lg font-medium text-gray-700">No Enrolled Residents Found</p>
-                    <p class="mt-2 text-sm text-gray-500">Try adjusting your filters or search term.</p>
-                </td>
-            </tr>
-        `;
-        return;
-    }
-
-    tableBody.innerHTML = residents.map(enrollment => `
-        <tr class="bg-white border-b text-normal_font hover:bg-gray-50 cursor-pointer" onclick="window.location='/midwife/enrolled-resident/${enrollment.id}'">
-            <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
-                ${enrollment.resident_id}
-            </th>
-            <td class="px-6 py-4">
-                ${enrollment.resident_name}
-            </td>
-            <td class="px-6 py-4">
-                <span class="px-2 py-1 font-semibold text-xs rounded-full ${enrollment.status_color}">
-                    ${enrollment.status_text}
-                </span>
-            </td>
-            <td class="px-6 py-4">
-                ${enrollment.date_enrolled}
-            </td>
-            <td class="px-6 py-4">
-                ${enrollment.next_schedule}
-            </td>
-        </tr>
-    `).join('');
-}
-
-// Render pagination
-function renderPagination(data) {
-    let html = '';
-    
-    if (data.totalPages > 1) {
-        html = '<div class="flex justify-between items-center"><div class="text-sm text-gray-600">Page ' + data.currentPage + ' of ' + data.totalPages + '</div><div class="flex gap-1">';
-        
-        if (data.currentPage > 1) {
-            html += '<a href="#" data-page="1" class="page-link px-3 py-2 border rounded hover:bg-gray-100">First</a>';
-            html += '<a href="#" data-page="' + (data.currentPage - 1) + '" class="page-link px-3 py-2 border rounded hover:bg-gray-100">Prev</a>';
-        }
-        
-        for (let i = Math.max(1, data.currentPage - 2); i <= Math.min(data.totalPages, data.currentPage + 2); i++) {
-            const active = i === data.currentPage ? 'bg-mainblue text-white' : 'border text-gray-700 hover:bg-gray-100';
-            html += '<a href="#" data-page="' + i + '" class="page-link px-3 py-2 rounded ' + active + '">' + i + '</a>';
-        }
-        
-        if (data.currentPage < data.totalPages) {
-            html += '<a href="#" data-page="' + (data.currentPage + 1) + '" class="page-link px-3 py-2 border rounded hover:bg-gray-100">Next</a>';
-            html += '<a href="#" data-page="' + data.totalPages + '" class="page-link px-3 py-2 border rounded hover:bg-gray-100">Last</a>';
-        }
-        
-        html += '</div></div>';
-    }
-    
-    paginationContainer.innerHTML = html;
-    
-    // Attach listeners
+function attachPaginationListeners() {
     document.querySelectorAll('.page-link').forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
-            currentFilters.page = parseInt(link.dataset.page);
+            const url = new URL(link.href);
+            currentFilters.page = url.searchParams.get('page') || 1;
             fetchResidents();
         });
     });
 }
 
-// Sort options
 sortOptions.forEach(option => {
     option.addEventListener('click', (e) => {
         e.preventDefault();
@@ -163,7 +104,6 @@ sortOptions.forEach(option => {
     });
 });
 
-// Date filter options
 dateOptions.forEach(option => {
     option.addEventListener('click', (e) => {
         e.preventDefault();
@@ -171,8 +111,10 @@ dateOptions.forEach(option => {
         currentFilters.page = 1;
         
         if (option.dataset.filter === 'custom') {
-            const modal = document.getElementById('filter-date-modal');
-            if (modal) new Modal(modal).show();
+            if (!modalInstance) {
+                modalInstance = new Modal(filterDateModal);
+            }
+            modalInstance.show();
         } else {
             const labels = {
                 'all': 'All Time',
@@ -186,17 +128,41 @@ dateOptions.forEach(option => {
     });
 });
 
-// Custom date filter event
-window.addEventListener('apply-custom-date-filter', (event) => {
-    currentFilters.from_date = event.detail.fromDate;
-    currentFilters.to_date = event.detail.toDate;
-    dateLabel.textContent = `${event.detail.fromDate} to ${event.detail.toDate}`;
+// Apply custom date filter
+applyFilterDateBtn.addEventListener('click', () => {
+    const fromDate = filterFromDate.value;
+    const toDate = filterToDate.value;
+    
+    if (!fromDate || !toDate) {
+        alert('Please select both from and to dates');
+        return;
+    }
+    
+    if (new Date(fromDate) > new Date(toDate)) {
+        alert('From date cannot be after to date');
+        return;
+    }
+    
+    currentFilters.from_date = fromDate;
+    currentFilters.to_date = toDate;
+    currentFilters.date_filter = 'custom';
     currentFilters.page = 1;
+    
+    dateLabel.textContent = `${fromDate} to ${toDate}`;
+    
+    modalInstance.hide();
+    
     fetchResidents();
 });
 
-// Search input
+// Cancel custom date filter
+cancelFilterDateBtn.addEventListener('click', () => {
+    filterFromDate.value = '';
+    filterToDate.value = '';
+    
+    modalInstance.hide();
+});
+
 searchInput.addEventListener('input', debounceSearch);
 
-// Initial load
 fetchResidents();

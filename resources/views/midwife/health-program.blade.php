@@ -9,7 +9,9 @@
         window.currentProgram = @json($healthProgram->id);
     </script>
 
-    <div class="py-12 px-5">
+    <div class="py-12 px-5" x-data="{ 
+            showPrivacy: localStorage.getItem('showPrivacy') ? JSON.parse(localStorage.getItem('showPrivacy')) : false
+        }">
         <div class="max-w-[90rem] mx-auto sm:px-6 lg:px-8">
             <h1 class="text-3xl font-semibold text-sub_blue mb-3">Health Programs</h1>
             
@@ -41,7 +43,8 @@
                     <div class="grid grid-cols-[auto_1fr] gap-x-4 items-center">
                         <svg class="w-10 h-10 text-blue2" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M8 3.5C8 4.88071 6.88071 6 5.5 6C4.11929 6 3 4.88071 3 3.5C3 2.11929 4.11929 1 5.5 1C6.88071 1 8 2.11929 8 3.5Z" fill="currentColor"></path><path d="M3 8C1.34315 8 0 9.34315 0 11V15H8V8H3Z" fill="currentColor"></path><path d="M13 8H10V15H16V11C16 9.34315 14.6569 8 13 8Z" fill="currentColor"></path><path d="M12 6C13.1046 6 14 5.10457 14 4C14 2.89543 13.1046 2 12 2C10.8954 2 10 2.89543 10 4C10 5.10457 10.8954 6 12 6Z" fill="currentColor"></path></g></svg>
                         <div class="min-w-0">
-                            <h1 class="text-2xl font-semibold -mb-1 break-words whitespace-normal text-main_font" id="total-enrolled">{{ $totalEnrolled }}</h1>
+                            <h1 class="text-2xl font-semibold -mb-1 break-words whitespace-normal text-main_font" id="total-enrolled" x-show="showPrivacy">{{ $totalEnrolled }}</h1>
+                            <h1 class="text-2xl font-semibold -mb-1 break-words whitespace-normal text-main_font" x-show="!showPrivacy">***</h1>
                             <p class="text-xs text-normal_font">Total Enrolled</p>
                         </div>
                     </div>
@@ -51,7 +54,8 @@
                     <div class="grid grid-cols-[auto_1fr] gap-x-4 items-center">
                         <svg class="w-10 h-10 text-indigo1" fill="currentColor" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><title></title><g><path d="M58.3945,32.1563,42.9961,50.625l-5.3906-6.4629a5.995,5.995,0,1,0-9.211,7.6758l9.9961,12a5.9914,5.9914,0,0,0,9.211.0059l20.0039-24a5.9988,5.9988,0,1,0-9.211-7.6875Z"></path><path d="M48,0A48,48,0,1,0,96,48,48.0512,48.0512,0,0,0,48,0Zm0,84A36,36,0,1,1,84,48,36.0393,36.0393,0,0,1,48,84Z"></path></g></g></svg>
                         <div class="min-w-0">
-                            <h1 class="text-2xl font-semibold -mb-1 break-words whitespace-normal text-main_font" id="total-completed">{{ $completed }}</h1>
+                            <h1 class="text-2xl font-semibold -mb-1 break-words whitespace-normal text-main_font" id="total-completed" x-show="showPrivacy">{{ $completed }}</h1>
+                            <h1 class="text-2xl font-semibold -mb-1 break-words whitespace-normal text-main_font" x-show="!showPrivacy">***</h1>
                             <p class="text-xs text-normal_font">Completed</p>
                         </div>
                     </div>
@@ -61,7 +65,8 @@
                     <div class="grid grid-cols-[auto_1fr] gap-x-4 items-center">
                         <svg class="w-10 h-10 items-center text-red1" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="currentColor"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><title>ic_fluent_calendar_overdue_24_filled</title><desc>Created with Sketch.</desc><g id="🔍-System-Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g id="ic_fluent_calendar_overdue_24_filled" fill="currentColor" fill-rule="nonzero"><path d="M17.5,12 C20.5376,12 23,14.4624 23,17.5 C23,20.5376 20.5376,23 17.5,23 C14.4624,23 12,20.5376 12,17.5 C12,14.4624 14.4624,12 17.5,12 Z M17.5,19.875 C17.1548,19.875 16.875,20.1548 16.875,20.5 C16.875,20.8452 17.1548,21.125 17.5,21.125 C17.8452,21.125 18.125,20.8452 18.125,20.5 C18.125,20.1548 17.8452,19.875 17.5,19.875 Z M21,8.5 L21,12.0218 C19.9897,11.375 18.7886,11 17.5,11 C13.9101,11 11,13.9101 11,17.5 C11,18.6894769 11.3195266,19.8043976 11.8774103,20.7635139 L12.0218,21 L6.25,21 C4.51696414,21 3.10075377,19.6435215 3.00514477,17.9344215 L3,17.75 L3,8.5 L21,8.5 Z M17.5,14 C17.2545778,14 17.0504,14.1769086 17.0080571,14.4101355 L17,14.5 L17,18.5 C17,18.7761 17.2239,19 17.5,19 C17.7454222,19 17.9496,18.8230914 17.9919429,18.5898645 L18,18.5 L18,14.5 C18,14.2239 17.7761,14 17.5,14 Z M17.75,3 C19.4830069,3 20.8992442,4.35645051 20.9948551,6.06557565 L21,6.25 L21,7 L3,7 L3,6.25 C3,4.51696414 4.35645051,3.10075377 6.06557565,3.00514477 L6.25,3 L17.75,3 Z" id="currentColor"></path></g></g></g></svg>
                         <div class="min-w-0">
-                            <h1 class="text-2xl font-semibold -mb-1 break-words whitespace-normal text-main_font" id="total-overdue">{{ $overdue }}</h1>
+                            <h1 class="text-2xl font-semibold -mb-1 break-words whitespace-normal text-main_font" id="total-overdue" x-show="showPrivacy">{{ $overdue }}</h1>
+                            <h1 class="text-2xl font-semibold -mb-1 break-words whitespace-normal text-main_font" x-show="!showPrivacy">***</h1>
                             <p class="text-xs text-normal_font">Overdue</p>
                         </div>
                     </div>
@@ -82,7 +87,7 @@
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                                         </svg>
                                     </div>
-                                    <input type="search" id="search-residents" class="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500" placeholder="Search by name or ID..."/>
+                                    <input type="search" id="search-residents" x-bind:disabled="!showPrivacy" x-bind:title="!showPrivacy ? 'Enable privacy view to use search' : ''" class="disabled:bg-gray-200 block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500" placeholder="Search by name or ID..."/>
                                 </div>
                             </div>
                             
@@ -90,7 +95,7 @@
                                 <!-- Sort Dropdown -->
                                 <div class="w-full xs:w-48">
                                     <label for="sort-dropdown" class="mb-2 text-sm font-medium text-main_font">Sort by</label>
-                                    <button id="sort-dropdown" data-dropdown-toggle="sortDropdownMenu" class="w-full text-main_font bg-[#F7F7F7] focus:outline-none font-medium border border-navboard rounded-lg text-sm px-4 py-2 text-center inline-flex items-center justify-between h-[2.375rem]" type="button">
+                                    <button id="sort-dropdown" data-dropdown-toggle="sortDropdownMenu" x-bind:disabled="!showPrivacy" x-bind:title="!showPrivacy ? 'Enable privacy view to use dropdown' : ''" class="disabled:bg-gray-200 w-full text-main_font bg-[#F7F7F7] focus:outline-none font-medium border border-navboard rounded-lg text-sm px-4 py-2 text-center inline-flex items-center justify-between h-[2.375rem]" type="button">
                                         <span id="sort-label">Name (A-Z)</span>
                                         <svg class="w-2.5 h-2.5 ms-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
@@ -101,7 +106,7 @@
                                 <!-- Date Filter Dropdown -->
                                 <div class="w-full xs:w-48">
                                     <label for="date-dropdown" class="mb-2 text-sm font-medium text-main_font">Date Added</label>
-                                    <button id="date-dropdown" data-dropdown-toggle="dateFilterDropdownMenu" class="w-full text-main_font bg-[#F7F7F7] focus:outline-none font-medium border border-navboard rounded-lg text-sm px-4 py-2 text-center inline-flex items-center justify-between h-[2.375rem]" type="button">
+                                    <button id="date-dropdown" data-dropdown-toggle="dateFilterDropdownMenu" x-bind:disabled="!showPrivacy" x-bind:title="!showPrivacy ? 'Enable privacy view to use dropdown' : ''" class="disabled:bg-gray-200 w-full text-main_font bg-[#F7F7F7] focus:outline-none font-medium border border-navboard rounded-lg text-sm px-4 py-2 text-center inline-flex items-center justify-between h-[2.375rem]" type="button">
                                         <span id="date-label">All Time</span>
                                         <svg class="w-2.5 h-2.5 ms-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
@@ -170,8 +175,9 @@
                                 </tr>
                             </thead>
                             <tbody id="residents-table-body">
-                                @include('components.health-program.enrolled-residents-rows')
+                               @include('components.health-program.enrolled-residents-rows')
                             </tbody>
+
                         </table>
                     </div>
 

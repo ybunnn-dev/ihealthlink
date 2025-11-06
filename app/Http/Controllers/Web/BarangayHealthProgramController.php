@@ -35,78 +35,32 @@ class BarangayHealthProgramController extends Controller
                 $q->where('brgy_id', $barangayId);
             });
 
-        // AJAX request - apply filters
-        if ($request->ajax()) {
-            $enrolledResidents = $query->get();
-            $enrolledResidents->each(function ($enrollment) {
-                $enrollment->consultations = $enrollment->consultations
-                    ->where('enrolled_resident_id', $enrollment->id);
-            });
+        // Get all enrolled residents
+        $allEnrolledResidents = $query->get();
 
-            $totalEnrolled = $enrolledResidents->count();
-            $completed = $enrolledResidents->where('status', 'completed')->count();
-            $overdue = $enrolledResidents->filter(function ($enrollment) {
-                return $enrollment->resident->consultations->contains(function ($consultation) {
-                    return $consultation->status === 'pending'
-                        && Carbon::parse($consultation->consultation_date)->isBefore(Carbon::today());
-                });
-            })->count();
-
-            return $this->applyFiltersWithPagination($enrolledResidents, $request, $totalEnrolled, $completed, $overdue);
-        }
-
-        // Initial page load - get paginated data
-        $perPage = 10;
-        $enrolledResidents = $query->paginate($perPage);
-
-        $enrolledResidents->each(function ($enrollment) {
+        $allEnrolledResidents->each(function ($enrollment) {
             $enrollment->consultations = $enrollment->consultations
                 ->where('enrolled_resident_id', $enrollment->id);
         });
 
-        $totalEnrolled = $enrolledResidents->total();
-        $completed = $enrolledResidents->where('status', 'completed')->count();
-        $overdue = $enrolledResidents->filter(function ($enrollment) {
-            return $enrollment->resident->consultations->contains(function ($consultation) {
-                return $consultation->status === 'pending'
-                    && Carbon::parse($consultation->consultation_date)->isBefore(Carbon::today());
-            });
-        })->count();
-
-        return view('midwife.health-program', compact(
-            'healthProgram',
-            'enrolledResidents',
-            'totalEnrolled',
-            'completed',
-            'overdue'
-        ));
-    }
-
-    private function applyFiltersWithPagination($enrolledResidents, $request, $totalEnrolled, $completed, $overdue)
-    {
-        // Apply search filter (on encrypted fields)
+        // Apply search filter (in PHP, after decryption)
         if ($request->filled('search')) {
             $searchTerm = strtolower($request->search);
-            $enrolledResidents = $enrolledResidents->filter(function ($enrollment) use ($searchTerm) {
+            $allEnrolledResidents = $allEnrolledResidents->filter(function($enrollment) use ($searchTerm) {
                 $resident = $enrollment->resident;
-                $firstName = strtolower($resident->firstName ?? '');
-                $lastName = strtolower($resident->lastName ?? '');
-                $middleName = strtolower($resident->middleName ?? '');
+                $fullName = strtolower($resident->firstName . ' ' . $resident->middleName . ' ' . $resident->lastName);
                 $residentId = strtolower((string)$resident->id);
-
-                return strpos($firstName, $searchTerm) !== false ||
-                       strpos($lastName, $searchTerm) !== false ||
-                       strpos($middleName, $searchTerm) !== false ||
-                       strpos($residentId, $searchTerm) !== false;
+                
+                return str_contains($fullName, $searchTerm) || str_contains($residentId, $searchTerm);
             });
         }
 
-        // Apply date filter
-        if ($request->filled('date_filter')) {
+        // Apply date filter (in PHP)
+        if ($request->filled('date_filter') && $request->date_filter !== 'all') {
             $dateFilter = $request->date_filter;
-            $enrolledResidents = $enrolledResidents->filter(function ($enrollment) use ($dateFilter, $request) {
+            $allEnrolledResidents = $allEnrolledResidents->filter(function($enrollment) use ($dateFilter, $request) {
                 $createdDate = Carbon::parse($enrollment->created_at);
-
+                
                 if ($dateFilter === 'last_week') {
                     return $createdDate->gte(Carbon::now()->subWeek());
                 } elseif ($dateFilter === 'last_month') {
@@ -122,19 +76,19 @@ class BarangayHealthProgramController extends Controller
             });
         }
 
-        // Apply sorting
+        // Apply sorting (in PHP)
         $sortBy = $request->get('sort_by', 'name');
         $sortOrder = $request->get('sort_order', 'asc');
 
         if ($sortBy === 'name') {
-            $enrolledResidents = $enrolledResidents->sort(function ($a, $b) use ($sortOrder) {
+            $allEnrolledResidents = $allEnrolledResidents->sort(function ($a, $b) use ($sortOrder) {
                 $nameA = trim($a->resident->firstName . ' ' . $a->resident->lastName);
                 $nameB = trim($b->resident->firstName . ' ' . $b->resident->lastName);
                 $comparison = strcasecmp($nameA, $nameB);
                 return $sortOrder === 'desc' ? -$comparison : $comparison;
             });
         } elseif ($sortBy === 'age') {
-            $enrolledResidents = $enrolledResidents->sort(function ($a, $b) use ($sortOrder) {
+            $allEnrolledResidents = $allEnrolledResidents->sort(function ($a, $b) use ($sortOrder) {
                 try {
                     $ageA = Carbon::parse($a->resident->birthdate)->age;
                     $ageB = Carbon::parse($b->resident->birthdate)->age;
@@ -146,39 +100,48 @@ class BarangayHealthProgramController extends Controller
             });
         }
 
-        // Pagination
-        $perPage = $request->get('per_page', 10);
+        // Manually paginate
         $page = $request->get('page', 1);
-        $total = $enrolledResidents->count();
-        $totalPages = ceil($total / $perPage);
+        $perPage = 10;
+        $total = $allEnrolledResidents->count();
+        $results = $allEnrolledResidents->forPage($page, $perPage);
+        
+        $enrolledResidents = new \Illuminate\Pagination\LengthAwarePaginator(
+            $results, 
+            $total, 
+            $perPage, 
+            $page, 
+            ['path' => $request->url(), 'query' => $request->query()]
+        );
 
-        $paginated = $enrolledResidents->slice(($page - 1) * $perPage, $perPage)->values();
+        // Calculate totals (from full unfiltered data)
+        $allUnfiltered = EnrolledResident::where('program_id', $healthProgram->id)
+            ->whereHas('resident.family.household.purok', function ($q) use ($barangayId) {
+                $q->where('brgy_id', $barangayId);
+            })->get();
 
-        $formattedResidents = $paginated->map(function ($enrollment) {
-            $info = $enrollment->getNextConsultationAttribute($enrollment->id);
-            return [
-                'id' => $enrollment->id,
-                'resident_id' => $enrollment->resident->id,
-                'resident_name' => $enrollment->resident->firstName . ' ' . $enrollment->resident->lastName . ' ' . $enrollment->resident->middleName,
-                'status_text' => $info['status'],
-                'status_color' => $info['color'],
-                'date_enrolled' => Carbon::parse($enrollment->created_at)->format('M d, Y'),
-                'next_schedule' => $info['date']
-            ];
-        });
+        $totalEnrolled = $allUnfiltered->count();
+        $completed = $allUnfiltered->where('status', 'completed')->count();
+        $overdue = 0;
 
-        return response()->json([
-            'enrolledResidents' => $formattedResidents,
-            'totalEnrolled' => $totalEnrolled,
-            'completed' => $completed,
-            'overdue' => $overdue,
-            'totalPages' => $totalPages,
-            'currentPage' => $page,
-            'perPage' => $perPage,
-            'total' => $total
-        ]);
+        // Return JSON with Blade HTML for AJAX requests
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'status' => 'success',
+                'html' => view('components.health-program.enrolled-residents-rows', compact('enrolledResidents'))->render(),
+                'pagination' => view('components.health-program.enrolled-residents-pagination', compact('enrolledResidents'))->render(),
+            ]);
+        }
+
+        // Return full view for initial page load
+        return view('midwife.health-program', compact(
+            'healthProgram',
+            'enrolledResidents',
+            'totalEnrolled',
+            'completed',
+            'overdue'
+        ));
     }
-
 
     public function show(EnrolledResident $enrolledResident)
     {
