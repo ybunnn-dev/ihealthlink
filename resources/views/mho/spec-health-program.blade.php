@@ -2,7 +2,7 @@
 @section('title', $healthProgram->name)
 <x-app-layout>
      <script>
-    
+        window.program = @json($healthProgram);
     </script>
     <div class="py-12 px-5">
         <div class="max-w-[90rem] mx-auto sm:px-6 lg:px-8">
@@ -35,8 +35,8 @@
 
                         
                         <div class="grid grid-cols-1 slg:grid-cols-2 gap-3 w-full">
-                            <button id="edit-brgy-button" type="button" class="flex-1 px-5 py-3 text-sm font-medium text-white bg-mainblue rounded-lg hover:bg-blue-700 col-span-1">Edit</button>
-                            <button id="remove-brgy-button" type="button" class="flex-1 px-5 py-3 text-sm font-medium text-mainblue bg-white border border-mainblue rounded-lg hover:bg-blue-50 col-span-1">Remove</button>
+                            <button id="edit-program-button" type="button" class="flex-1 px-5 py-3 text-sm font-medium text-white bg-mainblue rounded-lg hover:bg-blue-700 col-span-1">Edit</button>
+                            <button id="remove-program-button" type="button" class="flex-1 px-5 py-3 text-sm font-medium text-mainblue bg-white border border-mainblue rounded-lg hover:bg-blue-50 col-span-1">Remove</button>
                         </div>
                     </div>
 
@@ -103,5 +103,6 @@
     </div>
     
     </div>
+    @include('components.modals.health-program.edit-health-program')
    
 </x-app-layout>
