@@ -2,7 +2,7 @@
 // MULTI-STEP FAMILY MODAL - FIXED (Div-based selection)
 // ============================================================================
 const confirmTransferFamilyModalEl = document.getElementById('confirm-transfer-family-modal');
-
+const household = window.household;
 // Interactive elements inside the modal
 const confirmTransferCheckbox = document.getElementById('confirm-transfer-checkbox');
 const confirmTransferFamilyCancelBtn = document.getElementById('confirm-transfer-family-cancel');
@@ -303,7 +303,7 @@ confirmTransferFamilySubmitBtn.addEventListener('click', function () {
 
     const payload = {
         family_id: chosenFamily.id,
-        household_id: chosenFamily.household.id
+        household_id: household.id
     };
 
     fetch('/barangay/family/transfer', {

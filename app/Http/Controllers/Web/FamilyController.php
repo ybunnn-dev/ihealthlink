@@ -336,140 +336,145 @@ class FamilyController extends Controller
         ]);
     }
 
-    public function transfer(Request $request) {
-        $user = Auth::user();
+   public function transfer(Request $request) {
+    \Log::info('=== TRANSFER START ===');
+    \Log::info('Transfer request received:', $request->all());
+    
+    $user = Auth::user();
 
-        // Determine personnel type (Midwife or BHW)
-        if ($user->bhwWeb && $user->bhwWeb->role_id == 4) {
-            $personnel = $user->bhwWeb;
-        } else {
-            $personnel = $user->midwife;
-        }
+    if ($user->bhwWeb && $user->bhwWeb->role_id == 4) {
+        $personnel = $user->bhwWeb;
+    } else {
+        $personnel = $user->midwife;
+    }
 
-        if (!$personnel) {
-            abort(403, 'Unauthorized access.');
-        }
-
-        \Log::info('Transfer request received:', $request->all());
-        
-        // Validate the request
-        $validated = $request->validate([
-            'family_id' => 'required|integer|exists:families,id',
-            'household_id' => 'required|integer|exists:households,id',
-        ]);
-        
-        $familyId = $validated['family_id'];
-        $newHouseholdId = $validated['household_id'];
-        
-        try {
-            DB::beginTransaction();
-            
-            // Step 1: Get the family with its current household
-            $family = Family::with('household')->findOrFail($familyId);
-            $oldHousehold = $family->household;
-            
-            // Step 2: Get the new household
-            $newHousehold = Household::findOrFail($newHouseholdId);
-            
-            // Step 3: Check if purok has changed
-            $purokChanged = $oldHousehold->purok_id !== $newHousehold->purok_id;
-            
-            \Log::info('Purok comparison:', [
-                'old_purok_id' => $oldHousehold->purok_id,
-                'new_purok_id' => $newHousehold->purok_id,
-                'purok_changed' => $purokChanged,
-            ]);
-            
-            if ($purokChanged) {
-                \Log::info('Purok changed - updating history records');
-                
-                // Step 4a: Find and update the active family residence history
-                $activeFamilyHistory = FamilyResidenceHistory::where('family_id', $familyId)
-                    ->where('status', 'active')
-                    ->first();
-                
-                if ($activeFamilyHistory) {
-                    $activeFamilyHistory->update(['status' => 'moved']);
-                    \Log::info('Updated family history to moved:', ['id' => $activeFamilyHistory->id]);
-                }
-                
-                // Step 4b: Create new family residence history
-                FamilyResidenceHistory::create([
-                    'family_id' => $familyId,
-                    'purok_id' => $newHousehold->purok_id,
-                    'is_indigent' => $family->is_indigent,
-                    'is_4ps' => $family->is_4ps,
-                    'is_iwas_gutom' => $family->is_iwas_gutom,
-                    'status' => 'active',
-                ]);
-                \Log::info('Created new family history for purok:', ['purok_id' => $newHousehold->purok_id]);
-                
-                // Step 5: Get all active residents in this family
-                $residents = Resident::where('family_id', $familyId)
-                    ->where('status', 'active')
-                    ->get();
-                
-                \Log::info('Found residents to update:', ['count' => $residents->count()]);
-                
-                // Step 6: Update residence history for each resident
-                foreach ($residents as $resident) {
-                    // Mark old residence history as moved
-                    ResidenceHistory::where('resident_id', $resident->id)
-                        ->where('status', 'active')
-                        ->update(['status' => 'moved']);
-                    
-                    // Create new residence history
-                    ResidenceHistory::create([
-                        'resident_id' => $resident->id,
-                        'purok_id' => $newHousehold->purok_id,
-                        'status' => 'active',
-                    ]);
-                }
-                
-                \Log::info('Updated residence history for all residents');
-            } else {
-                \Log::info('Purok unchanged - no history updates needed');
-            }
-            
-            // Step 7: Update the family's household_id
-            $family->update(['household_id' => $newHouseholdId]);
-            
-            DB::commit();
-            
-            ActivityLog::create([
-                'user_id'   => $user->id,
-                'module_id' => 4, // replace with correct module ID for households
-                'activity'  => 'Transfered Family # '.$family->id .' to ' . $newHousehold->purok->name . '.',
-            ]);
-
-            \Log::info('Family transfer completed successfully');
-            
-            return response()->json([
-                'success' => true,
-                'message' => 'Family transferred successfully',
-                'data' => [
-                    'family_id' => $familyId,
-                    'old_household_id' => $oldHousehold->id,
-                    'new_household_id' => $newHouseholdId,
-                    'purok_changed' => $purokChanged,
-                    'residents_updated' => $purokChanged ? $residents->count() : 0,
-                ],
-            ], 200);
-            
-        } catch (\Exception $e) {
-            DB::rollBack();
-            \Log::error('Family transfer failed:', [
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
-            
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to transfer family: ' . $e->getMessage(),
-            ], 500);
-        }
+    if (!$personnel) {
+        abort(403, 'Unauthorized access.');
     }
     
+    $validated = $request->validate([
+        'family_id' => 'required|integer|exists:families,id',
+        'household_id' => 'required|integer|exists:households,id',
+    ]);
+    
+    $familyId = $validated['family_id'];
+    $newHouseholdId = $validated['household_id'];
+    
+    try {
+        DB::beginTransaction();
+        
+        // ✅ DEBUG: Check BEFORE update
+        $family = Family::with('household')->findOrFail($familyId);
+        \Log::info('BEFORE UPDATE - Family state:', [
+            'family_id' => $family->id,
+            'current_household_id' => $family->household_id,
+            'target_household_id' => $newHouseholdId,
+            'table_check' => DB::table('families')->find($familyId),
+        ]);
+        
+        $oldHousehold = $family->household;
+        $newHousehold = Household::findOrFail($newHouseholdId);
+        
+        // Check purok change
+        $purokChanged = $oldHousehold->purok_id !== $newHousehold->purok_id;
+        
+        \Log::info('Purok comparison:', [
+            'old_purok_id' => $oldHousehold->purok_id,
+            'new_purok_id' => $newHousehold->purok_id,
+            'purok_changed' => $purokChanged,
+        ]);
+        
+        if ($purokChanged) {
+            // Handle residence history...
+            $activeFamilyHistory = FamilyResidenceHistory::where('family_id', $familyId)
+                ->where('status', 'active')
+                ->first();
+            
+            if ($activeFamilyHistory) {
+                $activeFamilyHistory->update(['status' => 'moved']);
+            }
+            
+            FamilyResidenceHistory::create([
+                'family_id' => $familyId,
+                'purok_id' => $newHousehold->purok_id,
+                'is_indigent' => $family->is_indigent,
+                'is_4ps' => $family->is_4ps,
+                'is_iwas_gutom' => $family->is_iwas_gutom,
+                'status' => 'active',
+            ]);
+            
+            $residents = Resident::where('family_id', $familyId)
+                ->where('status', 'active')
+                ->get();
+            
+            foreach ($residents as $resident) {
+                ResidenceHistory::where('resident_id', $resident->id)
+                    ->where('status', 'active')
+                    ->update(['status' => 'moved']);
+                
+                ResidenceHistory::create([
+                    'resident_id' => $resident->id,
+                    'purok_id' => $newHousehold->purok_id,
+                    'status' => 'active',
+                ]);
+            }
+        }
+        
+        // ✅ THE FIX: Use raw update to verify
+        $updateResult = DB::table('families')
+            ->where('id', $familyId)
+            ->update(['household_id' => $newHouseholdId]);
+        
+        \Log::info('Raw update result:', [
+            'rows_affected' => $updateResult,
+            'family_id' => $familyId,
+            'new_household_id' => $newHouseholdId,
+        ]);
+        
+        // ✅ DEBUG: Check AFTER update
+        $familyAfter = Family::findOrFail($familyId);
+        \Log::info('AFTER UPDATE - Family state:', [
+            'family_id' => $familyAfter->id,
+            'household_id' => $familyAfter->household_id,
+            'expected' => $newHouseholdId,
+            'match' => $familyAfter->household_id == $newHouseholdId,
+            'table_check' => DB::table('families')->find($familyId),
+        ]);
+        
+        DB::commit();
+        
+        \Log::info('Transaction committed');
+        
+        ActivityLog::create([
+            'user_id'   => $user->id,
+            'module_id' => 4,
+            'activity'  => 'Transferred Family #' . $familyId . ' to ' . $newHousehold->purok->name . '.',
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Family transferred successfully',
+            'data' => [
+                'family_id' => $familyAfter->id,
+                'old_household_id' => $oldHousehold->id,
+                'new_household_id' => $familyAfter->household_id,
+                'verified' => $familyAfter->household_id == $newHouseholdId,
+            ],
+        ], 200);
+        
+    } catch (\Exception $e) {
+        DB::rollBack();
+        \Log::error('Family transfer failed:', [
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString(),
+        ]);
+        
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to transfer family: ' . $e->getMessage(),
+        ], 500);
+    }
+}
     public function getAllFamilies(Request $request)
     {
         // Get the current user's personnel info
