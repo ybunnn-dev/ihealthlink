@@ -7,6 +7,7 @@
     
     <script>
         window.currentProgram = @json($healthProgram->id);
+        window.empty = "{{ asset('images/illustrations/empty.png') }}";
     </script>
 
     <div class="py-12 px-5" x-data="{ 
@@ -202,5 +203,5 @@
         @include('components.modals.health-program.tcl-programs.enroll-family-planning')
     @endif
     @include('components.modals.reports.filter-date')
-
+  
 </x-app-layout>

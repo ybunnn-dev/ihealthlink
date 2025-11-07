@@ -17,9 +17,11 @@ const confirmSwitchCheckbox = document.getElementById('confirm-switch-checkbox')
 const confirmSwitchCancelBtn = document.getElementById('confirm-switch-cancel-button');
 const confirmSwitchProceedBtn = document.getElementById('confirm-switch-proceed-button');
 
+
 const confirmSwitchModal = new Modal(confirmSwitchModalEl);
 const defProgramID = window.currentProgram;
 
+const emptyImageUrl = window.empty;
 let selectedProgramName = null;
 let selectedProgramId = null;
 
