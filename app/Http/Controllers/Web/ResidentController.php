@@ -77,6 +77,7 @@ class ResidentController extends Controller
 
         // Apply age group filter (in PHP, after decryption)
         if ($request->filled('age_group')) {
+            \Log::info($request->age_group);
             $ageGroup = $request->age_group;
             $allResidents = $allResidents->filter(function($resident) use ($ageGroup) {
                 try {

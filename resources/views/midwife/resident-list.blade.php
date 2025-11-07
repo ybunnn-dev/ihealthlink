@@ -103,19 +103,19 @@
                                 <li data-age-group="" data-age-group-name="All Age Groups" class="cursor-pointer px-4 py-2 hover:bg-gray-100">
                                     All Age Groups
                                 </li>
-                                <li data-age-group="infant" data-age-group-name="Infant (0-1)" class="cursor-pointer px-4 py-2 hover:bg-gray-100">
+                                <li data-age-group="infant" data-age-group-name="infant" class="cursor-pointer px-4 py-2 hover:bg-gray-100">
                                     Infant (0-1)
                                 </li>
-                                <li data-age-group="child" data-age-group-name="Child (2-12)" class="cursor-pointer px-4 py-2 hover:bg-gray-100">
+                                <li data-age-group="child" data-age-group-name="child" class="cursor-pointer px-4 py-2 hover:bg-gray-100">
                                     Child (2-12)
                                 </li>
-                                <li data-age-group="teen" data-age-group-name="Teen (13-17)" class="cursor-pointer px-4 py-2 hover:bg-gray-100">
+                                <li data-age-group="teen" data-age-group-name="teen" class="cursor-pointer px-4 py-2 hover:bg-gray-100">
                                     Teen (13-17)
                                 </li>
-                                <li data-age-group="adult" data-age-group-name="Adult (18-59)" class="cursor-pointer px-4 py-2 hover:bg-gray-100">
+                                <li data-age-group="adult" data-age-group-name="adult" class="cursor-pointer px-4 py-2 hover:bg-gray-100">
                                     Adult (18-59)
                                 </li>
-                                <li data-age-group="senior" data-age-group-name="Senior (60+)" class="cursor-pointer px-4 py-2 hover:bg-gray-100">
+                                <li data-age-group="senior" data-age-group-name="senior" class="cursor-pointer px-4 py-2 hover:bg-gray-100">
                                     Senior (60+)
                                 </li>
                             </ul>
