@@ -41,9 +41,99 @@ let finalPayload = [];
 
 const trashIcon = `<svg class="w-4 h-4 text-red1 hover:text-red-500 cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>`;
 
-const addHealthProgramModal = new Modal(addHealthProgramModalEl);
-const confirmHealthProgramModal = new Modal(confirmProgramModalEl);
-const successModal = new Modal(successModalEl);
+// ====================================================================
+// MODAL OPTIONS WITH FADE ANIMATIONS
+// ====================================================================
+const addHealthProgramModalOptions = {
+    placement: 'center-center',
+    backdrop: 'static',
+    closable: false,
+    onShow: () => {
+        setTimeout(() => {
+            addHealthProgramModalEl.classList.remove('opacity-0');
+            addHealthProgramModalEl.classList.add('opacity-100');
+            
+            const modalContent = addHealthProgramModalEl.querySelector('.relative.bg-white');
+            if (modalContent) {
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }
+        }, 10);
+    },
+    onHide: () => {
+        addHealthProgramModalEl.classList.add('opacity-0');
+        addHealthProgramModalEl.classList.remove('opacity-100');
+        
+        const modalContent = addHealthProgramModalEl.querySelector('.relative.bg-white');
+        if (modalContent) {
+            modalContent.classList.add('scale-95');
+            modalContent.classList.remove('scale-100');
+        }
+    }
+};
+
+const confirmHealthProgramModalOptions = {
+    placement: 'center-center',
+    backdrop: 'static',
+    closable: false,
+    onShow: () => {
+        setTimeout(() => {
+            confirmProgramModalEl.classList.remove('opacity-0');
+            confirmProgramModalEl.classList.add('opacity-100');
+            
+            const modalContent = confirmProgramModalEl.querySelector('.relative.bg-white');
+            if (modalContent) {
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }
+        }, 10);
+    },
+    onHide: () => {
+        confirmProgramModalEl.classList.add('opacity-0');
+        confirmProgramModalEl.classList.remove('opacity-100');
+        
+        const modalContent = confirmProgramModalEl.querySelector('.relative.bg-white');
+        if (modalContent) {
+            modalContent.classList.add('scale-95');
+            modalContent.classList.remove('scale-100');
+        }
+    }
+};
+
+const successModalOptions = {
+    placement: 'center-center',
+    backdrop: 'static',
+    closable: false,
+    onShow: () => {
+        setTimeout(() => {
+            successModalEl.classList.remove('opacity-0');
+            successModalEl.classList.add('opacity-100');
+            
+            const modalContent = successModalEl.querySelector('.relative.bg-white');
+            if (modalContent) {
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }
+        }, 10);
+    },
+    onHide: () => {
+        successModalEl.classList.add('opacity-0');
+        successModalEl.classList.remove('opacity-100');
+        
+        const modalContent = successModalEl.querySelector('.relative.bg-white');
+        if (modalContent) {
+            modalContent.classList.add('scale-95');
+            modalContent.classList.remove('scale-100');
+        }
+    }
+};
+
+// ====================================================================
+// CREATE MODAL INSTANCES WITH OPTIONS
+// ====================================================================
+const addHealthProgramModal = new Modal(addHealthProgramModalEl, addHealthProgramModalOptions);
+const confirmHealthProgramModal = new Modal(confirmProgramModalEl, confirmHealthProgramModalOptions);
+const successModal = new Modal(successModalEl, successModalOptions);
 
 function validateForm() {
     // --- Rule 1: Check baseline fields that are always required ---
