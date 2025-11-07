@@ -34,6 +34,7 @@ const createModalOptions = (modalEl) => ({
 // ====================================================================
 const editHealthProgramModalEl = document.getElementById('edit-health-program-modal');
 const confirmEditProgramModalEl = document.getElementById('confirm-edit-program-modal');
+const successModalEl = document.getElementById('success-modal');
 
 const editProgramName = document.getElementById('edit-program-name');
 const editMinAge = document.getElementById('edit-min-age');
@@ -47,6 +48,10 @@ const cancelEditProgramConfirmBtn = document.getElementById('cancel-edit-program
 const confirmEditProceedBtn = document.getElementById('confirm-edit-proceed-button');
 const confirmEditCheckbox = document.getElementById('confirm-edit-program-checkbox');
 
+const successMesageHeader = document.getElementById('success-msg-head');
+const successMessage = document.getElementById('success-message');
+const closeSuccessModalButton = document.getElementById('close-success-modal-button');
+
 const openModal = document.getElementById('edit-program-button');
 const program = window.program;
 
@@ -55,6 +60,7 @@ const program = window.program;
 // ====================================================================
 const editHealthProgramModal = new Modal(editHealthProgramModalEl, createModalOptions(editHealthProgramModalEl));
 const confirmEditProgramModal = new Modal(confirmEditProgramModalEl, createModalOptions(confirmEditProgramModalEl));
+const successModal = new Modal(successModalEl, createModalOptions(successModalEl));
 
 // ====================================================================
 // AUTOFILL FORM WITH 4 FIELDS ONLY
@@ -64,6 +70,21 @@ function autofillEditForm(programData) {
     editMinAge.value = programData.age_min || '';
     editMaxAge.value = programData.age_max || '';
     editProgramType.value = programData.category || '';
+}
+
+// ====================================================================
+// HELPER: Button state management
+// ====================================================================
+function setButtonLoadingState(loading) {
+    if (loading) {
+        confirmEditProceedBtn.textContent = 'Saving...';
+        confirmEditProceedBtn.disabled = true;
+        cancelEditProgramConfirmBtn.disabled = true;
+    } else {
+        confirmEditProceedBtn.textContent = 'Confirm & Save Changes';
+        confirmEditProceedBtn.disabled = !confirmEditCheckbox.checked;
+        cancelEditProgramConfirmBtn.disabled = false;
+    }
 }
 
 // ====================================================================
@@ -114,7 +135,10 @@ cancelEditProgramConfirmBtn.addEventListener('click', function() {
     editHealthProgramModal.show();
 });
 
-confirmEditProceedBtn.addEventListener('click', function() {
+// ====================================================================
+// API CALL WITH LOADING STATE AND SUCCESS MODAL
+// ====================================================================
+confirmEditProceedBtn.addEventListener('click', async function() {
     const programName = editProgramName.value.trim();
     const minAge = editMinAge.value;
     const maxAge = editMaxAge.value;
@@ -129,13 +153,59 @@ confirmEditProceedBtn.addEventListener('click', function() {
     
     console.log('Sending payload:', payload);
     
-    // TODO: Send to backend
-    // fetch(`/barangay/health-programs/${program.id}`, {
-    //     method: 'PUT',
-    //     headers: {
-    //         'Content-Type': 'application/json',
-    //         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-    //     },
-    //     body: JSON.stringify(payload)
-    // })
+    // Show loading state
+    setButtonLoadingState(true);
+    
+    try {
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+        
+        const response = await fetch(`/mho/health-programs/${program.id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken
+            },
+            body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            if (response.status === 422) {
+                const errors = Object.values(result.errors || {})
+                    .flat()
+                    .join('\n');
+                alert('Validation Error:\n' + errors);
+            } else {
+                throw new Error(result.message || 'Failed to update program.');
+            }
+            // Reset button state on error
+            setButtonLoadingState(false);
+            return;
+        }
+
+        // Success - close confirmation modal
+        confirmEditProgramModal.hide();
+        
+        // Show success modal
+        successMesageHeader.textContent = 'Program Updated';
+        successMessage.textContent = `"${programName}" has been successfully updated.`;
+        successModal.show();
+        
+        console.log('✅ Program updated successfully:', result);
+
+    } catch (error) {
+        console.error('❌ Update Error:', error);
+        alert('An error occurred while updating the program. Please try again.');
+        setButtonLoadingState(false);
+    }
+});
+
+// ====================================================================
+// CLOSE SUCCESS MODAL
+// ====================================================================
+closeSuccessModalButton.addEventListener('click', function() {
+    successModal.hide();
+    // Reload page to reflect changes
+    window.location.reload();
 });

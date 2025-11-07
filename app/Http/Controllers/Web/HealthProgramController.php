@@ -148,4 +148,37 @@ class HealthProgramController extends Controller
             'id' => $program->id
         ]);
     }
+
+    public function update(Request $request, HealthProgram $healthProgram)
+    {
+        // Validate input
+        $validated = $request->validate([
+            'name'     => 'required|string|max:255',
+            'age_min'  => 'required|integer|min:0|max:150',
+            'age_max'  => 'required|integer|min:0|max:150',
+            'category' => 'required|string',
+        ]);
+
+        // Check that age_max >= age_min
+        if ($validated['age_max'] < $validated['age_min']) {
+            return response()->json([
+                'message' => 'Max age must be greater than or equal to min age.',
+                'errors' => ['age_max' => ['Max age must be greater than or equal to min age.']]
+            ], 422);
+        }
+
+        // Update only the 4 fields
+        $healthProgram->update([
+            'name'     => $validated['name'],
+            'age_min'  => $validated['age_min'],
+            'age_max'  => $validated['age_max'],
+            'category' => $validated['category'],
+        ]);
+
+        return response()->json([
+            'message' => 'Health Program updated successfully!',
+            'response' => 'success',
+            'data' => $healthProgram
+        ], 200);
+    }
 }

@@ -52,6 +52,8 @@ Route::middleware([
     'active'
 ])->group(function(){
      // MHO-specific dashboard
+     Route::put('/mho/health-programs/{healthProgram}', [HealthProgramController::class, 'update'])->name('health-programs.update');
+
     Route::get('/mho/dashboard', [MhoDashboardController::class, 'index'])->name('mho.dashboard');
 
     Route::get('/mho/health-programs', [HealthProgramController::class, 'index'])->name('mho.health-programs');
@@ -64,7 +66,7 @@ Route::middleware([
         ->where(['barangay' => '[0-9]+', 'name' => '[a-zA-Z0-9-]+']);
 
     Route::post('/barangay/health-programs/add', [HealthProgramController::class, 'store']);
-    
+
     //Route for barangays
     Route::get('/mho/barangays', [BarangayController::class, 'index'])->name('mho.barangays');
 
