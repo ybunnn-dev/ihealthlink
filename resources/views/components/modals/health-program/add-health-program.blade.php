@@ -32,7 +32,7 @@
                                 <label for="program-type" class="block mb-2 text-sm font-medium text-main_font dark:text-white">Program Type</label>
                                 <select id="program-type" class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                     <option selected>Choose a program type</option>
-                                    <option value="vaccines">Vaccination Drive</option>
+                                    <option value="vaccination_drive">Vaccination Drive</option>
                                     <option value="senior_citizen">Senior Citizen</option>
                                     <option value="general_consultation">General Consultation</option>
                                 </select>
@@ -70,10 +70,6 @@
                                 <label for="custom-interval" class="block mb-2 text-sm font-medium text-main_font dark:text-white">Interval (Days)</label>
                                 <input type="number" id="custom-interval" disabled placeholder="e.g., '3 days'" class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 disabled:bg-bg_col">
                             </div>
-                              <div>
-                                <label for="extension-days" class="block mb-2 text-sm font-medium text-main_font dark:text-white">Extension(Days)</label>
-                                <input type="number" id="extension-days" placeholder="e.g., '3'" class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 disabled:bg-bg_col">
-                            </div>
                         </div>
                     </div>
 
@@ -86,10 +82,6 @@
                             <div>
                                 <label for="schedule-interval" class="block mb-2 text-sm font-medium text-main_font dark:text-white">Interval (Days)</label>
                                 <input type="number" disabled id="schedule-interval" class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 disabled:bg-bg_col" placeholder="e.g., 6">
-                            </div>
-                            <div>
-                                <label for="custom-extension" class="block mb-2 text-sm font-medium text-main_font dark:text-white">Extension (Days)</label>
-                                <input type="number" disabled id="custom-extension" class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 disabled:bg-bg_col" placeholder="e.g., 6">
                             </div>
                         </div>
                         <button id="add-sched-btn" type="button" disabled class="w-full text-white bg-mainblue hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-mainblue dark:focus:ring-blue-800 disabled:opacity-50 disabled:cursor-not-allowed">Add Schedule</button>

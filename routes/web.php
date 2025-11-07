@@ -63,6 +63,8 @@ Route::middleware([
         ->name('mho.barangays.show')
         ->where(['barangay' => '[0-9]+', 'name' => '[a-zA-Z0-9-]+']);
 
+    Route::post('/barangay/health-programs/add', [HealthProgramController::class, 'store']);
+    
     //Route for barangays
     Route::get('/mho/barangays', [BarangayController::class, 'index'])->name('mho.barangays');
 
@@ -237,7 +239,7 @@ Route::middleware([
     Route::put('/barangay/schedule/delete/{id}', [ScheduleController::class, 'softDelete']);
 
    
-    Route::post('/barangay/health-programs/add', [HealthProgramController::class, 'store']);
+   
     
     
     Route::get('/barangay/medicines', [MedicineController::class, 'index'])

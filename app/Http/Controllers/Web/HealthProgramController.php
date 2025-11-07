@@ -106,14 +106,12 @@ class HealthProgramController extends Controller
             case 'fixed':
                 $fieldNum = (int) $request->input('field_num');
                 $interval = (int) $request->input('interval');
-                $extension = (int) $request->input('extension_days');
                 for ($i = 1; $i <= $fieldNum; $i++) {
                     ProgramSchedule::create([
                         'title'        => "Field $i",
                         'program_id'   => $program->id,
                         'interval_days'=> $interval,
                         'order'        => $i,
-                        'extension_days' => $extension,
                         'status'       => 'active',
                     ]);
                 }
@@ -127,21 +125,18 @@ class HealthProgramController extends Controller
                         'program_id'   => $program->id,
                         'interval_days'=> (int) $sched['intervalDays'],
                         'order'        => (int) $sched['position'],
-                        'extension_days' => (int) $sched['extension_days'],
                         'status'       => 'active',
                     ]);
                 }
                 break;
 
             case 'continuous':
-                $extension = (int) $request->input('extension_days');
                 ProgramSchedule::create([
                     'title'        => "Scheduled Return",
                     'program_id'   => $program->id,
                     'interval_days'=> (int) $request->input('interval', 0),
                     'order'        => 1,
-                    'status'       => 'active',
-                    'extension_days' => $extension,
+                    'status'       => 'active'
                 ]);
                 break;
         }
