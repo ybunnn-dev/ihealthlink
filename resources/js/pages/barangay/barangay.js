@@ -3,17 +3,116 @@
 const addBarangayModalEl = document.getElementById('add-barangay-modal');
 const confirmModalEl = document.getElementById('confirm-add-barangay-modal');
 const mainTriggerBtn = document.getElementById('page-add-barangay-button');
+const closeAdd = document.getElementById('cancel-add-brgy');
 
-// --- 2. Create Flowbite Modal Instances (without the generic onHide option) ---
-const addBarangayModal = new Modal(addBarangayModalEl);
-const confirmModal = new Modal(confirmModalEl);
+//success modal elements
+const successModalEl = document.getElementById('success-modal');
+const successMesageHeader = document.getElementById('success-msg-head');
+const successMessage = document.getElementById('success-message');
+const closeSuccessModalButton = document.getElementById('close-success-modal-button');
+
+let finalUrl;
+let barangaySlug;
+
+const addBarangayModalOptions = {
+    placement: 'center-center',
+    backdrop: 'static',
+    closable: false,
+    onShow: () => {
+        setTimeout(() => {
+            addBarangayModalEl.classList.remove('opacity-0');
+            addBarangayModalEl.classList.add('opacity-100');
+            
+            const modalContent = addBarangayModalEl.querySelector('.relative.bg-white');
+            if (modalContent) {
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }
+        }, 10);
+    },
+    onHide: () => {
+        addBarangayModalEl.classList.add('opacity-0');
+        addBarangayModalEl.classList.remove('opacity-100');
+        
+        const modalContent = addBarangayModalEl.querySelector('.relative.bg-white');
+        if (modalContent) {
+            modalContent.classList.add('scale-95');
+            modalContent.classList.remove('scale-100');
+        }
+    }
+};
+
+const confirmModalOptions = {
+    placement: 'center-center',
+    backdrop: 'static',
+    closable: false,
+    onShow: () => {
+        setTimeout(() => {
+            confirmModalEl.classList.remove('opacity-0');
+            confirmModalEl.classList.add('opacity-100');
+            
+            const modalContent = confirmModalEl.querySelector('.relative.bg-white');
+            if (modalContent) {
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }
+        }, 10);
+    },
+    onHide: () => {
+        confirmModalEl.classList.add('opacity-0');
+        confirmModalEl.classList.remove('opacity-100');
+        
+        const modalContent = confirmModalEl.querySelector('.relative.bg-white');
+        if (modalContent) {
+            modalContent.classList.add('scale-95');
+            modalContent.classList.remove('scale-100');
+        }
+    }
+};
+
+const successModalOptions = {
+    placement: 'center-center',
+    backdrop: 'static',
+    closable: false,
+    onShow: () => {
+        setTimeout(() => {
+            successModalEl.classList.remove('opacity-0');
+            successModalEl.classList.add('opacity-100');
+            
+            const modalContent = successModalEl.querySelector('.relative.bg-white');
+            if (modalContent) {
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }
+        }, 10);
+    },
+    onHide: () => {
+        successModalEl.classList.add('opacity-0');
+        successModalEl.classList.remove('opacity-100');
+        
+        const modalContent = successModalEl.querySelector('.relative.bg-white');
+        if (modalContent) {
+            modalContent.classList.add('scale-95');
+            modalContent.classList.remove('scale-100');
+        }
+    }
+};
+
+// --- 3. Create Flowbite Modal Instances with their own options ---
+const addBarangayModal = new Modal(addBarangayModalEl, addBarangayModalOptions);
+const confirmModal = new Modal(confirmModalEl, confirmModalOptions);
+const successModal = new Modal(successModalEl, successModalOptions);
 
 
 // --- 3. Add Event Listener to Open the First Modal ---
 mainTriggerBtn.addEventListener('click', function () {
     addBarangayModal.show();
+
 });
 
+closeAdd.addEventListener('click', function(){
+    addBarangayModal.hide();
+});
 
 // --- 4. Get other elements ---
 const barangayNameInput = document.getElementById('barangay-name-input');
@@ -84,16 +183,17 @@ confirmProceedBtn.addEventListener('click', async function () {
             // Use the SAME 'result' to get success data
             const newBarangayId = result.barangay.id;
 
-            alert(result.message);
-
+            confirmModal.hide();
+            successMesageHeader.textContent = "Success";
+            successMessage.textContent = result.message;
+            successModal.show();
             // Create a URL-friendly slug from the name
-            const barangaySlug = barangayNameToInsert.toLowerCase().replace(/\s+/g, '-');
+            barangaySlug = barangayNameToInsert.toLowerCase().replace(/\s+/g, '-');
 
             // Construct the final URL with both ID and name slug
-            const finalUrl = `/mho/barangays/${newBarangayId}/${barangaySlug}`;
-
+            finalUrl = `/mho/barangays/${newBarangayId}/${barangaySlug}`;
             // Redirect to the new URL
-            window.location.href = finalUrl;
+            
         }
 
     } catch (error) {
@@ -107,6 +207,9 @@ confirmProceedBtn.addEventListener('click', async function () {
     // in the success (redirect) and error (catch) blocks individually.
 });
 
+closeSuccessModalButton.addEventListener('click', function(){
+    window.location.href = finalUrl;
+})
 // --- 8. (NEW) Handle cancellation of the confirmation ---
 if (cancelConfirmBtn) {
     cancelConfirmBtn.addEventListener('click', function () {
