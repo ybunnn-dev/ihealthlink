@@ -60,7 +60,7 @@ class BarangayController extends Controller
         }
 
         // Get all results first (without search filter in query)
-        $barangays = $query->paginate(15)->appends($request->query());
+        $barangays = $query->paginate(8)->appends($request->query());
 
         // --- Count residents separately ---
         $barangays->getCollection()->transform(function ($barangay) {
