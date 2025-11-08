@@ -113,6 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
     import('./pages/health-programs/paginator.js');
   }else if(bodyClass.contains('spec-hp')){
     import('./pages/health-programs/edit-program.js');
+    import('./pages/health-programs/add-schedule.js');
   }else if(bodyClass.contains('faqs')){
     import('./pages/faq/add-faq.js');
     import('./pages/faq/faq-management.js');
