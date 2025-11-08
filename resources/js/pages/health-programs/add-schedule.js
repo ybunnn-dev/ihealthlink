@@ -1,6 +1,14 @@
 // ====================================================================
 // MODAL OPTIONS WITH FADE ANIMATIONS
 // ====================================================================
+
+// Note: You can remove these lines if you are populating
+// the dropdown with Blade, as we discussed.
+const programFields = window.program.program_fields;
+const programId = window.program.id;
+
+console.log(programFields);
+
 const createModalOptions = (modalEl) => ({
     placement: 'center-center',
     backdrop: 'static',
@@ -66,12 +74,105 @@ const successModal = new Modal(successModalEl, createModalOptions(successModalEl
 
 const addSchedBtn = document.getElementById('page-add-field-button');
 
+// ====================================================================
+// FORM VALIDATION
+// ====================================================================
 
+/**
+ * Validates the add schedule form and enables/disables the submit button.
+ */
+function validateAddScheduleForm() {
+    const title = addScheduleTitle.value.trim();
+    const intervals = addScheduleIntervals.value.trim();
+    const position = addSchedulePosition.value; // No trim needed for select
+
+    if (title && intervals && position) {
+        addScheduleSubmitBtn.disabled = false;
+    } else {
+        addScheduleSubmitBtn.disabled = true;
+    }
+}
+
+// Add event listeners to check validation on input
+addScheduleTitle.addEventListener('input', validateAddScheduleForm);
+addScheduleIntervals.addEventListener('input', validateAddScheduleForm);
+addSchedulePosition.addEventListener('change', validateAddScheduleForm);
+
+// ====================================================================
+// EVENT LISTENERS
+// ====================================================================
 
 addSchedBtn.addEventListener('click', function(){
+    // Reset the form and validation state every time the modal is opened
+    addScheduleForm.reset();
+    validateAddScheduleForm(); 
     addScheduleModal.show();
 });
 
 cancelAddScheduleBtn.addEventListener('click', function(){
     addScheduleModal.hide();
+    // Also reset form and validation on cancel
+    addScheduleForm.reset();
+    validateAddScheduleForm();
+});
+
+addScheduleSubmitBtn.addEventListener('click', function(){
+    event.preventDefault();
+
+    addScheduleModal.hide();
+    confirmAddScheduleModal.show();
+});
+
+confirmScheduleCheckbox.addEventListener('change', function(){
+    confirmScheduleProceedBtn.disabled = !this.checked;
+});
+
+cancelAddScheduleConfirmBtn.addEventListener('click', function(){
+    confirmAddScheduleModal.hide();
+    addScheduleModal.show();
+});
+
+confirmScheduleProceedBtn.addEventListener('click', function() {
+    // Disable both buttons immediately
+    confirmScheduleProceedBtn.disabled = true;
+    cancelAddScheduleConfirmBtn.disabled = true;
+    
+    // Change button text to "Saving..."
+    const originalText = confirmScheduleProceedBtn.textContent;
+    confirmScheduleProceedBtn.textContent = 'Saving...';
+
+    const payload = {
+        program_id: programId,
+        title: addScheduleTitle.value.trim(),
+        interval: addScheduleIntervals.value.trim(),
+        position: addSchedulePosition.value.trim(),
+    };
+
+    // Log for debugging
+    console.log('Sending payload:', payload);
+
+    // Send via POST to your controller route
+    fetch('/mho/health-program/schedule/create', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+        },
+        body: JSON.stringify(payload)
+    })
+    .then(response => response.json())
+    .then(data => {
+        successMessageHeader.textContent = "Add Schedule";
+        successMessage.textContent = data.message;
+        confirmAddScheduleModal.hide();
+        successModal.show();
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        
+        // Re-enable buttons and restore text on error
+        confirmScheduleProceedBtn.disabled = false;
+        cancelAddScheduleConfirmBtn.disabled = false;
+        confirmScheduleProceedBtn.textContent = originalText;
+    });
 });

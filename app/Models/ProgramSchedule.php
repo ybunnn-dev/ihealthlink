@@ -17,7 +17,6 @@ class ProgramSchedule extends Model
         'interval_days',
         'order',
         'status',
-        'extension_days',
     ];
 
     /**

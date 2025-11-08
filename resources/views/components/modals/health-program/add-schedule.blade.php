@@ -27,8 +27,15 @@
                         <select id="add-schedule-position" class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
                             <option value="">Choose a position</option>
                             <option value="start">At the very beginning</option>
-                            <option value="1">After [Schedule A]</option>
-                            <option value="2">After [Schedule B]</option>
+                            
+                            {{-- This is the new part --}}
+                            @if($healthProgram->programFields)
+                                @foreach($healthProgram->programFields as $field)
+                                    <option value="{{ $field->id }}">After {{ $field->title }}</option>
+                                @endforeach
+                            @endif
+                            {{-- End of new part --}}
+
                         </select>
                     </div>
 
@@ -38,7 +45,7 @@
                     <button id="cancel-add-schedule" type="button" class="py-2.5 px-5 text-sm font-medium text-main_font focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
                         Cancel
                     </button>
-                    <button id="add-schedule-submit" type="submit" class="text-white bg-mainblue hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-mainblue dark:focus:ring-blue-800">
+                    <button id="add-schedule-submit" type="submit" class="text-white bg-mainblue hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 disabled:opacity-50">
                         Add Schedule
                     </button>                
                 </div>

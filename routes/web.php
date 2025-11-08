@@ -116,6 +116,8 @@ Route::middleware([
 
     Route::post('/mho/faq/create', [FaqController::class, 'store'])->name('faqs.store');
 
+    Route::post('/mho/health-program/schedule/create', [HealthProgramController::class, 'addSched'])->name('health-program.addSched');
+
     Route::get('/faqs/{manual}', [FaqController::class, 'fetchFaq'])->name('faqs.show');
     Route::put('/faqs/{manual}', [FaqController::class, 'update'])->name('faqs.update');
     Route::put('/faqs/{manual}/deactivate', [FaqController::class, 'deactivate'])->name('faqs.deactivate');

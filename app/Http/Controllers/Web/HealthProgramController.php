@@ -80,13 +80,17 @@ class HealthProgramController extends Controller
     public function show(HealthProgram $healthProgram)
     {
         $healthProgram = HealthProgram::withCount('enrolledResidents')
-            ->with('programFields') 
+            ->with(['programFields' => function ($query) {
+                $query->where('status', 'active')
+                    ->orderBy('order', 'asc');
+            }]) 
             ->findOrFail($healthProgram->id);
 
         return view('mho.spec-health-program', [
             'healthProgram' => $healthProgram
         ]);
     }
+
 
     public function store(Request $request)
     {
@@ -181,4 +185,95 @@ class HealthProgramController extends Controller
             'data' => $healthProgram
         ], 200);
     }
+
+    public function addSched(Request $request)
+    {
+        $validated = $request->validate([
+            'program_id' => 'required|integer|exists:health_programs,id',
+            'title' => 'required|string',
+            'interval' => 'required|string',
+            'position' => 'required|string',
+        ]);
+
+        \DB::beginTransaction();
+        
+        try {
+            $programId = $validated['program_id'];
+            $position = $validated['position'];
+            
+            // Determine the new order position
+            if ($position === 'start') {
+                // Insert at the beginning - increment all existing orders
+                ProgramSchedule::where('program_id', $programId)
+                    ->increment('order');
+                
+                $newOrder = 1;
+                
+            } else {
+                // Position is an ID - convert to integer
+                $positionId = (int) $position;
+                
+                // Insert after that schedule
+                $afterSchedule = ProgramSchedule::where('program_id', $programId)
+                    ->where('id', $positionId)
+                    ->first();
+                
+                if (!$afterSchedule) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Invalid position schedule ID.'
+                    ], 400);
+                }
+                
+                $insertOrder = $afterSchedule->order + 1;
+                
+                // Increment all schedules that come after this position
+                ProgramSchedule::where('program_id', $programId)
+                    ->where('order', '>=', $insertOrder)
+                    ->increment('order');
+                
+                $newOrder = $insertOrder;
+            }
+            
+            // Create the new schedule
+            $schedule = ProgramSchedule::create([
+                'program_id' => $programId,
+                'title' => $validated['title'],
+                'interval_days' => $validated['interval'],
+                'order' => $newOrder,
+                'status' => 'active',
+            ]);
+            
+            \DB::commit();
+            
+            \Log::info('Schedule created successfully:', [
+                'schedule_id' => $schedule->id,
+                'order' => $newOrder,
+                'position' => $position
+            ]);
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Schedule has been successfully added.',
+                'schedule' => $schedule
+            ]);
+            
+        } catch (\Exception $e) {
+            \DB::rollBack();
+            
+            \Log::error('Error creating schedule:', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to add schedule. Please try again.'
+            ], 500);
+        }
+    }
+
+
+
+
 }
