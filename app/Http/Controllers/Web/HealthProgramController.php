@@ -155,14 +155,16 @@ class HealthProgramController extends Controller
 
     public function update(Request $request, HealthProgram $healthProgram)
     {
+        \Log::info('hey');
         // Validate input
         $validated = $request->validate([
             'name'     => 'required|string|max:255',
             'age_min'  => 'required|integer|min:0|max:150',
-            'age_max'  => 'required|integer|min:0|max:150',
+            'age_max'  => 'required|integer|min:0|max:1000',
             'category' => 'required|string',
         ]);
 
+        \Log::info('heylo');
         // Check that age_max >= age_min
         if ($validated['age_max'] < $validated['age_min']) {
             return response()->json([
@@ -178,6 +180,8 @@ class HealthProgramController extends Controller
             'age_max'  => $validated['age_max'],
             'category' => $validated['category'],
         ]);
+
+        \Log::info($healthProgram);
 
         return response()->json([
             'message' => 'Health Program updated successfully!',
@@ -274,6 +278,122 @@ class HealthProgramController extends Controller
     }
 
 
+    public function updateSched(Request $request)
+    {
+        $validated = $request->validate([
+            'schedule_id' => 'required|integer|exists:program_schedules,id',
+            'program_id' => 'required|integer|exists:health_programs,id',
+            'title' => 'required|string',
+            'interval' => 'required|string',
+            'position' => 'required|string',
+        ]);
 
+        \DB::beginTransaction();
+        
+        try {
+            $scheduleId = $validated['schedule_id'];
+            $programId = $validated['program_id'];
+            $position = $validated['position'];
+            
+            // Get the schedule being updated
+            $schedule = ProgramSchedule::where('id', $scheduleId)
+                ->where('program_id', $programId)
+                ->first();
+            
+            if (!$schedule) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Schedule not found.'
+                ], 404);
+            }
+            
+            $oldOrder = $schedule->order;
+            $newOrder = null;
+            
+            // Determine the new order position
+            if ($position === 'start') {
+                // Moving to the beginning
+                $newOrder = 1;
+                
+            } else {
+                // Position is an ID - convert to integer
+                $positionId = (int) $position;
+                
+                // Find the schedule to position after
+                $afterSchedule = ProgramSchedule::where('program_id', $programId)
+                    ->where('id', $positionId)
+                    ->first();
+                
+                if (!$afterSchedule) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Invalid position schedule ID.'
+                    ], 400);
+                }
+                
+                $newOrder = $afterSchedule->order + 1;
+            }
+            
+            // Re-order schedules if position changed
+            if ($oldOrder !== $newOrder) {
+                if ($newOrder < $oldOrder) {
+                    // Moving up (to a lower order number)
+                    // Increment all schedules between new and old position
+                    ProgramSchedule::where('program_id', $programId)
+                        ->where('id', '!=', $scheduleId)
+                        ->where('order', '>=', $newOrder)
+                        ->where('order', '<', $oldOrder)
+                        ->increment('order');
+                        
+                } else {
+                    // Moving down (to a higher order number)
+                    // Decrement all schedules between old and new position
+                    ProgramSchedule::where('program_id', $programId)
+                        ->where('id', '!=', $scheduleId)
+                        ->where('order', '>', $oldOrder)
+                        ->where('order', '<=', $newOrder)
+                        ->decrement('order');
+                        
+                    // Adjust newOrder since we decremented
+                    $newOrder = $newOrder;
+                }
+            }
+            
+            // Update the schedule
+            $schedule->update([
+                'title' => $validated['title'],
+                'interval_days' => $validated['interval'],
+                'order' => $newOrder,
+            ]);
+            
+            \DB::commit();
+            
+            \Log::info('Schedule updated successfully:', [
+                'schedule_id' => $schedule->id,
+                'old_order' => $oldOrder,
+                'new_order' => $newOrder,
+                'position' => $position
+            ]);
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Schedule has been successfully updated.',
+                'schedule' => $schedule
+            ]);
+            
+        } catch (\Exception $e) {
+            \DB::rollBack();
+            
+            \Log::error('Error updating schedule:', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to update schedule. Please try again.'
+            ], 500);
+        }
+    }
 
 }

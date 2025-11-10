@@ -140,8 +140,8 @@ cancelEditProgramConfirmBtn.addEventListener('click', function() {
 // ====================================================================
 confirmEditProceedBtn.addEventListener('click', async function() {
     const programName = editProgramName.value.trim();
-    const minAge = editMinAge.value;
-    const maxAge = editMaxAge.value;
+    const minAge = parseInt(editMinAge.value);
+    const maxAge = parseInt(editMaxAge.value);
     const programType = editProgramType.value;
     
     const payload = {
@@ -159,7 +159,7 @@ confirmEditProceedBtn.addEventListener('click', async function() {
     try {
         const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
         
-        const response = await fetch(`/mho/health-programs/${program.id}`, {
+        const response = await fetch(`/mho/health-programs/edit/${program.id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',

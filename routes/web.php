@@ -52,7 +52,10 @@ Route::middleware([
     'active'
 ])->group(function(){
      // MHO-specific dashboard
-     Route::put('/mho/health-programs/{healthProgram}', [HealthProgramController::class, 'update'])->name('health-programs.update');
+    Route::put('/mho/health-programs/edit/{healthProgram}', [HealthProgramController::class, 'update'])->name('health-programs.update');
+    
+    Route::post('/mho/health-programs/schedule/update', [HealthProgramController::class, 'updateSched'])
+    ->name('health-programs.schedule.update');
 
     Route::get('/mho/dashboard', [MhoDashboardController::class, 'index'])->name('mho.dashboard');
 
