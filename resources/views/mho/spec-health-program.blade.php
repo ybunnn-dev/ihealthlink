@@ -104,6 +104,7 @@
     
     </div>
     @include('components.modals.health-program.edit-health-program')
+    @include('components.modals.health-program.remove-program')
     @include('components.modals.health-program.add-schedule')
     @include('components.modals.health-program.edit-sched')
 </x-app-layout>

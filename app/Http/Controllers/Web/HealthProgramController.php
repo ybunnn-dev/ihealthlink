@@ -22,7 +22,9 @@ class HealthProgramController extends Controller
 
     public function index(Request $request)
     {
-        $query = HealthProgram::withCount('enrolledResidents');
+        // Only fetch active programs
+        $query = HealthProgram::where('status', 'active')
+            ->withCount('enrolledResidents');
         
         // Search functionality
         if ($request->has('search') && $request->search != '') {
@@ -76,6 +78,7 @@ class HealthProgramController extends Controller
             'healthPrograms' => $programs
         ]);
     }
+
 
     public function show(HealthProgram $healthProgram)
     {
@@ -392,6 +395,37 @@ class HealthProgramController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to update schedule. Please try again.'
+            ], 500);
+        }
+    }
+
+    public function destroy($id)
+    {
+        try {
+            \DB::beginTransaction();
+            
+            $program = HealthProgram::findOrFail($id);
+            
+            // Mark the program as inactive
+            $program->status = 'inactive';
+            $program->save();
+            
+            // Mark all related program schedules as inactive
+            $program->programFields()->update(['status' => 'inactive']);
+            
+            \DB::commit();
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Health program removed successfully'
+            ]);
+            
+        } catch (\Exception $e) {
+            \DB::rollBack();
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to remove health program: ' . $e->getMessage()
             ], 500);
         }
     }

@@ -91,11 +91,10 @@ class BarangayController extends Controller
             $barangays->setCollection($sorted);
         }
 
-        // Check for AJAX/JSON request
         if ($request->wantsJson() || $request->ajax() || $request->header('X-Requested-With') === 'XMLHttpRequest') {
             return response()->json([
                 'data' => $barangays->items(),
-                'links' => $barangays->links()->render()
+                'pagination' => (string)$barangays->appends($request->query())->links()  // ✅ HTML string
             ]);
         }
 

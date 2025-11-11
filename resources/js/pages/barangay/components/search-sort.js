@@ -14,16 +14,14 @@ const debounce = (func, delay = 300) => {
         timeout = setTimeout(() => func.apply(this, args), delay);
     };
 };
-
 const fetchBarangays = async (page = 1) => {
     const params = new URLSearchParams({
         search: searchQuery,
-        filter: sortBy,           // 👈 Changed from 'sort_by' to 'filter'
-        sort_date: dateFilter,    // 👈 Changed from 'date_filter' to 'sort_date'
+        filter: sortBy,
+        sort_date: dateFilter,
         page: page
     });
     
-    // 👇 Use the same route for both initial load and AJAX
     const url = `/mho/barangays?${params.toString()}`;
     history.pushState(null, '', url);
 
@@ -32,21 +30,37 @@ const fetchBarangays = async (page = 1) => {
         const response = await fetch(url, { 
             headers: { 
                 'X-Requested-With': 'XMLHttpRequest',
-                'Accept': 'application/json'  // 👈 Request JSON response
+                'Accept': 'application/json'
             } 
         });
+        
         if (!response.ok) throw new Error('Network response was not ok');
         
-        const apiResponse = await response.json();
+        const data = await response.json();
         
-        renderTable(apiResponse.data);
-        renderPagination(apiResponse.links);
+        renderTable(data.data);
+        paginationContainer.innerHTML = data.pagination;  // ✅ Just insert HTML
+        attachPaginationHandlers();  // ✅ Re-attach click handlers
 
     } catch (error) {
         console.error('Fetch error:', error);
         tableBody.innerHTML = `<tr><td colspan="6" class="text-center py-10 text-red-500">Failed to load data.</td></tr>`;
     }
 };
+
+// ✅ Add this function to handle pagination clicks
+function attachPaginationHandlers() {
+    document.querySelectorAll('#pagination-links a').forEach(link => {
+        link.addEventListener('click', function (e) {
+            e.preventDefault();
+            const url = new URL(this.href);
+            const page = url.searchParams.get('page') || 1;
+            fetchBarangays(page);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    });
+}
+
 
 const renderTable = (barangays) => {
     tableBody.innerHTML = '';

@@ -7,7 +7,6 @@
 const programFields = window.program.program_fields;
 const programId = window.program.id;
 
-console.log(programFields);
 
 const createModalOptions = (modalEl) => ({
     placement: 'center-center',
