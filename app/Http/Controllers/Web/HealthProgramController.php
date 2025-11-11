@@ -430,4 +430,43 @@ class HealthProgramController extends Controller
         }
     }
 
+    public function removeSchedule($id)
+    {
+        try {
+            \DB::beginTransaction();
+            
+            $schedule = ProgramSchedule::findOrFail($id);
+            $programId = $schedule->program_id;
+            $removedOrder = $schedule->order;
+            
+            // Mark schedule as inactive and set order to 0
+            $schedule->status = 'inactive';
+            $schedule->order = 0;
+            $schedule->save();
+            
+            // Reorder remaining active schedules for this program
+            // Decrease order by 1 for all schedules that were after the removed one
+            ProgramSchedule::where('program_id', $programId)
+                ->where('status', 'active')
+                ->where('order', '>', $removedOrder)
+                ->decrement('order');
+            
+            \DB::commit();
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Schedule removed successfully'
+            ]);
+            
+        } catch (\Exception $e) {
+            \DB::rollBack();
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to remove schedule: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+
 }

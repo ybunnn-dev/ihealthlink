@@ -52,7 +52,9 @@ Route::middleware([
     'active'
 ])->group(function(){
      // MHO-specific dashboard
-
+    Route::delete('/mho/health-program/schedule/remove/{id}', [HealthProgramController::class, 'removeSchedule'])
+    ->name('mho.health-program.schedule.remove');
+    
     Route::delete('/mho/health-program/delete/{id}', [HealthProgramController::class, 'destroy'])
     ->name('mho.health-program.delete');
 

@@ -116,6 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
     import('./pages/health-programs/remove-program.js');
     import('./pages/health-programs/add-schedule.js');
     import('./pages/health-programs/edit-schedule.js');
+    import('./pages/health-programs/remove-sched.js');
   }else if(bodyClass.contains('faqs')){
     import('./pages/faq/add-faq.js');
     import('./pages/faq/faq-management.js');
