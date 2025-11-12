@@ -97,7 +97,7 @@ class DashboardController extends Controller
         $enrolledStats = $this->getEnrolledResidentStats($personnel);
         $dewormed = $this->getDewormingStats($personnel);
         $philpenStats = $this->getPhilpenConsultationStats($personnel);
-        \Log::info($medicines);
+        
         return view('midwife.dashboard', [
             'barangay' => $barangay,
             'scheduledActivities' => $schedules,

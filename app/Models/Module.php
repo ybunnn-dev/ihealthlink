@@ -10,6 +10,7 @@ class Module extends Model
     use HasFactory;
 
     protected $fillable = [
+        //this supposedly has an id
         'module_name',
     ];
 

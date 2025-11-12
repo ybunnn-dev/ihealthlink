@@ -54,7 +54,7 @@
     </div>
     <div id="program-storage" data-selected-program-id="5"></div>
     <div id="bhw-storage" data-selected-bhw="def"></div>
-     <script>
+    <script>
         const emptyStateImageUrl = "{{ asset('images/illustrations/empty.png') }}";
     </script>
     @include('components.modals.schedules.add-activity-modal')
