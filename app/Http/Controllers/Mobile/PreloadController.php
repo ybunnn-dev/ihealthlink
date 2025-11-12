@@ -54,7 +54,7 @@ class PreloadController extends Controller
 
         $schedules = Schedules::where('brgy_id', $barangay->id)->get();
         $dailyActivities = DailyActivities::where('brgy_id', $barangay->id)->get();
-        $userManuals = UserManual::where('action_type', 'active');
+        $userManuals = UserManual::where('action_type', 'active')->get();
         $health_programs = HealthProgram::where('status', 'active')->get();
         // Return all in one payload
         return response()->json([
