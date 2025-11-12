@@ -67,6 +67,7 @@ class DashboardController extends Controller
             
         $medicines = Medicine::withSum('activeInventories as total_stock', 'stock')
             ->where('brgy_id', $personnel->brgy_id)
+            ->where('status', 'active')
             ->orderByDesc('total_stock')
             ->limit(10)
             ->get();
