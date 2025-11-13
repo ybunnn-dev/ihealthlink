@@ -31,8 +31,6 @@
                             <button id="edit-med-btn" 
                                     type="button" 
                                     class="edit-medicine-btn col-span-1 px-5 py-3 text-sm font-medium text-white bg-mainblue rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300"
-                                    data-modal-target="edit-medicine-modal"
-                                    data-modal-toggle="edit-medicine-modal"
                                     data-id="{{ $medicine->id }}">
                                 Edit
                             </button>   
@@ -153,9 +151,7 @@
                                         <th scope="col" class="px-6 py-3">
                                             EXPIRY DATE
                                         </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            ADDED BY
-                                        </th>
+                                    
                                         <th scope="col" class="px-6 py-3">
                                             STATUS
                                         </th>
@@ -174,13 +170,10 @@
                                                 {{ $inventory->stock }}
                                             </td>
                                             <td class="px-6 py-4">
-                                                {{ $inventory->date_received->format('Y-m-d') }}
+                                                {{ $inventory->date_received->format('F j, Y') }}
                                             </td>
                                             <td class="px-6 py-4">
-                                                {{ $inventory->expiry_date->format('Y-m-d') }}
-                                            </td>
-                                            <td class="px-6 py-4 bg-f7">
-                                                {{ $inventory->addedBy->name ?? 'Unknown' }}
+                                                {{ $inventory->expiry_date->format('F j, Y') }}
                                             </td>
                                             <td class="px-6 py-4 bg-f7">
                                                 @if($inventory->is_expired)
