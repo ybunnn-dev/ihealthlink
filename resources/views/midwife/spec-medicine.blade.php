@@ -32,21 +32,30 @@
                         <div class="grid grid-cols-1 lg:grid-cols-2 w-full px-0 pb-0 row-span-1 gap-3"> 
                             <button id="edit-med-btn" 
                                     type="button" 
-                                    class="edit-medicine-btn col-span-1 px-5 py-3 text-sm font-medium text-white bg-mainblue rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300"
-                                    data-id="{{ $medicine->id }}">
+                                    class="edit-medicine-btn col-span-1 px-5 py-3 text-sm font-medium rounded-lg focus:outline-none focus:ring-4 
+                                        text-white bg-mainblue border border-mainblue
+                                        {{ $medicine->default_status == 1 
+                                             ? 'opacity-50 cursor-not-allowed' 
+                                            : 'opacity-100 hover:bg-blue-50 focus:ring-300' }}"
+                                    data-id="{{ $medicine->id }}"
+                                    {{ $medicine->default_status == 1 ? 'disabled' : '' }}>
                                 Edit
                             </button>   
-                       
-                             @include('components.modals.medicine.edit-medicine-modal')       
-                                           
+
+                            @include('components.modals.medicine.edit-medicine-modal')       
+                                        
                             <button id="remove-med-btn" 
                                     type="button" 
-                                    class="remove-medicine-btn col-span-1 px-5 py-3 text-sm font-medium text-mainblue bg-white border border-mainblue rounded-lg hover:bg-blue-50 focus:outline-none focus:ring-4 focus:ring-300">
+                                    class="remove-medicine-btn col-span-1 px-5 py-3 text-sm font-medium rounded-lg focus:outline-none focus:ring-4 
+                                            text-mainblue bg-white border border-mainblue 
+                                        {{ $medicine->default_status == 1 
+                                            ? 'opacity-50 cursor-not-allowed' 
+                                            : 'opacity-100 hover:bg-blue-50 focus:ring-300' }}"
+                                    {{ $medicine->default_status == 1 ? 'disabled' : '' }}>
                                 Remove
                             </button>
                             
-                                @include('components.modals.medicine.remove-medicine')
-                            
+                            @include('components.modals.medicine.remove-medicine')
                         </div>
                     </div>
                     <div class="flex-grow h-full bg-f7 rounded-lg p-12 col-span-1 slg:col-span-2">

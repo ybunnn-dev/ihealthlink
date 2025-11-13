@@ -19,7 +19,8 @@ class Medicine extends Model
         'category',
         'form',
         'description',
-        'brgy_id'
+        'brgy_id',
+        'default_status'
     ];
 
     /**
