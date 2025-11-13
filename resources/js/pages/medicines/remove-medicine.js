@@ -92,7 +92,7 @@ confirmDeleteMedicineBtn.addEventListener('click', function () {
 });
 
 closeSuccessDelMedModalButton.addEventListener('click', function () {
-    window.location.href = '/midwife/medicines';
+    window.location.href = '/barangay/medicines';
 });
 
 cancelDeleteMedicineBtn.addEventListener('click', function(){
