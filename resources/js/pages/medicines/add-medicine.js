@@ -1,4 +1,33 @@
 // The modal container itself
+const createModalOptions = (modalEl) => ({
+    placement: 'center-center',
+    backdrop: 'static',
+    closable: false,
+    onShow: () => {
+        setTimeout(() => {
+            modalEl.classList.remove('opacity-0');
+            modalEl.classList.add('opacity-100');
+            
+            const modalContent = modalEl.querySelector('.relative.bg-white');
+            if (modalContent) {
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }
+        }, 10);
+    },
+    onHide: () => {
+        modalEl.classList.add('opacity-0');
+        modalEl.classList.remove('opacity-100');
+        
+        const modalContent = modalEl.querySelector('.relative.bg-white');
+        if (modalContent) {
+            modalContent.classList.add('scale-95');
+            modalContent.classList.remove('scale-100');
+        }
+    }
+});
+
+
 const addMedicineModal = document.getElementById('add-medicine-modal');
 
 // The form element
@@ -39,6 +68,10 @@ const successMessage = document.getElementById('success-message');
 const closeSuccessModalButton = document.getElementById('close-success-modal-button');
 
 
+const addMedModal = new Modal(addMedicineModal, createModalOptions(addMedicineModal));
+const confirmAddMedModal = new Modal(confirmAddMedicineModal, createModalOptions(confirmAddMedicineModal));
+const successMedModal = new Modal(successModalEl, createModalOptions(successModalEl));
+
 // --- NEW: FORM VALIDATION LOGIC ---
 let addMedPayload = null;
 // 1. Disable the submit button by default
@@ -75,16 +108,8 @@ function validateForm() {
 medicineNameInput.addEventListener('input', validateForm);
 
 
-// --- MODIFIED DROPDOWN FUNCTIONALITY ---
-
-/**
- * A reusable function to set up a custom dropdown.
- * @param {HTMLElement} menuElement - The dropdown menu container (the UL's parent).
- * @param {HTMLElement} textElement - The span element to display the selected text.
- * @param {HTMLElement} inputElement - The hidden input to store the selected value.
- */
 function setupDropdown(menuElement, textElement, inputElement) {
-    menuElement.addEventListener('click', function(event) {
+    menuElement.addEventListener('click', function (event) {
         if (event.target.tagName === 'BUTTON') {
             const selectedValue = event.target.dataset.value;
             const selectedText = event.target.textContent;
@@ -105,8 +130,8 @@ setupDropdown(formMenu, formSelectedText, formValueInput);
 
 // --- EXISTING MODAL AND SUBMIT LOGIC ---
 
-addMedBtn.addEventListener('click', function() {
-    const addMedModal = new Modal(addMedicineModal);
+addMedBtn.addEventListener('click', function () {
+
     if (addMedModal) {
         addMedModal.show();
     }
@@ -114,43 +139,41 @@ addMedBtn.addEventListener('click', function() {
     validateForm();
 });
 
-cancelButton.addEventListener('click', function() {
-    const addMedModal = new Modal(addMedicineModal);
+cancelButton.addEventListener('click', function () {
     if (addMedModal) {
         // Clear standard text inputs
         medicineNameInput.value = '';
         genericNameInput.value = '';
         descriptionTextarea.value = '';
-        
+
         // --- NEW: Reset Dropdowns ---
         // Reset the Category dropdown to its default state
         categorySelectedText.textContent = 'Select Category';
         categoryValueInput.value = '';
-        
+
         // Reset the Form dropdown to its default state
         formSelectedText.textContent = 'Select Form';
         formValueInput.value = '';
-        
+
         addMedModal.hide();
     }
-    
+
     // Validate the form, which will now be invalid and disable the submit button
     validateForm();
 });
 
-submitButton.addEventListener('click', function(event) {
+submitButton.addEventListener('click', function (event) {
     event.preventDefault();
-    
-    const addMedModal = new Modal(addMedicineModal);
-    const confirmAddMedModal = new Modal(confirmAddMedicineModal);
+
+
 
     if (addMedModal && confirmAddMedModal && addMedPayload) {
         // 1. Get the medicine name from the payload
         medicineNameToConfirm.textContent = addMedPayload.medicine_name;
-        
+
         // 2. Hide the form modal
         addMedModal.hide();
-        
+
         // 3. Show the confirmation modal
         confirmAddMedModal.show();
     }
@@ -160,7 +183,7 @@ confirmMedicineCheckbox.addEventListener('change', function () {
     confirmAddMedicineBtn.disabled = !this.checked;
 });
 
-confirmAddMedicineBtn.addEventListener('click', function() {
+confirmAddMedicineBtn.addEventListener('click', function () {
     // Disable the button to prevent multiple clicks
     confirmAddMedicineBtn.disabled = true;
     confirmAddMedicineBtn.textContent = 'Saving...';
@@ -168,15 +191,13 @@ confirmAddMedicineBtn.addEventListener('click', function() {
     // Get the CSRF token from the meta tag
     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-    const confirmAddMedModal = new Modal(confirmAddMedicineModal);
-    const successMedModal = new Modal(successModalEl);
-    
+
     const finalDescriptionTextarea = document.getElementById('medicine-description');
     if (finalDescriptionTextarea) {
         // Add the trimmed description value to the payload.
         addMedPayload.description = finalDescriptionTextarea.value.trim();
     }
-    
+
     // Use the Fetch API to send the data
     fetch('/midwife/add-medicines', {
         method: 'POST',
@@ -187,49 +208,48 @@ confirmAddMedicineBtn.addEventListener('click', function() {
         },
         body: JSON.stringify(addMedPayload)
     })
-    .then(response => {
-        // Check if the response was successful
-        if (!response.ok) {
-            // If not, throw an error to be caught by the .catch block
-            throw new Error('Network response was not ok.');
-        }
-        return response.json(); // Parse the JSON response from the server
-    })
-    .then(data => {
-        // SUCCESS: The data was saved successfully
-        console.log('Success:', data); // Log the success response from Laravel
-        
-        // Now, show the success modal
-        if (successMedModal && confirmAddMedModal) {
-            confirmAddMedModal.hide();
-            successMesageHeader.textContent = 'Medicine Added';
-            successMessage.textContent = `${addMedPayload.medicine_name ?? ''} has been successfully added.`;
-            successMedModal.show();
-        }
-    })
-    .catch(error => {
-        // ERROR: Something went wrong
-        console.error('Error:', error);
-        alert('An error occurred while adding the medicine. Please try again.');
-        
-        // Re-enable the button so the user can try again
-        confirmAddMedicineBtn.disabled = false;
-        confirmAddMedicineBtn.textContent = 'Confirm & Add';
-    });
+        .then(response => {
+            // Check if the response was successful
+            if (!response.ok) {
+                // If not, throw an error to be caught by the .catch block
+                throw new Error('Network response was not ok.');
+            }
+            return response.json(); // Parse the JSON response from the server
+        })
+        .then(data => {
+            // SUCCESS: The data was saved successfully
+            console.log('Success:', data); // Log the success response from Laravel
+
+            // Now, show the success modal
+            if (successMedModal && confirmAddMedModal) {
+                confirmAddMedModal.hide();
+                successMesageHeader.textContent = 'Medicine Added';
+                successMessage.textContent = `${addMedPayload.medicine_name ?? ''} has been successfully added.`;
+                successMedModal.show();
+            }
+        })
+        .catch(error => {
+            // ERROR: Something went wrong
+            console.error('Error:', error);
+            alert('An error occurred while adding the medicine. Please try again.');
+
+            // Re-enable the button so the user can try again
+            confirmAddMedicineBtn.disabled = false;
+            confirmAddMedicineBtn.textContent = 'Confirm & Add';
+        });
 });
 
-closeSuccessModalButton.addEventListener('click', function() {
+closeSuccessModalButton.addEventListener('click', function () {
     window.location.reload();
 });
 
-cancelConfirmAddMedicineBtn.addEventListener('click', function(){
+cancelConfirmAddMedicineBtn.addEventListener('click', function () {
     const addMedModal = new Modal(addMedicineModal);
     const confirmAddMedModal = new Modal(confirmAddMedicineModal);
 
     if (addMedModal && confirmAddMedModal) {
-     
+
         confirmAddMedModal.hide();
         addMedModal.show();
-        
     }
 });
