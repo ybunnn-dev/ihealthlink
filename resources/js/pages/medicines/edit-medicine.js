@@ -34,6 +34,7 @@ const editMedicineModalEl = document.getElementById('edit-medicine-modal');
 const confirmEditMedicineModalEl = document.getElementById('confirm-edit-medicine-modal');
 const successModalEl = document.getElementById('success-modal');
 
+const cancelEdit = document.getElementById('cancel-edit-medicine-btn');
 // --- Initialize Modal Instances ---
 const editMedicineModal = new Modal(editMedicineModalEl, createModalOptions(editMedicineModalEl));
 const confirmEditMedicineModal = new Modal(confirmEditMedicineModalEl, createModalOptions(confirmEditMedicineModalEl));
@@ -146,6 +147,9 @@ editMedBtn.addEventListener('click', function() {
     editMedicineModal.show();
 });
 
+cancelEdit.addEventListener('click', function(){
+    editMedicineModal.hide();
+});
 // --- Update Medicine Submit Handler ---
 updateMedicineSubmitBtn.addEventListener('click', function(event) {
     event.preventDefault();
@@ -237,3 +241,5 @@ cancelConfirmEditMedicineBtn.addEventListener('click', function() {
 closeSuccessModalButton.addEventListener('click', function() {
     window.location.reload();
 });
+
+

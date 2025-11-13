@@ -57,6 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // import('./pages/medicines/paginator.js'); // DELETE THIS LINE
     import('./pages/medicines/add-medicine.js');
   } else if (bodyClass.contains('spec-med')) {
+    import('./pages/medicines/add-batch.js');
     import('./pages/medicines/edit-medicine.js');
     import('./pages/medicines/remove-medicine.js');
   }else if(bodyClass.contains('sched')){

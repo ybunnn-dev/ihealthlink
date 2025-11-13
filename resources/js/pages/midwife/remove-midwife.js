@@ -14,14 +14,41 @@ const successMesageHeader = document.getElementById('success-msg-head');
 const successMessage = document.getElementById('success-message');
 const closeSuccessModalButton = document.getElementById('close-success-modal-button');
 
-const options = {
-    // This prevents the modal from closing when the backdrop is clicked
-    backdrop: 'static', 
-};
+
+
+// --- Modal Options Factory ---
+const createModalOptions = (modalEl) => ({
+    placement: 'center-center',
+    backdrop: 'static',
+    closable: false,
+    onShow: () => {
+        setTimeout(() => {
+            modalEl.classList.remove('opacity-0');
+            modalEl.classList.add('opacity-100');
+            
+            const modalContent = modalEl.querySelector('.relative.bg-white');
+            if (modalContent) {
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }
+        }, 10);
+    },
+    onHide: () => {
+        modalEl.classList.add('opacity-0');
+        modalEl.classList.remove('opacity-100');
+        
+        const modalContent = modalEl.querySelector('.relative.bg-white');
+        if (modalContent) {
+            modalContent.classList.add('scale-95');
+            modalContent.classList.remove('scale-100');
+        }
+    }
+});
+
+const successModal = new Modal(successModalEl, createModalOptions(successModalEl));
+const removeMidwife = new Modal(removeMidwifeModal, createModalOptions(removeMidwifeModal));
 
 openRemoveMidwifeModal.addEventListener('click', function () {
-    // Initialize the modal
-    const removeMidwife = new Modal(removeMidwifeModal);
 
     if (removeMidwife) {
         // Dynamically set the midwife name in the modal
@@ -42,6 +69,7 @@ closeRemoveMidwifeModalBtn.addEventListener('click', function(){
         removeMidwife.hide();
     }
 });
+
 
 removeMidwifeCheckbox.addEventListener('change', function() {
     // Enable the button if the checkbox is checked, disable it if not.
@@ -66,8 +94,7 @@ removeMidwifeBtn.addEventListener('click', async function() {
 
         // Optional: reload or close modal on success
         if (result.status === 'success') {
-            const successModal = new Modal(successModalEl, options);
-            const removeMidwife = new Modal(removeMidwifeModal);
+            
 
             if(successModal && removeMidwife){
                 successMesageHeader.textContent = 'Midwife Removed';

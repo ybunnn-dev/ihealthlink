@@ -227,6 +227,12 @@ class MedicineController extends Controller
         // Update with validated data
         $medicine->update($validated);
 
+        ActivityLog::create([
+            'user_id' => $user->id,
+            'module_id' => 1, // change this based on your module mapping (e.g., 8 for medicines)
+            'activity' => 'Updated medicine "' . $medicine->medicine_name . '".',
+        ]);
+
         return response()->json([
             'result' => 'success',
             'message'  => 'Medicine updated successfully',
@@ -261,6 +267,11 @@ class MedicineController extends Controller
         $medicine->status = 'inactive';
         $medicine->save();
 
+         ActivityLog::create([
+            'user_id' => $user->id,
+            'module_id' => 1, // change this based on your module mapping (e.g., 8 for medicines)
+            'activity' => 'Removed medicine "' . $medicine->medicine_name . '".',
+        ]);
         return response()->json([
             'result' => 'success',
             'message' => 'Medicine marked as inactive',

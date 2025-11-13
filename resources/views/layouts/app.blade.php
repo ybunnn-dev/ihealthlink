@@ -47,7 +47,6 @@
         </div>
         
         @stack('modals')
-        @include('components.modals.language-modal')
         @include('components.modals.success-modal')
         
         @livewireScripts

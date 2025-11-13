@@ -5,6 +5,7 @@
          window.medicineData = @json($medicine);
     </script>
     <div class="py-12 px-5">
+        
         <div class="max-w-[90rem] mx-auto sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 gap-4">
                 <a href="{{ route('midwife.medicines') }}">
@@ -13,6 +14,7 @@
                         <span class="font-semibold">Return</span>
                     </div>
                 </a>
+                
                 <div class="grid grid-cols-1 slg:grid-cols-3 gap-3">
                     <div class="grid grid-rows-5 col-span-1 gap-3">
                         <div class="w-full h-full bg-f7 rounded-lg flex flex-col items-center justify-center p-4 row-span-4"> 
@@ -34,19 +36,17 @@
                                     data-id="{{ $medicine->id }}">
                                 Edit
                             </button>   
-                            @push('modals')  
-                                @include('components.modals.medicine.edit-medicine-modal')       
-                            @endpush                    
+                       
+                             @include('components.modals.medicine.edit-medicine-modal')       
+                                           
                             <button id="remove-med-btn" 
                                     type="button" 
-                                    data-modal-target="confirm-delete-medicine-modal"
-                                    data-modal-toggle="confirm-delete-medicine-modal"
                                     class="remove-medicine-btn col-span-1 px-5 py-3 text-sm font-medium text-mainblue bg-white border border-mainblue rounded-lg hover:bg-blue-50 focus:outline-none focus:ring-4 focus:ring-300">
                                 Remove
                             </button>
-                            @push('modals')
+                            
                                 @include('components.modals.medicine.remove-medicine')
-                            @endpush
+                            
                         </div>
                     </div>
                     <div class="flex-grow h-full bg-f7 rounded-lg p-12 col-span-1 slg:col-span-2">
@@ -113,7 +113,7 @@
 
                                     <!-- Add Medicine Button -->
                                     <div class="w-full xs:w-40 pt-5 xs:pt-0">
-                                        <button type="button" class="w-full h-[2.375rem] text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3" data-modal-target="add-batch-modal" data-modal-toggle="add-batch-modal">+   Add Batch</button>
+                                        <button type="button" id="add-batch-tigger" class="w-full h-[2.375rem] text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3" >+   Add Batch</button>
                                     </div>
                                 </div>
                             </div>
@@ -214,5 +214,7 @@
                 </div>
             </div>
         </div>
+        @include('components.modals.medicine.confirm-batch')
         @include('components.modals.medicine.add-medicine-batch')
+    
 </x-app-layout>

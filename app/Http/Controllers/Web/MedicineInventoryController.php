@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Medicine;
 use App\Models\MedicineInventory;
 use Illuminate\Support\Facades\Auth;
+use App\Models\ActivityLog;
 
 class MedicineInventoryController extends Controller
 {
@@ -22,38 +23,62 @@ class MedicineInventoryController extends Controller
         }
 
         if (!$personnel) {
-            abort(403, 'Unauthorized access.');
+            return response()->json([
+                'result' => 'error',
+                'message' => 'Unauthorized access.'
+            ], 403);
         }
         
-        $medicine = Medicine::findOrFail($id);
+        try {
+            $medicine = Medicine::findOrFail($id);
 
-        // Validate input
-        $validated = $request->validate([
-            'expiry_date'       => 'required|date|after:today',
-            'quantity_received' => 'required|integer|min:1',
-        ]);
+            // Validate input
+            $validated = $request->validate([
+                'expiry_date'       => 'required|date|after:today',
+                'quantity_received' => 'required|integer|min:1',
+            ]);
 
-        // Auto-generate batch number (increment per medicine)
-        $latestBatch = MedicineInventory::where('medicine_id', $medicine->id)
-            ->orderBy('batch_num', 'desc')
-            ->first();
+            // Auto-generate batch number (increment per medicine)
+            $latestBatch = MedicineInventory::where('medicine_id', $medicine->id)
+                ->orderBy('batch_num', 'desc')
+                ->first();
 
-        $nextBatchNum = $latestBatch ? $latestBatch->batch_num + 1 : 1;
+            $nextBatchNum = $latestBatch ? $latestBatch->batch_num + 1 : 1;
 
-        // Create inventory record
-        MedicineInventory::create([
-            'medicine_id'       => $medicine->id,
-            'added_by'          => Auth::id(),
-            'batch_num'         => $nextBatchNum,
-            'stock'             => $validated['quantity_received'], // stock = qty
-            'date_received'     => now()->toDateString(),           // same as date_added
-            'quantity_received' => $validated['quantity_received'],
-            'expiry_date'       => $validated['expiry_date'],
-        ]);
+            // Create inventory record
+            $inventory = MedicineInventory::create([
+                'medicine_id'       => $medicine->id,
+                'added_by'          => Auth::id(),
+                'batch_num'         => $nextBatchNum,
+                'stock'             => $validated['quantity_received'],
+                'date_received'     => now()->toDateString(),
+                'quantity_received' => $validated['quantity_received'],
+                'expiry_date'       => $validated['expiry_date'],
+            ]);
 
-        return redirect()
-            ->route('midwife.medicines.show', $medicine->id)
-            ->with('success', 'New batch added successfully.');
+            // Log the activity
+            ActivityLog::create([
+                'user_id' => $user->id,
+                'module_id' => 1, // Update this to your medicines module ID
+                'activity' => 'Added new batch #' . $nextBatchNum . ' for "' . $medicine->medicine_name . '" with quantity of ' . $validated['quantity_received'] . '.',
+            ]);
+
+            return response()->json([
+                'result' => 'success',
+                'message' => 'New batch added successfully.'
+            ]);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'result' => 'error',
+                'message' => 'Validation failed: ' . implode(', ', $e->errors())
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'result' => 'error',
+                'message' => 'An error occurred: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
 }

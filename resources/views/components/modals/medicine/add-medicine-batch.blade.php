@@ -1,8 +1,8 @@
 <!-- Main modal -->
-<div id="add-batch-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+<div id="add-batch-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full transition-opacity duration-400 ease-out opacity-0">
     <div class="relative p-4 w-full max-w-lg max-h-full">
         <!-- Modal content -->
-        <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700 py-10 px-6 max-w-full">
+        <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700 py-10 px-6 max-w-full transition-transform duration-300 ease-out scale-95">
             <!-- Modal header -->
             <div class="flex flex-col items-center justify-center rounded-t mb-6">
                 <h3 class="text-xl font-semibold text-main_font">
@@ -12,9 +12,8 @@
             </div>
             <!-- Modal body -->
             <div class="p-4 md:p-5 space-y-4">
-                <form method="POST" action="{{ route('midwife.medicines.inventory.store', $medicine->id) }}">
+                <form>
                     @csrf
-
                     <!-- DATE ADDED (auto-filled, disabled for user but still pass via hidden input) -->
                     <div class="grid grid-cols-1 gap-1 relative col-span-1 mb-3">
                         <label for="dateAdded" class="text-sm font-medium text-main_font">DATE ADDED</label>
@@ -57,10 +56,10 @@
 
                     <!-- Modal footer -->
                     <div class="flex items-center rounded-b gap-3 justify-end pt-3 px-6">
-                        <button data-modal-hide="add-batch-modal" type="button" class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100">Cancel</button>
-                        <button type="submit" class="text-white bg-mainblue hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5">Add Medicine</button>
+                        <button id="close-add-batch" type="button" class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100">Cancel</button>
+                        <button id="submit-batch" type="button" class="text-white bg-mainblue hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5">Add Medicine</button>
                     </div>
-                </form>
+            </form>
         </div>
     </div>
 </div>
