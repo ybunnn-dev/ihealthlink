@@ -1,5 +1,5 @@
 @section('title', 'BHWs | #' .$personnel->user->id)
- @section('page-id', 'spec-bhw')
+@section('page-id', 'spec-bhw')
 <x-app-layout>
     <script>
         window.bhwData = @json($personnel);
@@ -13,8 +13,9 @@
                         <span class="font-semibold">Return</span>
                     </div>
                 </a>
-                 <div class="grid grid-cols-1 xl:grid-cols-3 gap-3">
-                    <!-- Left Column (Profile + Scheduled Activity) -->
+                
+                <div class="grid grid-cols-1 xl:grid-cols-3 gap-3">
+                    <!-- Left Column (Profile + Buttons) -->
                     <div class="grid grid-rows-6 gap-2 col-span-1">
                         <!-- Profile Card -->
                         <div class="bg-f7 rounded-lg flex flex-col items-center justify-center p-4 row-span-5"> 
@@ -31,22 +32,19 @@
                             <p class="text-main_font font-semibold">BHW #{{ $personnel->id }}</p> 
                         </div>
 
-                        <!-- Scheduled Activity Card -->
-                         <div class="grid grid-cols-1 lg:grid-cols-2 w-full px-0 pb-0 row-span-1 gap-3"> {{-- Removed px and pb as they are no longer needed on this container --}}
-                            {{-- Increased py- for taller buttons --}}
+                        <!-- Action Buttons -->
+                        <div class="grid grid-cols-1 lg:grid-cols-2 w-full px-0 pb-0 row-span-1 gap-3">
                             <button id="open-edit-bhw" type="button" class="col-span-1 px-5 py-3 text-sm font-medium text-white bg-mainblue rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300">Edit</button>
                             <button id="open-remove-bhw" type="button" class="col-span-1 px-5 py-3 text-sm font-medium text-mainblue bg-white border border-mainblue rounded-lg hover:bg-blue-50 focus:outline-none focus:ring-4 focus:ring-300">Remove</button>
                         </div>
                     </div>
 
-                    <!-- Right Column (Resident Info) -->
+                    <!-- Right Column (BHW Info) -->
                     <div class="col-span-1 xl:col-span-2 h-full bg-f7 rounded-lg px-6 sm:px-10 lg:px-12 py-8">
-                        <!-- Header -->
                         <div class="flex items-center gap-2 mb-6">
                             <h2 class="text-xl font-semibold text-main_font">BHW Info</h2>
                         </div>
 
-                        <!-- Info Grid -->
                         <div class="grid grid-cols-1 gap-y-4 text-xs">
                             <div class="grid grid-rows-2 md:grid-cols-3 md:grid-rows-1">
                                 <p class="font-semibold text-main_font">FIRST NAME:</p>
@@ -70,7 +68,6 @@
 
                             <div class="grid grid-rows-2 md:grid-cols-3 md:grid-rows-1">
                                 <p class="font-semibold text-main_font">BIRTHDATE:</p>
-                                {{-- Using Carbon for easy date formatting and age calculation --}}
                                 <p class="text-normal_font">{{ \Carbon\Carbon::parse($personnel->user->birthdate)->format('F d, Y') }} ({{ \Carbon\Carbon::parse($personnel->user->birthdate)->age }} Years old)</p>
                             </div>
 
@@ -92,121 +89,67 @@
                     </div>
                 </div>
 
-                {{-- "bhw Activity Log" label --}}
+                {{-- Activity Log Section --}}
                 <h2 class="text-2xl font-semibold text-main_font mt-8">{{ $personnel->name }} Activity Log</h2>
 
-                <div class="bg-white p-6 rounded-xl">
+               <div class="bg-white p-6 rounded-xl" 
+                    x-data="activityLogData()">
+                    
+                    {{-- Search and Filter --}}
                     <div class="flex flex-col slg2:flex-row slg2:items-end gap-4 mb-4">
                         <div class="w-full slg2:w-64 slg2:flex-grow slg2:max-w-md">
-                            <label for="default-search" class="mb-2 text-sm font-medium text-main_font">Search Name?</label>
+                            <label for="activity-search" class="mb-2 text-sm font-medium text-main_font">Search Activity</label>
                             <div class="relative">
                                 <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                                     <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                                     </svg>
                                 </div>
-                                <input type="search" id="default-search" class="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500" placeholder="Search...">
+                                <input type="search" 
+                                    id="activity-search"
+                                    x-model="search" 
+                                    @input.debounce.500ms="fetchLogs(1)"
+                                    class="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500" 
+                                    placeholder="Search activity...">
                             </div>
                         </div>
 
                         <div class="w-full xs:w-48">
-                            <label for="dateDropdown" class="mb-2 text-sm font-medium text-main_font">Sort By Date</label>
-                            <button id="dateDropdown" data-dropdown-toggle="dateDropdownMenu" class="w-full text-main_font bg-[#F7F7F7] focus:outline-none font-medium border border-gray-300 rounded-lg text-sm px-4 py-2 text-center inline-flex items-center justify-between h-[2.375rem]" type="button">
-                                All Date
-                                <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-                                </svg>
-                            </button>
-                            <div id="dateDropdownMenu" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg w-44">
-                                <ul class="py-2 text-sm text-gray-700" aria-labelledby="dateDropdown">
-                                    <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">All Date</a></li>
-                                    <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Last Week</a></li>
-                                    <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Last Month</a></li>
-                                </ul>
-                            </div>
+                            <label for="dateFilter" class="mb-2 text-sm font-medium text-main_font">Sort By Date</label>
+                            <select x-model="dateFilter" 
+                                    @change="fetchLogs(1)"
+                                    id="dateFilter"
+                                    class="w-full text-main_font bg-[#F7F7F7] focus:outline-none font-medium border border-gray-300 rounded-lg text-sm px-4 py-2 h-[2.375rem]">
+                                <option value="">All Date</option>
+                                <option value="last_week">Last Week</option>
+                                <option value="last_month">Last Month</option>
+                            </select>
                         </div>
                     </div>
 
-                    <div class="relative overflow-x-auto rounded-lg">
-                        <table class="w-full text-sm text-left text-main_font">
-                            <thead class="text-xs text-main_font uppercase bg-col_tab_h text-center">
-                                <tr>
-                                    <th scope="col" class="px-6 py-3">LOG ID</th>
-                                    <th scope="col" class="px-6 py-3">NAME</th>
-                                    <th scope="col" class="px-6 py-3">ROLE</th>
-                                    <th scope="col" class="px-6 py-3">ACTIVITY</th>
-                                    <th scope="col" class="px-6 py-3">DATE & TIME UPDATED</th>
-                                    <th scope="col" class="px-6 py-3">ACTION</th>
-                                </tr>
-                            </thead>
-                            <tbody> {{-- Removed text-center from tbody --}}
-                                <tr class="bg-white border-b text-normal_font hover:bg-gray-50">
-                                    <th scope="row" class="px-6 py-4 font-medium text-normal_font whitespace-nowrap text-center">121</th>
-                                    <td class="px-6 py-4 text-center">Ron Peter Mortega</td>
-                                    <td class="px-6 py-4 text-center">BHW</td>
-                                    <td class="px-6 py-4 text-center">Add Medicine</td>
-                                    <td class="px-6 py-4 text-center">Feb 10, 2025 - 10:00 AM</td>
-                                    <td class="px-6 py-4 text-center">
-                                        <button class="text-white bg-mainblue hover:bg-blue-700 font-medium rounded-lg text-sm px-4 py-2">View</button>
-                                    </td>
-                                </tr>
-                                <tr class="bg-white border-b text-normal_font hover:bg-gray-50">
-                                    <th scope="row" class="px-6 py-4 font-medium text-normal_font whitespace-nowrap text-center">122</th>
-                                    <td class="px-6 py-4 text-center">Ron Peter Mortega</td>
-                                    <td class="px-6 py-4 text-center">BHW</td>
-                                    <td class="px-6 py-4 text-center">Add Medicine</td>
-                                    <td class="px-6 py-4 text-center">Feb 10, 2025 - 10:00 AM</td>
-                                    <td class="px-6 py-4 text-center">
-                                        <button class="text-white bg-mainblue hover:bg-blue-700 font-medium rounded-lg text-sm px-4 py-2">View</button>
-                                    </td>
-                                </tr>
-                                <tr class="bg-white border-b text-normal_font hover:bg-gray-50">
-                                    <th scope="row" class="px-6 py-4 font-medium text-normal_font whitespace-nowrap text-center">123</th>
-                                    <td class="px-6 py-4 text-center">Ron Peter Mortega</td>
-                                    <td class="px-6 py-4 text-center">BHW</td>
-                                    <td class="px-6 py-4 text-center">Update Resident</td>
-                                    <td class="px-6 py-4 text-center">Feb 10, 2025 - 10:00 AM</td>
-                                    <td class="px-6 py-4 text-center">
-                                        <button class="text-white bg-mainblue hover:bg-blue-700 font-medium rounded-lg text-sm px-4 py-2">View</button>
-                                    </td>
-                                </tr>
-                                <tr class="bg-white text-normal_font hover:bg-gray-50">
-                                    <th scope="row" class="px-6 py-4 font-medium text-normal_font whitespace-nowrap text-center">124</th>
-                                    <td class="px-6 py-4 text-center">Ron Peter Mortega</td>
-                                    <td class="px-6 py-4 text-center">BHW</td>
-                                    <td class="px-6 py-4 text-center">Add Resident</td>
-                                    <td class="px-6 py-4 text-center">Feb 10, 2025 - 10:00 AM</td>
-                                    <td class="px-6 py-4 text-center">
-                                        <button class="text-white bg-mainblue hover:bg-blue-700 font-medium rounded-lg text-sm px-4 py-2">View</button>
-                                    </td>
-                                </tr>
-                                <tr class="bg-white text-normal_font hover:bg-gray-50">
-                                    <th scope="row" class="px-6 py-4 font-medium text-normal_font whitespace-nowrap text-center">125</th>
-                                    <td class="px-6 py-4 text-center">Ron Peter Mortega</td>
-                                    <td class="px-6 py-4 text-center">BHW</td>
-                                    <td class="px-6 py-4 text-center">Add Resident</td>
-                                    <td class="px-6 py-4 text-center">Feb 10, 2025 - 10:00 AM</td>
-                                    <td class="px-6 py-4 text-center">
-                                        <button class="text-white bg-mainblue hover:bg-blue-700 font-medium rounded-lg text-sm px-4 py-2">View</button>
-                                    </td>
-                                </tr>
-                                <tr class="bg-white text-normal_font hover:bg-gray-50">
-                                    <th scope="row" class="px-6 py-4 font-medium text-normal_font whitespace-nowrap text-center">126</th>
-                                    <td class="px-6 py-4 text-center">Ron Peter Mortega</td>
-                                    <td class="px-6 py-4 text-center">BHW</td>
-                                    <td class="px-6 py-4 text-center">Add Medicine</td>
-                                    <td class="px-6 py-4 text-center">Feb 10, 2025 - 10:00 AM</td>
-                                    <td class="px-6 py-4 text-center">
-                                        <button class="text-white bg-mainblue hover:bg-blue-700 font-medium rounded-lg text-sm px-4 py-2">View</button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    {{-- Loading State --}}
+                    <div x-show="loading" class="flex justify-center items-center py-12">
+                        <svg class="animate-spin h-10 w-10 text-mainblue" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                    </div>
+
+                    {{-- Table --}}
+                    <div id="activity-log-table-container" x-show="!loading">
+                        @include('components.bhw.activity-log-table', ['logs' => $logs, 'personnel' => $personnel])
+                    </div>
+
+                    {{-- Pagination --}}
+                    <div id="pagination-container" class="mt-4" x-show="!loading">
+                        {{ $logs->links() }}
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
+
     @include('components.modals.bhw.edit-bhw-modal')
     @include('components.modals.bhw.remove-bhw')
 </x-app-layout>

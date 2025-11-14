@@ -154,13 +154,13 @@ Route::middleware([
 
     Route::put('/barangay/bhw/{id}/remove', [BhwController::class, 'remove']);
 
-      //bhw routes
+    //bhw routes
     Route::get('/barangay/bhws/', [BHWController::class, 'index'])->name('midwife.bhws');
 
     // Midwife-specific dashboard
     Route::get('/barangay/logs', [BarangayLogs::class, 'index'])->name('midwife.logs');
     
-    Route::get('/midwife/bhws/{personnel}', [BHWController::class, 'show'])->name('midwife.bhws.show');
+    Route::get('/barangay/bhws/{personnel}', [BHWController::class, 'show'])->name('midwife.bhws.show');
 
     Route::get('/barangay/philpen/count/', [PhilpenController::class, 'countIncomplete']);
 

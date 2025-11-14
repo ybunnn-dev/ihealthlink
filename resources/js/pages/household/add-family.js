@@ -1,4 +1,32 @@
 // The main modal element
+const createModalOptions = (modalEl) => ({
+    placement: 'center-center',
+    backdrop: 'static',
+    closable: false,
+    onShow: () => {
+        setTimeout(() => {
+            modalEl.classList.remove('opacity-0');
+            modalEl.classList.add('opacity-100');
+            
+            const modalContent = modalEl.querySelector('.relative.bg-white');
+            if (modalContent) {
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }
+        }, 10);
+    },
+    onHide: () => {
+        modalEl.classList.add('opacity-0');
+        modalEl.classList.remove('opacity-100');
+        
+        const modalContent = modalEl.querySelector('.relative.bg-white');
+        if (modalContent) {
+            modalContent.classList.add('scale-95');
+            modalContent.classList.remove('scale-100');
+        }
+    }
+});
+
 const addFamilyModalEl = document.getElementById('add-family-modal');
 
 // Button to trigger household selection
@@ -32,25 +60,20 @@ const successMesageHeader = document.getElementById('success-msg-head');
 const successMessage = document.getElementById('success-message');
 const closeSuccessModalButton = document.getElementById('close-success-modal-button');
 
-const modalOptions = {
-    placement: 'center-center',
-    backdrop: 'static',
-    closable: false,
-};
 
 const selectedHH = document.getElementById('selectHouseholdButton');
 
 const household = window.household;
-console.log(household);
+
 
 const purokFilterDropdownButton = document.getElementById('purokFilterDropdownButton');
 const purokFilterDropdownMenu = document.getElementById('purokFilterDropdownMenu')
 
 const addFamilyTriggerBtn = document.getElementById('add-family-trigger');
 
-const addFamilyModal = new Modal(addFamilyModalEl, modalOptions);
-const confirmAddFamilyModal = new Modal(confirmAddFamilyModalEl, modalOptions);
-const successModal = new Modal(successModalEl, modalOptions);
+const addFamilyModal = new Modal(addFamilyModalEl, createModalOptions(addFamilyModalEl));
+const confirmAddFamilyModal = new Modal(confirmAddFamilyModalEl, createModalOptions(confirmAddFamilyModalEl));
+const successModal = new Modal(successModalEl, createModalOptions(successModalEl));
 
 
 // NEW: Completed validation function
@@ -124,6 +147,14 @@ confirmFamilyCheckbox.addEventListener('change', function(){
 });
 
 confirmAddFamilySubmitBtn.addEventListener('click', function () {
+    // Disable both buttons
+    confirmAddFamilyCancelBtn.disabled = true;
+    confirmAddFamilySubmitBtn.disabled = true;
+    
+    // Store original button text and change to "Saving..."
+    const originalButtonText = confirmAddFamilySubmitBtn.textContent;
+    confirmAddFamilySubmitBtn.textContent = 'Saving...';
+
     const addFamilyPayload = {
         household_id: household.id,
         familyHeadId: null,
@@ -131,8 +162,6 @@ confirmAddFamilySubmitBtn.addEventListener('click', function () {
         isIndigent: isIndigentButtonText.textContent,
         isIwasGutom: isIwasGutomButtonText.textContent
     };
-    
-    confirmAddFamilySubmitBtn.disabled = true;
 
     fetch('/barangays/families/add', {
         method: 'POST',
@@ -144,14 +173,31 @@ confirmAddFamilySubmitBtn.addEventListener('click', function () {
     })
     .then(response => response.json())
     .then(data => {
-        //console.log("Server response:", data);
         if(data.status === 'success'){
-            alert('Family has been added successfully!');
-            window.location.reload();
+            // Hide confirmation modal
+            confirmAddFamilyModal.hide();
+            
+            // Update success modal content
+            successMesageHeader.textContent = 'Success!';
+            successMessage.textContent = 'Family has been added successfully!';
+            
+            // Show success modal
+            successModal.show();
         }
     })
     .catch(error => {
         console.error("Error:", error);
+        alert('An error occurred while adding the family.');
+        
+        // Re-enable buttons and restore original text on error
+        confirmAddFamilyCancelBtn.disabled = false;
+        confirmAddFamilySubmitBtn.disabled = false;
+        confirmAddFamilySubmitBtn.textContent = originalButtonText;
     });
 });
 
+// Add event listener for success modal close button to reload page
+closeSuccessModalButton.addEventListener('click', function() {
+    successModal.hide();
+    window.location.reload();
+});

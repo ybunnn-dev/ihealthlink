@@ -1,4 +1,34 @@
 // Get modal DOM elements
+// The modal container itself
+const createModalOptions = (modalEl) => ({
+    placement: 'center-center',
+    backdrop: 'static',
+    closable: false,
+    onShow: () => {
+        setTimeout(() => {
+            modalEl.classList.remove('opacity-0');
+            modalEl.classList.add('opacity-100');
+            
+            const modalContent = modalEl.querySelector('.relative.bg-white');
+            if (modalContent) {
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }
+        }, 10);
+    },
+    onHide: () => {
+        modalEl.classList.add('opacity-0');
+        modalEl.classList.remove('opacity-100');
+        
+        const modalContent = modalEl.querySelector('.relative.bg-white');
+        if (modalContent) {
+            modalContent.classList.add('scale-95');
+            modalContent.classList.remove('scale-100');
+        }
+    }
+});
+
+
 const modalMember = document.getElementById('existing-member-modal');
 const modalFamilyHead = document.getElementById('existing-family-head-modal');
 const modalHouseholdHead = document.getElementById('existing-household-head-modal');
@@ -23,19 +53,18 @@ const confirmAddHouseholdCancel = document.getElementById('confirm-add-household
 const confirmAddHouseholdSubmit = document.getElementById('confirm-add-household-submit');
 const confirmAddHouseholdCheckbox = document.getElementById('confirm-household-checkbox');
 
+const successModalEl = document.getElementById('success-modal');
+const successMesageHeader = document.getElementById('success-msg-head');
+const successMessage = document.getElementById('success-message');
+const closeSuccessModalButton = document.getElementById('close-success-modal-button');
 
 const sanitaryDropdownBtn = document.getElementById('sanitarySelect');
 const wasteDisposalDropdownBtn = document.getElementById('wasteDisposalSelect');
 
-const modalOptions = {
-    placement: 'center-center',
-    backdrop: 'static',
-    closable: false,
-};
 
-const addHouseholdModal = new Modal(addHouseholdModalEl, modalOptions);
-const confirmAddHouseholdModal = new Modal(confirmAddHouseholdModalEl, modalOptions);
-
+const addHouseholdModal = new Modal(addHouseholdModalEl, createModalOptions(addHouseholdModalEl));
+const confirmAddHouseholdModal = new Modal(confirmAddHouseholdModalEl, createModalOptions(confirmAddHouseholdModalEl));
+const successModal = new Modal(successModalEl, createModalOptions(successModalEl));
 
 let createdHouseholdId = null;
 
@@ -136,8 +165,15 @@ confirmAddHouseholdSubmit.addEventListener('click', function(){
         waste_disposal: wasteDisposalDropdownBtn.value.trim(),
         sanitary: sanitaryDropdownBtn.value.trim(),
     };
+    
+    // Disable both buttons
     confirmAddHouseholdCancel.disabled = true;
     confirmAddHouseholdSubmit.disabled = true;
+    
+    // Store original button text and change to "Saving..."
+    const originalButtonText = confirmAddHouseholdSubmit.textContent;
+    confirmAddHouseholdSubmit.textContent = 'Saving...';
+    
     console.log('Sending payload:', householdPayload);
 
     fetch('/barangays/households/add', {
@@ -153,13 +189,38 @@ confirmAddHouseholdSubmit.addEventListener('click', function(){
         console.log('Backend response:', data);
         if(data.result === 'success'){
             console.log(data);
-           alert('Household has been successfully added');
-           window.location.href = `/barangays/households/${data.household.id}`;
+            
+            // Hide the confirmation modal
+            confirmAddHouseholdModal.hide();
+            
+            // Update success modal content
+            successMesageHeader.textContent = 'Success!';
+            successMessage.textContent = 'Household has been successfully added';
+            
+            // Show success modal
+            successModal.show();
+            
+            // Store the household ID for navigation after closing modal
+            createdHouseholdId = data.household.id;
         }
     })
     .catch(error => {
         console.error('Error:', error);
+        
+        // Re-enable buttons and restore original text on error
+        confirmAddHouseholdCancel.disabled = false;
+        confirmAddHouseholdSubmit.disabled = false;
+        confirmAddHouseholdSubmit.textContent = originalButtonText;
     });
+});
+
+closeSuccessModalButton.addEventListener('click', function() {
+    successModal.hide();
+    
+    // Navigate to the household detail page after closing the modal
+    if (createdHouseholdId) {
+        window.location.href = `/barangays/households/${createdHouseholdId}`;
+    }
 });
 
 openAddHouseholdBtn.addEventListener('click', function () {

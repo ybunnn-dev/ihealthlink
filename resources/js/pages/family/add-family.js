@@ -1,4 +1,32 @@
-// The main modal element
+const createModalOptions = (modalEl) => ({
+    placement: 'center-center',
+    backdrop: 'static',
+    closable: false,
+    onShow: () => {
+        setTimeout(() => {
+            modalEl.classList.remove('opacity-0');
+            modalEl.classList.add('opacity-100');
+
+            const modalContent = modalEl.querySelector('.relative.bg-white');
+            if (modalContent) {
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }
+        }, 10);
+    },
+    onHide: () => {
+        modalEl.classList.add('opacity-0');
+        modalEl.classList.remove('opacity-100');
+
+        const modalContent = modalEl.querySelector('.relative.bg-white');
+        if (modalContent) {
+            modalContent.classList.add('scale-95');
+            modalContent.classList.remove('scale-100');
+        }
+    }
+});
+
+
 const addFamilyModalEl = document.getElementById('add-family-modal');
 
 // Button to trigger household selection
@@ -38,15 +66,15 @@ const purokFilterDropdownMenu = document.getElementById('purokFilterDropdownMenu
 
 const addFamilyTriggerBtn = document.getElementById('add-family-trigger');
 
-const modalOptions = {
-    placement: 'center-center',
-    backdrop: 'static',
-    closable: false,
-};
+const successModalEl = document.getElementById('success-modal');
+const successMesageHeader = document.getElementById('success-msg-head');
+const successMessage = document.getElementById('success-message');
+const closeSuccessModalButton = document.getElementById('close-success-modal-button');
 
-const addFamilyModal = new Modal(addFamilyModalEl, modalOptions);
-const confirmAddFamilyModal = new Modal(confirmAddFamilyModalEl, modalOptions);
-const switchHouseholdModal = new Modal(switchHouseholdModalEl, modalOptions);
+const addFamilyModal = new Modal(addFamilyModalEl, createModalOptions(addFamilyModalEl));
+const confirmAddFamilyModal = new Modal(confirmAddFamilyModalEl, createModalOptions(confirmAddFamilyModalEl));
+const switchHouseholdModal = new Modal(switchHouseholdModalEl, createModalOptions(switchHouseholdModalEl));
+const successModal = new Modal(successModalEl, createModalOptions(successModalEl));
 
 
 const householdTableBody = document.getElementById('switchHHTableBody'); // Target for rendering rows
@@ -54,13 +82,14 @@ const householdTableBody = document.getElementById('switchHHTableBody'); // Targ
 let household = window.household;
 let householdHead;
 
-
 let currentHouseholdId;
 
 const barangayName = window.barangay_name;
 const barangayId = window.barangay_id;
 
-confirmAddFamilyCancelBtn.addEventListener('click',function(){
+let familyId;
+
+confirmAddFamilyCancelBtn.addEventListener('click', function () {
     confirmAddFamilyModal.hide();
     confirmFamilyCheckbox.checked = false;
     addFamilyModal.show();
@@ -79,7 +108,7 @@ function validateForm() {
     }
 }
 
-proceedAddFamilyButton.addEventListener('click', function(){
+proceedAddFamilyButton.addEventListener('click', function () {
     event.preventDefault();
 
     addFamilyModal.hide();
@@ -87,19 +116,18 @@ proceedAddFamilyButton.addEventListener('click', function(){
 });
 
 
-addFamilyTriggerBtn.addEventListener('click', function() {    
-    // CHANGED: Ensure the button is disabled when the modal opens
-    proceedAddFamilyButton.disabled = true; 
+addFamilyTriggerBtn.addEventListener('click', function () {
+    proceedAddFamilyButton.disabled = true;
 
     addFamilyModal.show();
 });
 
-cancelAddFamilyButton.addEventListener('click', function() {
+cancelAddFamilyButton.addEventListener('click', function () {
     isIndigentButtonText.textContent = "Select";
     is4psButtonText.textContent = "Select";
 
     // CHANGED: Ensure the button is disabled when the form is reset
-    proceedAddFamilyButton.disabled = true; 
+    proceedAddFamilyButton.disabled = true;
 
     addFamilyModal.hide();
 });
@@ -114,7 +142,7 @@ function setupDropdownValueUpdater(buttonEl, menuEl, textEl) {
             textEl.classList.remove('text-gray-400');
             textEl.classList.add('text-normal_font');
             buttonEl.click();
-            
+
             // CHANGED: Call the validation function every time a value changes
             validateForm();
         });
@@ -125,18 +153,25 @@ setupDropdownValueUpdater(is4psButton, psDropdownMenu, is4psButtonText);
 setupDropdownValueUpdater(isIndigentButton, indigentDropdownMenu, isIndigentButtonText);
 setupDropdownValueUpdater(isIwasGutomButton, isIwasGutomMenu, isIwasGutomButtonText);
 
-confirmFamilyCheckbox.addEventListener('change', function(){
+confirmFamilyCheckbox.addEventListener('change', function () {
     confirmAddFamilySubmitBtn.disabled = !this.checked;
 });
 
 confirmAddFamilySubmitBtn.addEventListener('click', function () {
+    // Disable both buttons
+    confirmAddFamilyCancelBtn.disabled = true;
+    confirmAddFamilySubmitBtn.disabled = true;
+
+    // Store original button text and change to "Saving..."
+    const originalButtonText = confirmAddFamilySubmitBtn.textContent;
+    confirmAddFamilySubmitBtn.textContent = 'Saving...';
+
     const addFamilyPayload = {
         household_id: currentHouseholdId,
         is4ps: is4psButtonText.textContent,
         isIndigent: isIndigentButtonText.textContent,
         isIwasGutom: isIwasGutomButtonText.textContent
     };
-    confirmAddFamilySubmitBtn.disabled = true;
 
     fetch('/barangays/families/add', {
         method: 'POST',
@@ -146,18 +181,42 @@ confirmAddFamilySubmitBtn.addEventListener('click', function () {
         },
         body: JSON.stringify(addFamilyPayload)
     })
-    .then(response => response.json())
-    .then(data => {
-        //console.log("Server response:", data);
-        if(data.status === 'success'){
-            alert("Family has been added successfully!");
-            
-            window.location.href = `/barangay/family/${data.data.id}`;
-        }
-    })
-    .catch(error => {
-        console.error("Error:", error);
-    });
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+
+                
+                // Hide confirmation modal
+                confirmAddFamilyModal.hide();
+
+                // Update success modal content
+                
+                successMesageHeader.textContent = 'Success!';
+                successMessage.textContent = 'Family has been added successfully!';
+                
+                successModal.show();
+                console.log('uyes');
+                familyId = data.data.id;
+
+
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            alert('An error occurred while adding the family.');
+
+            // Re-enable buttons and restore original text on error
+            confirmAddFamilyCancelBtn.disabled = false;
+            confirmAddFamilySubmitBtn.disabled = false;
+            confirmAddFamilySubmitBtn.textContent = originalButtonText;
+            window.location.reload();
+        });
+});
+
+// Navigate when success modal is closed
+closeSuccessModalButton.addEventListener('click', function () {
+    successModal.hide();
+    window.location.href = `/barangay/family/${familyId}`;
 });
 
 let debounceTimer;
@@ -211,44 +270,75 @@ async function fetchHouseholds() {
             </tr>`;
     }
 }
-
 function renderHouseholds(households) {
-    // 1. Clear the existing table body
-    householdTableBody.innerHTML = '';
+    // 1. Get the container for household cards
+    const householdCardContainer = document.getElementById('householdCardContainer');
 
-    // 2. Handle case where no households are found
+    // 2. Clear existing content
+    householdCardContainer.innerHTML = '';
+
+    // 3. Handle case where no households are found
     if (!households || households.length === 0) {
-        householdTableBody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-gray-500">No households found.</td></tr>`;
+        householdCardContainer.innerHTML = `
+            <div class="text-center py-8 text-gray-500">
+                No households found.
+            </div>`;
         return;
     }
 
-    // 3. Create and append a new row for each household
-    households.forEach((household, index) => {
-        const rowHTML = `
-            <tr class="bg-white border-b hover:bg-gray-50">
-                <td class="w-4 p-4">
-                    <div class="flex items-center">
-                        <input id="household-radio-${household.id}"
-                            type="radio" 
-                            name="selected_household" 
-                            value="${household.id}"
-                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500">
-                        <label for="household-radio-${household.id}" class="sr-only">radio</label>
+    // 4. Create and append a card (not a label) for each household
+    households.forEach((household) => {
+        console.log(household);
+        const cardHTML = `
+            <div data-household-id="${household.id}" class="household-card flex items-center p-3 w-full text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-100 transition-colors">
+                <input type="radio" 
+                       value="${household.id}" 
+                       name="selected_household" 
+                       class="hidden"
+                       id="household-radio-${household.id}">
+                <div class="flex justify-between w-full">
+                    <div>
+                        <p class="font-semibold text-main_font">${household.head_name}</p>
+                        <p class="text-xs text-gray-500">
+                            <span>ID: HH-${household.id}</span>
+                            <span class="mx-1.5">&middot;</span>
+                            <span>${household.purok}</span>
+                        </p>
                     </div>
-                </td>
-                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                    ${household.id}
-                </th>
-                <td class="px-6 py-4">${household.head_name}</td>
-                <td class="px-6 py-4">${household.member_count}</td>
-                <td class="px-6 py-4">${household.purok}</td>
-            </tr>
+                    <div class="flex items-center text-xs text-gray-600">
+                        <span class="bg-gray-200 px-2 py-1 rounded-full">${household.member_count} Members</span>
+                    </div>
+                </div>
+            </div>
         `;
-        householdTableBody.insertAdjacentHTML('beforeend', rowHTML);
+        householdCardContainer.insertAdjacentHTML('beforeend', cardHTML);
+    });
+
+    // 5. Add click handlers to the cards instead of labels
+    const householdCards = householdCardContainer.querySelectorAll('.household-card');
+    householdCards.forEach(card => {
+        card.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            // Remove selected state from all cards
+            householdCards.forEach(c => {
+                c.classList.remove('border-blue-500', 'ring-2', 'ring-blue-200');
+            });
+
+            // Add selected state to this card
+            this.classList.add('border-blue-500', 'ring-2', 'ring-blue-200');
+
+            // Check the radio button
+            const radio = this.querySelector('input[type="radio"]');
+            radio.checked = true;
+
+            // Enable the button
+            chooseHouseholdCompleteBtn.disabled = false;
+        });
     });
 }
-
-chooseHouseholdCompleteBtn.addEventListener('click', function() {
+chooseHouseholdCompleteBtn.addEventListener('click', function () {
     // 1. Find the radio button that is currently checked
     const selectedRadio = document.querySelector('input[name="selected_household"]:checked');
 
@@ -257,30 +347,32 @@ chooseHouseholdCompleteBtn.addEventListener('click', function() {
         // 3. Get the value (which is the household ID)
         currentHouseholdId = selectedRadio.value;
         console.log('Chosen Household ID:', currentHouseholdId);
-        selectHouseholdButton.textContent = "Household #"+currentHouseholdId;
+        selectHouseholdButton.textContent = "Household #" + currentHouseholdId;
         switchHouseholdModal.hide();
         addFamilyModal.show();
-        // You can now use 'chosenHouseholdId' for your next steps.
-
     } else {
         // Handle the case where the user didn't select anything
         console.log('No household was selected.');
-        alert('Please select a household first.'); 
+        alert('Please select a household first.');
     }
 });
+
 // When the "Select Household" button is clicked
-selectHouseholdButton.addEventListener('click', function() {
+selectHouseholdButton.addEventListener('click', function () {
     addFamilyModal.hide();
+
+    // Reset button state
+    chooseHouseholdCompleteBtn.disabled = true;
+
     switchHouseholdModal.show();
-    console.log(barangayId);
     fetchHouseholds(); // Fetch initial list of households
 });
 
-closeSuccessModalButton.addEventListener('click', function(){
+closeSuccessModalButton.addEventListener('click', function () {
     window.location.reload();
 });
 
-closeChooseHousehold.addEventListener('click', function(){
+closeChooseHousehold.addEventListener('click', function () {
     switchHouseholdModal.hide();
     addFamilyModal.show();
 });

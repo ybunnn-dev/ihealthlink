@@ -1,15 +1,33 @@
-/* eslint-disable no-undef, no-unused-vars */
-
-// --- Initial Data ---
-const family = window.family;
-console.log('Original Family Data:', family);
-
-// --- Modal Options ---
-const modalOptions = {
+const createModalOptions = (modalEl) => ({
     placement: 'center-center',
     backdrop: 'static',
     closable: false,
-};
+    onShow: () => {
+        setTimeout(() => {
+            modalEl.classList.remove('opacity-0');
+            modalEl.classList.add('opacity-100');
+
+            const modalContent = modalEl.querySelector('.relative.bg-white');
+            if (modalContent) {
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }
+        }, 10);
+    },
+    onHide: () => {
+        modalEl.classList.add('opacity-0');
+        modalEl.classList.remove('opacity-100');
+
+        const modalContent = modalEl.querySelector('.relative.bg-white');
+        if (modalContent) {
+            modalContent.classList.add('scale-95');
+            modalContent.classList.remove('scale-100');
+        }
+    }
+});
+
+const family = window.family;
+
 
 // --- Element Variables (Modal 1: Edit) ---
 const editFamilyModalEl = document.getElementById('edit-family-modal');
@@ -32,9 +50,14 @@ const confirmEditFamilyCheckbox = document.getElementById('confirm-edit-family-c
 const confirmEditFamilyCancelBtn = document.getElementById('confirm-edit-family-cancel');
 const confirmEditFamilySubmitBtn = document.getElementById('confirm-edit-family-submit');
 
-// --- Modal Initialization ---
-const editFamilyModal = new Modal(editFamilyModalEl, modalOptions);
-const confirmEditFamilyModal = new Modal(confirmEditFamilyModalEl, modalOptions);
+const successModalEl = document.getElementById('success-modal');
+const successMesageHeader = document.getElementById('success-msg-head');
+const successMessage = document.getElementById('success-message');
+const closeSuccessModalButton = document.getElementById('close-success-modal-button');
+
+const editFamilyModal = new Modal(editFamilyModalEl, createModalOptions(editFamilyModalEl));
+const confirmEditFamilyModal = new Modal(confirmEditFamilyModalEl, createModalOptions(confirmEditFamilyModalEl));
+const successModal = new Modal(successModalEl, createModalOptions(successModalEl));
 
 // --- State Variables ---
 let originalFamilyState = {};
@@ -184,14 +207,17 @@ confirmEditFamilyCheckbox.addEventListener('change', function() {
 
 // [Modal 2] "Confirm & Save" button (FINAL SUBMIT)
 confirmEditFamilySubmitBtn.addEventListener('click', async function() {
-    // 'this' refers to the button
+    // Disable both buttons
+    confirmEditFamilyCancelBtn.disabled = true;
     this.disabled = true;
+    
+    // Change button to loading state
     this.innerHTML = `
         <svg aria-hidden="true" role="status" class="inline w-4 h-4 me-3 text-white animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="#E5E7EB"/>
         <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0492C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentColor"/>
         </svg>
-        Updating...
+        Saving...
     `;
 
     // The payload only needs the fields that are being updated.
@@ -205,7 +231,6 @@ confirmEditFamilySubmitBtn.addEventListener('click', async function() {
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
-                // Get the token directly from the meta tag
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
             },
             body: JSON.stringify(payload)
@@ -220,21 +245,35 @@ confirmEditFamilySubmitBtn.addEventListener('click', async function() {
 
         // --- Success ---
         console.log('Success:', data);
-        alert(data.message || 'Family details updated successfully!');
         
-        // Hide modals and reload the page to see the change
+        // Hide confirmation modal
         confirmEditFamilyModal.hide();
-        resetConfirmModal(); // Assumes this function exists
-        resetEditModal(); // Assumes this function exists
-        window.location.reload(); // Reload to show the new data
+        
+        // Update success modal content
+        successMesageHeader.textContent = 'Success!';
+        successMessage.textContent = data.message || 'Family details updated successfully!';
+        
+        // Show success modal
+        successModal.show();
+        
+        // Reset modals
+        resetConfirmModal();
+        resetEditModal();
 
     } catch (error) {
         // --- Error ---
         console.error('Error updating family:', error);
         alert('Error: ' + error.message);
 
-        // Reset the button so the user can try again
+        // Re-enable buttons and restore original HTML
+        confirmEditFamilyCancelBtn.disabled = false;
         this.disabled = false;
         this.innerHTML = 'Confirm & Save';
     }
+});
+
+// Add event listener for success modal close button to reload page
+closeSuccessModalButton.addEventListener('click', function() {
+    successModal.hide();
+    window.location.reload();
 });

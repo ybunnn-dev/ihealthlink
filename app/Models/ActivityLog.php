@@ -31,7 +31,6 @@ class ActivityLog extends Model
     |--------------------------------------------------------------------------
     */
     
-    /* 🔒 Automatically Encrypt Before Saving */
     public function setAttribute($key, $value)
     {
         if (in_array($key, $this->encryptable) && $value !== null) {
@@ -41,7 +40,6 @@ class ActivityLog extends Model
         return parent::setAttribute($key, $value);
     }
 
-    /* 🔓 Automatically Decrypt When Accessing */
     public function getAttribute($key)
     {
         $value = parent::getAttribute($key);
@@ -54,11 +52,6 @@ class ActivityLog extends Model
         return $value;
     }
 
-    /**
-     * 🔓 CRITICAL FIX: Override attributesToArray to decrypt before JSON serialization
-     * This ensures that when models are converted to JSON (e.g., @json($residents)),
-     * encrypted fields are properly decrypted for frontend consumption.
-     */
     public function attributesToArray()
     {
         $attributes = parent::attributesToArray();

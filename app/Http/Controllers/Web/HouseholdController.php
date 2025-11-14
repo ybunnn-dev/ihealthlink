@@ -337,51 +337,61 @@ class HouseholdController extends Controller
         $barangay = Barangay::with('puroks')->find($personnel->brgy_id);
         $puroks = $barangay->puroks;
 
-        $purokIds = $puroks->pluck('id'); // gives you an array/collection of purok IDs
-        $query = Household::whereIn('purok_id', $purokIds);
- 
-        \Log::info(json_encode($query));
+        $purokIds = $puroks->pluck('id');
+        
+        // Load all households with relationships (no filters at query level due to encryption)
+        $households = Household::whereIn('purok_id', $purokIds)
+            ->with(['head', 'families', 'purok'])
+            ->get();
 
-
-        // 2. Apply search filter if provided
-        if ($request->filled('search')) {
-            $searchQuery = $request->input('search');
-            $query->where(function ($q) use ($searchQuery) {
-                // Search by household ID number
-                $q->where('id_number', 'like', "%{$searchQuery}%")
-                  // Also search by the household head's name (requires a relationship)
-                  ->orWhereHas('head', function ($subQ) use ($searchQuery) {
-                      $subQ->where(DB::raw("CONCAT(first_name, ' ', last_name)"), 'like', "%{$searchQuery}%");
-                  });
-            });
-        }
-
-        // 3. Apply purok filter if provided
+        // Apply purok filter in memory (since purok name is encrypted)
         if ($request->filled('purok')) {
             $purokName = $request->input('purok');
-            $query->whereHas('purok', function ($q) use ($purokName) {
-                $q->where('purok_name', $purokName); // Assuming your purok table has a 'purok_name' column
-            });
+            
+            $households = $households->filter(function ($household) use ($purokName) {
+                // Auto-decrypted by model
+                return $household->purok && $household->purok->name === $purokName;
+            })->values();
         }
 
-        // 4. Eager load relationships to prevent N+1 issues and get necessary data
-        $households = $query->with(['head', 'families', 'purok'])->get();
+        // Apply search filter in memory (since names are encrypted)
+        if ($request->filled('search')) {
+            $searchQuery = strtolower($request->input('search'));
+            
+            $households = $households->filter(function ($household) use ($searchQuery) {
+                // Search by household ID number
+                if (stripos($household->id_number, $searchQuery) !== false) {
+                    return true;
+                }
+                
+                // Search by head name (auto-decrypted by model)
+                if ($household->head) {
+                    $fullName = strtolower($household->head->firstName . ' ' . $household->head->lastName);
+                    if (stripos($fullName, $searchQuery) !== false) {
+                        return true;
+                    }
+                }
+                
+                return false;
+            })->values();
+        }
 
-        // 5. Format the data to match what the frontend expects
+        // Format the data
         $formattedHouseholds = $households->map(function ($household) {
             return [
-                'id'           => $household->id, // The actual ID for the checkbox value
-                'head_name'    => $household->head ? $household->head->first_name . ' ' . $household->head->last_name : 'N/A',
-                'member_count' => $household->families->count(), // Count of families can represent members
-                'purok'        => $household->purok->name,
+                'id'           => $household->id,
+                'head_name'    => $household->head ? $household->head->firstName . ' ' . $household->head->lastName : 'N/A',
+                'member_count' => $household->families->count(),
+                'purok'        => $household->purok->name, // Auto-decrypted
             ];
         });
 
-        // 6. Return the final data as a JSON response
+        // Return JSON response
         return response()->json([
             'households' => $formattedHouseholds
         ]);
     }
+
 
     public function setHead(Request $request)
     {

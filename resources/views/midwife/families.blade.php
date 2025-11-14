@@ -70,8 +70,6 @@
                                     <div class="w-full xs:w-40 pt-5 xs:pt-0">
                                         <button id="add-family-trigger" 
                                             type="button" 
-                                            data-modal-target="add-family-modal" 
-                                            data-modal-toggle="add-family-modal"
                                             class="w-full h-[2.375rem] text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3">
                                             Add Family
                                         </button>

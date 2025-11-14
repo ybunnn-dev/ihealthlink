@@ -1,27 +1,47 @@
-/* eslint-disable no-undef, no-unused-vars */
+const createModalOptions = (modalEl) => ({
+    placement: 'center-center',
+    backdrop: 'static',
+    closable: false,
+    onShow: () => {
+        setTimeout(() => {
+            modalEl.classList.remove('opacity-0');
+            modalEl.classList.add('opacity-100');
+            
+            const modalContent = modalEl.querySelector('.relative.bg-white');
+            if (modalContent) {
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }
+        }, 10);
+    },
+    onHide: () => {
+        modalEl.classList.add('opacity-0');
+        modalEl.classList.remove('opacity-100');
+        
+        const modalContent = modalEl.querySelector('.relative.bg-white');
+        if (modalContent) {
+            modalContent.classList.add('scale-95');
+            modalContent.classList.remove('scale-100');
+        }
+    }
+});
 
 // --- Your Data (from window) ---
 const families = window.families;
 const household = window.household;
-console.log('Families data:', families);
-console.log('Household data:', household);
 
 // --- Modal Initialization (Modal 1: Choose Head) ---
 const chooseHeadModalEl = document.getElementById('chooseHeadModal');
-const modalOptions = {
-    placement: 'center-center',
-    backdrop: 'static',
-    closable: false,
-};
-const chooseHeadModal = new Modal(chooseHeadModalEl, modalOptions);
-
-// --- Modal Initialization (Modal 2: Confirm Assign) ---
 const confirmAssignHeadModalEl = document.getElementById('confirm-assign-head-modal');
-const confirmAssignHeadModal = new Modal(confirmAssignHeadModalEl, {
-    placement: 'center-center',
-    backdrop: 'static',
-    closable: false,
-});
+
+const successModalEl = document.getElementById('success-modal');
+const successMesageHeader = document.getElementById('success-msg-head');
+const successMessage = document.getElementById('success-message');
+const closeSuccessModalButton = document.getElementById('close-success-modal-button');
+
+const chooseHeadModal = new Modal(chooseHeadModalEl, createModalOptions(chooseHeadModalEl));
+const confirmAssignHeadModal = new Modal(confirmAssignHeadModalEl, createModalOptions(confirmAssignHeadModalEl));
+const successModal = new Modal(successModalEl, createModalOptions(successModalEl));
 
 // --- Element Variables (Modal 1) ---
 const headCardContainer = document.getElementById('headCardContainer');
@@ -40,12 +60,7 @@ let selectedHeadId = null;
 let allHouseholdResidents = [];
 const selectedClasses = ['border-blue-500', 'ring-2', 'ring-blue-200'];
 
-// --- Functions ---
 
-/**
- * Gets the CSRF token from the meta tag.
- * @returns {string} The CSRF token.
- */
 function getCsrfToken() {
     const token = document.querySelector('meta[name="csrf-token"]');
     if (!token) {
@@ -135,9 +150,6 @@ function resetSelectionModal() {
     headCardContainer.innerHTML = '';
 }
 
-/**
- * Resets the confirmation modal to its default state.
- */
 function resetConfirmModal() {
     confirmAssignHeadCheckbox.checked = false;
     confirmAssignHeadSubmitBtn.disabled = true;
@@ -145,9 +157,7 @@ function resetConfirmModal() {
     newHeadNameConfirmEl.textContent = '[Resident Name]';
 }
 
-// --- Event Listeners ---
 
-// [Trigger] Show the *first* modal
 chooseHeadTrigger.addEventListener('click', function() {
     allHouseholdResidents = families.flatMap(family => family.residents);
     const currentHeadId = household ? household.head_id : null;
@@ -158,13 +168,11 @@ chooseHeadTrigger.addEventListener('click', function() {
     chooseHeadModal.show();
 });
 
-// [Modal 1] Cancel button
 cancelChooseHeadBtn.addEventListener('click', function() {
     resetSelectionModal();
     chooseHeadModal.hide();
 });
 
-// [Modal 1] Selection logic
 headCardContainer.addEventListener('click', function(event) {
     const clickedCard = event.target.closest('.resident-selection-card');
     if (!clickedCard) return;
@@ -175,7 +183,6 @@ headCardContainer.addEventListener('click', function(event) {
     confirmChooseHeadBtn.disabled = false;
 });
 
-// [Modal 1] "Confirm" button (now acts as "Next")
 confirmChooseHeadBtn.addEventListener('click', function() {
     if (!selectedHeadId) return;
     const currentHeadId = household ? household.head_id : null;
@@ -207,19 +214,18 @@ confirmAssignHeadCheckbox.addEventListener('change', function() {
     confirmAssignHeadSubmitBtn.disabled = !this.checked;
 });
 
-
-// ==========================================================
-// === UPDATED: FINAL SUBMIT BUTTON with fetch() ===
-// ==========================================================
 confirmAssignHeadSubmitBtn.addEventListener('click', async function() {
-    // 'this' refers to the button
+    // Disable both buttons
+    confirmAssignHeadCancelBtn.disabled = true;
     this.disabled = true;
+    
+    // Change button to loading state with spinner
     this.innerHTML = `
         <svg aria-hidden="true" role="status" class="inline w-4 h-4 me-3 text-white animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="#E5E7EB"/>
         <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0492C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentColor"/>
         </svg>
-        Assigning...
+        Saving...
     `;
 
     const payload = {
@@ -247,21 +253,35 @@ confirmAssignHeadSubmitBtn.addEventListener('click', async function() {
 
         // --- Success ---
         console.log('Success:', data);
-        alert(data.message || 'Household head updated successfully!');
         
-        // Hide modals and reload the page to see the change
+        // Hide confirmation modal
         confirmAssignHeadModal.hide();
+        
+        // Update success modal content
+        successMesageHeader.textContent = 'Success!';
+        successMessage.textContent = data.message || 'Household head updated successfully!';
+        
+        // Show success modal
+        successModal.show();
+        
+        // Reset modals
         resetConfirmModal();
         resetSelectionModal();
-        window.location.reload(); // Reload to show the new head in the UI
 
     } catch (error) {
         // --- Error ---
         console.error('Error:', error);
         alert('Error: ' + error.message);
 
-        // Reset the button so the user can try again
+        // Re-enable both buttons and reset the submit button text
+        confirmAssignHeadCancelBtn.disabled = false;
         this.disabled = false;
         this.innerHTML = 'Confirm & Assign';
     }
+});
+
+// Add event listener for success modal close button to reload page
+closeSuccessModalButton.addEventListener('click', function() {
+    successModal.hide();
+    window.location.reload(); // Reload to show the new head in the UI
 });

@@ -1,4 +1,31 @@
-// The modal element itself (for showing/hiding)
+const createModalOptions = (modalEl) => ({
+    placement: 'center-center',
+    backdrop: 'static',
+    closable: false,
+    onShow: () => {
+        setTimeout(() => {
+            modalEl.classList.remove('opacity-0');
+            modalEl.classList.add('opacity-100');
+            
+            const modalContent = modalEl.querySelector('.relative.bg-white');
+            if (modalContent) {
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }
+        }, 10);
+    },
+    onHide: () => {
+        modalEl.classList.add('opacity-0');
+        modalEl.classList.remove('opacity-100');
+        
+        const modalContent = modalEl.querySelector('.relative.bg-white');
+        if (modalContent) {
+            modalContent.classList.add('scale-95');
+            modalContent.classList.remove('scale-100');
+        }
+    }
+});
+
 const editHouseholdModalEl = document.getElementById('edit-household-modal');
 
 // The hidden input to store the ID
@@ -23,14 +50,15 @@ const confirmEditHouseholdSubmitBtn = document.getElementById('confirm-edit-hous
 
 const household = window.household;
 
-const modalOptions = {
-    placement: 'center-center',
-    backdrop: 'static',
-    closable: false,
-};
+const successModalEl = document.getElementById('success-modal');
+const successMesageHeader = document.getElementById('success-msg-head');
+const successMessage = document.getElementById('success-message');
+const closeSuccessModalButton = document.getElementById('close-success-modal-button');
 
-const editHouseholdModal = new Modal(editHouseholdModalEl, modalOptions);
-const confirmEditHouseholdModal = new Modal(confirmEditHouseholdModalEl, modalOptions);
+
+const editHouseholdModal = new Modal(editHouseholdModalEl, createModalOptions(editHouseholdModalEl));
+const confirmEditHouseholdModal = new Modal(confirmEditHouseholdModalEl, createModalOptions(confirmEditHouseholdModalEl));
+const successModal = new Modal(successModalEl, createModalOptions(successModalEl));
 
 const editHouseholdTrigger = document.getElementById('edit-household-btn');
 
@@ -116,9 +144,13 @@ confirmEditHouseholdCancelBtn.addEventListener('click', function() {
 
 confirmEditHouseholdSubmitBtn.addEventListener('click', function() {
     if (!confirmEditHouseholdSubmitBtn.disabled) {
-        // Disable button to prevent double submission
+        // Disable both buttons and change submit button text
+        confirmEditHouseholdCancelBtn.disabled = true;
         confirmEditHouseholdSubmitBtn.disabled = true;
-        confirmEditHouseholdSubmitBtn.textContent = 'Updating...';
+        
+        // Store original text and change to "Saving..."
+        const originalButtonText = confirmEditHouseholdSubmitBtn.textContent;
+        confirmEditHouseholdSubmitBtn.textContent = 'Saving...';
 
         // Prepare form data
         const formData = {
@@ -145,27 +177,36 @@ confirmEditHouseholdSubmitBtn.addEventListener('click', function() {
         .then(response => response.json())
         .then(data => {
             if (data.message) {
-                // Success - close modal and show success message
+                // Success - close confirmation modal
                 confirmEditHouseholdModal.hide();
                 
                 // Update the household object in window
                 window.household = data.household;
                 
-                // Show success notification (adjust based on your notification system)
-                alert(data.message);
+                // Update success modal content
+                successMesageHeader.textContent = 'Success!';
+                successMessage.textContent = data.message;
                 
-                // Optionally reload the page or update UI
-                location.reload();
+                // Show success modal
+                successModal.show();
             }
         })
         .catch(error => {
             console.error('Error:', error);
             alert('An error occurred while updating the household.');
-        })
-        .finally(() => {
-            // Re-enable button
+            
+            // Re-enable buttons and restore original text on error
+            confirmEditHouseholdCancelBtn.disabled = false;
             confirmEditHouseholdSubmitBtn.disabled = false;
-            confirmEditHouseholdSubmitBtn.textContent = 'Confirm';
+            confirmEditHouseholdSubmitBtn.textContent = originalButtonText;
         });
     }
+});
+
+// Add event listener for success modal close button
+closeSuccessModalButton.addEventListener('click', function() {
+    successModal.hide();
+    
+    // Reload the page to show updated data
+    location.reload();
 });

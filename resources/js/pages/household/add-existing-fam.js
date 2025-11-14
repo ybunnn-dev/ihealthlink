@@ -1,6 +1,36 @@
-// ============================================================================
-// MULTI-STEP FAMILY MODAL - FIXED (Div-based selection)
-// ============================================================================
+const createModalOptions = (modalEl) => ({
+    placement: 'center-center',
+    backdrop: 'static',
+    closable: false,
+    onShow: () => {
+        setTimeout(() => {
+            modalEl.classList.remove('opacity-0');
+            modalEl.classList.add('opacity-100');
+            
+            const modalContent = modalEl.querySelector('.relative.bg-white');
+            if (modalContent) {
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }
+        }, 10);
+    },
+    onHide: () => {
+        modalEl.classList.add('opacity-0');
+        modalEl.classList.remove('opacity-100');
+        
+        const modalContent = modalEl.querySelector('.relative.bg-white');
+        if (modalContent) {
+            modalContent.classList.add('scale-95');
+            modalContent.classList.remove('scale-100');
+        }
+    }
+});
+
+const successModalEl = document.getElementById('success-modal');
+const successMesageHeader = document.getElementById('success-msg-head');
+const successMessage = document.getElementById('success-message');
+const closeSuccessModalButton = document.getElementById('close-success-modal-button');
+
 const confirmTransferFamilyModalEl = document.getElementById('confirm-transfer-family-modal');
 const household = window.household;
 // Interactive elements inside the modal
@@ -8,11 +38,7 @@ const confirmTransferCheckbox = document.getElementById('confirm-transfer-checkb
 const confirmTransferFamilyCancelBtn = document.getElementById('confirm-transfer-family-cancel');
 const confirmTransferFamilySubmitBtn = document.getElementById('confirm-transfer-family-submit');
 
-const confirmTransferFamilyModal = new Modal(confirmTransferFamilyModalEl, {
-    placement: 'center-center',
-    backdrop: 'static',
-    closable: false,
-});
+const confirmTransferFamilyModal = new Modal(confirmTransferFamilyModalEl, createModalOptions(confirmTransferFamilyModalEl));
 
 let currentStep = 0; // 0-based index
 const totalSteps = 2;
@@ -22,11 +48,7 @@ const step1 = document.querySelector('[data-step="1"]');
 const step2 = document.querySelector('[data-step="2"]');
 const modalSteps = [step1, step2];
 
-/**
- * FIXED: Uses a small setTimeout(10) to force a browser repaint.
- * This ensures the "off-screen" state is set *before*
- * the "on-screen" animation starts, making the slide reliable.
- */
+
 const goToStep = (stepIndex) => {
     if (stepIndex < 0 || stepIndex >= totalSteps || !modalSteps[stepIndex] || !modalSteps[currentStep]) return;
 
@@ -77,17 +99,13 @@ const resetModalSteps = () => {
     updateButtonsAndText();
 };
 
-
+const successModal = new Modal(successModalEl, createModalOptions(successModalEl));
 // ============================================================================
 // STEP 1: FAMILY SELECTION LOGIC
 // ============================================================================
 
 const chooseFamilyModalEl = document.getElementById('chooseFamilyModal');
-const chooseFamilyModal = new Modal(chooseFamilyModalEl, {
-    placement: 'center-center',
-    backdrop: 'static',
-    closable: false,
-});
+const chooseFamilyModal = new Modal(chooseFamilyModalEl, createModalOptions(chooseFamilyModalEl));
 
 const familySearchInput = document.getElementById('family-search');
 const familyCardContainer = document.getElementById('familyCardContainer');
@@ -98,9 +116,7 @@ let chosenFamily = null;
 let familiesData = [];
 let debounceTimer;
 
-/**
- * ADDED: The CSS classes to toggle for selection
- */
+
 const selectionClasses = ['border-blue-500', 'bg-blue-50', 'ring-2', 'ring-blue-200'];
 
 
@@ -300,6 +316,13 @@ confirmTransferCheckbox.addEventListener('change', function(){
 });
 
 confirmTransferFamilySubmitBtn.addEventListener('click', function () {
+    // Disable both buttons
+    confirmTransferFamilyCancelBtn.disabled = true;
+    confirmTransferFamilySubmitBtn.disabled = true;
+    
+    // Store original button text and change to "Saving..."
+    const originalButtonText = confirmTransferFamilySubmitBtn.textContent;
+    confirmTransferFamilySubmitBtn.textContent = 'Saving...';
 
     const payload = {
         family_id: chosenFamily.id,
@@ -317,12 +340,32 @@ confirmTransferFamilySubmitBtn.addEventListener('click', function () {
     .then(response => response.json())
     .then(data => {
         console.log('Response:', data);
-        alert('Family has been successfuly added.');
-        window.location.reload();
+        
+        // Hide confirmation modal
+        confirmTransferFamilyModal.hide();
+        
+        // Update success modal content
+        successMesageHeader.textContent = 'Success!';
+        successMessage.textContent = 'Family has been successfully added.';
+        
+        // Show success modal
+        successModal.show();
     })
     .catch(error => {
         console.error('Error:', error);
+        alert('An error occurred while transferring the family.');
+        
+        // Re-enable buttons and restore original text on error
+        confirmTransferFamilyCancelBtn.disabled = false;
+        confirmTransferFamilySubmitBtn.disabled = false;
+        confirmTransferFamilySubmitBtn.textContent = originalButtonText;
     });
+});
+
+// Add event listener for success modal close button to reload page
+closeSuccessModalButton.addEventListener('click', function() {
+    successModal.hide();
+    window.location.reload();
 });
 
 

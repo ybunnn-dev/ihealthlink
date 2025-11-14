@@ -4,6 +4,7 @@ import sideMenu from './components/side-menu-bhc.js';
 import notificationHandler from './notification.js';
 import { medicineFilter } from './pages/medicines/paginator.js'; // ADD THIS
 import { faqFilter } from './pages/faq/paginator.js';
+import { activityLogData } from './pages/bhw/spec-paginate.js';
 
 import 'flowbite';
 import 'flowbite-datepicker';
@@ -12,6 +13,7 @@ Alpine.data('sideMenu', sideMenu);
 Alpine.data('notificationHandler', notificationHandler);
 Alpine.data('medicineFilter', medicineFilter); // REGISTER IT HERE
 Alpine.data('faqFilter', faqFilter);
+Alpine.data('activityLogData', activityLogData);
 
 window.Alpine = Alpine;
 
@@ -79,6 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
   else if (bodyClass.contains('spec-bhw')) {
     import('./pages/bhw/edit-bhw.js');
     import('./pages/bhw/remove-bhw.js');
+    
   }
   else if (bodyClass.contains('households')) {
     import('./pages/household/paginate.js');
@@ -103,6 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   else if (bodyClass.contains('family')) {
     import('./pages/family/paginate.js');
+    import('./pages/family/add-family.js');
   } else if(bodyClass.contains('spec-family')){
     import('./pages/family/add-existing.js');
     import('./pages/family/add-resident.js');
@@ -194,6 +198,7 @@ document.addEventListener('alpine:init', () => {
   Alpine.data('sideMenu', sideMenu);
   Alpine.data('notificationHandler', notificationHandler);
   Alpine.data('medicineFilter', medicineFilter); // REGISTER HERE TOO
+  Alpine.data('activityLogData' , activityLogData); // REGISTER HERE TOO
 });
 
 Alpine.start();

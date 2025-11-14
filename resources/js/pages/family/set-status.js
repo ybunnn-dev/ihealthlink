@@ -2,14 +2,40 @@
 
 // --- Initial Data ---
 const family = window.family;
-console.log('Original Family Data:', family);
 
-// --- Modal Options ---
-const modalOptions = {
+const successModalEl = document.getElementById('success-modal');
+const successMesageHeader = document.getElementById('success-msg-head');
+const successMessage = document.getElementById('success-message');
+const closeSuccessModalButton = document.getElementById('close-success-modal-button');
+
+const createModalOptions = (modalEl) => ({
     placement: 'center-center',
     backdrop: 'static',
     closable: false,
-};
+    onShow: () => {
+        setTimeout(() => {
+            modalEl.classList.remove('opacity-0');
+            modalEl.classList.add('opacity-100');
+
+            const modalContent = modalEl.querySelector('.relative.bg-white');
+            if (modalContent) {
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }
+        }, 10);
+    },
+    onHide: () => {
+        modalEl.classList.add('opacity-0');
+        modalEl.classList.remove('opacity-100');
+
+        const modalContent = modalEl.querySelector('.relative.bg-white');
+        if (modalContent) {
+            modalContent.classList.add('scale-95');
+            modalContent.classList.remove('scale-100');
+        }
+    }
+});
+
 
 // --- Element Variables (Modal 1: Set Status) ---
 const setStatTrigger = document.getElementById('set-stat-btn');
@@ -28,20 +54,15 @@ const confirmSetStatusCancelBtn = document.getElementById('confirm-set-status-ca
 const confirmSetStatusSubmitBtn = document.getElementById('confirm-set-status-submit');
 
 // --- Modal Initialization ---
-const setStatusModal = new Modal(setStatusModalEl, modalOptions);
-const confirmSetStatusModal = new Modal(confirmSetStatusModalEl, modalOptions);
+const setStatusModal = new Modal(setStatusModalEl, createModalOptions(setStatusModalEl));
+const confirmSetStatusModal = new Modal(confirmSetStatusModalEl, createModalOptions(confirmSetStatusModalEl));
+const successModal = new Modal(successModalEl, createModalOptions(successModalEl));
 
 // --- State Variables ---
 let originalStatus = null;
 let newStatus = null;
 
-// --- Helper Functions ---
 
-/**
- * Capitalizes the first letter of a string.
- * @param {string} s - The input string.
- * @returns {string} - The capitalized string.
- */
 const capitalize = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 
 /**
@@ -137,6 +158,14 @@ confirmSetStatusCheckbox.addEventListener('change', function() {
 });
 
 confirmSetStatusSubmitBtn.addEventListener('click', function() {
+    // Disable both buttons
+    confirmSetStatusCancelBtn.disabled = true;
+    confirmSetStatusSubmitBtn.disabled = true;
+    
+    // Store original button text and change to "Saving..."
+    const originalButtonText = confirmSetStatusSubmitBtn.textContent;
+    confirmSetStatusSubmitBtn.textContent = 'Saving...';
+
     // Create the final payload
     const payload = {
         family_id: family.id,
@@ -157,22 +186,41 @@ confirmSetStatusSubmitBtn.addEventListener('click', function() {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            // Show success message
-            alert(`Family status updated successfully. ${data.data.affected_residents} resident(s) affected.`);
-            
-            // Hide and reset both modals
+            // Hide confirmation modal
             confirmSetStatusModal.hide();
+            
+            // Update success modal content
+            successMesageHeader.textContent = 'Success!';
+            successMessage.textContent = `Family status updated successfully. ${data.data.affected_residents} resident(s) affected.`;
+            
+            // Show success modal
+            successModal.show();
+            
+            // Reset both modals
             resetConfirmModal();
             resetStatusModal();
-            
-            // Reload the page to reflect changes
-            window.location.reload();
         } else {
             alert('Error: ' + data.message);
+            
+            // Re-enable buttons and restore original text on error
+            confirmSetStatusCancelBtn.disabled = false;
+            confirmSetStatusSubmitBtn.disabled = false;
+            confirmSetStatusSubmitBtn.textContent = originalButtonText;
         }
     })
     .catch(error => {
         console.error('Error:', error);
         alert('An error occurred while updating the family status.');
+        
+        // Re-enable buttons and restore original text on error
+        confirmSetStatusCancelBtn.disabled = false;
+        confirmSetStatusSubmitBtn.disabled = false;
+        confirmSetStatusSubmitBtn.textContent = originalButtonText;
     });
+});
+
+// Add event listener for success modal close button to reload page
+closeSuccessModalButton.addEventListener('click', function() {
+    successModal.hide();
+    window.location.reload();
 });

@@ -22,6 +22,7 @@ use App\Models\Personnel;
 use App\Models\Barangay;
 use App\Models\User;
 use App\Models\Midwife;
+use App\Models\ActivityLog;
 
 class BHWController extends Controller
 {
@@ -138,18 +139,80 @@ class BHWController extends Controller
         }
     }
 
-    public function show(Personnel $personnel)
+    public function show(Request $request, Personnel $personnel)
     {
-        
-        \Log::info($personnel);
         $personnel->load('user', 'barangay');
+        
+        // Start with the activity logs query
+        $query = ActivityLog::where('user_id', $personnel->user_id);
 
-        \Log::info($personnel);
+        // Apply date filters based on request
+        $dateFilter = $request->input('date_filter');
 
+        if ($dateFilter) {
+            switch ($dateFilter) {
+                case 'last_week':
+                    $query->where('created_at', '>=', \Carbon\Carbon::now()->subWeek());
+                    break;
+                case 'last_month':
+                    $query->where('created_at', '>=', \Carbon\Carbon::now()->subMonth());
+                    break;
+            }
+        }
+
+        // Order by most recent and paginate
+        $logs = $query->latest()->paginate(7)->withQueryString();
+
+        // Apply search filter in memory (since activity is encrypted)
+        if ($request->filled('search')) {
+            $searchQuery = strtolower($request->input('search'));
+            
+            $filtered = $logs->filter(function ($log) use ($searchQuery) {
+                return stripos($log->activity, $searchQuery) !== false;
+            });
+            
+            $logs->setCollection($filtered->values());
+        }
+
+        // Log the pagination data
+        \Log::info('Activity logs pagination', [
+            'personnel_id' => $personnel->id,
+            'date_filter' => $dateFilter,
+            'search' => $request->input('search'),
+            'total' => $logs->total(),
+            'current_page' => $logs->currentPage(),
+        ]);
+
+        // If AJAX request, return only the table content
+        if ($request->ajax() || $request->wantsJson()) {
+            $html = view('components.bhw.activity-log-table', [
+                'logs' => $logs,
+                'personnel' => $personnel
+            ])->render();
+
+            return response()->json([
+                'success' => true,
+                'html' => $html,
+                'pagination' => [
+                    'current_page' => $logs->currentPage(),
+                    'last_page' => $logs->lastPage(),
+                    'per_page' => $logs->perPage(),
+                    'total' => $logs->total(),
+                    'from' => $logs->firstItem(),
+                    'to' => $logs->lastItem(),
+                    'links' => $logs->hasPages() ? $logs->links()->render() : '',
+                ]
+            ]);
+        }
+
+        // Regular page load
         return view('midwife.BHWs-profile', [
             'personnel' => $personnel,
+            'logs' => $logs,
         ]);
     }
+
+
 
     public function getBHWs()
     {
