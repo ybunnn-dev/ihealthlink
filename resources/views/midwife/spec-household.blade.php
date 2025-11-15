@@ -85,13 +85,14 @@
 
                             <p class="font-semibold text-main_font">DATE ADDED:</p>
                                 <p class="text-normal_font">
-                                    {{ $household->created_at->format('F d, Y, h:i A') }}
+                                    {{ $household->created_at->format('F d, Y') }}
                                 </p>
 
                                 <p class="font-semibold text-main_font">DATE UPDATED:</p>
                                 <p class="text-normal_font">
-                                    {{ $household->updated_at->format('F d, Y, h:i A') }}
+                                    {{ $household->updated_at->format('F d, Y') }}
                             </p>
+
                         </div>
                     </div>
                 </div>
