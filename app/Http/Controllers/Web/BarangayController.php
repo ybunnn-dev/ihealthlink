@@ -17,6 +17,8 @@ use App\Models\Household;
 use App\Models\Resident;
 use App\Models\Family;
 use App\Models\DailyActivities;
+use Illuminate\Pagination\LengthAwarePaginator;
+
 use Illuminate\Support\Facades\DB;
 
 class BarangayController extends Controller
