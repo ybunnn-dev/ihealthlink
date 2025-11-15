@@ -145,10 +145,15 @@
                             </div>
 
                             <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-                                <p class="font-semibold text-main_font">PWD ID:</p>
-                                <p class="text-normal_font">{{ $resident->pwd_id !== null ? $resident->pwd_id : 'Non-PWD' }} </p>
+                                <p class="font-semibold text-main_font">PWD Status:</p>
+                                <p class="text-normal_font">
+                                    @if($resident->is_pwd)
+                                        PWD {{ $resident->pwd_id ? "({$resident->pwd_id})" : '(No PWD ID)' }}
+                                    @else
+                                        Non-PWD
+                                    @endif
+                                </p>
                             </div>
-
                             <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
                                 <p class="font-semibold text-main_font">INDIGENOUS PEOPLE:</p>
                                 <p class="text-normal_font">{{ $resident->is_indigenous ? 'Yes' : 'No' }}</p>
