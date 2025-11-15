@@ -1,4 +1,32 @@
 // --- Existing Element Variables ---
+// --- Modal and Element References ---
+const createModalOptions = (modalEl) => ({
+    placement: 'center-center',
+    backdrop: 'static',
+    closable: false,
+    onShow: () => {
+        setTimeout(() => {
+            modalEl.classList.remove('opacity-0');
+            modalEl.classList.add('opacity-100');
+
+            const modalContent = modalEl.querySelector('.relative.bg-white');
+            if (modalContent) {
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }
+        }, 10);
+    },
+    onHide: () => {
+        modalEl.classList.add('opacity-0');
+        modalEl.classList.remove('opacity-100');
+
+        const modalContent = modalEl.querySelector('.relative.bg-white');
+        if (modalContent) {
+            modalContent.classList.add('scale-95');
+            modalContent.classList.remove('scale-100');
+        }
+    }
+});
 
 // Main Modal Elements
 const createConsultationModalEl = document.getElementById('create-consultation-modal');
@@ -24,7 +52,7 @@ const successMessage = document.getElementById('success-message');
 const closeSuccessModalButton = document.getElementById('close-success-modal-button');
 
 
-const successModal = new Modal(successModalEl, {backdrop: 'static',closable: true,});
+const successModal = new Modal(successModalEl, createModalOptions(successModalEl));
 
 let currentConsultation = null;
 
@@ -46,7 +74,7 @@ const saveConsultationBtn = document.getElementById('saveConsultationBtn');
 // Main Modal Element
 const distributeMedicineModalEl = document.getElementById('distribute-medicine-modal');
 
-const distributeMedicineModal = new Modal(distributeMedicineModalEl, {backdrop: 'static',closable: true,});
+const distributeMedicineModal = new Modal(distributeMedicineModalEl, createModalOptions(distributeMedicineModalEl));
 
 const chosenMedicineList = document.getElementById('chosen-medicine-list');
 const chosenMedicinePlaceholder = document.getElementById('chosen-medicine-placeholder');
@@ -64,7 +92,7 @@ const cancelDistributeButton = document.getElementById('cancel-distribute-button
 const distributeButton = document.getElementById('distribute-button');
 
 // --- New Logic to Trigger the Modal ---
-const createConsultationModal = new Modal(createConsultationModalEl, {backdrop: 'static',closable: true,});
+const createConsultationModal = new Modal(createConsultationModalEl, createModalOptions(createConsultationModalEl));
 
 // 1. Select all the update buttons from the table
 const updateButtons = document.querySelectorAll('.js-update-consultation-btn');
@@ -77,7 +105,7 @@ const confirmConsultationCheckbox = document.getElementById('confirm-consultatio
 const confirmAddConsultationCancelBtn = document.getElementById('confirm-add-consultation-cancel');
 const confirmConsultationProceedBtn = document.getElementById('confirm-consultation-proceed-button');
 
-const confirmAddConsultationModal = new Modal(confirmAddConsultationModalEl, {backdrop: 'static',closable: true,});
+const confirmAddConsultationModal = new Modal(confirmAddConsultationModalEl, createModalOptions(confirmAddConsultationModalEl));
 
 function renderMedicineList(medicinesToRender = medicineInventory) {
     // Clear any existing content
@@ -449,6 +477,13 @@ confirmConsultationCheckbox.addEventListener('change', function(){
 });
 
 confirmConsultationProceedBtn.addEventListener('click', async function() {
+    // Disable both buttons and show loading state
+    confirmConsultationProceedBtn.disabled = true;
+    confirmAddConsultationCancelBtn.disabled = true;
+    
+    const originalButtonText = confirmConsultationProceedBtn.textContent;
+    confirmConsultationProceedBtn.textContent = 'Saving...';
+    
     console.log(payload); // optional for debugging
 
     try {
@@ -467,12 +502,20 @@ confirmConsultationProceedBtn.addEventListener('click', async function() {
         console.log('Server response:', data);
 
         successMesageHeader.textContent = "Consultation Updated";
-        successMessage.textContent = "You have succeessfully updated consultation";
+        successMessage.textContent = "You have successfully updated consultation";
         confirmAddConsultationModal.hide();
         successModal.show();
 
     } catch (error) {
         console.error('Error submitting consultation:', error);
+        
+        // Re-enable buttons on error
+        confirmConsultationProceedBtn.disabled = false;
+        confirmAddConsultationCancelBtn.disabled = false;
+        confirmConsultationProceedBtn.textContent = originalButtonText;
+        
+        // Optionally show error message to user
+        alert('Error: ' + error.message);
     }
 });
 
