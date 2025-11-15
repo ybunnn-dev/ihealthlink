@@ -1,4 +1,34 @@
 // --- Part 1: Search and Filter Elements (from previous context) ---
+// Main modal container
+const createModalOptions = (modalEl) => ({
+    placement: 'center-center',
+    backdrop: 'static',
+    closable: false,
+    onShow: () => {
+        setTimeout(() => {
+            modalEl.classList.remove('opacity-0');
+            modalEl.classList.add('opacity-100');
+            
+            const modalContent = modalEl.querySelector('.relative.bg-white');
+            if (modalContent) {
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }
+        }, 10);
+    },
+    onHide: () => {
+        modalEl.classList.add('opacity-0');
+        modalEl.classList.remove('opacity-100');
+        
+        const modalContent = modalEl.querySelector('.relative.bg-white');
+        if (modalContent) {
+            modalContent.classList.add('scale-95');
+            modalContent.classList.remove('scale-100');
+        }
+    }
+});
+
+
 const enrollFPResidentSearchInput = document.getElementById('enrollFPResidentSearchInput');
 const enrollFPResidentPurokFilter = document.getElementById('enrollFPResidentPurokFilter');
 const enrollFPScanQRButton = document.getElementById('enroll-fp-scan-qr');
@@ -42,16 +72,16 @@ const fpSourceOptions = document.getElementById('fp_source_options');
 const fpPreviousMethodLabel = document.getElementById('fp_previous_method_label');
 const fpPreviousMethodDropdown = document.getElementById('fp_previous_method_dropdown');
 const fpPreviousMethodOptions = document.getElementById('fp_previous_method_options');
+const successModalEl = document.getElementById('success-modal');
+const successMesageHeader = document.getElementById('success-msg-head');
+const successMessage = document.getElementById('success-message');
+const closeSuccessModalButton = document.getElementById('close-success-modal-button');
 
 
 
-const modalOptions = {
-    placement: 'center-center',
-    backdrop: 'static',
-    closable: false,
-};
-const enrollFamilyPlanningModal = new Modal(enrollFamilyPlanningModalEl, modalOptions);
-const enrollFamilyPlanningConfirmationModal = new Modal(enrollFamilyConfirmationModalEl, modalOptions);
+const enrollFamilyPlanningModal = new Modal(enrollFamilyPlanningModalEl, createModalOptions(enrollFamilyPlanningModalEl));
+const enrollFamilyPlanningConfirmationModal = new Modal(enrollFamilyConfirmationModalEl, createModalOptions(enrollFamilyConfirmationModalEl));
+const successModal = new Modal(successModalEl, createModalOptions(successModalEl));
 // === Multi-Step Logic ===
 let fpCurrentStep = 0; // 0-based index
 const fpTotalSteps = fpSteps.length;
@@ -380,41 +410,79 @@ cancelConfirmBtn.addEventListener('click', () => {
 });
 
 proceedConfirmBtn.addEventListener('click', function () {
-    // --- CORRECTED CODE ---
-    // The payload now gets the values from the hidden <input> fields
-    // associated with each custom dropdown.
+    // Disable buttons during submission
+    proceedConfirmBtn.disabled = true;
+    // Add cancel button if you have one: proceedCancelBtn.disabled = true;
+    
+    const originalButtonText = proceedConfirmBtn.textContent;
+    proceedConfirmBtn.textContent = 'Enrolling...';
     
     const payload = {
-        resident_id: parseInt(selectedResidentId), // Assumes selectedResidentId is available
+        resident_id: parseInt(selectedResidentId),
         client_type: fpClientTypeInput.value,
         previous_method: fpPreviousMethodInput.value,
-        source: fpSourceInput.value, // Corrected key and variable
-        program_id: parseInt(healthProgramId) // Assumes healthProgramId is available
+        source: fpSourceInput.value,
+        program_id: parseInt(healthProgramId)
     };
 
-    console.log(payload);
+    console.log('Payload:', payload);
     
-    // The fetch logic below remains the same.
     fetch(`/barangay/health-program/enroll/${selectedResidentId}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
+            'Accept': 'application/json',
             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         },
         body: JSON.stringify(payload)
     })
-        .then(response => response.json())
-        .then(data => {
-            console.log('Server response:', data);
-            if (data.result === 'success') {
-                alert('Resident has been succefully enrolled');
-                window.location.href = `/barangay/health-programs/enrolled/resident/${data.enrollment.id}`;
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Failed to enroll resident');
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Server response:', data);
+        
+        if (data.result === 'success' || data.status === 'success') {
+            // Store enrollment ID for redirect
+            const enrollmentId = data.enrollment?.id || data.data?.id;
+            
+            // Hide confirmation modal (update with your actual modal variable)
+            enrollFamilyPlanningConfirmationModal.hide(); // Update with your confirmation modal instance
+            
+            // Show success modal
+            successMesageHeader.textContent = 'Enrollment Successful';
+            successMessage.textContent = data.message || 'Resident has been successfully enrolled in the family planning program.';
+            successModal.show();
+            
+            // Redirect when success modal closes
+            closeSuccessModalButton.addEventListener('click', function() {
+                successModal.hide();
+                if (enrollmentId) {
+                    window.location.href = `/barangay/health-programs/enrolled/resident/${enrollmentId}`;
+                } else {
+                    window.location.reload();
+                }
+            }, { once: true });
+        } else {
+            throw new Error(data.message || 'Enrollment failed');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        
+        // Re-enable buttons on error
+        proceedConfirmBtn.disabled = false;
+        // proceedCancelBtn.disabled = false;
+        proceedConfirmBtn.textContent = originalButtonText;
+        
+        // Show error message
+        alert('Error: ' + error.message);
+    });
 });
+
 
 if (fpBackBtn) {
     fpBackBtn.addEventListener('click', () => {
