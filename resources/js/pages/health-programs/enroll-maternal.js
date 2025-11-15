@@ -1,3 +1,37 @@
+// Main modal container
+const createModalOptions = (modalEl) => ({
+    placement: 'center-center',
+    backdrop: 'static',
+    closable: false,
+    onShow: () => {
+        setTimeout(() => {
+            modalEl.classList.remove('opacity-0');
+            modalEl.classList.add('opacity-100');
+            
+            const modalContent = modalEl.querySelector('.relative.bg-white');
+            if (modalContent) {
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }
+        }, 10);
+    },
+    onHide: () => {
+        modalEl.classList.add('opacity-0');
+        modalEl.classList.remove('opacity-100');
+        
+        const modalContent = modalEl.querySelector('.relative.bg-white');
+        if (modalContent) {
+            modalContent.classList.add('scale-95');
+            modalContent.classList.remove('scale-100');
+        }
+    }
+});
+
+const successModalEl = document.getElementById('success-modal');
+const successMesageHeader = document.getElementById('success-msg-head');
+const successMessage = document.getElementById('success-message');
+const closeSuccessModalButton = document.getElementById('close-success-modal-button');
+
 const openMaternityModalBtn = document.getElementById('openEnrollMaternityModalBtn');
 
 const maternityModalEl = document.getElementById('enroll-maternity-modal');
@@ -14,11 +48,6 @@ const maternityCancelBtn = document.getElementById('maternityCancelBtn');
 const maternityBackBtn = document.getElementById('maternityBackBtn');
 const maternityNextBtn = document.getElementById('maternityNextBtn');
 
-const modalOptions = {
-    placement: 'center-center',
-    backdrop: 'static', 
-    closable: false,    
-};
 
 let selectedResidentId = null;
 let chosenResidentName = null;
@@ -56,8 +85,9 @@ const confirmCheckbox = document.getElementById('confirm-maternity-enrollment-ch
 const confirmCancelBtn = document.getElementById('enroll-maternity-confirmation-cancel-btn');
 const confirmProceedBtn = document.getElementById('enroll-maternity-confirmation-proceed-btn');
 
-const maternityModal = new Modal(maternityModalEl, modalOptions);
-const confirmMaternityModal = new Modal(confirmMaternityModalEl, modalOptions);
+const maternityModal = new Modal(maternityModalEl, createModalOptions(maternityModalEl));
+const confirmMaternityModal = new Modal(confirmMaternityModalEl, createModalOptions(confirmMaternityModalEl));
+const successModal = new Modal(successModalEl, createModalOptions(successModalEl));
 
 // === Modal Elements ===
 const steps = [
@@ -354,7 +384,14 @@ confirmCheckbox.addEventListener('change', function(){
     confirmProceedBtn.disabled = !this.checked;
 });
 
-confirmProceedBtn.addEventListener('click', function(){
+confirmProceedBtn.addEventListener('click', function() {
+    // Disable buttons during submission
+    confirmProceedBtn.disabled = true;
+    confirmCancelBtn.disabled = true; // Add if you have a cancel button
+    
+    const originalButtonText = confirmProceedBtn.textContent;
+    confirmProceedBtn.textContent = 'Enrolling...';
+    
     const payload = {
         health_program_id: parseInt(healthProgramId, 10),
         resident_id: parseInt(selectedResidentId, 10),
@@ -362,12 +399,11 @@ confirmProceedBtn.addEventListener('click', function(){
         expected_date_of_confinement: edcInput.value,
         gravida: parseInt(gravidaInput.value, 10),
         para: parseInt(paraInput.value, 10),
-        initial_weight: parseInt(weightInput, 10),
-        initial_height:parseInt(heightInput, 10)
+        initial_weight: parseFloat(weightInput.value), // Fixed: was missing .value
+        initial_height: parseFloat(heightInput.value)  // Fixed: was missing .value
     };
 
-    console.log(payload);
-    const residentId = parseInt(selectedResidentId);
+    console.log('Payload:', payload);
 
     const url = `/barangay/health-program/maternity/enroll/`;
 
@@ -380,7 +416,45 @@ confirmProceedBtn.addEventListener('click', function(){
         },
         body: JSON.stringify(payload)
     })
-    .then(res => res.json())
-    .then(data => console.log(data))
-    .catch(err => console.error(err));
+    .then(res => {
+        if (!res.ok) {
+            throw new Error('Failed to enroll in maternity program');
+        }
+        return res.json();
+    })
+    .then(data => {
+        console.log('Success:', data);
+        
+        // Store enrolled resident ID if available
+        const enrolledResidentId = data.data?.id || data.enrolled_resident_id;
+        
+        // Hide confirmation modal (make sure you have this modal instance)
+        confirmMaternityModal.hide(); // Update with your actual confirmation modal variable
+        
+        // Show success modal
+        successMesageHeader.textContent = 'Maternity Enrollment Successful';
+        successMessage.textContent = data.message || 'Resident has been successfully enrolled in the maternity program.';
+        successModal.show();
+        
+        // Redirect when success modal closes
+        closeSuccessModalButton.addEventListener('click', function() {
+            successModal.hide();
+            if (enrolledResidentId) {
+                window.location.href = `/barangay/health-programs/enrolled/resident/${enrolledResidentId}`;
+            } else {
+                window.location.reload();
+            }
+        }, { once: true });
+    })
+    .catch(err => {
+        console.error('Error:', err);
+        
+        // Re-enable buttons on error
+        confirmProceedBtn.disabled = false;
+        confirmCancelBtn.disabled = false;
+        confirmProceedBtn.textContent = originalButtonText;
+        
+        // Show error message
+        alert('Error: ' + err.message);
+    });
 });
