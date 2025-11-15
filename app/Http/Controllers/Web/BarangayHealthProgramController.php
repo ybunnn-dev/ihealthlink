@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Web;
 
+
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -20,7 +21,19 @@ class BarangayHealthProgramController extends Controller
 {
     public function index(Request $request, HealthProgram $healthProgram = null)
     {
-        $personnel = Auth::user()->midwife;
+        $user = auth()->user();
+
+        // Determine personnel: BHW with role 4 or Midwife
+        if ($user->bhwWeb && $user->bhwWeb->role_id == 4) {
+            $personnel = $user->bhwWeb;
+        } else {
+            $personnel = $user->midwife;
+        }
+
+        if (!$personnel) {
+            abort(403, 'Unauthorized access.');
+        }
+
         $barangayId = $personnel->brgy_id;
 
         if (!$healthProgram) {
@@ -145,6 +158,19 @@ class BarangayHealthProgramController extends Controller
 
     public function show(EnrolledResident $enrolledResident)
     {
+        $user = auth()->user();
+        
+        // Determine personnel: BHW with role 4 or Midwife
+        if ($user->bhwWeb && $user->bhwWeb->role_id == 4) {
+            $personnel = $user->bhwWeb;
+        } else {
+            $personnel = $user->midwife;
+        }
+
+        if (!$personnel) {
+            abort(403, 'Unauthorized access.');
+        }
+        
         $enrolledResident->load([
             'consultations' => function ($q) use ($enrolledResident) {
                 $q->where('enrolled_resident_id', $enrolledResident->id)
@@ -221,14 +247,26 @@ class BarangayHealthProgramController extends Controller
 
     public function getAllPrograms(Request $request)
     {
-        $personnel = Auth::user()->midwife;
+        $user = auth()->user();
+        
+        // Determine personnel: BHW with role 4 or Midwife
+        if ($user->bhwWeb && $user->bhwWeb->role_id == 4) {
+            $personnel = $user->bhwWeb;
+        } else {
+            $personnel = $user->midwife;
+        }
+
+        if (!$personnel) {
+            abort(403, 'Unauthorized access.');
+        }
         $barangayId = $personnel->brgy_id;
 
-        $query = HealthProgram::withCount(['enrolledResidents' => function ($q) use ($barangayId) {
-            $q->whereHas('resident.family.household.purok', function ($sub) use ($barangayId) {
-                $sub->where('brgy_id', $barangayId);
-            });
-        }]);
+        $query = HealthProgram::where('status', 'active') // Add this line
+            ->withCount(['enrolledResidents' => function ($q) use ($barangayId) {
+                $q->whereHas('resident.family.household.purok', function ($sub) use ($barangayId) {
+                    $sub->where('brgy_id', $barangayId);
+                });
+            }]);
 
         // Search by program name (optional)
         if ($request->filled('search')) {
@@ -246,6 +284,7 @@ class BarangayHealthProgramController extends Controller
 
         return response()->json($programs);
     }
+
 
     public function updateFamPlan(Request $request, $enrolledResident)
     {

@@ -12,7 +12,7 @@ class HealthProgramController extends Controller
 {
     public function provideData()
     {
-        $programs = HealthProgram::all();
+        $programs = HealthProgram::get();
 
         return response()->json([
             'success' => true,
