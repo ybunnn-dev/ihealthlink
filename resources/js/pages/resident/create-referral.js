@@ -1,4 +1,36 @@
 // Main Modal Element
+
+// --- Existing Element Variables ---
+
+const createModalOptions = (modalEl) => ({
+    placement: 'center-center',
+    backdrop: 'static',
+    closable: false,
+    onShow: () => {
+        setTimeout(() => {
+            modalEl.classList.remove('opacity-0');
+            modalEl.classList.add('opacity-100');
+
+            const modalContent = modalEl.querySelector('.relative.bg-white');
+            if (modalContent) {
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }
+        }, 10);
+    },
+    onHide: () => {
+        modalEl.classList.add('opacity-0');
+        modalEl.classList.remove('opacity-100');
+
+        const modalContent = modalEl.querySelector('.relative.bg-white');
+        if (modalContent) {
+            modalContent.classList.add('scale-95');
+            modalContent.classList.remove('scale-100');
+        }
+    }
+});
+
+
 const createReferralModalEl = document.getElementById('create-referral-modal');
 const confirmCreateReferralModalEl = document.getElementById('confirm-create-referral-modal');
 const residentNameConfirm = document.getElementById('create-referral-resident-name-confirm');
@@ -32,13 +64,13 @@ const motherName = document.getElementById('mother-name');
 const purokSelect = document.getElementById('purokSelect');
 
 // Vital Signs & Measurements Section
-const height = document.getElementById('height');
-const weight = document.getElementById('weight');
-const temperature = document.getElementById('temperature');
-const bpSystolic = document.getElementById('bp-systolic');
-const bpDiastolic = document.getElementById('bp-diastolic');
-const pulseRate = document.getElementById('pulse-rate');
-const respRate = document.getElementById('resp-rate');
+const height = document.getElementById('referral-height');
+const weight = document.getElementById('referral-weight');
+const temperature = document.getElementById('referral-temperature');
+const bpSystolic = document.getElementById('referral-bp-systolic');
+const bpDiastolic = document.getElementById('referral-bp-diastolic');
+const pulseRate = document.getElementById('referral-pulse-rate');
+const respRate = document.getElementById('referral-resp-rate');
 
 // For Female Patients Section
 const isPregnant = document.getElementById('is-pregnant');

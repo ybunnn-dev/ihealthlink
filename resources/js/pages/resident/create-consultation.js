@@ -1,5 +1,33 @@
 // --- Existing Element Variables ---
 
+const createModalOptions = (modalEl) => ({
+    placement: 'center-center',
+    backdrop: 'static',
+    closable: false,
+    onShow: () => {
+        setTimeout(() => {
+            modalEl.classList.remove('opacity-0');
+            modalEl.classList.add('opacity-100');
+
+            const modalContent = modalEl.querySelector('.relative.bg-white');
+            if (modalContent) {
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }
+        }, 10);
+    },
+    onHide: () => {
+        modalEl.classList.add('opacity-0');
+        modalEl.classList.remove('opacity-100');
+
+        const modalContent = modalEl.querySelector('.relative.bg-white');
+        if (modalContent) {
+            modalContent.classList.add('scale-95');
+            modalContent.classList.remove('scale-100');
+        }
+    }
+});
+
 // Main Modal Elements
 const resident = window.resident;
 const record = window.resident.basic_health_record;
@@ -28,8 +56,7 @@ const closeSuccessModalButton = document.getElementById('close-success-modal-but
 const pregnantSelect = document.getElementById('is_pregnant');
 const lactatingSelect = document.getElementById('is_lactating');
 
-console.log('yes',record);
-const successModal = new Modal(successModalEl, { backdrop: 'static', closable: true, });
+const successModal = new Modal(successModalEl, createModalOptions(successModalEl));
 
 let currentConsultation = null;
 
@@ -51,7 +78,7 @@ const saveConsultationBtn = document.getElementById('saveConsultationBtn');
 // Main Modal Element
 const distributeMedicineModalEl = document.getElementById('distribute-medicine-modal');
 
-const distributeMedicineModal = new Modal(distributeMedicineModalEl, { backdrop: 'static', closable: true, });
+const distributeMedicineModal = new Modal(distributeMedicineModalEl, createModalOptions(distributeMedicineModalEl));
 
 const chosenMedicineList = document.getElementById('chosen-medicine-list');
 const chosenMedicinePlaceholder = document.getElementById('chosen-medicine-placeholder');
@@ -69,7 +96,7 @@ const cancelDistributeButton = document.getElementById('cancel-distribute-button
 const distributeButton = document.getElementById('distribute-button');
 
 // --- New Logic to Trigger the Modal ---
-const createConsultationModal = new Modal(createConsultationModalEl, { backdrop: 'static', closable: true, });
+const createConsultationModal = new Modal(createConsultationModalEl, createModalOptions(createConsultationModalEl));
 
 // 1. Select all the update buttons from the table
 const createBtn = document.getElementById('create-consult-trigger');
@@ -82,7 +109,7 @@ const confirmConsultationCheckbox = document.getElementById('confirm-consultatio
 const confirmAddConsultationCancelBtn = document.getElementById('confirm-add-consultation-cancel');
 const confirmConsultationProceedBtn = document.getElementById('confirm-consultation-proceed-button');
 
-const confirmAddConsultationModal = new Modal(confirmAddConsultationModalEl, { backdrop: 'static', closable: true, });
+const confirmAddConsultationModal = new Modal(confirmAddConsultationModalEl, createModalOptions(confirmAddConsultationModalEl));
 
 function renderMedicineList(medicinesToRender = medicineInventory) {
     // Clear any existing content
@@ -393,16 +420,36 @@ consultationCancelBtn.addEventListener('click', function () {
 saveConsultationBtn.addEventListener('click', function (event) {
     event.preventDefault();
 
+    // 🔍 DEBUG: Log the actual input values
+    console.log('=== DEBUG INPUT VALUES ===');
+    console.log('Weight element:', weight);
+    console.log('Weight value:', weight.value);
+    console.log('Weight value length:', weight.value.length);
+    console.log('Weight value type:', typeof weight.value);
+    
+    console.log('Height element:', height);
+    console.log('Height value:', height.value);
+    console.log('Height value length:', height.value.length);
+    console.log('Height value type:', typeof height.value);
+    
+    console.log('BP Systolic value:', bpSystolic.value);
+    console.log('BP Diastolic value:', bpDiastolic.value);
+    console.log('========================');
+
     // Helper function to convert empty string to null
     const toNullOrNumber = (value, parser) => {
+        console.log('🔍 toNullOrNumber called with:', value, 'type:', typeof value);
+        
         if (value === '' || value === null || value === undefined) {
+            console.log('  → Returning null (empty/null/undefined)');
             return null;
         }
         const parsed = parser(value);
+        console.log('  → Parsed to:', parsed, 'isNaN:', isNaN(parsed));
         return isNaN(parsed) ? null : parsed;
     };
 
-    // Prepare the payload with NESTED structure
+    // Rest of your payload code...
     payload = {
         resident_id: resident.id,
         consultation_date: consultationDate.value || null,
@@ -410,32 +457,31 @@ saveConsultationBtn.addEventListener('click', function (event) {
         chief_complaint: chiefComplaint.value || null,
         treatment: treatment.value || null,
    
-        
-        // ⭐ NESTED consultation_data object
         consultation_data: {
             weight: toNullOrNumber(weight.value, parseFloat),
             height: toNullOrNumber(height.value, parseFloat),
             temperature: toNullOrNumber(temperature.value, parseFloat),
-            pulse_rate: toNullOrNumber(pr.value, parseInt),  // Changed pr → pulse_rate
-            respiratory_rate: toNullOrNumber(rr.value, parseInt),  // Changed rr → respiratory_rate
+            pulse_rate: toNullOrNumber(pr.value, parseInt),
+            respiratory_rate: toNullOrNumber(rr.value, parseInt),
             bp_systolic: toNullOrNumber(bpSystolic.value, parseInt),
             bp_diastolic: toNullOrNumber(bpDiastolic.value, parseInt),
-            is_pregnant: parseInt(pregnantSelect.value) === 1 ? 1 : 0,  // Convert to boolean
-            is_lactating: parseInt(lactatingSelect.value) === 1 ?1 : 0 , // Convert to boolean
+            is_pregnant: parseInt(pregnantSelect.value) === 1 ? 1 : 0,
+            is_lactating: parseInt(lactatingSelect.value) === 1 ? 1 : 0,
         },
         
-        // ⭐ Map distributed_medicines to medicine_distributions with correct structure
         medicine_distributions: distributedMedicines.map(med => ({
-            medicine_id: med.id,  // Make sure your distributedMedicines has 'id' field
+            medicine_id: med.id,
             quantity: med.quantity
         }))
     };
 
-    console.log('📤 Payload ready for submission:', payload);
+    console.log('📦 Final payload:', payload);
+    console.log('Payload ready for submission:', payload);
 
     createConsultationModal.hide();
     confirmAddConsultationModal.show();
 });
+
 
 confirmConsultationCheckbox.addEventListener('change', function () {
     confirmConsultationProceedBtn.disabled = !this.checked;

@@ -26,7 +26,6 @@ const createModalOptions = (modalEl) => ({
     }
 });
 
-
 const family = window.family; // Added this based on your payload
 
 // --- Element Variables (Modal 1: Search) ---

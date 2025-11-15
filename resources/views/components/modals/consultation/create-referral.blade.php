@@ -1,4 +1,4 @@
-<script>window</script>
+
 <div id="create-referral-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
     <div class="relative p-4 w-full max-w-6xl max-h-full">
         <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700 py-10 px-8">
@@ -98,36 +98,38 @@
                     </div>
 
                     <div class="slg2:col-span-4 font-semibold text-lg border-b pb-2 mb-2 text-normal_font mt-4">Vital Signs & Measurements</div>
+                    
                     <div>
-                        <label for="height" class="block mb-2 text-sm font-medium text-main_font">Height (cm)</label>
-                        <input type="number" id="height" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5" placeholder="e.g., 160">
+                        <label for="referral-height" class="block mb-2 text-sm font-medium text-main_font">Height (cm)</label>
+                        <input type="number" id="referral-height" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5" placeholder="e.g., 160">
                     </div>
                     <div>
-                        <label for="weight" class="block mb-2 text-sm font-medium text-main_font">Weight (kg)</label>
-                        <input type="number" id="weight" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5" placeholder="e.g., 55">
+                        <label for="referral-weight" class="block mb-2 text-sm font-medium text-main_font">Weight (kg)</label>
+                        <input type="number" id="referral-weight" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5" placeholder="e.g., 55">
                     </div>
                     <div>
-                        <label for="temperature" class="block mb-2 text-sm font-medium text-main_font">Temp (°C)</label>
-                        <input type="number" id="temperature" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5" placeholder="e.g., 36.5">
+                        <label for="referral-temperature" class="block mb-2 text-sm font-medium text-main_font">Temp (°C)</label>
+                        <input type="number" id="referral-temperature" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5" placeholder="e.g., 36.5">
                     </div>
                     <div class="flex gap-2">
                         <div>
-                             <label for="bp-systolic" class="block mb-2 text-sm font-medium text-main_font">BP Sys</label>
-                             <input type="number" id="bp-systolic" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5" placeholder="120">
+                            <label for="referral-bp-systolic" class="block mb-2 text-sm font-medium text-main_font">BP Sys</label>
+                            <input type="number" id="referral-bp-systolic" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5" placeholder="120">
                         </div>
-                         <div>
-                             <label for="bp-diastolic" class="block mb-2 text-sm font-medium text-main_font">BP Dia</label>
-                             <input type="number" id="bp-diastolic" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5" placeholder="80">
+                        <div>
+                            <label for="referral-bp-diastolic" class="block mb-2 text-sm font-medium text-main_font">BP Dia</label>
+                            <input type="number" id="referral-bp-diastolic" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5" placeholder="80">
                         </div>
                     </div>
                     <div>
-                        <label for="pulse-rate" class="block mb-2 text-sm font-medium text-main_font">Pulse Rate (bpm)</label>
-                        <input type="number" id="pulse-rate" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5" placeholder="e.g., 70">
+                        <label for="referral-pulse-rate" class="block mb-2 text-sm font-medium text-main_font">Pulse Rate (bpm)</label>
+                        <input type="number" id="referral-pulse-rate" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5" placeholder="e.g., 70">
                     </div>
-                     <div>
-                        <label for="resp-rate" class="block mb-2 text-sm font-medium text-main_font">Resp. Rate (rpm)</label>
-                        <input type="number" id="resp-rate" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5" placeholder="e.g., 18">
+                    <div>
+                        <label for="referral-resp-rate" class="block mb-2 text-sm font-medium text-main_font">Resp. Rate (rpm)</label>
+                        <input type="number" id="referral-resp-rate" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5" placeholder="e.g., 18">
                     </div>
+
 
                     <fieldset class="slg2:col-span-4 border p-4 rounded-lg mt-4">
                         <legend class="text-md font-semibold text-main_font px-2">For Female Patients (18+)</legend>

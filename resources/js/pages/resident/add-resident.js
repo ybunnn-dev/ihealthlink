@@ -1,4 +1,32 @@
-// --- Main Modal Container ---
+
+const createModalOptions = (modalEl) => ({
+    placement: 'center-center',
+    backdrop: 'static',
+    closable: false,
+    onShow: () => {
+        setTimeout(() => {
+            modalEl.classList.remove('opacity-0');
+            modalEl.classList.add('opacity-100');
+            
+            const modalContent = modalEl.querySelector('.relative.bg-white');
+            if (modalContent) {
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }
+        }, 10);
+    },
+    onHide: () => {
+        modalEl.classList.add('opacity-0');
+        modalEl.classList.remove('opacity-100');
+        
+        const modalContent = modalEl.querySelector('.relative.bg-white');
+        if (modalContent) {
+            modalContent.classList.add('scale-95');
+            modalContent.classList.remove('scale-100');
+        }
+    }
+});
+
 const addResidentModalEl = document.getElementById('add-resident-modal');
 
 // --- Section 1: Name ---
@@ -38,13 +66,11 @@ const educAttainment = document.getElementById('educationAttainment');
 const philhealthNo = document.getElementById('philHealthNo');
 let isPurokFilterPopulated = false;
 
-// --- Footer Action Buttons ---
-const modalOptions = {
-    placement: 'center-center',
-    backdrop: 'static',
-    closable: false,
-};
 
+const successModalEl = document.getElementById('success-modal');
+const successMesageHeader = document.getElementById('success-msg-head');
+const successMessage = document.getElementById('success-message');
+const closeSuccessModalButton = document.getElementById('close-success-modal-button');
 
 const confirmResidentModalEl = document.getElementById('confirm-add-resident-modal');
 const residentFullNameConfirm = document.getElementById('confirm-resident-full-name');
@@ -73,9 +99,10 @@ const cancelChooseFamilyBtn = document.getElementById('cancelChooseFamily');
 const confirmChooseFamilyBtn = document.getElementById('confirmChooseFamilyBtn');
 
 
-const confirmResidentModal = new Modal(confirmResidentModalEl, modalOptions);
-const addResidentModal = new Modal(addResidentModalEl, modalOptions);
-const chooseFamilyModal = new Modal(chooseFamilyModalEl, modalOptions);
+const confirmResidentModal = new Modal(confirmResidentModalEl, createModalOptions(confirmResidentModalEl));
+const addResidentModal = new Modal(addResidentModalEl, createModalOptions(addResidentModalEl));
+const chooseFamilyModal = new Modal(chooseFamilyModalEl, createModalOptions(chooseFamilyModalEl));
+const successModal = new Modal(successModalEl, createModalOptions(successModalEl));
 
 const cancelButton = document.getElementById('cancel-button-add-resident');
 const addResidentButton = document.getElementById('add-resident-button');
@@ -314,11 +341,11 @@ addResidentButton.addEventListener('click', function() {
         employment_status: employmentStatus.value,
 
         // Section 6: Special Statuses & Emergency Contact
-        is_pwd: pwdStatus.value === 'yes' ? 1 : 0,
+        is_pwd: pwdStatus.value === 'Yes' ? 1 : 0,
         pwd_id: pwdIdInput.value.trim(),
-        is_indigenous: indigenousStatus.value === 'yes' ? 1 : 0,
-        is_solo_parent: soloParentStatus.value === 'yes' ? 1 : 0,
-        is_philhealth_member: philhealthStatus.value === 'yes' ? 1 : 0,
+        is_indigenous: indigenousStatus.value === 'Yes' ? 1 : 0,
+        is_solo_parent: soloParentStatus.value === 'Yes' ? 1 : 0,
+        is_philhealth_member: philhealthStatus.value === 'Yes' ? 1 : 0,
         emergency_contact_no: emergencyContactNo.value.trim()
     };
 
@@ -328,7 +355,8 @@ addResidentButton.addEventListener('click', function() {
         [residentFirstName.value, residentMiddleName.value, residentLastName.value, suffix.value]
             .map(name => name?.trim())
             .filter(Boolean)
-            .join(' ');    addResidentModal.hide();
+            .join(' ');    
+    addResidentModal.hide();
 
     confirmResidentModal.show();
    
@@ -345,6 +373,14 @@ confirmResidentCheckbox.addEventListener('change', function () {
 });
 
 confirmAddResidentSubmitBtn.addEventListener('click', function () {
+    // Disable buttons and show loading state
+    confirmAddResidentSubmitBtn.disabled = true;
+    cancelConfirm.disabled = true;
+    confirmResidentCheckbox.disabled = true;
+    
+    const originalButtonText = confirmAddResidentSubmitBtn.textContent;
+    confirmAddResidentSubmitBtn.textContent = 'Saving...';
+    
     fetch('/barangay/resident/add', {
         method: 'POST',
         headers: {
@@ -358,17 +394,44 @@ confirmAddResidentSubmitBtn.addEventListener('click', function () {
             if (!res.ok) {
                 // Laravel returned a 422 or other error
                 console.error('Validation failed:', data.errors);
+                
+                // Re-enable buttons on error
+                confirmAddResidentSubmitBtn.disabled = false;
+                cancelConfirm.disabled = false;
+                confirmResidentCheckbox.disabled = false;
+                confirmAddResidentSubmitBtn.textContent = originalButtonText;
                 return;
             }
             console.log('Response from backend:', data);
 
             if(data.status === 'success'){
                 console.log(data);
-               alert('Resident has been added successfully');
-
-               const residentId = data.data.id;
-                window.location.href = `/barangay/residents/${residentId}`;
+                
+                // Close confirmation modal
+                confirmResidentModal.hide();
+                
+                // Show success modal
+                successMesageHeader.textContent = 'Resident Added Successfully';
+                successMessage.textContent = 'The resident has been added to the system.';
+                successModal.show();
+                
+                // Store resident ID for redirect
+                const residentId = data.data.id;
+                
+                // Redirect when success modal is closed
+                closeSuccessModalButton.addEventListener('click', function() {
+                    successModal.hide();
+                    window.location.href = `/barangay/residents/${residentId}`;
+                }, { once: true });
             }
         })
-        .catch(err => console.error('Error:', err));
+        .catch(err => {
+            console.error('Error:', err);
+            
+            // Re-enable buttons on network error
+            confirmAddResidentSubmitBtn.disabled = false;
+            cancelConfirm.disabled = false;
+            confirmResidentCheckbox.disabled = false;
+            confirmAddResidentSubmitBtn.textContent = originalButtonText;
+        });
 });

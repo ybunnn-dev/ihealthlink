@@ -480,21 +480,22 @@ class ConsultationController extends Controller
                 \Log::info('ℹ️ No medicine distributions to process');
             }
 
-            // 4. Update or create basic health record (preserve existing values, only update non-null)
+            // 4. Update or create basic health record
             $healthRecord = BasicHealthRecord::firstOrNew(['resident_id' => $validated['resident_id']]);
 
-            // Only update fields that have non-null values
-            if ($consultationData['weight'] !== null) {
-                $healthRecord->weight = $consultationData['weight'];
-            }
-            if ($consultationData['height'] !== null) {
-                $healthRecord->height = $consultationData['height'];
-            }
-            if ($consultationData['bp_systolic'] !== null) {
-                $healthRecord->systolic_pressure = $consultationData['bp_systolic'];
-            }
-            if ($consultationData['bp_diastolic'] !== null) {
-                $healthRecord->diastolic_pressure = $consultationData['bp_diastolic'];
+            // Prepare updates - only include non-null values
+            $updates = array_filter([
+                'weight' => $consultationData['weight'] ?? null,
+                'height' => $consultationData['height'] ?? null,
+                'systolic_pressure' => $consultationData['bp_systolic'] ?? null,
+                'diastolic_pressure' => $consultationData['bp_diastolic'] ?? null,
+            ], function($value) {
+                return $value !== null;
+            });
+
+            // Apply updates
+            foreach ($updates as $field => $value) {
+                $healthRecord->$field = $value;
             }
 
             // Always update pregnant/lactating status (even if false)
@@ -502,7 +503,7 @@ class ConsultationController extends Controller
             $healthRecord->is_lactating = $consultationData['is_lactating'] ?? false;
 
             $healthRecord->save();
-            
+                        
 
             DB::commit();
             
