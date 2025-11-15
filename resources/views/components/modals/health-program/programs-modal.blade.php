@@ -1,6 +1,6 @@
-<div id="switchProgramModal" tabindex="-1" aria-hidden="true" class="hidden fixed inset-0 flex justify-center items-center z-50 px-6 py-10">
+<div id="switchProgramModal" tabindex="-1" aria-hidden="true" class="hidden fixed inset-0 flex justify-center items-center z-50 px-6 py-10 transition-opacity duration-400 ease-out opacity-0">
 
-  <div class="bg-white rounded-xl shadow-lg w-full max-w-4xl h-[85vh] mx-auto px-6 lg:px-10 py-10 flex flex-col">
+  <div class="bg-white rounded-xl shadow-lg w-full max-w-4xl h-[85vh] mx-auto px-6 lg:px-10 py-10 flex flex-col transition-transform duration-300 ease-out scale-95">
 
     <div class="grid grid-rows-[auto_auto_1fr_auto] gap-3 h-full">
 

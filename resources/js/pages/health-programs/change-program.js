@@ -1,7 +1,36 @@
 // --- Modal & UI Element Variables ---
+const createModalOptions = (modalEl) => ({
+    placement: 'center-center',
+    backdrop: 'static',
+    closable: false,
+    onShow: () => {
+        setTimeout(() => {
+            modalEl.classList.remove('opacity-0');
+            modalEl.classList.add('opacity-100');
+
+            const modalContent = modalEl.querySelector('.relative.bg-white');
+            if (modalContent) {
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }
+        }, 10);
+    },
+    onHide: () => {
+        modalEl.classList.add('opacity-0');
+        modalEl.classList.remove('opacity-100');
+
+        const modalContent = modalEl.querySelector('.relative.bg-white');
+        if (modalContent) {
+            modalContent.classList.add('scale-95');
+            modalContent.classList.remove('scale-100');
+        }
+    }
+});
+
+
 const switchProgramModalEl = document.getElementById('switchProgramModal');
 const openSwitchProgramBtn = document.getElementById('open-change-program');
-const switchProgramModal = new Modal(switchProgramModalEl);
+const switchProgramModal = new Modal(switchProgramModalEl, createModalOptions(switchProgramModalEl));
 const searchInput = document.getElementById('default-search');
 
 // CORRECTED: Use the specific ID for the container
@@ -18,7 +47,7 @@ const confirmSwitchCancelBtn = document.getElementById('confirm-switch-cancel-bu
 const confirmSwitchProceedBtn = document.getElementById('confirm-switch-proceed-button');
 
 
-const confirmSwitchModal = new Modal(confirmSwitchModalEl);
+const confirmSwitchModal = new Modal(confirmSwitchModalEl, createModalOptions(confirmSwitchModalEl));
 const defProgramID = window.currentProgram;
 
 const emptyImageUrl = window.empty;
