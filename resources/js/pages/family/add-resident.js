@@ -212,11 +212,11 @@ addResidentButton.addEventListener('click', function() {
         employment_status: employmentStatus.value,
 
         // Section 6: Special Statuses & Emergency Contact
-        is_pwd: pwdStatus.value === 'yes' ? 1 : 0,
+        is_pwd: pwdStatus.value === 'Yes' ? 1 : 0,
         pwd_id: pwdIdInput.value.trim(),
-        is_indigenous: indigenousStatus.value === 'yes' ? 1 : 0,
-        is_solo_parent: soloParentStatus.value === 'yes' ? 1 : 0,
-        is_philhealth_member: philhealthStatus.value === 'yes' ? 1 : 0,
+        is_indigenous: indigenousStatus.value === 'Yes' ? 1 : 0,
+        is_solo_parent: soloParentStatus.value === 'Yes' ? 1 : 0,
+        is_philhealth_member: philhealthStatus.value === 'Yes' ? 1 : 0,
         emergency_contact_no: emergencyContactNo.value.trim()
     };
 
