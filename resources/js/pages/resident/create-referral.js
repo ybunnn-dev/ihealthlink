@@ -95,15 +95,8 @@ const printReferralBtn = document.getElementById('print-referral-btn');
 
 const openCreateReferral = document.getElementById('create-referral-open');
 
-const modalOptions = {
-    placement: 'center-center',
-    backdrop: 'static',
-    closable: false,
-};
-
-
-const createReferralModal = new Modal(createReferralModalEl, modalOptions);
-const confirmCreateReferralModal = new Modal(confirmCreateReferralModalEl, modalOptions);
+const createReferralModal = new Modal(createReferralModalEl, createModalOptions(createReferralModalEl));
+const confirmCreateReferralModal = new Modal(confirmCreateReferralModalEl, createModalOptions(confirmCreateReferralModalEl));
 
 openCreateReferral.addEventListener('click', async function () {
     const { firstName, middleName, lastName, suffix } = resident;

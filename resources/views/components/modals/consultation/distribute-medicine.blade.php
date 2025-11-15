@@ -1,6 +1,6 @@
-<div id="distribute-medicine-modal" tabindex="-1" aria-hidden="true" data-modal-backdrop="static" class="hidden fixed inset-0 z-50 flex justify-center items-center w-full h-ful">
+<div id="distribute-medicine-modal" tabindex="-1" aria-hidden="true" data-modal-backdrop="static" class="hidden fixed inset-0 z-50 flex justify-center items-center w-full h-full transition-opacity duration-400 ease-out opacity-0">
     <div class="relative p-4 w-full max-w-6xl max-h-full">
-        <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-800 py-8 px-10">
+        <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-800 py-8 px-10 transition-transform duration-300 ease-out scale-95">
             <!-- Modal Header -->
             <div class="flex flex-col items-center justify-center rounded-t mb-6 border-b border-gray-200 pb-6 dark:border-gray-600">
                 <h3 class="text-xl font-semibold text-main_font dark:text-white">
