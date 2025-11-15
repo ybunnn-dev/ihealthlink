@@ -1,3 +1,32 @@
+// Main modal container
+const createModalOptions = (modalEl) => ({
+    placement: 'center-center',
+    backdrop: 'static',
+    closable: false,
+    onShow: () => {
+        setTimeout(() => {
+            modalEl.classList.remove('opacity-0');
+            modalEl.classList.add('opacity-100');
+            
+            const modalContent = modalEl.querySelector('.relative.bg-white');
+            if (modalContent) {
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }
+        }, 10);
+    },
+    onHide: () => {
+        modalEl.classList.add('opacity-0');
+        modalEl.classList.remove('opacity-100');
+        
+        const modalContent = modalEl.querySelector('.relative.bg-white');
+        if (modalContent) {
+            modalContent.classList.add('scale-95');
+            modalContent.classList.remove('scale-100');
+        }
+    }
+});
+
 const enrollOpen = document.getElementById('openEnrollChildHealthcareModalBtn');
 const enrollChildModalEl = document.getElementById('enroll-child-modal');
 let isPurokFilterPopulated = false;
@@ -44,19 +73,18 @@ const childBirthWeightConfirm = document.getElementById('child-birth-weight-conf
 const confirmChildEnrollmentCheckbox = document.getElementById('confirm-child-enrollment-checkbox');
 const enrollChildConfirmationCancelBtn = document.getElementById('enroll-child-confirmation-cancel-btn');
 const enrollChildConfirmationProceedBtn = document.getElementById('enroll-child-confirmation-proceed-btn');
-
+const successModalEl = document.getElementById('success-modal');
+const successMesageHeader = document.getElementById('success-msg-head');
+const successMessage = document.getElementById('success-message');
+const closeSuccessModalButton = document.getElementById('close-success-modal-button');
 
 let currentData = null;
 let currentMothers = null;
 
-const modalOptions = {
-    placement: 'center-center',
-    backdrop: 'static',
-    closable: false,
-};
 
-const enrollChildModal = new Modal(enrollChildModalEl, modalOptions);
-const enrollChildConfirmationModal = new Modal(enrollChildConfirmationModalEl, modalOptions);
+const enrollChildModal = new Modal(enrollChildModalEl, createModalOptions(enrollChildModalEl));
+const enrollChildConfirmationModal = new Modal(enrollChildConfirmationModalEl, createModalOptions(enrollChildConfirmationModalEl));
+const successModal = new Modal(successModalEl, createModalOptions(successModalEl));
 
 // State Management
 let currentStep = 1;
@@ -375,6 +403,13 @@ confirmChildEnrollmentCheckbox.addEventListener('change',function(){
 });
 
 enrollChildConfirmationProceedBtn.addEventListener('click', function() {
+    // Disable buttons during submission
+    enrollChildConfirmationProceedBtn.disabled = true;
+    enrollChildConfirmationCancelBtn.disabled = true; // Add if you have a cancel button
+    
+    const originalButtonText = enrollChildConfirmationProceedBtn.textContent;
+    enrollChildConfirmationProceedBtn.textContent = 'Enrolling...';
+    
     const payload = {
         resident_id: parseInt(selectedResidentId),
         mother_id: parseInt(selectedMotherId),
@@ -382,32 +417,58 @@ enrollChildConfirmationProceedBtn.addEventListener('click', function() {
         program_id: healthProgramId
     };
 
-    console.log(payload);
+    console.log('Payload:', payload);
 
     fetch('/barangay/health-program/child-healthcare/enroll', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
+            'Accept': 'application/json',
             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         },
         body: JSON.stringify(payload)
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Failed to enroll child');
+        }
+        return response.json();
+    })
     .then(data => {
         if (data.status === 'success') {
-            console.log(data);
-            alert('Okay');
-            console.log(data.data.id);
-            location.href = `/barangay/health-programs/enrolled/resident/${data.data.id}`;
+            console.log('Success:', data);
+            
+            // Store the enrolled resident ID for redirect
+            const enrolledResidentId = data.data.id;
+            
+            // Hide confirmation modal
+            enrollChildConfirmationModal.hide();
+            
+            // Show success modal
+            successMesageHeader.textContent = 'Child Enrolled Successfully';
+            successMessage.textContent = data.message || 'The child has been successfully enrolled in the health program.';
+            successModal.show();
+            
+            // Redirect when success modal closes
+            closeSuccessModalButton.addEventListener('click', function() {
+                successModal.hide();
+                window.location.href = `/barangay/health-programs/enrolled/resident/${enrolledResidentId}`;
+            }, { once: true });
+            
         } else {
-            alert('Error: ' + data.message);
-            location.reload();
-
+            throw new Error(data.message || 'Enrollment failed');
         }
     })
     .catch(error => {
-        alert('Request failed: ' + error.message);
-        location.reload();
+        console.error('Error:', error);
+        
+        // Re-enable buttons on error
+        enrollChildConfirmationProceedBtn.disabled = false;
+        enrollChildConfirmationCancelBtn.disabled = false;
+        enrollChildConfirmationProceedBtn.textContent = originalButtonText;
+        
+        // Show error message
+        alert('Error: ' + error.message);
     });
 });
 

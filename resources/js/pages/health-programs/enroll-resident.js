@@ -1,4 +1,32 @@
 // Main modal container
+const createModalOptions = (modalEl) => ({
+    placement: 'center-center',
+    backdrop: 'static',
+    closable: false,
+    onShow: () => {
+        setTimeout(() => {
+            modalEl.classList.remove('opacity-0');
+            modalEl.classList.add('opacity-100');
+            
+            const modalContent = modalEl.querySelector('.relative.bg-white');
+            if (modalContent) {
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }
+        }, 10);
+    },
+    onHide: () => {
+        modalEl.classList.add('opacity-0');
+        modalEl.classList.remove('opacity-100');
+        
+        const modalContent = modalEl.querySelector('.relative.bg-white');
+        if (modalContent) {
+            modalContent.classList.add('scale-95');
+            modalContent.classList.remove('scale-100');
+        }
+    }
+});
+
 const enrollResidentModalEl = document.getElementById('enroll-resident-modal');
 const enrollResidentSearchInput = document.getElementById('enrollResidentSearchInput');
 const enrollResidentPurokFilter = document.getElementById('enrollResidentPurokFilter');
@@ -15,11 +43,16 @@ const residentNameToConfirmEl = document.getElementById('resident-name-to-confir
 const confirmEnrollmentCheckbox = document.getElementById('confirm-enrollment-checkbox');
 const enrollResidentConfirmationCancelBtn = document.getElementById('enroll-resident-confirmation-cancel-btn');
 const enrollResidentConfirmationProceedBtn = document.getElementById('enroll-resident-confirmation-proceed-btn');
+const successModalEl = document.getElementById('success-modal');
+const successMesageHeader = document.getElementById('success-msg-head');
+const successMessage = document.getElementById('success-message');
+const closeSuccessModalButton = document.getElementById('close-success-modal-button');
 
 let chosenResidentName = null;
 
-const enrollResidentConfirmation = new Modal(enrollResidentConfirmationModalEl);
-export const enrollResidentModal = new Modal(enrollResidentModalEl);
+const enrollResidentConfirmation = new Modal(enrollResidentConfirmationModalEl, createModalOptions(enrollResidentConfirmationModalEl));
+export const enrollResidentModal = new Modal(enrollResidentModalEl, createModalOptions(enrollResidentModalEl));
+const successModal = new Modal(successModalEl, createModalOptions(successModalEl));
 
 const openEnrollModalBtn = document.getElementById('openEnrollModalBtn');
 
@@ -172,6 +205,14 @@ enrollResidentConfirmationCancelBtn.addEventListener('click', function(){
 });
 
 enrollResidentConfirmationProceedBtn.addEventListener('click', function() {
+    // Disable buttons during submission
+    enrollResidentConfirmationProceedBtn.disabled = true;
+    // If you have a cancel button, disable it too:
+    // enrollResidentConfirmationCancelBtn.disabled = true;
+    
+    const originalButtonText = enrollResidentConfirmationProceedBtn.textContent;
+    enrollResidentConfirmationProceedBtn.textContent = 'Enrolling...';
+    
     const url = `/barangay/health-program/${healthProgramId}/enroll/${selectedResidentId}`;
 
     fetch(url, {
@@ -181,9 +222,40 @@ enrollResidentConfirmationProceedBtn.addEventListener('click', function() {
             'Accept': 'application/json',
             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         },
-        body: JSON.stringify({}) // can send additional payload if needed later
+        body: JSON.stringify({})
     })
-    .then(res => res.json())
-    .then(data => console.log(data))
-    .catch(err => console.error(err));
+    .then(res => {
+        if (!res.ok) {
+            throw new Error('Failed to enroll resident');
+        }
+        return res.json();
+    })
+    .then(data => {
+        console.log('Success:', data);
+        
+        // Hide the confirmation modal
+        enrollResidentConfirmation.hide(); // Make sure you have this modal instance
+        
+        // Show success modal
+        successMesageHeader.textContent = 'Resident Enrolled';
+        successMessage.textContent = data.message || 'Resident has been successfully enrolled in the health program.';
+        successModal.show();
+        
+        // Optional: Reload page or update UI when success modal closes
+        closeSuccessModalButton.addEventListener('click', function() {
+            successModal.hide();
+            window.location.reload(); // or update your UI dynamically
+        }, { once: true });
+    })
+    .catch(err => {
+        console.error('Error:', err);
+        
+        // Re-enable buttons on error
+        enrollResidentConfirmationProceedBtn.disabled = false;
+        // enrollResidentConfirmationCancelBtn.disabled = false;
+        enrollResidentConfirmationProceedBtn.textContent = originalButtonText;
+        
+        // Show error message
+        alert('Error: ' + err.message);
+    });
 });
