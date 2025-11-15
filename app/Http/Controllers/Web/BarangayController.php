@@ -33,7 +33,7 @@ class BarangayController extends Controller
         ])
         ->where('barangays.status', 'active');
 
-        // --- Sorting (do this BEFORE getting results) ---
+        // --- Sorting ---
         $filter = $request->input('filter', 'alpha_asc');
         if ($filter === 'alpha_asc') {
             $query->orderBy('barangays.name', 'asc');
@@ -59,11 +59,11 @@ class BarangayController extends Controller
             $query->orderBy('barangays.created_at', 'asc');
         }
 
-        // Get all results first (without search filter in query)
-        $barangays = $query->paginate(8)->appends($request->query());
+        // Get ALL results first (no pagination yet)
+        $barangays = $query->get();
 
         // --- Count residents separately ---
-        $barangays->getCollection()->transform(function ($barangay) {
+        $barangays->transform(function ($barangay) {
             $barangay->residents_count = DB::table('residents')
                 ->join('families', 'residents.family_id', '=', 'families.id')
                 ->join('households', 'families.household_id', '=', 'households.id')
@@ -75,31 +75,42 @@ class BarangayController extends Controller
             return $barangay;
         });
 
-        // --- SEARCH: Filter by decrypted name IN PHP (after pagination) ---
+        // --- SEARCH: Filter by decrypted name BEFORE pagination ---
         if ($request->filled('search')) {
             $searchTerm = strtolower($request->input('search'));
-            $filtered = $barangays->getCollection()->filter(function ($barangay) use ($searchTerm) {
+            $barangays = $barangays->filter(function ($barangay) use ($searchTerm) {
                 return strpos(strtolower($barangay->name), $searchTerm) !== false;
             })->values();
-            
-            $barangays->setCollection($filtered);
         }
 
-        // Sort by residents_count after fetching
+        // Sort by residents_count if needed
         if ($filter === 'residents_count') {
-            $sorted = $barangays->getCollection()->sortByDesc('residents_count')->values();
-            $barangays->setCollection($sorted);
+            $barangays = $barangays->sortByDesc('residents_count')->values();
         }
+
+        // --- Manual Pagination AFTER filtering ---
+        $perPage = 8;
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $currentItems = $barangays->slice(($currentPage - 1) * $perPage, $perPage)->values();
+        
+        $paginatedBarangays = new LengthAwarePaginator(
+            $currentItems,
+            $barangays->count(),
+            $perPage,
+            $currentPage,
+            ['path' => LengthAwarePaginator::resolveCurrentPath(), 'query' => $request->query()]
+        );
 
         if ($request->wantsJson() || $request->ajax() || $request->header('X-Requested-With') === 'XMLHttpRequest') {
             return response()->json([
-                'data' => $barangays->items(),
-                'pagination' => (string)$barangays->appends($request->query())->links()  // ✅ HTML string
+                'data' => $paginatedBarangays->items(),
+                'pagination' => (string)$paginatedBarangays->links()
             ]);
         }
 
-        return view('mho.barangay-list', compact('barangays'));
+        return view('mho.barangay-list', ['barangays' => $paginatedBarangays]);
     }
+
 
         
     public function store(Request $request)
