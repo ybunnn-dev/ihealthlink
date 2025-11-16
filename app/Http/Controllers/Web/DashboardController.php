@@ -41,8 +41,17 @@ class DashboardController extends Controller
                                             ->with('barangay')
                                             ->get();
 
-        $residents = Resident::whereHas('family.household.purok', function($q) use ($personnel) {
-                                $q->where('brgy_id', $personnel->brgy_id);
+        // Add status filters for active residents, families, households, and puroks
+        $residents = Resident::where('status', 'active')
+                            ->whereHas('family', function($q) {
+                                $q->where('status', 'active');
+                            })
+                            ->whereHas('family.household', function($q) {
+                                $q->where('status', 'active');
+                            })
+                            ->whereHas('family.household.purok', function($q) use ($personnel) {
+                                $q->where('brgy_id', $personnel->brgy_id)
+                                ->where('status', 'active');
                             });
 
         $totalResidents = $residents->count();
@@ -57,8 +66,17 @@ class DashboardController extends Controller
             return \Carbon\Carbon::parse($resident->birthdate)->age >= 60;
         })->count();
 
-        $pregnantCount = Resident::whereHas('family.household.purok', function($q) use ($personnel) {
-            $q->where('brgy_id', $personnel->brgy_id);
+        // Add status filters for pregnant count
+        $pregnantCount = Resident::where('status', 'active')
+            ->whereHas('family', function($q) {
+                $q->where('status', 'active');
+            })
+            ->whereHas('family.household', function($q) {
+                $q->where('status', 'active');
+            })
+            ->whereHas('family.household.purok', function($q) use ($personnel) {
+                $q->where('brgy_id', $personnel->brgy_id)
+                ->where('status', 'active');
             })
             ->whereHas('basicHealthRecord', function($q) {
                 $q->where('is_pregnant', 1);
@@ -72,16 +90,19 @@ class DashboardController extends Controller
             ->limit(10)
             ->get();
 
-       $waterSources = Household::whereHas('purok', function ($q) use ($personnel) {
-                $q->where('brgy_id', $personnel->brgy_id);
-            })
-            ->whereNotNull('water_source')
-            ->where('water_source', '!=', '')
-            ->get()
-            ->groupBy('water_source')
-            ->map(fn($group) => ['water_source' => $group->first()->water_source, 'total' => $group->count()])
-            ->sortByDesc('total')
-            ->values();
+        // Add status filters for water sources
+        $waterSources = Household::where('status', 'active')
+                ->whereHas('purok', function ($q) use ($personnel) {
+                    $q->where('brgy_id', $personnel->brgy_id)
+                    ->where('status', 'active');
+                })
+                ->whereNotNull('water_source')
+                ->where('water_source', '!=', '')
+                ->get()
+                ->groupBy('water_source')
+                ->map(fn($group) => ['water_source' => $group->first()->water_source, 'total' => $group->count()])
+                ->sortByDesc('total')
+                ->values();
 
         // Calculate total households for percentage
         $totalHouseholds = $waterSources->sum('total');
