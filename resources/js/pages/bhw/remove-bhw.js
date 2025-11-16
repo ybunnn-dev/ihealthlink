@@ -1,4 +1,33 @@
 // The main "remove BHW" modal element
+const createModalOptions = (modalEl) => ({
+    placement: 'center-center',
+    backdrop: 'static',
+    closable: false,
+    onShow: () => {
+        setTimeout(() => {
+            modalEl.classList.remove('opacity-0');
+            modalEl.classList.add('opacity-100');
+
+            const modalContent = modalEl.querySelector('.relative.bg-white');
+            if (modalContent) {
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }
+        }, 10);
+    },
+    onHide: () => {
+        modalEl.classList.add('opacity-0');
+        modalEl.classList.remove('opacity-100');
+
+        const modalContent = modalEl.querySelector('.relative.bg-white');
+        if (modalContent) {
+            modalContent.classList.add('scale-95');
+            modalContent.classList.remove('scale-100');
+        }
+    }
+});
+
+
 const removeBhwModalEl = document.getElementById('remove-bhw-modal');
 const removeBhwName = document.getElementById('remove-bhw-name');
 const removeBhwCheckbox = document.getElementById('remove-bhw-checkbox');
@@ -6,12 +35,14 @@ const cancelRemoveBhwButton = document.getElementById('cancel-remove-bhw');
 const removeBhwButton = document.getElementById('remove-bhw-btn');
 
 const removeBhwTrigger = document.getElementById('open-remove-bhw');
-const removeBhwModal = new Modal(removeBhwModalEl);
+const removeBhwModal = new Modal(removeBhwModalEl, createModalOptions(removeBhwModalEl));
 
 const bhwData = window.bhwData;
 
+console.log(bhwData);
+
 removeBhwTrigger.addEventListener('click', function(){
-    removeBhwName.textContent = bhwData.name;
+    removeBhwName.textContent = `${bhwData.user.firstName} ${bhwData.user.middleName} ${bhwData.user.lsastName}`;
     removeBhwModal.show();
 });
 
@@ -23,11 +54,11 @@ const successModalEl = document.getElementById('success-modal');
 const successMesageHeader = document.getElementById('success-msg-head');
 const successMessage = document.getElementById('success-message');
 const closeSuccessModalButton = document.getElementById('close-success-modal-button');
-const successModal = new Modal(successModalEl);
+const successModal = new Modal(successModalEl, createModalOptions(successModalEl));
 
 removeBhwButton.addEventListener('click', function(){
     event.preventDefault();
-    const bhwId = bhwData.users.id;
+    const bhwId = bhwData.user.id;
     const bhwName = bhwData.name;
 
     console.log(bhwId);
@@ -53,7 +84,7 @@ removeBhwButton.addEventListener('click', function(){
 });
 
 closeSuccessModalButton.addEventListener('click', function(){
-    window.location.href = '/midwife/bhws';
+    window.location.href = '/barangay/bhws';
 })
 cancelRemoveBhwButton.addEventListener('click',function(){
     removeBhwModal.hide();
