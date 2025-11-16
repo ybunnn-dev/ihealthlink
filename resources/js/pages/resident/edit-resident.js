@@ -1,4 +1,33 @@
 // Modal Container
+
+const createModalOptions = (modalEl) => ({
+    placement: 'center-center',
+    backdrop: 'static',
+    closable: false,
+    onShow: () => {
+        setTimeout(() => {
+            modalEl.classList.remove('opacity-0');
+            modalEl.classList.add('opacity-100');
+
+            const modalContent = modalEl.querySelector('.relative.bg-white');
+            if (modalContent) {
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }
+        }, 10);
+    },
+    onHide: () => {
+        modalEl.classList.add('opacity-0');
+        modalEl.classList.remove('opacity-100');
+
+        const modalContent = modalEl.querySelector('.relative.bg-white');
+        if (modalContent) {
+            modalContent.classList.add('scale-95');
+            modalContent.classList.remove('scale-100');
+        }
+    }
+});
+
 const editResidentModalEl = document.getElementById('edit-resident-modal');
 
 // The modal element itself
@@ -42,16 +71,16 @@ const emergencyContactNo = document.getElementById('emergencyContactNo');
 const cancelEditResidentBtn = document.getElementById('cancel-button-edit-resident');
 const updateResidentBtn = document.getElementById('update-resident-button');
 
-const modalOptions = {
-    placement: 'center-center',
-    backdrop: 'static',
-    closable: false,
-};
+const successModalEl = document.getElementById('success-modal');
+const successMesageHeader = document.getElementById('success-msg-head');
+const successMessage = document.getElementById('success-message');
+const closeSuccessModalButton = document.getElementById('close-success-modal-button');
 
 const resident = window.resident;
 
-const confirmEditModal = new Modal(confirmEditModalEl, modalOptions);
-const editResidentModal = new Modal(editResidentModalEl, modalOptions);
+const confirmEditModal = new Modal(confirmEditModalEl, createModalOptions(confirmEditModalEl));
+const editResidentModal = new Modal(editResidentModalEl, createModalOptions(editResidentModalEl));
+const successModal = new Modal(successModalEl, createModalOptions(successModalEl));
 
 const editTrigger = document.getElementById('edit-resident-trigger');
 
@@ -220,7 +249,11 @@ cancelEditConfirmBtn.addEventListener('click', function(){
 
 
 proceedEditBtn.addEventListener('click', async function(){
+    const originalButtonText = proceedEditBtn.textContent;
+    
+    // Disable both buttons and show loading state
     proceedEditBtn.disabled = true;
+    cancelEditConfirmBtn.disabled = true;
     proceedEditBtn.textContent = 'Updating...';
     
     // Helper function to convert empty strings to null for optional fields
@@ -282,17 +315,30 @@ proceedEditBtn.addEventListener('click', async function(){
 
         console.log('✅ Success:', data);
 
-        // Show success message
-        alert('Resident updated successfully!');
+        // Hide confirm modal
+        confirmEditModal.hide();
         
-        // Optionally reload or redirect
-        window.location.reload();
+        // Show success modal
+        successMesageHeader.textContent = 'Update Successful';
+        successMessage.textContent = 'Resident information has been successfully updated.';
+        successModal.show();
 
     } catch (error) {
         console.error('❌ Error:', error);
-        alert('Error: ' + error.message);
         
+        // Show alert for error
+        alert('Error: ' + (error.message || 'Failed to update resident. Please try again.'));
+        
+    } finally {
+        // Re-enable buttons and restore text
         proceedEditBtn.disabled = false;
-        proceedEditBtn.textContent = 'Proceed';
+        cancelEditConfirmBtn.disabled = false;
+        proceedEditBtn.textContent = originalButtonText;
+        confirmEditCheckbox.checked = false;
     }
+});
+
+// Close success modal button - reload page
+closeSuccessModalButton.addEventListener('click', function(){
+    window.location.reload();
 });

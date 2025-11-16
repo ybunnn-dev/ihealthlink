@@ -7,7 +7,7 @@ const createModalOptions = (modalEl) => ({
         setTimeout(() => {
             modalEl.classList.remove('opacity-0');
             modalEl.classList.add('opacity-100');
-            
+
             const modalContent = modalEl.querySelector('.relative.bg-white');
             if (modalContent) {
                 modalContent.classList.remove('scale-95');
@@ -18,7 +18,7 @@ const createModalOptions = (modalEl) => ({
     onHide: () => {
         modalEl.classList.add('opacity-0');
         modalEl.classList.remove('opacity-100');
-        
+
         const modalContent = modalEl.querySelector('.relative.bg-white');
         if (modalContent) {
             modalContent.classList.add('scale-95');
@@ -127,23 +127,23 @@ function fetchAndRenderFamilies() {
     const url = new URL('/barangay/resident/families/get', window.location.origin);
     if (searchQuery) url.searchParams.append('search', searchQuery);
     if (purokId) url.searchParams.append('purok_id', purokId);
-    
+
     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
     fetch(url, {
         method: 'GET',
         headers: { 'X-CSRF-TOKEN': csrfToken, 'Accept': 'application/json' }
     })
-    .then(response => response.ok ? response.json() : Promise.reject('Failed to fetch'))
-    .then(data => {
-        familiesData = data.families; // Update our local data cache
-        populatePurokFilter(data.puroks);
-        populateFamilyCards(data.families);
-    })
-    .catch(error => {
-        console.error('Fetch error:', error);
-        familyCardContainer.innerHTML = `<p class="text-center text-red-500 p-4">Error loading families.</p>`;
-    });
+        .then(response => response.ok ? response.json() : Promise.reject('Failed to fetch'))
+        .then(data => {
+            familiesData = data.families; // Update our local data cache
+            populatePurokFilter(data.puroks);
+            populateFamilyCards(data.families);
+        })
+        .catch(error => {
+            console.error('Fetch error:', error);
+            familyCardContainer.innerHTML = `<p class="text-center text-red-500 p-4">Error loading families.</p>`;
+        });
 }
 
 // --- UI Population Functions ---
@@ -313,7 +313,7 @@ const observer = new MutationObserver(() => {
 observer.observe(familyIdStorage, { childList: true, characterData: true, subtree: true });
 
 
-addResidentButton.addEventListener('click', function() {
+addResidentButton.addEventListener('click', function () {
     // This payload object gathers all the values from your form fields
     currentResidentPayload = {
         // Section 1: Name
@@ -330,7 +330,7 @@ addResidentButton.addEventListener('click', function() {
 
         // Section 3: Household & Family
         family_id: familyIdStorage.textContent.trim(), // Get ID from the hidden div
-        
+
         philhealth_no: philhealthNo.value.trim(),
 
         educational_attainment: educAttainment.value,
@@ -351,15 +351,15 @@ addResidentButton.addEventListener('click', function() {
 
     // You can now see the complete payload in your browser's console
     console.log("Resident Data Payload:", currentResidentPayload);
-    residentFullNameConfirm.textContent = 
+    residentFullNameConfirm.textContent =
         [residentFirstName.value, residentMiddleName.value, residentLastName.value, suffix.value]
             .map(name => name?.trim())
             .filter(Boolean)
-            .join(' ');    
+            .join(' ');
     addResidentModal.hide();
 
     confirmResidentModal.show();
-   
+
 });
 
 
@@ -377,10 +377,10 @@ confirmAddResidentSubmitBtn.addEventListener('click', function () {
     confirmAddResidentSubmitBtn.disabled = true;
     cancelConfirm.disabled = true;
     confirmResidentCheckbox.disabled = true;
-    
+
     const originalButtonText = confirmAddResidentSubmitBtn.textContent;
     confirmAddResidentSubmitBtn.textContent = 'Saving...';
-    
+
     fetch('/barangay/resident/add', {
         method: 'POST',
         headers: {
@@ -394,7 +394,7 @@ confirmAddResidentSubmitBtn.addEventListener('click', function () {
             if (!res.ok) {
                 // Laravel returned a 422 or other error
                 console.error('Validation failed:', data.errors);
-                
+
                 // Re-enable buttons on error
                 confirmAddResidentSubmitBtn.disabled = false;
                 cancelConfirm.disabled = false;
@@ -404,34 +404,35 @@ confirmAddResidentSubmitBtn.addEventListener('click', function () {
             }
             console.log('Response from backend:', data);
 
-            if(data.status === 'success'){
+            if (data.status === 'success') {
                 console.log(data);
-                
+
                 // Close confirmation modal
                 confirmResidentModal.hide();
-                
+
                 // Show success modal
                 successMesageHeader.textContent = 'Resident Added Successfully';
                 successMessage.textContent = 'The resident has been added to the system.';
                 successModal.show();
-                
+
                 // Store resident ID for redirect
                 const residentId = data.data.id;
-                
-                // Redirect when success modal is closed
-                closeSuccessModalButton.addEventListener('click', function() {
-                    successModal.hide();
-                    window.location.href = `/barangay/residents/${residentId}`;
-                }, { once: true });
+
+
             }
         })
         .catch(err => {
             console.error('Error:', err);
-            
+
             // Re-enable buttons on network error
             confirmAddResidentSubmitBtn.disabled = false;
             cancelConfirm.disabled = false;
             confirmResidentCheckbox.disabled = false;
             confirmAddResidentSubmitBtn.textContent = originalButtonText;
         });
+});
+// Redirect when success modal is closed
+closeSuccessModalButton.addEventListener('click', function () {
+    successModal.hide();
+    window.location.href = `/barangay/residents/${residentId}`;
 });

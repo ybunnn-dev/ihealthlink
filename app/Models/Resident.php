@@ -39,7 +39,8 @@ class Resident extends Model
         'religion',
         'ethnicity',
         'emergencyContactNo',
-        'client_uuid'
+        'client_uuid',
+        'status'
     ];
 
     // Fields that should be automatically encrypted/decrypted
