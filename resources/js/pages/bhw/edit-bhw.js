@@ -1,4 +1,34 @@
 // The main "edit bhw" modal container
+// The main "remove BHW" modal element
+const createModalOptions = (modalEl) => ({
+    placement: 'center-center',
+    backdrop: 'static',
+    closable: false,
+    onShow: () => {
+        setTimeout(() => {
+            modalEl.classList.remove('opacity-0');
+            modalEl.classList.add('opacity-100');
+
+            const modalContent = modalEl.querySelector('.relative.bg-white');
+            if (modalContent) {
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }
+        }, 10);
+    },
+    onHide: () => {
+        modalEl.classList.add('opacity-0');
+        modalEl.classList.remove('opacity-100');
+
+        const modalContent = modalEl.querySelector('.relative.bg-white');
+        if (modalContent) {
+            modalContent.classList.add('scale-95');
+            modalContent.classList.remove('scale-100');
+        }
+    }
+});
+
+
 const bhwData = window.bhwData;
 
 const editBhwModalEl = document.getElementById('edit-bhw-modal');
@@ -42,9 +72,14 @@ const confirmEditBhwCheckbox = document.getElementById('confirm-edit-bhw-checkbo
 const confirmEditBhwCancelButton = document.getElementById('confirm-edit-bhw-cancel');
 const confirmEditProceedButton = document.getElementById('confirm-edit-proceed-button');
 
-const editBhwModal = new Modal(editBhwModalEl);
-const confirmEditBhw = new Modal(confirmEditBhwModalEl);
+const successModalEl = document.getElementById('success-modal');
+const successMesageHeader = document.getElementById('success-msg-head');
+const successMessage = document.getElementById('success-message');
+const closeSuccessModalButton = document.getElementById('close-success-modal-button');
 
+const editBhwModal = new Modal(editBhwModalEl, createModalOptions(editBhwModalEl));
+const confirmEditBhw = new Modal(confirmEditBhwModalEl, createModalOptions(confirmEditBhwModalEl));
+const successModal = new Modal(successModalEl, createModalOptions(successModalEl));
 
 function validateEditForm() {
     // Exit if the initial data isn't loaded yet
@@ -285,14 +320,12 @@ confirmEditBhwCheckbox.addEventListener('change', function(){
     confirmEditProceedButton.disabled = !this.checked;
 });
 
-const successModalEl = document.getElementById('success-modal');
-const successMesageHeader = document.getElementById('success-msg-head');
-const successMessage = document.getElementById('success-message');
-const closeSuccessModalButton = document.getElementById('close-success-modal-button');
-const successModal = new Modal(successModalEl);
 
-confirmEditProceedButton.addEventListener('click', function(){
-     const payLoad = {
+
+confirmEditProceedButton.addEventListener('click', function(event){
+    event.preventDefault();
+    
+    const payLoad = {
         id: bhwData.user.id,
         firstName: editBhwFirstNameInput.value,
         lastName: editBhwLastNameInput.value,
@@ -307,6 +340,14 @@ confirmEditProceedButton.addEventListener('click', function(){
         role_id: parseInt(editPrivilegeDropdownButton.dataset.selectedValue, 10)
     };
 
+    // Store original button text
+    const originalButtonText = confirmEditProceedButton.textContent;
+    
+    // Disable both buttons and change submit button text
+    confirmEditProceedButton.disabled = true;
+    confirmEditBhwCancelButton.disabled = true;
+    confirmEditProceedButton.textContent = 'Updating...';
+
     fetch(`/barangay/bhw/${payLoad.id}/edit`, {
         method: 'PUT',
         headers: {
@@ -318,15 +359,24 @@ confirmEditProceedButton.addEventListener('click', function(){
     .then(response => response.json())
     .then(data => {
         confirmEditBhw.hide();
-        successMessage.textContent = "Edit Success";
-        successMessage.textContent = "BHW Has been successfully updated";
+        successMesageHeader.textContent = "Edit Success";
+        successMessage.textContent = "BHW has been successfully updated";
         successModal.show();
     })
     .catch(error => {
         console.error('Error:', error);
+        
+        // On error, hide confirm modal and show error in success modal
+        confirmEditBhw.hide();
+        alert.error("Failed to update BHW. Please try again.");
+    })
+    .finally(() => {
+        // Re-enable buttons and restore text
+        confirmEditProceedButton.disabled = false;
+        confirmEditBhwCancelButton.disabled = false;
+        confirmEditProceedButton.textContent = originalButtonText;
+        confirmEditBhwCheckbox.checked = false;
     });
-
-
 });
 
 closeSuccessModalButton.addEventListener('click', function(){

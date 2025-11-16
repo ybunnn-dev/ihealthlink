@@ -39,8 +39,6 @@ const removeBhwModal = new Modal(removeBhwModalEl, createModalOptions(removeBhwM
 
 const bhwData = window.bhwData;
 
-console.log(bhwData);
-
 removeBhwTrigger.addEventListener('click', function(){
     removeBhwName.textContent = `${bhwData.user.firstName} ${bhwData.user.middleName} ${bhwData.user.lastName}`;
     removeBhwModal.show();
@@ -56,14 +54,22 @@ const successMessage = document.getElementById('success-message');
 const closeSuccessModalButton = document.getElementById('close-success-modal-button');
 const successModal = new Modal(successModalEl, createModalOptions(successModalEl));
 
-removeBhwButton.addEventListener('click', function(){
+removeBhwButton.addEventListener('click', function(event){
     event.preventDefault();
     const bhwId = bhwData.user.id;
     const bhwName = bhwData.name;
 
     console.log(bhwId);
 
-     fetch(`/barangay/bhw/${bhwId}/remove`, {
+    // Store original button text
+    const originalButtonText = removeBhwButton.textContent;
+    
+    // Disable both buttons and change submit button text
+    removeBhwButton.disabled = true;
+    cancelRemoveBhwButton.disabled = true;
+    removeBhwButton.textContent = 'Removing...';
+
+    fetch(`/barangay/bhw/${bhwId}/remove`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
@@ -75,13 +81,23 @@ removeBhwButton.addEventListener('click', function(){
     .then(data => {
         removeBhwModal.hide();
         successMesageHeader.textContent = "BHW Removed";
-        successMessage.textContent = bhwName +" has been removed";
+        successMessage.textContent = bhwName + " has been removed";
         successModal.show();
     })
     .catch(error => {
         console.error('Error:', error);
+        alert.error("Failed to remove BHW. Please try again.");
+       
+    })
+    .finally(() => {
+        // Re-enable buttons and restore text (in case modal stays open)
+        removeBhwButton.disabled = false;
+        cancelRemoveBhwButton.disabled = false;
+        removeBhwButton.textContent = originalButtonText;
+        removeBhwCheckbox.checked = false;
     });
 });
+
 
 closeSuccessModalButton.addEventListener('click', function(){
     window.location.href = '/barangay/bhws';
