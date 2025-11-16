@@ -49,15 +49,10 @@
                         <!-- Update Health Record is always enabled, no changes needed -->
                         <button id="update-record" type="button" 
                             class="w-full h-full text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3 py-4 disabled:opacity-50 disabled:pointer-events-none"
-                            @if($enrolledResident->program->category === 'philpen_tcl') disabled @endif>
+                            @if($enrolledResident->program->category !== 'maternal_health_tcl' && $enrolledResident->program->category !== 'family_planning_tcl' && $enrolledResident->program->category !== 'child_healthcare_tcl') disabled @endif>
                             Update Record
                         </button>
 
-                        <button id="mark-complete" type="button" 
-                            class="w-full h-full text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3 py-4 disabled:opacity-50 disabled:pointer-events-none"
-                            @if($enrolledResident->program->category === 'philpen_tcl') disabled @endif>
-                            Mark as Completed
-                        </button>
                        <div class="bg-white w-full h-full rounded-lg py-10">
                             <div class="flex flex-col items-center justify-center text-main_font">
                                 <h2 class="font-semibold text-3xl text-center uppercase">

@@ -1,7 +1,6 @@
-<div id="confirm-update-maternity-modal" data-modal-backdrop="static" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+<div id="confirm-update-maternity-modal" data-modal-backdrop="static" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full transition-opacity duration-400 ease-out opacity-0">
     <div class="relative p-4 w-full max-w-xl max-h-full">
-        <!-- Modal content -->
-        <div class="relative bg-white rounded-lg shadow-sm dark:bg-main_font py-10 px-6">
+        <div class="relative bg-white rounded-lg shadow-sm dark:bg-main_font py-10 px-6 transition-transform duration-300 ease-out scale-95">
             <!-- Modal header -->
             <div class="flex flex-col items-center justify-center rounded-t mb-6">
                 <h3 class="text-xl font-semibold text-gray-800 dark:text-white">

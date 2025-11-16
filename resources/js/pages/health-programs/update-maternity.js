@@ -1,4 +1,37 @@
 // Main Modal Element
+const createModalOptions = (modalEl) => ({
+    placement: 'center-center',
+    backdrop: 'static',
+    closable: false,
+    onShow: () => {
+        setTimeout(() => {
+            modalEl.classList.remove('opacity-0');
+            modalEl.classList.add('opacity-100');
+            
+            const modalContent = modalEl.querySelector('.relative.bg-white');
+            if (modalContent) {
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }
+        }, 10);
+    },
+    onHide: () => {
+        modalEl.classList.add('opacity-0');
+        modalEl.classList.remove('opacity-100');
+        
+        const modalContent = modalEl.querySelector('.relative.bg-white');
+        if (modalContent) {
+            modalContent.classList.add('scale-95');
+            modalContent.classList.remove('scale-100');
+        }
+    }
+});
+
+const successModalEl = document.getElementById('success-modal');
+const successMessageHeader = document.getElementById('success-msg-head');
+const successMessage = document.getElementById('success-message');
+const closeSuccessModalButton = document.getElementById('close-success-modal-button');
+
 const updateMaternityModalEl = document.getElementById('update-maternity-modal');
 
 const currentResident = window.enrolledResident.resident;
@@ -117,20 +150,14 @@ const confirmUpdateCheckbox = document.getElementById('confirm-update-maternity-
 const cancelUpdateButton = document.getElementById('confirm-update-maternity-cancel');
 const submitUpdateButton = document.getElementById('confirm-update-maternity-submit');
 
-const modalOptions = {
-    placement: 'center-center',
-    backdrop: 'static', 
-    closable: false,    
-};
 
-const updateMaternityModal = new Modal(updateMaternityModalEl,modalOptions);
-
-const confirmUpdateMaternityModal = new Modal(confirmUpdateMaternityModalEl, modalOptions);
+const updateMaternityModal = new Modal(updateMaternityModalEl,createModalOptions(updateMaternityModalEl));
+const confirmUpdateMaternityModal = new Modal(confirmUpdateMaternityModalEl, createModalOptions(confirmUpdateMaternityModalEl));
+const successModal = new Modal(successModalEl, createModalOptions(successModalEl));
 
 const updateMaternityBtn = document.getElementById('update-maternity-btn');
 const printMaternityBtn = document.getElementById('print-maternity-btn');
 
-console.log(dconsultations);
 
 function updateMaternityMeds(consultationTitle, medicineCategory, amountElement, dateElement) {
     const consultation = dconsultations.find(c => c.consultation_title === consultationTitle);
@@ -345,7 +372,7 @@ openUpdateMaternityModalBtn.addEventListener('click', function(){
 
     calculateBmi(enrolledResident);
 
-    console.log(maternityRecord);
+
 
     if(maternityRecord.maternity_screening){
         const maternityScreening = maternityRecord.maternity_screening;
@@ -616,7 +643,14 @@ confirmUpdateCheckbox.addEventListener('change', function(){
 
 submitUpdateButton.addEventListener('click', async function() {
     const payload = getMaternityPayload();
+    
+    // Store original button text
+    const originalButtonText = submitUpdateButton.textContent;
+    
+    // Disable both buttons and change submit button text
     submitUpdateButton.disabled = true;
+    cancelUpdateButton.disabled = true;
+    submitUpdateButton.textContent = 'Saving...';
 
     console.log("Data for UPDATE:", payload);
 
@@ -653,17 +687,31 @@ submitUpdateButton.addEventListener('click', async function() {
         const result = await response.json();
         console.log(result);
 
-        alert(' Maternal record updated successfully!');
-        window.location.reload();
+        // Hide confirm modal
+        confirmUpdateMaternityModal.hide();
+        
+        // Show success modal
+        successMessageHeader.textContent = 'Update Successful';
+        successMessage.textContent = 'Maternal record has been successfully updated.';
+        successModal.show();
+
     } catch (error) {
         console.error('Error updating maternal record:', error);
-        alert(` Failed to update maternal record.\n\nDetails: ${error.message}`);
+        alert(`Failed to update maternal record.\n\nDetails: ${error.message}`);
+        
     } finally {
-        // Always re-enable the button
+        // Re-enable buttons and restore text
         submitUpdateButton.disabled = false;
+        cancelUpdateButton.disabled = false;
+        submitUpdateButton.textContent = originalButtonText;
+        confirmUpdateCheckbox.checked = false;
     }
 });
 
+// Close success modal button - reload page
+closeSuccessModalButton.addEventListener('click', function(){
+    window.location.reload();
+});
 
 // Event listener for the PRINT button
 printMaternityBtn.addEventListener('click', function() {
@@ -703,4 +751,9 @@ printMaternityBtn.addEventListener('click', function() {
         console.error('Error exporting PDF:', error);
         alert('Failed to generate PDF. Please check the console for more details and try again.');
     });
+});
+
+cancelUpdateButton.addEventListener('click', function(){
+    confirmUpdateMaternityModal.hide();
+    updateMaternityModal.show();
 });
