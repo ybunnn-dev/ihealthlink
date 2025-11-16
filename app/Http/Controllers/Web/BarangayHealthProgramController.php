@@ -37,9 +37,11 @@ class BarangayHealthProgramController extends Controller
         $barangayId = $personnel->brgy_id;
 
         if (!$healthProgram) {
-            $healthProgram = HealthProgram::latest()->first();
+            // fallback: still only fetch latest active
+            $healthProgram = HealthProgram::where('status', 'active')
+                ->orderBy('id', 'desc')
+                ->first();
         }
-
         $query = EnrolledResident::with(['resident', 'consultations' => function ($q) {
                 $q->orderBy('consultation_date');
             }])

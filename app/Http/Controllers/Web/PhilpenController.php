@@ -105,6 +105,12 @@ class PhilpenController extends Controller
                 })
                 ->get();
 
+            \Log::info('Step 2 - Enrolled Residents Found:', [
+                'total_count' => $enrolledResidents->count(),
+                'enrolled_resident_ids' => $enrolledResidents->pluck('id')->toArray(),
+                'resident_ids' => $enrolledResidents->pluck('resident_id')->toArray()
+            ]);
+            
             // Step 3: Create new consultations for all enrolled residents
             $newConsultations = [];
             $consultationTimestamp = now();
@@ -129,10 +135,16 @@ class PhilpenController extends Controller
                 $createdConsultationsCount = count($newConsultations);
                 
                 // Step 4: Get the newly created consultations to create related PhilPEN records
-                $newlyCreatedConsultations = Consultation::where('created_at', $consultationTimestamp)
-                    ->whereIn('resident_id', $enrolledResidents->pluck('resident_id'))
+                $newlyCreatedConsultations = Consultation::where('consultation_date', $validated['consultation_date'])
+                    ->whereIn('enrolled_resident_id', $enrolledResidents->pluck('id'))
                     ->where('status', 'pending')
+                    ->where('consultation_title', 'Scheduled Return')
+                    ->whereBetween('created_at', [
+                        $consultationTimestamp->copy()->subSecond(),
+                        $consultationTimestamp->copy()->addSecond()
+                    ])
                     ->get();
+
 
                 // Step 5: Create empty PhilPEN records for EACH consultation
                 foreach ($newlyCreatedConsultations as $consultation) {
@@ -351,7 +363,7 @@ class PhilpenController extends Controller
                         );
                         $notifiedCount++;
                     } catch (\Exception $e) {
-                        Log::error('FCM Error for user ' . $person->user->id . ': ' . $e->getMessage());
+                        \Log::error('FCM Error for user ' . $person->user->id . ': ' . $e->getMessage());
                     }
                 }
             }

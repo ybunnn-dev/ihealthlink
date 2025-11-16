@@ -7,18 +7,46 @@ const pendingConsultationCountSpan = document.getElementById('pending-consultati
 const confirmCreatePhilpenCheckbox = document.getElementById('confirm-create-philpen-checkbox');
 const cancelConfirmCreatePhilpenBtn = document.getElementById('cancel-confirm-create-philpen');
 const confirmCreatePhilpenBtn = document.getElementById('confirm-create-philpen-btn');
+const successModalEl = document.getElementById('success-modal');
+const successMessageHeader = document.getElementById('success-msg-head');
+const successMessage = document.getElementById('success-message');
+const closeSuccessModalButton = document.getElementById('close-success-modal-button');
 
-const modalOptions = {
+// --- Modal & UI Element Variables ---
+const createModalOptions = (modalEl) => ({
     placement: 'center-center',
     backdrop: 'static',
     closable: false,
-};
+    onShow: () => {
+        setTimeout(() => {
+            modalEl.classList.remove('opacity-0');
+            modalEl.classList.add('opacity-100');
+
+            const modalContent = modalEl.querySelector('.relative.bg-white');
+            if (modalContent) {
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }
+        }, 10);
+    },
+    onHide: () => {
+        modalEl.classList.add('opacity-0');
+        modalEl.classList.remove('opacity-100');
+
+        const modalContent = modalEl.querySelector('.relative.bg-white');
+        if (modalContent) {
+            modalContent.classList.add('scale-95');
+            modalContent.classList.remove('scale-100');
+        }
+    }
+});
 
 let currentCount = null;
 
 const triggerPhilpen = document.getElementById('createNewPhilpen');
-const addPhilpenModal = new Modal(addPhilpenModalEl, modalOptions);
-const confirmCreatePhilpenModal = new Modal(confirmCreatePhilpenModalEl, modalOptions);
+const addPhilpenModal = new Modal(addPhilpenModalEl, createModalOptions(addPhilpenModalEl));
+const confirmCreatePhilpenModal = new Modal(confirmCreatePhilpenModalEl, createModalOptions(confirmCreatePhilpenModalEl));
+const successModal = new Modal(successModalEl, createModalOptions(successModalEl));
 
 triggerPhilpen.addEventListener('click',function(){
     addPhilpenModal.show();
@@ -81,13 +109,19 @@ confirmCreatePhilpenCheckbox.addEventListener('change',function(){
 
 confirmCreatePhilpenBtn.addEventListener('click', async function() {
     const scheduledDate = consultationDateInput.value;
-    confirmCreatePhilpenBtn.disabled = true;
-    cancelConfirmCreatePhilpenBtn.disabled = true;
-
+    
     if (!scheduledDate) {
         alert('Please select a consultation date first.');
         return;
     }
+
+    // Store original button text
+    const originalButtonText = confirmCreatePhilpenBtn.textContent;
+    
+    // Disable both buttons and change text
+    confirmCreatePhilpenBtn.disabled = true;
+    cancelConfirmCreatePhilpenBtn.disabled = true;
+    confirmCreatePhilpenBtn.textContent = 'Creating...';
 
     try {
         const response = await fetch('/barangay/philpen/consultation/create', {
@@ -104,14 +138,71 @@ confirmCreatePhilpenBtn.addEventListener('click', async function() {
         console.log('Server response:', data);
 
         if (data.status === 'success') {
-            alert('Consultation successfully scheduled.');
-            window.location.reload();
+            // Hide confirmation modal
+            confirmCreatePhilpenModal.hide();
+            
+            // Set success modal content
+            successMessageHeader.textContent = 'Success!';
+            successMessage.textContent = 'Consultation successfully scheduled.';
+            
+            // Show success modal
+            successModal.show();
+            
+            // Optional: Reload on success modal close
+            closeSuccessModalButton.addEventListener('click', function() {
+                successModal.hide();
+                window.location.reload();
+            });
         } else {
-            alert('Error: ' + (data.message || 'Something went wrong.'));
-            window.location.reload();
+            // Hide confirmation modal
+            confirmCreatePhilpenModal.hide();
+            
+            // Set error modal content
+            successMessageHeader.textContent = 'Error';
+            successMessage.textContent = data.message || 'Something went wrong.';
+            
+            // Show success modal (reusing for error)
+            successModal.show();
+            
+            // Reload on modal close
+            closeSuccessModalButton.addEventListener('click', function() {
+                successModal.hide();
+                window.location.reload();
+            });
         }
 
     } catch (error) {
         console.error('Error creating schedule:', error);
+        
+        // Hide confirmation modal
+        confirmCreatePhilpenModal.hide();
+        
+        // Set error modal content
+        successMessageHeader.textContent = 'Error';
+        successMessage.textContent = 'An error occurred while creating the schedule.';
+        
+        // Show success modal (reusing for error)
+        successModal.show();
+        
+        // Reload on modal close
+        closeSuccessModalButton.addEventListener('click', function() {
+            successModal.hide();
+            window.location.reload();
+        });
+    } finally {
+        // Reset buttons (in case modal stays open)
+        confirmCreatePhilpenBtn.disabled = false;
+        cancelConfirmCreatePhilpenBtn.disabled = false;
+        confirmCreatePhilpenBtn.textContent = originalButtonText;
+        confirmCreatePhilpenCheckbox.checked = false;
     }
+});
+
+// Close success modal handler (if you want to close without reload)
+cancelConfirmCreatePhilpenBtn.addEventListener('click', function() {
+    consultationDateInput.value = '';
+    confirmCreatePhilpenCheckbox.checked = false;
+    confirmCreatePhilpenBtn.disabled = true;
+    confirmCreatePhilpenModal.hide();
+    addPhilpenModal.show();
 });

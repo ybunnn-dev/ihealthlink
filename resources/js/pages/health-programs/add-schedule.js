@@ -1,9 +1,4 @@
-// ====================================================================
-// MODAL OPTIONS WITH FADE ANIMATIONS
-// ====================================================================
 
-// Note: You can remove these lines if you are populating
-// the dropdown with Blade, as we discussed.
 const programFields = window.program.program_fields;
 const programId = window.program.id;
 
@@ -38,11 +33,6 @@ const createModalOptions = (modalEl) => ({
     }
 });
 
-// ====================================================================
-// GET ELEMENTS
-// ====================================================================
-
-// --- Add Schedule Modal ---
 const addScheduleModalEl = document.getElementById('add-schedule-modal');
 const addScheduleForm = document.getElementById('add-schedule-form');
 const addScheduleTitle = document.getElementById('add-schedule-title');
@@ -64,22 +54,12 @@ const successMessageHeader = document.getElementById('success-msg-head');
 const successMessage = document.getElementById('success-message');
 const closeSuccessModalButton = document.getElementById('close-success-modal-button');
 
-// ====================================================================
-// CREATE MODAL INSTANCES
-// ====================================================================
 const addScheduleModal = new Modal(addScheduleModalEl, createModalOptions(addScheduleModalEl));
 const confirmAddScheduleModal = new Modal(confirmAddScheduleModalEl, createModalOptions(confirmAddScheduleModalEl));
 const successModal = new Modal(successModalEl, createModalOptions(successModalEl));
 
 const addSchedBtn = document.getElementById('page-add-field-button');
 
-// ====================================================================
-// FORM VALIDATION
-// ====================================================================
-
-/**
- * Validates the add schedule form and enables/disables the submit button.
- */
 function validateAddScheduleForm() {
     const title = addScheduleTitle.value.trim();
     const intervals = addScheduleIntervals.value.trim();
@@ -97,10 +77,6 @@ addScheduleTitle.addEventListener('input', validateAddScheduleForm);
 addScheduleIntervals.addEventListener('input', validateAddScheduleForm);
 addSchedulePosition.addEventListener('change', validateAddScheduleForm);
 
-// ====================================================================
-// EVENT LISTENERS
-// ====================================================================
-
 addSchedBtn.addEventListener('click', function(){
     // Reset the form and validation state every time the modal is opened
     addScheduleForm.reset();
@@ -110,7 +86,6 @@ addSchedBtn.addEventListener('click', function(){
 
 cancelAddScheduleBtn.addEventListener('click', function(){
     addScheduleModal.hide();
-    // Also reset form and validation on cancel
     addScheduleForm.reset();
     validateAddScheduleForm();
 });
