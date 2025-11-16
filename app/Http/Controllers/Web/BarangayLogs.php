@@ -124,17 +124,37 @@ class BarangayLogs extends Controller
     {
         $log->load('user');
         
-        // Convert to array and clean all strings
+        // Convert to array first
         $data = $log->toArray();
+        
+        // Use the original Carbon objects from the model, NOT the string from toArray()
+        $data['created_at'] = $log->created_at
+            ->timezone('Asia/Manila')
+            ->format('M d, Y - h:i A');
+        
+        $data['updated_at'] = $log->updated_at
+            ->timezone('Asia/Manila')
+            ->format('M d, Y - h:i A');
+        
+        // For user timestamps - use the Carbon objects from the relationship
+        if ($log->user) {
+            $data['user']['created_at'] = $log->user->created_at
+                ->timezone('Asia/Manila')
+                ->format('M d, Y - h:i A');
+            
+            $data['user']['updated_at'] = $log->user->updated_at
+                ->timezone('Asia/Manila')
+                ->format('M d, Y - h:i A');
+        }
         
         // Recursively clean all string values
         array_walk_recursive($data, function(&$value) {
             if (is_string($value)) {
-                // Remove any invalid UTF-8 sequences
                 $value = mb_convert_encoding($value, 'UTF-8', 'UTF-8');
             }
         });
         
         return response()->json($data);
     }
+
 }

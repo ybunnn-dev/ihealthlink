@@ -19,10 +19,12 @@
             <span x-show="!showPrivacy">{{ str_repeat('*', 20) }}</span>
         </td>
         <td class="px-6 py-4">
-            <span x-show="showPrivacy">{{ \Carbon\Carbon::parse($log->created_at)->format('M d, Y - h:i A') }}</span>
+            <span x-show="showPrivacy">
+                {{ \Carbon\Carbon::parse($log->created_at)->tz('Asia/Manila')->format('M d, Y - h:i A') }}
+            </span>
             <span x-show="!showPrivacy">{{ str_repeat('*', 20) }}</span>
         </td>
-        <td class="px-6 py-4">
+       <td class="px-6 py-4">
             <button data-id="{{ $log->id }}" class="text-white bg-mainblue hover:bg-blue-700 font-medium rounded-lg text-sm px-4 py-1 view-log-btn">
                 View
             </button>
