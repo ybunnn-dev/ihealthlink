@@ -42,7 +42,7 @@ const bhwData = window.bhwData;
 console.log(bhwData);
 
 removeBhwTrigger.addEventListener('click', function(){
-    removeBhwName.textContent = `${bhwData.user.firstName} ${bhwData.user.middleName} ${bhwData.user.lsastName}`;
+    removeBhwName.textContent = `${bhwData.user.firstName} ${bhwData.user.middleName} ${bhwData.user.lastName}`;
     removeBhwModal.show();
 });
 
