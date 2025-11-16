@@ -1,4 +1,34 @@
 // --- Main Elements ---
+// The main "remove BHW" modal element
+const createModalOptions = (modalEl) => ({
+    placement: 'center-center',
+    backdrop: 'static',
+    closable: false,
+    onShow: () => {
+        setTimeout(() => {
+            modalEl.classList.remove('opacity-0');
+            modalEl.classList.add('opacity-100');
+
+            const modalContent = modalEl.querySelector('.relative.bg-white');
+            if (modalContent) {
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }
+        }, 10);
+    },
+    onHide: () => {
+        modalEl.classList.add('opacity-0');
+        modalEl.classList.remove('opacity-100');
+
+        const modalContent = modalEl.querySelector('.relative.bg-white');
+        if (modalContent) {
+            modalContent.classList.add('scale-95');
+            modalContent.classList.remove('scale-100');
+        }
+    }
+});
+
+
 const addBhwModalEl = document.getElementById('add-bhw-modal');
 const addBhwForm = document.getElementById('addBhwForm');
 
@@ -35,9 +65,16 @@ const confirmBhwCheckbox = document.getElementById('confirm-bhw-checkbox');
 const confirmProceedButton = document.getElementById('confirm-proceed-button');
 const cancelConfirmAddBhwButton = document.getElementById('confirm-add-bhw-cancel');
 
-// --- Modal Initialization (Using Flowbite's JS API) ---
-const addBhwModal = new Modal(addBhwModalEl);
-const addBhwConfirmModal = new Modal(addBhwConfirmModalEl);
+const successModalEl = document.getElementById('success-modal');
+const successMesageHeader = document.getElementById('success-msg-head');
+const successMessage = document.getElementById('success-message');
+const closeSuccessModalButton = document.getElementById('close-success-modal-button');
+
+
+
+const addBhwModal = new Modal(addBhwModalEl, createModalOptions(addBhwModalEl));
+const addBhwConfirmModal = new Modal(addBhwConfirmModalEl, createModalOptions(addBhwConfirmModalEl));
+const successModal = new Modal(successModalEl, createModalOptions(successModalEl));
 
 const openModalBtn = document.getElementById('open-add-bhw-modal');
 
@@ -266,12 +303,7 @@ confirmBhwCheckbox.addEventListener('change', function(){
   confirmProceedButton.disabled = !this.checked;
 });
 
-const successModalEl = document.getElementById('success-modal');
-const successMesageHeader = document.getElementById('success-msg-head');
-const successMessage = document.getElementById('success-message');
-const closeSuccessModalButton = document.getElementById('close-success-modal-button');
 
-const successModal = new Modal(successModalEl);
 
 confirmProceedButton.addEventListener('click', async function() {
     // 1. Provide immediate UI feedback

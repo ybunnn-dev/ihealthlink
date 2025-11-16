@@ -226,10 +226,6 @@ allTextInputs.forEach(input => {
     input.addEventListener('input', validateEditForm);
 });
 
-/**
- * Sets up a click event listener for a specific dropdown menu.
- * @param {string} menuId The ID of the dropdown menu element (the <div> with the <ul>).
- */
 function setupDropdownHandler(menuId) {
     const menuElement = document.getElementById(menuId);
 
@@ -310,7 +306,7 @@ editBhwSubmitButton.addEventListener('click', function(){
 
     
     editBhwModal.hide();
-    editBhwNameToConfirm.textContent = bhwData.name;
+    editBhwNameToConfirm.textContent = `${bhwData.user.firstName} ${bhwData.user.middleName} ${bhwData.user.lastName}`;
     confirmEditBhw.show();
 
     
