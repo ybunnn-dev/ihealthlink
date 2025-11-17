@@ -305,10 +305,6 @@ if (fpNextBtn) {
             // This is the final step, handle the form submission
             console.log('Final step reached. Populating confirmation modal...');
 
-            // --- CORRECTED CODE ---
-            // Get the text from the label spans of the custom dropdowns.
-            // This also assumes 'residentNameConfirm', 'clientTypeConfirm', 'sourceConfirm', 
-            // and 'previousMethodConfirm' are defined element variables for your confirmation modal.
 
             residentNameToConfirm.textContent = fpResidentNameInput.value;
             clientTypeConfirm.textContent = fpClientTypeLabel.textContent;

@@ -400,7 +400,7 @@ class BarangayHealthProgramController extends Controller
 
         FamilyPlanningData::create([
             'client_type' => $request->client_type,
-            'source' => $request->source_select,
+            'source' => $request->source,
             'previous_method' => $request->previous_method,
             'enrolled_resident_id' => $enrollment->id, // if created earlier
         ]);
