@@ -56,7 +56,7 @@ class PreloadController extends Controller
         // Get schedules that are active AND dated today or in the future
         $schedules = Schedules::where('brgy_id', $barangay->id)
             ->where('status', 'active')
-            ->whereDate('date_column', '>=', Carbon::today())
+            ->whereDate('date', '>=', Carbon::today())
             ->get();
         $dailyActivities = DailyActivities::where('brgy_id', $barangay->id)->get();
         $userManuals = UserManual::where('action_type', 'active')->get();

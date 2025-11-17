@@ -36,10 +36,11 @@ class ScheduleController extends Controller
                 $this->createDefaultDailyActivities($midwife->brgy_id);
             }
 
-            // Alternative using newer Laravel date methods
-            $schedules = Schedules::where('brgy_id', $barangay->id)
+            // Filter schedules to only include today and future dates
+            $schedules = Schedules::where('brgy_id', $midwife->brgy_id)
                 ->where('status', 'active')
-                ->whereTodayOrAfter('date_column')
+                ->whereDate('date', '>=', Carbon::today())
+                ->with(['barangay'])
                 ->get();
 
             $dailyActivities = DailyActivities::where('brgy_id', $midwife->brgy_id)
