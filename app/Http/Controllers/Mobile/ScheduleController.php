@@ -35,6 +35,7 @@ class ScheduleController extends Controller
         $schedules = Schedules::where('brgy_id', $brgyId)
             ->whereMonth('date', $month)   
             ->whereYear('date', $year)
+            ->where('status', 'active')
             ->get();
 
         return response()->json($schedules);

@@ -12,6 +12,7 @@ use App\Models\Schedules;
 use App\Models\DailyActivities;
 use App\Models\UserManual;
 use App\Models\HealthProgram;
+use Carbon\Carbon;
 
 class PreloadController extends Controller
 {
@@ -52,7 +53,11 @@ class PreloadController extends Controller
         // Fetch inventories through the medicine IDs belonging to this barangay
         $inventories = MedicineInventory::whereIn('medicine_id', $medicines->pluck('id'))->get();
 
-        $schedules = Schedules::where('brgy_id', $barangay->id)->get();
+        // Get schedules that are active AND dated today or in the future
+        $schedules = Schedules::where('brgy_id', $barangay->id)
+            ->where('status', 'active')
+            ->whereDate('date_column', '>=', Carbon::today())
+            ->get();
         $dailyActivities = DailyActivities::where('brgy_id', $barangay->id)->get();
         $userManuals = UserManual::where('action_type', 'active')->get();
         $health_programs = HealthProgram::where('status', 'active')->get();

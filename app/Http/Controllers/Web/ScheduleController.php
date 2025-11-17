@@ -36,12 +36,10 @@ class ScheduleController extends Controller
                 $this->createDefaultDailyActivities($midwife->brgy_id);
             }
 
-            // FIXED: Added 'user' relationship to activeBhws
-            $schedules = Schedules::where('brgy_id', $midwife->brgy_id)
+            // Alternative using newer Laravel date methods
+            $schedules = Schedules::where('brgy_id', $barangay->id)
                 ->where('status', 'active')
-                ->with([
-                    'barangay'
-                ])
+                ->whereTodayOrAfter('date_column')
                 ->get();
 
             $dailyActivities = DailyActivities::where('brgy_id', $midwife->brgy_id)
