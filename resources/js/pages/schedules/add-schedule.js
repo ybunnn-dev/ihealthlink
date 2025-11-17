@@ -31,14 +31,16 @@ const createModalOptions = (modalEl) => ({
     }
 });
 
-const modalOptions = {
-    placement: 'center-center',
-    backdrop: 'static',
-    closable: false,
-};
+const successModalEl = document.getElementById('success-modal');
+const successMesageHeader = document.getElementById('success-msg-head');
+const successMessage = document.getElementById('success-message');
+const closeSuccessModalButton = document.getElementById('close-success-modal-button');
+
 // --- INITIALIZE MODAL OBJECTS ONCE ---
-const addActivityModal = new Modal(addActivityModalEl, modalOptions);
-const confirmAddSchedulModal = new Modal(confirmAddSchedulModalEl, modalOptions);
+const addActivityModal = new Modal(addActivityModalEl, createModalOptions(addActivityModalEl));
+const confirmAddSchedulModal = new Modal(confirmAddSchedulModalEl, createModalOptions(confirmAddSchedulModalEl));
+const successModal = new Modal(successModalEl, createModalOptions(successModalEl));
+
 
 // --- Buttons ---
 const addActivityBtn = document.getElementById('add-activity-btn');
@@ -115,20 +117,19 @@ cancelConfirmAddScheduleBtn.addEventListener('click', function(){
     addActivityModal.show();
 });
 
-
-
-const successSchedModalEl = document.getElementById('success-modal');
-const successSchedMesageHeader = document.getElementById('success-msg-head');
-const successSchedMessage = document.getElementById('success-message');
-const closeSuccessSchedModalButton = document.getElementById('close-success-modal-button');
-
-const successSchedModal = new Modal(successSchedModalEl);
-
 confirmAddScheduleBtn.addEventListener('click', function() {
+    // Store original button text
+    const originalButtonText = confirmAddScheduleBtn.textContent;
+    
+    // Disable both buttons and change confirm button text
+    confirmAddScheduleBtn.disabled = true;
+    cancelConfirmAddScheduleBtn.disabled = true;
+    confirmAddScheduleBtn.textContent = 'Saving...';
+    
     const addSchedPayload = {
         activity: activityNameInput.value.trim(),
         date: activityDateInput.value.trim(),
-        time: activityTimeInput.value.trim(), // changed to correct input
+        time: activityTimeInput.value.trim(),
         venue: activityVenueInput.value.trim(),
     };
 
@@ -138,20 +139,56 @@ confirmAddScheduleBtn.addEventListener('click', function() {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') // Laravel CSRF
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         },
         body: JSON.stringify(addSchedPayload)
     })
     .then(res => res.json())
     .then(data => {
         console.log("Response from backend:", data);
+        
         if(data.result == 'success'){
-            alert('Scheduled activity has been successfully added.');
-            window.location.reload();
+            // Hide the confirmation modal
+            confirmAddSchedulModal.hide();
+            
+            // Update success modal content
+            successMesageHeader.textContent = 'Success!';
+            successMessage.textContent = 'Scheduled activity has been successfully added.';
+            
+            // Show the success modal
+            successModal.show();
+            
+            // Reload after closing success modal
+            closeSuccessModalButton.addEventListener('click', function() {
+                successModal.hide();
+                window.location.reload();
+            }, { once: true });
+        } else {
+            // Handle error case
+            confirmAddSchedulModal.hide();
+            successMesageHeader.textContent = 'Error!';
+            successMessage.textContent = data.message || 'Something went wrong. Please try again.';
+            successModal.show();
         }
     })
     .catch(err => {
         console.error("Error sending schedule:", err);
+        
+        // Show error in success modal
+        confirmAddSchedulModal.hide();
+        successMesageHeader.textContent = 'Error!';
+        successMessage.textContent = 'Failed to add schedule. Please check your connection.';
+        successModal.show();
+    })
+    .finally(() => {
+        // Re-enable buttons and restore text regardless of success or error
+        confirmAddScheduleBtn.disabled = false;
+        cancelConfirmAddScheduleBtn.disabled = false;
+        confirmAddScheduleBtn.textContent = originalButtonText;
     });
 });
-validateAddActivityForms();
+
+// Close success modal button handler
+closeSuccessModalButton.addEventListener('click', function() {
+    successModal.hide();
+});

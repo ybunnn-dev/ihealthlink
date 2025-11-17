@@ -48,9 +48,14 @@ const modalOptions = {
     closable: false,
 };
 
+const successModalEl = document.getElementById('success-modal');
+const successMesageHeader = document.getElementById('success-msg-head');
+const successMessage = document.getElementById('success-message');
+const closeSuccessModalButton = document.getElementById('close-success-modal-button');
 
-const editActivityModal = new Modal(editActivityModalEl, modalOptions);
-const confirmEditModal = new Modal(confirmEditScheduleModalEl, modalOptions);
+const successModal = new Modal(successModalEl, createModalOptions(successModalEl));
+const editActivityModal = new Modal(editActivityModalEl, createModalOptions(editActivityModalEl));
+const confirmEditModal = new Modal(confirmEditScheduleModalEl, createModalOptions(confirmEditScheduleModalEl));
 
 
 let defPayload = null;
@@ -146,9 +151,16 @@ confirmEditScheCheckbox.addEventListener('change', function(){
 });
 
 
-
 confirmEditScheduleBtn.addEventListener('click', function() {
     const url = `/barangay/schedule/edit/${passPayload.id}`;
+
+    // Disable buttons
+    confirmEditScheduleBtn.disabled = true;
+    cancelConfirmEditScheduleBtn.disabled = true;
+
+    // Change confirm button text
+    const originalText = confirmEditScheduleBtn.textContent;
+    confirmEditScheduleBtn.textContent = 'Saving...';
 
     fetch(url, {
         method: 'PUT',
@@ -161,15 +173,37 @@ confirmEditScheduleBtn.addEventListener('click', function() {
     .then(response => response.json())
     .then(data => {
         console.log("Controller response:", data);
+        
         if(data.success){
-           alert('Schedule has been successfully updated.');
-            // Redirect to a GET route after success
+            confirmEditModal.hide();
             
-            window.location.reload(); // or your schedules list page
-            
+            successMesageHeader.textContent = 'Success!';
+            successMessage.textContent = 'Schedule has been successfully updated.';
+            successModal.show();
+
+            closeSuccessModalButton.addEventListener('click', function() {
+                successModal.hide();
+                window.location.reload();
+            }, { once: true });
+        } else {
+            confirmEditModal.hide();
+            successMesageHeader.textContent = 'Error!';
+            successMessage.textContent = data.message || 'Failed to update schedule.';
+            successModal.show();
         }
     })
     .catch(error => {
         console.error("Error sending update request:", error);
+        
+        confirmEditModal.hide();
+        successMesageHeader.textContent = 'Error!';
+        successMessage.textContent = 'Failed to update schedule. Please check your connection.';
+        successModal.show();
+    })
+    .finally(() => {
+        // Re-enable buttons & restore text if needed
+        confirmEditScheduleBtn.disabled = false;
+        cancelConfirmEditScheduleBtn.disabled = false;
+        confirmEditScheduleBtn.textContent = originalText;
     });
 });
