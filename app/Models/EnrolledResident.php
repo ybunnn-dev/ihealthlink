@@ -101,7 +101,8 @@ class EnrolledResident extends Model
         }
 
         $next = $pending->first();
-        $date = Carbon::parse($next->consultation_date)->startOfDay();
+        // Parse the date with the same timezone
+        $date = Carbon::parse($next->consultation_date, 'Asia/Manila')->startOfDay();
 
         if ($date->lt($today)) {
             $status = 'Late';
@@ -120,6 +121,7 @@ class EnrolledResident extends Model
             'date'   => $date->format('M d, Y'),
         ];
     }
+
     public function familyPlanningData(){
         return $this->hasOne(FamilyPlanningData::class);
     }

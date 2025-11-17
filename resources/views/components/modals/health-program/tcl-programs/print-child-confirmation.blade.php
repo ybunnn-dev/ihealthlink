@@ -1,6 +1,6 @@
-<div id="confirm-print-child-care-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+<div id="confirm-print-child-care-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full transition-opacity duration-400 ease-out opacity-0">
     <div class="relative p-4 w-full max-w-lg max-h-full">
-        <div class="relative bg-white rounded-lg shadow-sm py-10 px-6">
+        <div class="relative bg-white rounded-lg shadow-sm py-10 px-6 transition-transform duration-300 ease-out scale-95">
             <div class="flex flex-col items-center justify-center rounded-t mb-6 text-center">
                 <h3 class="text-xl font-semibold text-main_font">
                     Confirm PDF Generation

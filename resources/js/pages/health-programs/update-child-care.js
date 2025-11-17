@@ -9,8 +9,6 @@ const family = resident.family;
 const mother = window.enrolledResident.child_healthcare.mother;
 const childCare = window.enrolledResident.child_healthcare;
 const childConsultations = window.enrolledResident.consultations;
-console.log(enrolledResidentId);
-console.log(mother);
 
 // A. Basic Information Section
 const childRegDate = document.getElementById('child-reg-date');
@@ -116,15 +114,43 @@ const printBtn = document.getElementById('print-child-care-btn');
 const updateBtn = document.getElementById('update-child-care-btn');
 
 
-const modalOptions = {
+const successModalEl = document.getElementById('success-modal');
+const successMesageHeader = document.getElementById('success-msg-head');
+const successMessage = document.getElementById('success-message');
+const closeSuccessModalButton = document.getElementById('close-success-modal-button');
+
+const createModalOptions = (modalEl) => ({
     placement: 'center-center',
     backdrop: 'static',
     closable: false,
-};
+    onShow: () => {
+        setTimeout(() => {
+            modalEl.classList.remove('opacity-0');
+            modalEl.classList.add('opacity-100');
 
-const updateChildCareModal = new Modal(updateChildCareModalEl, modalOptions);
-const confirmPrintChildCareModal = new Modal(confirmPrintChildCareModalEl, modalOptions);
-const confirmUpdateChildCareModal = new Modal(confirmUpdateChildCareModalEl, modalOptions);
+            const modalContent = modalEl.querySelector('.relative.bg-white');
+            if (modalContent) {
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }
+        }, 10);
+    },
+    onHide: () => {
+        modalEl.classList.add('opacity-0');
+        modalEl.classList.remove('opacity-100');
+
+        const modalContent = modalEl.querySelector('.relative.bg-white');
+        if (modalContent) {
+            modalContent.classList.add('scale-95');
+            modalContent.classList.remove('scale-100');
+        }
+    }
+});
+
+const updateChildCareModal = new Modal(updateChildCareModalEl, createModalOptions(updateChildCareModalEl));
+const confirmPrintChildCareModal = new Modal(confirmPrintChildCareModalEl, createModalOptions(confirmPrintChildCareModalEl));
+const confirmUpdateChildCareModal = new Modal(confirmUpdateChildCareModalEl, createModalOptions(confirmUpdateChildCareModalEl));
+const successModal = new Modal(successModalEl, createModalOptions(successModalEl));
 
 const openUpdateChildCareBtn = document.getElementById('update-record');
 
@@ -576,39 +602,56 @@ confirmPrintCheckbox.addEventListener('click',function(){
     confirmPrintBtn.disabled = !this.checked;
 });
 
-confirmUpdateBtn.addEventListener('click',function(){
-    // 1. Call the function to get all the data
-    const formDataPayload = getChildHealthPayload();
-    confirmUpdateBtn.disabled = true;
-    // 2. You can now use the payload, for example, log it to the console
-    console.log("Collected Form Payload:", formDataPayload);
-
-    fetch('/barangay/health-program/update-child-record', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-        },
-        body: JSON.stringify(formDataPayload),
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.status === 'success') {
-            alert(data.message);
-            setTimeout(() => {
-                location.reload();
-            }, 500); // waits 1 second before reloading
-        } else {
-            alert((data.message || 'An error occurred while updating.'));
-        }
-    })
-    .catch((error) => {
-        console.error('Error:', error);
-        alert('Failed to update record. Please try again later.');
-        window.location.reload();
-    });
-
+async function submitChildHealthUpdate() {
+    const originalButtonText = confirmUpdateBtn.textContent;
     
+    // Get form data
+    const formDataPayload = getChildHealthPayload();
+    console.log("Collected Form Payload:", formDataPayload);
+    
+    // Disable buttons and show loading state
+    confirmUpdateBtn.disabled = true;
+    cancelUpdateBtn.disabled = true;
+    confirmUpdateBtn.textContent = 'Saving...';
+    
+    try {
+        const response = await fetch('/barangay/health-program/update-child-record', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: JSON.stringify(formDataPayload)
+        });
+        
+        const data = await response.json();
+        
+        if (data.status === 'success') {
+            confirmUpdateChildCareModal.hide();
+            successMesageHeader.textContent = 'Update Successful';
+            successMessage.textContent = data.message || 'Child health record has been successfully updated.';
+            successModal.show();
+        } else {
+            alert(data.message || 'An error occurred while updating.');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Failed to update record. Please check your connection.');
+    } finally {
+        // Re-enable buttons and restore text
+        confirmUpdateBtn.disabled = false;
+        cancelUpdateBtn.disabled = false;
+        confirmUpdateBtn.textContent = originalButtonText;
+    }
+}
+
+// ===== EVENT LISTENER =====
+confirmUpdateBtn.addEventListener('click', submitChildHealthUpdate);
+
+// Close success modal and reload
+closeSuccessModalButton.addEventListener('click', () => {
+    successModal.hide();
+    window.location.reload();
 });
 
 confirmPrintBtn.addEventListener('click',function(){
