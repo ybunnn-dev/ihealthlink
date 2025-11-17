@@ -39,7 +39,6 @@ class ScheduleController extends Controller
             // Filter schedules to only include today and future dates
             $schedules = Schedules::where('brgy_id', $midwife->brgy_id)
                 ->where('status', 'active')
-                ->whereDate('date', '>=', Carbon::today())
                 ->with(['barangay'])
                 ->get();
 

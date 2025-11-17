@@ -1,5 +1,13 @@
 @props(['upcomingActivities'])
 
+@php
+    // Filter to only show today and future schedules
+    $filteredActivities = $upcomingActivities->filter(function($activity) {
+        return \Carbon\Carbon::parse($activity->date)->isToday() || 
+               \Carbon\Carbon::parse($activity->date)->isFuture();
+    });
+@endphp
+
 <div class="bg-white rounded-xl p-6 md:col-span-1">
     <h2 class="text-xl font-semibold text-main_font mb-4 flex items-center gap-2">
         <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -9,7 +17,7 @@
     </h2>
     
     <ul class="space-y-2 max-h-72 overflow-y-auto scrollbar-thin scrollbar-gray-200 scrollbar-track-gray-100 scrollbar-hide-arrows pr-2">
-        @forelse ($upcomingActivities as $activity)
+        @forelse ($filteredActivities as $activity)
             <li class="bg-bg_col rounded-lg p-3 flex items-start">
                 <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" class="flex-shrink-0 w-6 h-6 text-gray-500 mr-3 mt-0.5" fill="currentColor">
                     <g>

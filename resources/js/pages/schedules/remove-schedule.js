@@ -1,4 +1,33 @@
 // The entire modal container, used to show or hide it.
+const createModalOptions = (modalEl) => ({
+    placement: 'center-center',
+    backdrop: 'static',
+    closable: false,
+    onShow: () => {
+        setTimeout(() => {
+            modalEl.classList.remove('opacity-0');
+            modalEl.classList.add('opacity-100');
+            
+            const modalContent = modalEl.querySelector('.relative.bg-white');
+            if (modalContent) {
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }
+        }, 10);
+    },
+    onHide: () => {
+        modalEl.classList.add('opacity-0');
+        modalEl.classList.remove('opacity-100');
+        
+        const modalContent = modalEl.querySelector('.relative.bg-white');
+        if (modalContent) {
+            modalContent.classList.add('scale-95');
+            modalContent.classList.remove('scale-100');
+        }
+    }
+});
+
+
 const removeActivityModalEl = document.getElementById('remove-activity-modal');
 
 // The <strong> tag where the activity's name will be displayed.
@@ -13,7 +42,7 @@ const removeActivityBtn = document.getElementById('remove-activity-btn');
 // The "Cancel" button.
 const cancelRemoveActivityBtn = document.getElementById('cancel-remove-activity');
 
-const removeActivityModal = new Modal(removeActivityModalEl);
+const removeActivityModal = new Modal(removeActivityModalEl, createModalOptions(removeActivityModalEl));
 let scheduleToRemove = null;
 
 export function handleDeleteSchedule(scheduleId) {
@@ -40,7 +69,7 @@ const successSchedModalEl = document.getElementById('success-modal');
 const successSchedMesageHeader = document.getElementById('success-msg-head');
 const successSchedMessage = document.getElementById('success-message');
 const closeSuccessSchedModalButton = document.getElementById('close-success-modal-button');
-const successSchedModal = new Modal(successSchedModalEl);
+const successSchedModal = new Modal(successSchedModalEl, createModalOptions(successSchedModalEl));
 
 removeActivityBtn.addEventListener('click', function() {
     if (!scheduleToRemove) return;
@@ -70,4 +99,8 @@ removeActivityBtn.addEventListener('click', function() {
     .catch(error => {
         console.error("Error deleting schedule:", error);
     });
+});
+
+closeSuccessSchedModalButton.addEventListener('click', function(){
+    window.location.reload();
 });
