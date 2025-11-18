@@ -170,6 +170,7 @@
                                 <tr>
                                     <th scope="col" class="px-6 py-3">RESIDENT ID</th>
                                     <th scope="col" class="px-6 py-3">NAME</th>
+                                    <th scope="col" class="px-6 py-3">AGE</th>
                                     <th scope="col" class="px-6 py-3">STATUS</th>
                                     <th scope="col" class="px-6 py-3">DATE ENROLLED</th>
                                     <th scope="col" class="px-6 py-3">NEXT SCHEDULE</th>
