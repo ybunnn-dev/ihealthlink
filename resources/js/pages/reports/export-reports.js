@@ -26,8 +26,6 @@ let pageIsRendering = false;
 let pageNumIsPending = null;
 const renderScale = 1.5;
 
-const currentProgram = window.programId;
-
 // --- 3. PDF RENDERING LOGIC ---
 
 /**
@@ -164,7 +162,7 @@ exportBtn.addEventListener('click', () => {
     }
 
     const queryParams = new URLSearchParams({
-        programId: programId, startDate: fromDate, endDate: toDate
+        startDate: fromDate, endDate: toDate
     }).toString();
 
     window.open(`${baseUrl}?${queryParams}`, '_blank');
