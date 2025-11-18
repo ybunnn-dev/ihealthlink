@@ -363,6 +363,7 @@ class BarangayController extends Controller
         $midwife = Midwife::with('user')
             ->where('brgy_id', $barangay->id)
             ->where('status', 'active')
+            ->where('role_id', 2)
             ->first();
 
         // ✅ Count active households for this barangay

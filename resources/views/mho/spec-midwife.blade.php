@@ -1,11 +1,22 @@
 @section('page-id', 'spec-midwife')
-@section('title', 'Peter')
+@section('title', 'Midwife Profile')
 <x-app-layout>
+    <script>
+        window.midwifeData = @json($midwife);
+    </script>
+
     <div class="py-12 px-5">
         <div class="max-w-[90rem] mx-auto sm:px-6 lg:px-8">
             <div class="grid grid-rows gap-4">
-                 <a href="{{ route('mho.midwives') }}">
-                    <div class="flex items-center space-x-2"> <svg class="w-5 h-5" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M5 1H4L0 5L4 9H5V6H11C12.6569 6 14 7.34315 14 9C14 10.6569 12.6569 12 11 12H4V14H11C13.7614 14 16 11.7614 16 9C16 6.23858 13.7614 4 11 4H5V1Z" fill="#323643"></path> </g></svg>
+                <a href="{{ route('mho.midwives') }}">
+                    <div class="flex items-center space-x-2">
+                        <svg class="w-5 h-5" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                            <g id="SVGRepo_iconCarrier">
+                                <path d="M5 1H4L0 5L4 9H5V6H11C12.6569 6 14 7.34315 14 9C14 10.6569 12.6569 12 11 12H4V14H11C13.7614 14 16 11.7614 16 9C16 6.23858 13.7614 4 11 4H5V1Z" fill="#323643"></path>
+                            </g>
+                        </svg>
                         <span class="font-semibold">Return</span>
                     </div>
                 </a>
@@ -40,7 +51,6 @@
                     </div>
 
                     {{-- Right div: MIDWIFE INFO --}}
-                    {{-- CHANGE HERE: Made the horizontal padding responsive --}}
                     <div class="slg:col-span-2 bg-white rounded-xl py-6 px-6 lg:px-12">
                         <div class="flex items-center space-x-2 mb-4">
                             <svg class="w-6 h-6" viewBox="0 0 24 24" fill="#578FCA" xmlns="http://www.w3.org/2000/svg">
@@ -84,10 +94,63 @@
                         </div>
                     </div>
                 </div>
-                <x-midwife.history :midwife="$midwife"/>
+
+                {{-- Activity Log Section --}}
+                <h2 class="text-2xl font-semibold text-main_font mt-8">{{ $midwife['firstName'] }}'s Activity Log</h2>
+
+                <div class="bg-white p-6 rounded-xl" x-data="{ showPrivacy: true }">
+                    
+                    {{-- Search and Filter --}}
+                    <div class="flex flex-col slg2:flex-row slg2:items-end gap-4 mb-4">
+                        <div class="w-full slg2:w-64 slg2:flex-grow slg2:max-w-md">
+                            <label for="activity-search" class="mb-2 text-sm font-medium text-main_font">Search Activity</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                                    <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                                    </svg>
+                                </div>
+                                <input type="search" id="activity-search"
+                                       class="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+                                       placeholder="Search activity...">
+                            </div>
+                        </div>
+
+                        <div class="w-full xs:w-48">
+                            <label for="dateFilter" class="mb-2 text-sm font-medium text-main_font">Sort By Date</label>
+                            <select id="dateFilter"
+                                    class="w-full text-main_font bg-[#F7F7F7] focus:outline-none font-medium border border-gray-300 rounded-lg text-sm px-4 py-2 h-[2.375rem]">
+                                <option value="">All Date</option>
+                                <option value="last_week">Last Week</option>
+                                <option value="last_month">Last Month</option>
+                                <option value="custom">Custom Range</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    {{-- Loading State --}}
+                    <div id="loading-spinner" class="hidden flex justify-center items-center py-12">
+                        <svg class="animate-spin h-10 w-10 text-mainblue" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                    </div>
+
+                    {{-- Table --}}
+                    <div id="activity-log-table-container">
+                        @include('components.midwife.activity-log-table', ['logs' => $logs, 'midwife' => $midwife])
+                    </div>
+
+                    {{-- Pagination --}}
+                    <div id="pagination-container" class="mt-4">
+                        {{ $logs->links() }}
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+
     @include('components.modals.midwife.edit-midwife-modal')
     @include('components.modals.midwife.remove-midwife')
+    @include('components.modals.reports.filter-date')
 </x-app-layout>

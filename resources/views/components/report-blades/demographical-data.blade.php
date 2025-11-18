@@ -36,7 +36,7 @@
                     </svg>
                     <div class="flex flex-col">
                         <h1 class="text-col_orange text-lg slg3:text-xl xl:text-xl 2xl:text-2xl font-bold mt-2">{{ $families }}</h1>
-                        <p class="text-col_orange text-xs -mt-1 slg3:text-fluid-xxs xl:text-xs 2xl:text-xs">Residents</p>
+                        <p class="text-col_orange text-xs -mt-1 slg3:text-fluid-xxs xl:text-xs 2xl:text-xs">Families</p>
                     </div>
                 </div>
             </div>                

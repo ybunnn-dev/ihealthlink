@@ -54,6 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
   } else if (bodyClass.contains('spec-midwife')) {
     import('./pages/midwife/edit-midwife.js');
     import('./pages/midwife/remove-midwife.js');
+    import('./pages/midwife/paginate.js');
   } else if (bodyClass.contains('medicines')) {
     // REMOVE the dynamic import from here
     // import('./pages/medicines/paginator.js'); // DELETE THIS LINE

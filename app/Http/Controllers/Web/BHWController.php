@@ -142,48 +142,50 @@ class BHWController extends Controller
     public function show(Request $request, Personnel $personnel)
     {
         $personnel->load('user', 'barangay');
-        
-        // Start with the activity logs query
+
         $query = ActivityLog::where('user_id', $personnel->user_id);
 
-        // Apply date filters based on request
+        // Date Filters
         $dateFilter = $request->input('date_filter');
-
         if ($dateFilter) {
             switch ($dateFilter) {
                 case 'last_week':
-                    $query->where('created_at', '>=', \Carbon\Carbon::now()->subWeek());
+                    $query->where('created_at', '>=', now()->subWeek());
                     break;
                 case 'last_month':
-                    $query->where('created_at', '>=', \Carbon\Carbon::now()->subMonth());
+                    $query->where('created_at', '>=', now()->subMonth());
                     break;
             }
         }
 
-        // Order by most recent and paginate
-        $logs = $query->latest()->paginate(7)->withQueryString();
+        // Fetch all logs before pagination
+        $allLogs = $query->latest()->get();
 
-        // Apply search filter in memory (since activity is encrypted)
+        // Search filtering BEFORE pagination (in memory)
         if ($request->filled('search')) {
             $searchQuery = strtolower($request->input('search'));
-            
-            $filtered = $logs->filter(function ($log) use ($searchQuery) {
+
+            $allLogs = $allLogs->filter(function ($log) use ($searchQuery) {
                 return stripos($log->activity, $searchQuery) !== false;
             });
-            
-            $logs->setCollection($filtered->values());
         }
 
-        // Log the pagination data
-        \Log::info('Activity logs pagination', [
-            'personnel_id' => $personnel->id,
-            'date_filter' => $dateFilter,
-            'search' => $request->input('search'),
-            'total' => $logs->total(),
-            'current_page' => $logs->currentPage(),
-        ]);
+        // Manual pagination after filtering
+        $page = $request->input('page', 1);
+        $perPage = 7;
 
-        // If AJAX request, return only the table content
+        $logs = new \Illuminate\Pagination\LengthAwarePaginator(
+            $allLogs->forPage($page, $perPage),
+            $allLogs->count(),
+            $perPage,
+            $page,
+            [
+                'path' => $request->url(),
+                'query' => $request->query()
+            ]
+        );
+
+        // AJAX request
         if ($request->ajax() || $request->wantsJson()) {
             $html = view('components.bhw.activity-log-table', [
                 'logs' => $logs,
@@ -205,12 +207,13 @@ class BHWController extends Controller
             ]);
         }
 
-        // Regular page load
+        // Regular page
         return view('midwife.BHWs-profile', [
             'personnel' => $personnel,
-            'logs' => $logs,
+            'logs' => $logs
         ]);
     }
+
 
 
 
@@ -240,10 +243,7 @@ class BHWController extends Controller
     }
 
     public function store(Request $request)
-    {
-
-        \Log::info('vakla');
-        
+    {        
         $validated = $request->validate([
             'firstName'   => 'required|string|max:50',
             'lastName'    => 'required|string|max:50',
@@ -259,7 +259,7 @@ class BHWController extends Controller
             'religion'    => 'required|string|max:100',
         ]);
 
-        Log::info('Validated BHW Data:', $validated);
+        $mid = Auth::user();
 
         // get current logged-in midwife
         $midwifePersonnel = Midwife::where('user_id', Auth::id())
@@ -303,6 +303,23 @@ class BHWController extends Controller
         // send email with credentials
         Mail::to($user->email)->send(new BHWCredentialsMail($user->email, $password));
 
+       // Build the full name for logging
+        $bhwName = $user->firstName;
+        if ($user->middleName) {
+            $bhwName .= ' ' . $user->middleName;
+        }
+        $bhwName .= ' ' . $user->lastName;
+        if ($user->suffix) {
+            $bhwName .= ' ' . $user->suffix;
+        }
+
+        // Log the activity
+        $activityLog = ActivityLog::create([
+            'user_id' => $mid->id,
+            'module_id' => 9,
+            'activity' => 'Added BHW: ' . $bhwName,
+        ]);
+
         return response()->json([
             'success' => true,
             'message' => 'BHW created successfully and credentials emailed',
@@ -331,7 +348,6 @@ class BHWController extends Controller
         ]);
         
         $user = User::findOrFail($id);
-
         $user->update($validated);
 
         $bhw = Personnel::where('user_id', $user->id)->first();
@@ -341,7 +357,25 @@ class BHWController extends Controller
                 'role_id' => $validated['role_id'],
             ]);
         }
-        
+
+        // Build the bhwName for activity logging
+        $bhwName = $user->firstName;
+        if ($user->middleName) {
+            $bhwName .= ' ' . $user->middleName;
+        }
+        $bhwName .= ' ' . $user->lastName;
+        if ($user->suffix) {
+            $bhwName .= ' ' . $user->suffix;
+        }
+
+        // Log the activity
+        $mid = Auth::user();
+        ActivityLog::create([
+            'user_id' => $mid->id,
+            'module_id' => 9,
+            'activity' => 'Updated BHW: ' . $bhwName,
+        ]);
+
         return response()->json([
             'message' => 'Payload received successfully',
         ]);
@@ -349,14 +383,11 @@ class BHWController extends Controller
 
     public function remove(Request $request, $id)
     {
-        
         $user = User::findOrFail($id);
-
         $user->update([
             'status' => 'inactive'
         ]);
 
-        // 🔹 Find related personnel (BHW) record
         $bhw = BHW::where('user_id', $user->id)->first();
 
         if ($bhw) {
@@ -364,6 +395,24 @@ class BHWController extends Controller
                 'status' => 'inactive'
             ]);
         }
+
+        // Build the bhwName for activity logging
+        $bhwName = $user->firstName;
+        if ($user->middleName) {
+            $bhwName .= ' ' . $user->middleName;
+        }
+        $bhwName .= ' ' . $user->lastName;
+        if ($user->suffix) {
+            $bhwName .= ' ' . $user->suffix;
+        }
+
+        // Log the activity
+        $mid = Auth::user();
+        ActivityLog::create([
+            'user_id' => $mid->id,
+            'module_id' => 9,
+            'activity' => 'Removed BHW: ' . $bhwName,
+        ]);
 
         return response()->json([
             'message' => 'BHW removed successfully (set to inactive)',

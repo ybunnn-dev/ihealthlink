@@ -5,6 +5,36 @@ const barangayData = window.emptyBarangay;
 const currentMidwifeData = window.midwifeData;
 
 
+
+const createModalOptions = (modalEl) => ({
+    placement: 'center-center',
+    backdrop: 'static',
+    closable: false,
+    onShow: () => {
+        setTimeout(() => {
+            modalEl.classList.remove('opacity-0');
+            modalEl.classList.add('opacity-100');
+
+            const modalContent = modalEl.querySelector('.relative.bg-white');
+            if (modalContent) {
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }
+        }, 10);
+    },
+    onHide: () => {
+        modalEl.classList.add('opacity-0');
+        modalEl.classList.remove('opacity-100');
+
+        const modalContent = modalEl.querySelector('.relative.bg-white');
+        if (modalContent) {
+            modalContent.classList.add('scale-95');
+            modalContent.classList.remove('scale-100');
+        }
+    }
+});
+
+
 const editMidwifeFirstName = document.getElementById('editMidwifeFirstName');
 const editMidwifeLastName = document.getElementById('editMidwifeLastName');
 const editMidwifeMiddleName = document.getElementById('editMidwifeMiddleName');
@@ -305,8 +335,8 @@ confirmEditMidwifeBtn.addEventListener('click', async function () {
         
         // Optional: reload or close modal on success
         if (result.status === 'success') {
-            const successModal = new Modal(successModalEl, options);
-            const confirmEditMidwifeModal = new Modal(confirmEditMidwifeModalEl);
+            const successModal = new Modal(successModalEl, createModalOptions(successModalEl));
+            const confirmEditMidwifeModal = new Modal(confirmEditMidwifeModalEl, createModalOptions(confirmEditMidwifeModalEl));
 
             if(successModal && editMidwifeModal){
                 successMesageHeader.textContent = 'Midwife Updated';

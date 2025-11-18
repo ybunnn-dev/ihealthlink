@@ -17,18 +17,21 @@ use App\Models\Midwife;
 use App\Models\Barangay;
 use App\Models\User;
 use App\Models\Personnel;
+use App\Models\ActivityLog;
 
 
 class MidwifeController extends Controller
 {
-    public function index(Request $request)
+   public function index(Request $request)
     {
         $searchQuery = $request->input('search');
         $filterBy = $request->input('filter_by', 'filter-alphabetical');
         $dateFilter = $request->input('date_filter');
 
+        // Base query — ensure only midwives are loaded
         $query = Midwife::query()
             ->with(['user', 'barangay'])
+            ->where('personnel.role_id', 2) // midwife only
             ->where('personnel.status', 'active');
 
         // --- Date Filter ---
@@ -46,61 +49,78 @@ class MidwifeController extends Controller
         // --- Sorting ---
         switch ($filterBy) {
             case 'filter-age-asc':
-                $query->join('users', 'personnel.user_id', '=', 'users.id') // ← Fix here
+                $query->join('users', 'personnel.user_id', '=', 'users.id')
                     ->select('personnel.*')
                     ->orderBy('users.birthdate', 'asc');
                 break;
 
             case 'filter-age-desc':
-                $query->join('users', 'personnel.user_id', '=', 'users.id') // ← Fix here
+                $query->join('users', 'personnel.user_id', '=', 'users.id')
                     ->select('personnel.*')
                     ->orderBy('users.birthdate', 'desc');
                 break;
 
-            case 'filter-alphabetical':
             default:
-                $query->join('users', 'personnel.user_id', '=', 'users.id') // ← Fix here
+                $query->join('users', 'personnel.user_id', '=', 'users.id')
                     ->select('personnel.*')
                     ->orderBy('users.lastName', 'asc')
                     ->orderBy('users.firstName', 'asc');
-                break;
         }
 
-        // --- Paginate ---
-        $midwives = $query->paginate(8)->appends($request->query());
+        // --- Fetch ALL results before search + pagination ---
+        $allMidwives = $query->get();
 
-        // --- SEARCH: Filter by decrypted names IN PHP ---
+
+        // --- SEARCH FIRST ---
         if ($searchQuery) {
             $searchLower = strtolower($searchQuery);
-            $filtered = $midwives->getCollection()->filter(function ($midwife) use ($searchLower) {
+
+            $allMidwives = $allMidwives->filter(function ($midwife) use ($searchLower) {
                 $user = $midwife->user;
                 if (!$user) return false;
-                
-                $fullName = trim(implode(' ', array_filter([
+
+                $fullName = strtolower(trim(implode(' ', array_filter([
                     $user->firstName,
                     $user->middleName,
                     $user->lastName,
                     $user->suffix
-                ])));
-                
-                return strpos(strtolower($fullName), $searchLower) !== false
-                    || strpos(strtolower($user->firstName ?? ''), $searchLower) !== false
-                    || strpos(strtolower($user->lastName ?? ''), $searchLower) !== false
-                    || strpos(strtolower($user->middleName ?? ''), $searchLower) !== false;
+                ]))));
+
+                return str_contains($fullName, $searchLower);
             })->values();
-            
-            $midwives->setCollection($filtered);
         }
 
-        // Check for AJAX/JSON request
-        if ($request->wantsJson() || $request->ajax() || $request->header('X-Requested-With') === 'XMLHttpRequest') {
+
+        // --- PAGINATE AFTER SEARCH ---
+        $page = $request->input('page', 1);
+        $perPage = 8;
+
+        $midwives = new \Illuminate\Pagination\LengthAwarePaginator(
+            $allMidwives->forPage($page, $perPage),
+            $allMidwives->count(),
+            $perPage,
+            $page,
+            [
+                'path' => $request->url(),
+                'query' => $request->query(),
+            ]
+        );
+
+
+        // AJAX response
+        if ($request->wantsJson() || $request->ajax()) {
             return response()->json([
-                'data' => $midwives->items(), // Returns full Midwife objects
+                'data' => $midwives->items(),
                 'links' => $midwives->links()->render()
             ]);
         }
 
-        $emptyBrgy = Barangay::whereDoesntHave('midwives')->get();
+
+        // Barangays with no active midwives
+        $emptyBrgy = Barangay::whereDoesntHave('midwives', function ($q) {
+            $q->where('status', 'active')->where('role_id', 2);
+        })->get();
+
 
         return view('mho.midwives', [
             'midwives' => $midwives,
@@ -182,21 +202,21 @@ class MidwifeController extends Controller
             ]
         ], 201);
     }
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $name, string $m_id)
+    
+    public function show(Request $request, string $name, string $m_id)
     {
-        // 1. Find the midwife record using the unique ID ($m_id) from the URL.
-        // The $name parameter is not needed for the query but must be in the signature.
+        // Find the midwife record using the unique ID ($m_id) from the URL
         $midwife = Midwife::with(['user', 'barangay'])->findOrFail($m_id);
-        $emptyBrgy = Barangay::whereDoesntHave('midwives')->get();
+        $emptyBrgy = Barangay::whereDoesntHave('midwives', function ($q) {
+            $q->where('status', 'active')
+            ->where('role_id', 2);
+        })->get();
 
-        // 2. Extract the related user and barangay objects for easier access.
+        // Extract the related user and barangay objects for easier access
         $user = $midwife->user;
         $barangay = $midwife->barangay;
 
-        // 3. Consolidate all the required details into a single array.
+        // Consolidate all the required details into a single array
         $data = [
             // Personnel Details from the Midwife model
             'midwife_id'    => $midwife->id,
@@ -223,20 +243,91 @@ class MidwifeController extends Controller
             'barangay_name' => $barangay->name,
         ];
 
-        // 4. Return the view and pass the consolidated data.
-       return view('mho.spec-midwife', [
+        // Query for activity logs filtered by module_id 6 and 9
+        $query = ActivityLog::where('user_id', $user->id)
+            ->whereIn('module_id', [6, 9]);
+
+        // Date Filters
+        $dateFilter = $request->input('date_filter');
+        $fromDate = $request->input('from_date');
+        $toDate = $request->input('to_date');
+
+        if ($dateFilter) {
+            switch ($dateFilter) {
+                case 'last_week':
+                    $query->where('created_at', '>=', now()->subWeek());
+                    break;
+                case 'last_month':
+                    $query->where('created_at', '>=', now()->subMonth());
+                    break;
+                case 'custom':
+                    if ($fromDate && $toDate) {
+                        $query->whereBetween('created_at', [$fromDate, $toDate]);
+                    }
+                    break;
+            }
+        }
+
+        // Fetch all matching logs (before pagination for encrypted search)
+        $allLogs = $query->latest()->get();
+
+        // Search filter on decrypted activity (in memory)
+        if ($request->filled('search')) {
+            $searchTerm = strtolower($request->input('search'));
+
+            $allLogs = $allLogs->filter(function ($log) use ($searchTerm) {
+                return stripos($log->activity, $searchTerm) !== false;
+            });
+        }
+
+        // Manual pagination after filtering
+        $page = $request->input('page', 1);
+        $perPage = 8;
+
+        $logs = new \Illuminate\Pagination\LengthAwarePaginator(
+            $allLogs->forPage($page, $perPage),
+            $allLogs->count(),
+            $perPage,
+            $page,
+            [
+                'path' => $request->url(),
+                'query' => $request->query()
+            ]
+        );
+
+        // AJAX request: return partial HTML for logs + pagination meta
+        if ($request->ajax() || $request->wantsJson()) {
+            $html = view('components.midwife.activity-log-table', [
+                'logs' => $logs,
+                'midwife' => $data,
+            ])->render();
+
+            return response()->json([
+                'success' => true,
+                'html' => $html,
+                'pagination' => [
+                    'current_page' => $logs->currentPage(),
+                    'last_page' => $logs->lastPage(),
+                    'per_page' => $logs->perPage(),
+                    'total' => $logs->total(),
+                    'from' => $logs->firstItem(),
+                    'to' => $logs->lastItem(),
+                    'links' => $logs->hasPages() ? $logs->links()->render() : '',
+                ],
+            ]);
+        }
+
+        // Regular page load
+        return view('mho.spec-midwife', [
             'midwife' => $data,
-            'avail_brgy' => $emptyBrgy
+            'avail_brgy' => $emptyBrgy,
+            'logs' => $logs,
         ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function update(Request $request, $userId)
     {
-        // Log payload for debugging
-        Log::info("Received update for midwife ID {$request->midwife_id}", $request->all());
+        // Log payload for debuggin
 
         // Update the User model
         $user = User::find($userId);

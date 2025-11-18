@@ -1,6 +1,34 @@
 // --- Global State ---
 let midwifePayload = {}; // NEW: Holds the form data for the confirmation step
 
+const createModalOptions = (modalEl) => ({
+    placement: 'center-center',
+    backdrop: 'static',
+    closable: false,
+    onShow: () => {
+        setTimeout(() => {
+            modalEl.classList.remove('opacity-0');
+            modalEl.classList.add('opacity-100');
+
+            const modalContent = modalEl.querySelector('.relative.bg-white');
+            if (modalContent) {
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }
+        }, 10);
+    },
+    onHide: () => {
+        modalEl.classList.add('opacity-0');
+        modalEl.classList.remove('opacity-100');
+
+        const modalContent = modalEl.querySelector('.relative.bg-white');
+        if (modalContent) {
+            modalContent.classList.add('scale-95');
+            modalContent.classList.remove('scale-100');
+        }
+    }
+});
+
 // --- Element Selection (Main Form) ---
 const availableBarangay = window.emptyBarangay || [];
 const submitButton = document.getElementById('addMidwifeSubmitBtn');
@@ -222,8 +250,8 @@ async function submitMidwifeData(payload) {
         if (response.ok) {
             console.log('Success:', data);
             
-            const successModal = new Modal(successModalEl, options);
-            const confAddMidwifeModal = new Modal(confirmModalEl);
+            const successModal = new Modal(successModalEl, createModalOptions(successModalEl));
+            const confAddMidwifeModal = new Modal(createModalOptions(confirmModalEl));
 
             if(successModal && confAddMidwifeModal){
                 successMesageHeader.textContent = 'Midwife Added';

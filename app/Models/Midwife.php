@@ -33,7 +33,7 @@ class Midwife extends Model
     }
     public function getNameAttribute()
     {
-        $user = $this->users;
+        $user = $this->user;
         if (!$user) return null;
 
         // Example: "Peter Montefalco Jr."
