@@ -74,10 +74,10 @@
                             <p class="text-normal_font">{{ $family->is_iwas_gutom ? 'Enrolled' : 'Not Enrolled' }}</p>
 
                             <p class="font-semibold text-main_font">DATE ADDED:</p>
-                            <p class="text-normal_font">March 17, 2025</p>
+                            <p class="text-normal_font">{{ $family->created_at->format('F d, Y') }}</p>
 
                             <p class="font-semibold text-main_font">DATE UPDATED:</p>
-                            <p class="text-normal_font">March 17, 2025</p>
+                            <p class="text-normal_font">{{ $family->updated_at->format('F d, Y') }}</p>
                         </div>
                     </div>
                 </div>
@@ -154,7 +154,7 @@
                                                 <td class="px-6 py-4 bg-f7">
                                                     @if($resident->status === 'active')
                                                         <span class="bg-green-100 border-1 border-green-500 text-green-800 text-xs font-medium px-2 py-1 rounded-full w-32 text-center inline-block">
-                                                            Alive
+                                                            Active
                                                         </span>
                                                     @elseif($resident->status === 'deceased')
                                                         <span class="bg-yellow-100 border-1 border-yellow-500 text-yellow-800 text-xs font-medium px-2 py-1 rounded-full w-32 text-center inline-block">

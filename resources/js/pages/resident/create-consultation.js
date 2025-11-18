@@ -352,8 +352,9 @@ medicineSearch.addEventListener('input', function () {
 });
 
 createBtn.addEventListener('click', async () => {
-    pregnantSelect.value = record.is_pregnant? '1' : '0';
-    lactatingSelect.value = record.is_lactating? '1' : '0';
+    pregnantSelect.value = record?.is_pregnant ? '1' : '0';
+    lactatingSelect.value = record?.is_lactating ? '1' : '0';
+    
     createConsultationModal.show();
 });
 
