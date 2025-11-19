@@ -384,6 +384,11 @@ confirmCheckbox.addEventListener('change', function(){
     confirmProceedBtn.disabled = !this.checked;
 });
 
+confirmCancelBtn.addEventListener('click', function(){
+    confirmMaternityModal.hide(); 
+    maternityModal.show();
+});
+
 confirmProceedBtn.addEventListener('click', function() {
     // Disable buttons during submission
     confirmProceedBtn.disabled = true;
