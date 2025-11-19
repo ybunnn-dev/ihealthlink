@@ -410,7 +410,7 @@ confirmProceedBtn.addEventListener('click', function() {
 
     console.log('Payload:', payload);
 
-    const url = `/barangay/health-program/maternity/enroll/`;
+    const url = `/barangay/health-program/maternity/enroll`;
 
     fetch(url, {
         method: 'POST',

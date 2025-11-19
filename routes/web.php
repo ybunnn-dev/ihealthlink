@@ -295,7 +295,7 @@ Route::middleware([
 
     Route::post('/barangay/health-program/{healthProgramId}/enroll/{residentId}',[BarangayHealthProgramController::class, 'enrollResident'])->name('barangay.health-program.enroll');
     
-    Route::post('/barangay/health-program/maternity/enroll/',[MaternalController::class, 'enroll']);
+    Route::post('/barangay/health-program/maternity/enroll',[MaternalController::class, 'enroll']);
 
     Route::get('/barangay/health-program/fetch', [BarangayHealthProgramController::class, 'getAllPrograms'])
     ->name('barangay.health-program.fetch');
