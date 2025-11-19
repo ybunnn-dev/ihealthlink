@@ -117,7 +117,7 @@ class BarangayHealthProgramController extends Controller
 
         // Manually paginate
         $page = $request->get('page', 1);
-        $perPage = 10;
+        $perPage = 8;
         $total = $allEnrolledResidents->count();
         $results = $allEnrolledResidents->forPage($page, $perPage);
         

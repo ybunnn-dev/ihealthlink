@@ -75,7 +75,8 @@ function fetchResidents() {
 }
 
 function attachPaginationListeners() {
-    document.querySelectorAll('.page-link').forEach(link => {
+    // Change from '.page-link' to 'a[href*="page="]'
+    document.querySelectorAll('a[href*="page="]').forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
             const url = new URL(link.href);
@@ -84,6 +85,7 @@ function attachPaginationListeners() {
         });
     });
 }
+
 
 sortOptions.forEach(option => {
     option.addEventListener('click', (e) => {
