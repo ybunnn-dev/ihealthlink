@@ -57,6 +57,9 @@ class BarangayReportsController extends Controller
             ->whereHas('purok', function ($q) use ($brgyId) {
                 $q->where('brgy_id', $brgyId);
             })
+            ->whereHas('resident', function ($q) {
+                $q->where('status', 'active'); // Filter for active residents only
+            })
             ->when($startDate, function ($q) use ($startDate) {
                 $q->whereDate('created_at', '>=', $startDate);
             })
