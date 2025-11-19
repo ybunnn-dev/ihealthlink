@@ -57,9 +57,6 @@ class BarangayReportsController extends Controller
             ->whereHas('purok', function ($q) use ($brgyId) {
                 $q->where('brgy_id', $brgyId);
             })
-            ->whereHas('resident', function ($q) {
-                $q->where('status', 'active'); // Filter for active residents only
-            })
             ->when($startDate, function ($q) use ($startDate) {
                 $q->whereDate('created_at', '>=', $startDate);
             })
@@ -71,7 +68,17 @@ class BarangayReportsController extends Controller
             ->map(function ($histories) use ($end) {
                 // Get the history closest to (but not after) the end date
                 return $histories->sortByDesc('created_at')->first();
+            })
+            ->filter(function ($history) use ($end) {
+                // Only include if the history was still active during the report period
+                // Check if the history became inactive AFTER the end date (or is still active)
+                return $history->status === 'active' 
+                    || ($history->updated_at && \Carbon\Carbon::parse($history->updated_at)->isAfter($end));
             });
+
+        $residents = $residenceHistories->pluck('resident')->unique('id');
+        $totalResidents = $residents->count();
+
 
         $residents = $residenceHistories->pluck('resident')->unique('id');
         $totalResidents = $residents->count();
@@ -253,8 +260,7 @@ class BarangayReportsController extends Controller
         $purokName = $purok->name;
         $purokId = $purok->id;
 
-          $residentsCollection = Resident::where('status', 'active') // ADD THIS: Filter active residents
-            ->whereHas('residenceHistory', function($query) use ($purokId, $startDate, $endDate) {
+          $residentsCollection = Resident::whereHas('residenceHistory', function($query) use ($purokId, $startDate, $endDate) {
                 $query->where('purok_id', $purokId);
                 
                 if ($endDate) {
@@ -265,15 +271,21 @@ class BarangayReportsController extends Controller
                 }
             })
             ->get()
-            ->filter(function($resident) use ($purokId, $endDate) {
+            ->filter(function($resident) use ($purokId, $endDate, $end) {
                 // For each resident, get their latest residence history up to the end date
                 $latestHistory = $resident->residenceHistory()
                     ->when($endDate, fn($q) => $q->whereDate('created_at', '<=', $endDate))
                     ->orderBy('created_at', 'desc')
                     ->first();
                 
-                // Only include this resident if their latest history is in this purok
-                return $latestHistory && $latestHistory->purok_id == $purokId;
+                // Only include if their latest history is in this purok
+                if (!$latestHistory || $latestHistory->purok_id != $purokId) {
+                    return false;
+                }
+                
+                // Check if the history was active during the report period
+                return $latestHistory->status === 'active' 
+                    || ($latestHistory->updated_at && \Carbon\Carbon::parse($latestHistory->updated_at)->isAfter($end));
             });
 
         // Count total residents
@@ -397,23 +409,23 @@ class BarangayReportsController extends Controller
         ksort($femalePerAgePerPurok[$purokName]);
     }
 
-       $residentsCollection = ResidenceHistory::with('resident') // eager load the related resident
-            ->where('status', 'active')
-            ->whereHas('purok', function ($q) use ($brgyId) {
-                $q->where('brgy_id', $brgyId); // filter by purok's barangay
-            });
-
-        if ($startDate) {
-            $residentsCollection->whereDate('updated_at', '>=', $startDate);
-        }
-
-        if ($endDate) {
-            $residentsCollection->whereDate('created_at', '<=', $endDate);
-        }
-
-        $residentsCollection = $residentsCollection->get()
-            ->pluck('resident') // get the actual resident models
-            ->unique('id');     // avoid duplicates
+    $residentsCollection = ResidenceHistory::with('resident')
+        ->whereHas('purok', function ($q) use ($brgyId) {
+            $q->where('brgy_id', $brgyId);
+        })
+        ->whereDate('created_at', '<=', $endDate ?: now()) // existed by end date
+        ->get()
+        ->groupBy('resident_id')
+        ->map(function ($histories) {
+            return $histories->sortByDesc('created_at')->first(); // latest per resident
+        })
+        ->filter(function ($history) use ($end) {
+            // Active during the period: either still active, or became inactive after end date
+            return $history->status === 'active' 
+                || ($history->updated_at && \Carbon\Carbon::parse($history->updated_at)->isAfter($end));
+        })
+        ->pluck('resident')
+        ->unique('id');
 
         $seniorsTotal = $residentsCollection
             ->filter(function($r) use ($end) {
