@@ -10,6 +10,7 @@ const cancelFilterDateButton = document.getElementById('cancel-filter-date');
 const applyFilterDateButton = document.getElementById('apply-filter-date');
 
 const filterDateTrigger = document.getElementById('filterDate');
+const clearFilterButton = document.getElementById('clearFilter');
 
 const modalOptions = {
     placement: 'center-center',
@@ -19,16 +20,31 @@ const modalOptions = {
 
 const filterDateModal = new Modal(filterDateModalEl, modalOptions);
 
+// Function to update clear filter button state
+function updateClearFilterButton() {
+    const hasParams = new URLSearchParams(window.location.search).toString() !== '';
+    
+    clearFilterButton.disabled = !hasParams;
+    
+    if (!hasParams) {
+        clearFilterButton.classList.add('opacity-50', 'cursor-not-allowed');
+        clearFilterButton.classList.remove('hover:bg-nav_active');
+    } else {
+        clearFilterButton.classList.remove('opacity-50', 'cursor-not-allowed');
+        clearFilterButton.classList.add('hover:bg-nav_active');
+    }
+}
+
+// Run on page load
+updateClearFilterButton();
 
 filterDateTrigger.addEventListener('click', function(){
     filterDateModal.show();
 });
 
-
 cancelFilterDateButton.addEventListener('click',function(){
     filterDateModal.hide();
 });
-
 
 applyFilterDateButton.addEventListener('click', function() {
     // 1. Get the values from the date inputs
@@ -56,4 +72,10 @@ applyFilterDateButton.addEventListener('click', function() {
     // 5. Hide the modal and redirect the page
     filterDateModal.hide();
     window.location.href = `${baseUrl}?${params.toString()}`;
+});
+
+// Clear filter functionality
+clearFilterButton.addEventListener('click', function() {
+    const baseUrl = '/mho/reports';
+    window.location.href = baseUrl;
 });

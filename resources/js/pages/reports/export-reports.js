@@ -157,7 +157,6 @@ exportBtn.addEventListener('click', () => {
     let baseUrl = '';
     switch (selectedFormat) {
         case 'pdf': baseUrl = '/barangay/reports/community-report-pdf'; break;
-        case 'csv': baseUrl = '/barangay/reports/export-csv'; break;
         case 'excel': baseUrl = '/barangay/reports/export-excel'; break;
     }
 

@@ -72,15 +72,21 @@
             <!-- Upper Card -->
             <div class="bg-white rounded-xl overflow-hidden p-6 mb-3">
                 <div class="grid grid-cols-1 lg2:grid-cols-7 xl:items-end gap-4">
-                    <div class="grid grid-cols-1 slg2:grid-cols-2 items-end col-span-1 lg:col-span-2 gap-3"> 
+                    <div class="grid grid-cols-1 slg2:grid-cols-3 items-end col-span-1 lg:col-span-3 gap-3"> 
                         <div class="w-full col-span-1">
                             <button id="filterDate" class="w-full text-mainblue bg-[#F7F7F7] focus:outline-none font-medium border border-mainblue rounded-lg hover:border-white hover:bg-nav_active text-sm px-4 py-2 inline-flex items-center justify-center h-[2.375rem]" type="button">
                                 Filter Date
                             </button>
                         </div>
+                        
+                        <div class="w-full col-span-1">
+                            <button id="clearFilter" class="w-full text-white bg-mainblue focus:outline-none font-medium border border-mainblue rounded-lg hover:border-white hover:bg-nav_active text-sm px-4 py-2 inline-flex items-center justify-center h-[2.375rem] transition-opacity" type="button">
+                                Clear Filters
+                            </button>
+                        </div>
 
                         <div class="w-full col-span-1">
-                            <button type="button" data-modal-target="print-report-modal" data-modal-toggle="print-report-modal" class="w-full h-[2.37rem] text-white bg-mainblue hover:bg-blue-700 font-medium rounded-lg text-sm">Export</button>
+                            <button type="button" data-modal-target="print-report-modal" data-modal-toggle="print-report-modal" class="w-full h-[2.37rem] text-white bg-maingreen hover:bg-blue-700 font-medium rounded-lg text-sm">Export</button>
                         </div>
                     </div>
                 </div>

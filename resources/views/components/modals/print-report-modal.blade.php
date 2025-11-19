@@ -1,4 +1,4 @@
-<div id="print-report-modal" tabindex="-1" aria-hidden="true" class="hidden fixed inset-0 z-50 flex justify-center items-center w-full h-full bg-gray-900/50">
+<div id="print-report-modal" tabindex="-1" aria-hidden="true" class="hidden fixed inset-0 z-50 flex justify-center items-center w-full h-full">
     <div class="relative p-4 w-full max-w-6xl max-h-full">
         <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-800 py-8 px-10">
             <div class="flex flex-col items-center justify-center rounded-t mb-6  border-b border-gray-200 rounded-b dark:border-gray-600 pb-6">
@@ -28,10 +28,6 @@
                                 <div class="flex items-center">
                                     <input id="pdf-radio" type="radio" value="pdf" name="export_as" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                     <label for="pdf-radio" class="ms-2 text-sm font-medium text-main_font dark:text-gray-300">PDF</label>
-                                </div>
-                                <div class="flex items-center">
-                                    <input id="csv-radio" type="radio" value="csv" name="export_as" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                    <label for="csv-radio" class="ms-2 text-sm font-medium text-main_font dark:text-gray-300">CSV</label>
                                 </div>
                                 <div class="flex items-center">
                                     <input id="excel-radio" type="radio" value="excel" name="export_as" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
