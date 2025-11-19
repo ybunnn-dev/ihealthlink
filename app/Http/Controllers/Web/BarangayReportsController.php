@@ -253,31 +253,31 @@ class BarangayReportsController extends Controller
         $purokName = $purok->name;
         $purokId = $purok->id;
 
-        $residentsCollection = Resident::whereHas('residenceHistory', function($query) use ($purokId, $startDate, $endDate) {
-            $query->where('purok_id', $purokId);
-            
-            if ($endDate) {
-                $query->whereDate('created_at', '<=', $endDate);
-            }
-            if ($startDate) {
-                $query->whereDate('created_at', '>=', $startDate);
-            }
-        })
-        ->get()
-        ->filter(function($resident) use ($purokId, $endDate) {
-            // For each resident, get their latest residence history up to the end date
-            $latestHistory = $resident->residenceHistory()
-                ->when($endDate, fn($q) => $q->whereDate('created_at', '<=', $endDate))
-                ->orderBy('created_at', 'desc')
-                ->first();
-            
-            // Only include this resident if their latest history is in this purok
-            return $latestHistory && $latestHistory->purok_id == $purokId;
-        });
+          $residentsCollection = Resident::where('status', 'active') // ADD THIS: Filter active residents
+            ->whereHas('residenceHistory', function($query) use ($purokId, $startDate, $endDate) {
+                $query->where('purok_id', $purokId);
+                
+                if ($endDate) {
+                    $query->whereDate('created_at', '<=', $endDate);
+                }
+                if ($startDate) {
+                    $query->whereDate('created_at', '>=', $startDate);
+                }
+            })
+            ->get()
+            ->filter(function($resident) use ($purokId, $endDate) {
+                // For each resident, get their latest residence history up to the end date
+                $latestHistory = $resident->residenceHistory()
+                    ->when($endDate, fn($q) => $q->whereDate('created_at', '<=', $endDate))
+                    ->orderBy('created_at', 'desc')
+                    ->first();
+                
+                // Only include this resident if their latest history is in this purok
+                return $latestHistory && $latestHistory->purok_id == $purokId;
+            });
 
         // Count total residents
         $residentsPerPurok[$purokName] = $residentsCollection->count();
-
         // Pre-filter residents by sex for efficiency
         $maleResidents = $residentsCollection->where('sex', 'male');
         $femaleResidents = $residentsCollection->where('sex', 'female');
@@ -398,6 +398,7 @@ class BarangayReportsController extends Controller
     }
 
        $residentsCollection = ResidenceHistory::with('resident') // eager load the related resident
+            ->where('status', 'active')
             ->whereHas('purok', function ($q) use ($brgyId) {
                 $q->where('brgy_id', $brgyId); // filter by purok's barangay
             });
