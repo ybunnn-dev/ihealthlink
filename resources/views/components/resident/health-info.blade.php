@@ -69,19 +69,20 @@
                 {{ ($basicHR->systolic_pressure ?? 'N/A') . '/' . ($basicHR->diastolic_pressure ?? 'N/A') }} mmHg
             </p>
         </div>
-        @if($resident->sex === 'female' && ($age > 9 && $age < 50))
+       @if($resident->sex === 'female' && ($age > 9 && $age < 50))
             <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
                 <p class="font-semibold text-main_font">Pregnant:</p>
                 <p class="text-normal_font">
-                    {{ ($basicHR->is_pregnant ? 'Yes' : 'No') }}
+                    {{ $basicHR?->is_pregnant ? 'Yes' : 'No' }}
                 </p>
             </div>
             <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
                 <p class="font-semibold text-main_font">Lactating:</p>
                 <p class="text-normal_font">
-                    {{ ($basicHR->is_lactating ? 'Yes' : 'No') }}
+                    {{ $basicHR?->is_lactating ? 'Yes' : 'No' }}
                 </p>
             </div>
         @endif
+
     </div>
 </div>
