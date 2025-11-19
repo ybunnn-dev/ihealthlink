@@ -162,7 +162,7 @@
                 @foreach ($malesPerPurok as $count)
                     <td class="px-6 py-3 text-center border-r">{{ $count }}</td>
                 @endforeach
-                <td class="px-6 py-3 text-center" id="total-males">0</td>
+                <td class="px-6 py-3 text-center font-semibold">{{ array_sum($malesPerPurok) }}</td>
             </tr>
 
             {{-- FEMALE ROW --}}
@@ -171,19 +171,20 @@
                 @foreach ($femalesPerPurok as $count)
                     <td class="px-6 py-3 text-center border-r">{{ $count }}</td>
                 @endforeach
-                <td class="px-6 py-3 text-center" id="total-females">0</td>
+                <td class="px-6 py-3 text-center font-semibold">{{ array_sum($femalesPerPurok) }}</td>
             </tr>
 
             {{-- TOTAL ROW --}}
             <tr class="bg-gray-100 font-semibold border-t">
                 <td class="px-6 py-3 border-r">Total</td>
 
-                {{-- CHANGE: Loop over the keys again to create the placeholder cells --}}
                 @foreach (array_keys($malesPerPurok) as $purokName)
-                    <td class="px-6 py-3 text-center border-r" id="total-purok-{{ Str::slug($purokName) }}">0</td>
+                    <td class="px-6 py-3 text-center border-r">
+                        {{ $malesPerPurok[$purokName] + $femalesPerPurok[$purokName] }}
+                    </td>
                 @endforeach
 
-                <td class="px-6 py-3 text-center" id="grand-total">0</td>
+                <td class="px-6 py-3 text-center">{{ array_sum($malesPerPurok) + array_sum($femalesPerPurok) }}</td>
             </tr>
         </x-slot:tbody>
 
