@@ -53,24 +53,24 @@ class BarangayReportsController extends Controller
         /**
          * RESIDENT STATISTICS
          */
-        $residenceHistories = ResidenceHistory::with('resident') // eager load the related resident
+        $residenceHistories = ResidenceHistory::with('resident')
             ->whereHas('purok', function ($q) use ($brgyId) {
-                $q->where('brgy_id', $brgyId); // filter by barangay via purok
+                $q->where('brgy_id', $brgyId);
+            })
+            ->when($startDate, function ($q) use ($startDate) {
+                $q->whereDate('created_at', '>=', $startDate);
+            })
+            ->when($endDate, function ($q) use ($end) {
+                $q->whereDate('created_at', '<=', $end);
+            })
+            ->get()
+            ->groupBy('resident_id')
+            ->map(function ($histories) use ($end) {
+                // Get the history closest to (but not after) the end date
+                return $histories->sortByDesc('created_at')->first();
             });
 
-        if ($startDate) {
-            $residenceHistories->whereDate('updated_at', '>=', $startDate); // still active after start
-        }
-
-        if ($endDate) {
-            $residenceHistories->whereDate('created_at', '<=', $endDate); // existed before end
-        }
-
-        $residenceHistories = $residenceHistories->get();
-
-        // Get the residents from these histories
         $residents = $residenceHistories->pluck('resident')->unique('id');
-
         $totalResidents = $residents->count();
 
         $households = Household::whereHas('householdResidenceHistory', function ($q) use ($brgyId, $startDate, $endDate) {
