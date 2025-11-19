@@ -80,9 +80,32 @@ class MaternalController extends Controller
                 $pregnancyOutcome->delivery_datetime = $deliveryInfo['dateTime']['date'] . ' ' . $deliveryInfo['dateTime']['time'];
             }
 
+
             if (!empty($deliveryInfo['dateTime']['date'])) {
                 $this->updateConsultations($data['imporantIds']['enrolledResidentId'], $deliveryInfo['dateTime']['date']);
+                
+                // Navigate: BasicMaternalRecord -> EnrolledResident -> Resident -> BasicHealthRecord
+                $maternalRecord = BasicMaternalRecord::with('enrolledResident.resident.basicHealthRecord')
+                    ->find($maternalRecordId);
+                
+                if ($maternalRecord) {
+                    $resident = $maternalRecord->enrolledResident?->resident;
+                    
+                    if ($resident && $resident->basicHealthRecord) {
+                        $resident->basicHealthRecord->update([
+                            'is_pregnant' => false,
+                            'is_lactating' => true, // Set to lactating after delivery
+                        ]);
+                        
+                        Log::info('Updated pregnancy status for resident', [
+                            'resident_id' => $resident->id,
+                            'is_pregnant' => false,
+                            'is_lactating' => true,
+                        ]);
+                    }
+                }
             }
+
             $pregnancyOutcome->save();
 
             $screeningData = $data['labAndDiseaseScreening'] ?? [];
