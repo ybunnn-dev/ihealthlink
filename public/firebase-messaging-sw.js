@@ -17,7 +17,7 @@ const messaging = firebase.messaging();
 
 // Handle background messages
 messaging.onBackgroundMessage((payload) => {
-    console.log('[firebase-messaging-sw.js] Received background message:', payload);
+
     
     const notificationTitle = payload.notification.title;
     const notificationOptions = {
@@ -38,6 +38,6 @@ self.addEventListener('notificationclick', (event) => {
     
     // Open your app when notification is clicked
     event.waitUntil(
-        clients.openWindow('http://localhost:8000')
+        clients.openWindow('https://ihealthlink-daraga.site')
     );
 });
