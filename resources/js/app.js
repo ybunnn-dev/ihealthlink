@@ -22,8 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Only load charts on the reports page
   if (bodyClass.contains('account')) {
-    import('./pages/account/password.js');
-    import('./pages/account/update-profile.js');
+    import('./pages/account/account.js');
   }
 
   if (bodyClass.contains('reports')) {

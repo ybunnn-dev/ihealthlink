@@ -79,7 +79,7 @@
                 {{ __('Saved.') }}
             </x-action-message>
 
-            <x-button type="button" id="show-profile-update-modal-btn" wire:loading.attr="disabled" wire:target="photo">
+            <x-button id="show-profile-update-modal-btn" wire:loading.attr="disabled" wire:target="photo">
                 {{ __('Save') }}
             </x-button>
         </x-slot>

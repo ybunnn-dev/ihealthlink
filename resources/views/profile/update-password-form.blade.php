@@ -1,5 +1,5 @@
 <div>
-    <x-form-section>
+    <x-form-section submit="updatePassword">
         <x-slot name="title">
             {{ __('Update Password') }}
         </x-slot>
@@ -33,7 +33,7 @@
                 {{ __('Saved.') }}
             </x-action-message>
 
-            <x-button type="button" id="show-password-modal-btn">
+            <x-button id="show-password-modal-btn">
                 {{ __('Save') }}
             </x-button>
         </x-slot>
