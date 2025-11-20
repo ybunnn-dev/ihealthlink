@@ -12,9 +12,9 @@
             <span x-show="showPrivacy">{{ $log->user->role->name ?? 'BHW' }}</span>
             <span x-show="!showPrivacy">{{ str_repeat('*', 5) }}</span>
         </td>
-        <td class="px-6 py-4">
+       <td class="px-6 py-4">
             <span x-show="showPrivacy" class="truncate max-w-20 slg2:max-w-30 xl3:max-w-80" title="{{ $log->activity }}">
-                {{ $log->activity }}
+                {{ Str::limit($log->activity, 50) }}
             </span>
             <span x-show="!showPrivacy">{{ str_repeat('*', 20) }}</span>
         </td>
