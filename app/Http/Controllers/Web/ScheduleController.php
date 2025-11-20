@@ -176,24 +176,22 @@ class ScheduleController extends Controller
 
     private function notifyBarangayPersonnel($brgyId, $schedule)
     {
-        // Get all active personnel in this barangay
         $personnel = Personnel::where('brgy_id', $brgyId)
             ->where('status', 'active')
             ->with('user')
             ->get();
 
-        // Format the date and time for the notification
         $scheduleDate = Carbon::parse($schedule->date)->format('F d, Y');
         $scheduleTime = Carbon::parse($schedule->time)->format('h:i A');
 
         $notificationSubject = 'New Activity: ' . $schedule->activity;
         $notificationMessage = "A new activity '{$schedule->activity}' has been scheduled for {$scheduleDate} at {$scheduleTime}. Venue: {$schedule->venue}";
 
-        $notifiedCount = 0;
+        $fcmTokens = [];
 
         foreach ($personnel as $person) {
             if ($person->user) {
-                // Create notification in database (shows in UI bell icon)
+                // Create DB notification
                 Notification::create([
                     'user_id' => $person->user->id,
                     'subject' => $notificationSubject,
@@ -202,28 +200,39 @@ class ScheduleController extends Controller
                     'is_read' => false
                 ]);
 
-                // Send push notification if user has FCM token
+                // Collect FCM tokens
                 if ($person->user->fcm_token) {
-                    try {
-                        FireBase::send(
-                            $notificationSubject,
-                            $notificationMessage,
-                            [$person->user->fcm_token],
-                            [
-                                'schedule_id' => (string)$schedule->id,
-                                'type' => 'new_schedule',
-                                'date' => (string)$schedule->date,
-                                'time' => (string)$schedule->time
-                            ]
-                        );
-                        $notifiedCount++;
-                    } catch (\Exception $e) {
-                        Log::error('FCM Error for user ' . $person->user->id . ': ' . $e->getMessage());
-                    }
+                    $fcmTokens[] = $person->user->fcm_token;
                 }
             }
         }
+
+        // Send push notifications in batch (fixed version will handle looping)
+        if (!empty($fcmTokens)) {
+            try {
+                $result = FireBase::send(
+                    $notificationSubject,
+                    $notificationMessage,
+                    $fcmTokens,
+                    [
+                        'schedule_id' => (string)$schedule->id,
+                        'type' => 'new_schedule',
+                        'date' => (string)$schedule->date,
+                        'time' => (string)$schedule->time
+                    ]
+                );
+
+                Log::info('FCM Notifications sent', [
+                    'success' => $result['success_count'],
+                    'failed' => $result['failure_count']
+                ]);
+
+            } catch (\Exception $e) {
+                Log::error('FCM Batch Error: ' . $e->getMessage());
+            }
+        }
     }
+
 
     public function edit(Request $request, $id)
     {
