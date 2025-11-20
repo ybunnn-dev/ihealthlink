@@ -10,7 +10,7 @@ firebase.initializeApp({
     projectId: "ihealthlink-notification",
     storageBucket: "ihealthlink-notification.firebasestorage.app",
     messagingSenderId: "156915535205",
-    appId: "1:156915535205:web:669345ad9a79fcb254a58c"
+    appId: "1:156915535205:web:e11a0a747c12aaf654a58c"
 });
 
 const messaging = firebase.messaging();
