@@ -14,7 +14,6 @@ const pdfViewer = document.getElementById('pdf-viewer');
 
 // All other form inputs
 const allFilterInputs = [
-    document.getElementById('report-source'),
     document.getElementById('from-date'),
     document.getElementById('to-date')
 ];
@@ -64,8 +63,6 @@ const renderPage = num => {
 const updatePdfPreview = () => {
     if (!pdfRadio.checked) return;
 
-    // Get all current form values
-    const reportSource = parseInt(document.getElementById('report-source').value);
     const fromDate = document.getElementById('from-date').value;
     const toDate = document.getElementById('to-date').value;
 
@@ -152,7 +149,6 @@ exportBtn.addEventListener('click', () => {
         return;
     }
 
-    const reportSource = document.getElementById('report-source').value;
     const fromDate = document.getElementById('from-date').value;
     const toDate = document.getElementById('to-date').value;
 
