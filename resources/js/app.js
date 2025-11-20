@@ -21,6 +21,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const bodyClass = document.body.classList;
 
   // Only load charts on the reports page
+  if (bodyClass.contains('account')) {
+    import('./pages/account/password.js');
+    import('./pages/account/update-profile.js');
+  }
+
   if (bodyClass.contains('reports')) {
     import('./pages/reports/filter-mho.js');
     import('./pages/reports/export-mho.js');
