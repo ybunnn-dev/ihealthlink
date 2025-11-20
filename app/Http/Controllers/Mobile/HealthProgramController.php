@@ -34,8 +34,8 @@ class HealthProgramController extends Controller
                     $sub->where('brgy_id', $barangayId);
                 });
             }])
-            // ✅ Exclude programs with category 'philpen_tcl'
-            ->where('category', '!=', 'philpen_tcl');
+            ->where('category', '!=', 'philpen_tcl')
+            ->where('status', 'active'); // ✅ Add this line
 
         // Search by program name (optional)
         if ($request->filled('search')) {
@@ -51,10 +51,8 @@ class HealthProgramController extends Controller
 
         $programs = $query->paginate(10);
 
-        // No need to wrap in response()->json(), paginate does this for you.
         return $programs;
     }
-
     public function specHP(HealthProgram $healthProgram, Request $request)
     {
         $user = Auth::user();
