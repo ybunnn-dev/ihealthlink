@@ -30,13 +30,15 @@ class HomeController extends Controller
         }
 
         
-        $pregnantCount = Resident::whereHas('family.household.purok', function ($q) use ($personnel) {
+        $pregnantCount = Resident::where('status', 'active')
+            ->whereHas('family.household.purok', function ($q) use ($personnel) {
                 $q->where('brgy_id', $personnel->brgy_id);
             })
             ->whereHas('basicHealthRecord', function ($q) {
                 $q->where('is_pregnant', 1);
             })
             ->count();
+            
         $upcomingSchedulesCount = Schedules::where('brgy_id', $personnel->brgy_id)
             ->whereDate('date', '>=', now()->toDateString())
             ->where('status', 'active')
