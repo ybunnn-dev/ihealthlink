@@ -1,13 +1,13 @@
 <x-guest-layout>
     @section('title', 'iHealthLink | Login')
     <!-- Fluid Background Egg Shape (45% of screen height) -->
-    <div class="hidden lg:block fixed top-0 left-1/2 transform -translate-x-1/2 w-full h-[48vh] bg-mainblue rounded-b-[100%] scale-x-125 -z-10"></div>
+    <div class="hidden lg:block fixed top-0 left-1/2 transform -translate-x-1/2 w-full h-[38vh] xl3:h-[48vh] bg-mainblue rounded-b-[100%] scale-x-125 -z-10"></div>
 
     <!-- Main Content -->
     <div class="relative z-10 min-h-screen grid grid-cols-1 lg:grid-cols-2 items-stretch overflow-hidden">
 
         <!-- Left Side: Logo and Login -->
-        <div class="flex flex-col justify-center lg:justify-start gap-y-fluid-gap-col px-[clamp(1rem,4vw,4rem)] slg:px-[clamp(1.5rem,5vw,6rem)] lg:pl-[clamp(4rem,12vw,12rem)] lg:pr-[clamp(1rem,4vw,4rem)] py-fluid-vert-pad">
+        <div class="flex flex-col justify-center lg:justify-start gap-y-fluid-gap-col px-4 slg:px-6 lg:pl-24 xl3:pl-40 lg:pr-24 xl3:pr-40 py-fluid-vert-pad">
             <!-- Top Logo -->
             <div class="flex items-center gap-fluid-1 mb-fluid-gap-col gap-2 justify-center lg:justify-start">
                 <svg class="w-8 xs:w-9 sm:w-10 text-mainblue lg:text-f7" viewBox="0 0 90 65" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -19,9 +19,9 @@
             </div>
             <!-- Login Form -->
             <div class="w-full max-w-[clamp(16rem,85vw,28rem)] mx-auto lg:mx-0 bg-f7 rounded-xl slg:rounded-2xl shadow px-[clamp(1rem,2.5vw,2.5rem)] xs:px-[clamp(1.2rem,2.8vw,2.8rem)] py-[clamp(1.25rem,3vw,2.5rem)] xs:py-[clamp(1.5rem,3.2vw,3rem)] border border-gray-200">    
-                <div class="text-center mb-4 xs:mb-5 sm:mb-6">
-                    <h2 class="text-xl xs:text-2xl sm:text-fluid-2xl font-semibold text-gray-900 mb-0.7 xs:mb-1.5 sm:mb-1.3">SIGN IN</h2>
-                    <p class="text-gray-500 text-fluid-sm md:text-fluid-sm slg:text-xs lg2:text-xs lg3:text-sm lg3:text-xs xl:text-xs xl2:text-sm xl3:text-sm" >Welcome back! Please sign in to continue.</p>                </div>
+                <div class="text-center mb-4 xs:mb-5 slg:mb-6">
+                    <h2 class="text-2xl lg:text-2xl xl3:text-fluid-2xl font-semibold text-main_font mb-0.7 xs:mb-1.5 sm:mb-1.3">SIGN IN</h2>
+                    <p class="text-normal_font text-xs xl3:text-sm" >Welcome back! Please sign in to continue.</p>                </div>
                 <x-validation-errors class="mb-4" />
 
                 @session('status')
@@ -93,7 +93,6 @@
                             <span class="text-maingreen">iHealth</span><span class="text-mainblue">Link</span>
                         </h2>
                         <p class="text-xs font-medium text-darkblue -mt-2">Barangay Healthcare Management System</p>
-                        {{-- You can try -mt-3 or -mt-4 if -mt-2 isn't enough --}}
                     </div>
                 </div>         
                 <p class="text-[0.75rem] text-justify">
