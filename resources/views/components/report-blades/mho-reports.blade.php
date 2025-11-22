@@ -117,7 +117,11 @@
 
     </x-chart-layouts.donut-table-combo>
 
-     <x-chart-layouts.donut-table-combo 
+    
+    <x-chart-layouts.donut-table-combo 
+        chartTitle="PWDs"
+        canvasId="pwdChart"
+        tableTitle="PWDs Per Barangay"><x-chart-layouts.donut-table-combo 
         chartTitle="Sex Distribution"
         canvasId="genderChart"
         tableTitle="Sex Distribution Per Barangay">
@@ -137,39 +141,40 @@
             <tr class="border-t">
                 <td class="px-6 py-3 font-medium border-r">Male</td>
                 @foreach ($malesPerBarangay as $count)
-                    <td class="px-6 py-3 text-center border-r">{{ $count }}</td>
+                    <td class="px-6 py-3 text-center border-r">{{ number_format($count) }}</td>
                 @endforeach
-                <td class="px-6 py-3 text-center" id="total-males">0</td>
+                <td class="px-6 py-3 text-center">{{ number_format(array_sum($malesPerBarangay)) }}</td>
             </tr>
 
             {{-- FEMALE ROW --}}
             <tr class="border-t">
                 <td class="px-6 py-3 font-medium border-r">Female</td>
                 @foreach ($femalesPerBarangay as $count)
-                    <td class="px-6 py-3 text-center border-r">{{ $count }}</td>
+                    <td class="px-6 py-3 text-center border-r">{{ number_format($count) }}</td>
                 @endforeach
-                <td class="px-6 py-3 text-center" id="total-females">0</td>
+                <td class="px-6 py-3 text-center">{{ number_format(array_sum($femalesPerBarangay)) }}</td>
             </tr>
 
             {{-- TOTAL ROW --}}
             <tr class="bg-gray-100 font-semibold border-t">
                 <td class="px-6 py-3 border-r">Total</td>
 
-                {{-- CHANGE: Loop over the keys again to create the placeholder cells --}}
-                @foreach (array_keys($malesPerBarangay) as $purokName)
-                    <td class="px-6 py-3 text-center border-r" id="total-purok-{{ Str::slug($purokName) }}">0</td>
+                @foreach ($barangays as $index => $barangayName)
+                    @php
+                        $males = $malesPerBarangay[$barangayName] ?? 0;
+                        $females = $femalesPerBarangay[$barangayName] ?? 0;
+                        $total = $males + $females;
+                    @endphp
+                    <td class="px-6 py-3 text-center border-r">{{ number_format($total) }}</td>
                 @endforeach
 
-                <td class="px-6 py-3 text-center" id="grand-total">0</td>
+                <td class="px-6 py-3 text-center">
+                    {{ number_format(array_sum($malesPerBarangay) + array_sum($femalesPerBarangay)) }}
+                </td>
             </tr>
         </x-slot:tbody>
 
     </x-chart-layouts.donut-table-combo>
-
-    <x-chart-layouts.donut-table-combo 
-        chartTitle="PWDs"
-        canvasId="pwdChart"
-        tableTitle="PWDs Per Barangay">
 
         @php
             // Extract purok names
