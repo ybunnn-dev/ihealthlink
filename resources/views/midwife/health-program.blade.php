@@ -77,10 +77,10 @@
             <!-- Search, Filters, and Table -->
             <div class="bg-white rounded-xl overflow-hidden p-6 mb-3">
                 <div class="grid grid-rows-1 gap-1">
-                    <div class="pb-6">
-                        <div class="flex flex-col slg2:flex-row slg2:items-end gap-4">
-                            <!-- Search Input -->
-                            <div class="w-full slg2:w-64 slg2:flex-grow slg2:max-w-md">
+                    <div class="pb-6 w-full">
+                        <div class="grid grid-cols-1 slg2:grid-cols-7 xl:grid-cols-9 gap-4 w-full items-end">
+                            
+                            <div class="w-full col-span-1 slg2:col-span-7 xl:col-span-3">
                                 <label for="search-residents" class="mb-2 text-sm font-medium text-main_font">Search for residents</label>
                                 <div class="relative">
                                     <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
@@ -88,49 +88,72 @@
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                                         </svg>
                                     </div>
-                                    <input type="search" id="search-residents" x-bind:disabled="!showPrivacy" x-bind:title="!showPrivacy ? 'Enable privacy view to use search' : ''" class="disabled:bg-gray-200 block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500" placeholder="Search by name or ID..."/>
+                                    <input type="search" id="search-residents" 
+                                        x-bind:disabled="!showPrivacy" 
+                                        x-bind:title="!showPrivacy ? 'Enable privacy view to use search' : ''" 
+                                        class="disabled:bg-gray-200 block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500" 
+                                        placeholder="Search by name or ID..."/>
                                 </div>
                             </div>
-                            
-                            <div class="flex flex-col xs:flex-row gap-4 slg2:items-end flex-none">
-                                <!-- Sort Dropdown -->
-                                <div class="w-full xs:w-48">
-                                    <label for="sort-dropdown" class="mb-2 text-sm font-medium text-main_font">Sort by</label>
-                                    <button id="sort-dropdown" data-dropdown-toggle="sortDropdownMenu" x-bind:disabled="!showPrivacy" x-bind:title="!showPrivacy ? 'Enable privacy view to use dropdown' : ''" class="disabled:bg-gray-200 w-full text-main_font bg-[#F7F7F7] focus:outline-none font-medium border border-navboard rounded-lg text-sm px-4 py-2 text-center inline-flex items-center justify-between h-[2.375rem]" type="button">
-                                        <span id="sort-label">Name (A-Z)</span>
-                                        <svg class="w-2.5 h-2.5 ms-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-                                        </svg>
-                                    </button>
-                                </div>
 
-                                <!-- Date Filter Dropdown -->
-                                <div class="w-full xs:w-48">
-                                    <label for="date-dropdown" class="mb-2 text-sm font-medium text-main_font">Date Added</label>
-                                    <button id="date-dropdown" data-dropdown-toggle="dateFilterDropdownMenu" x-bind:disabled="!showPrivacy" x-bind:title="!showPrivacy ? 'Enable privacy view to use dropdown' : ''" class="disabled:bg-gray-200 w-full text-main_font bg-[#F7F7F7] focus:outline-none font-medium border border-navboard rounded-lg text-sm px-4 py-2 text-center inline-flex items-center justify-between h-[2.375rem]" type="button">
-                                        <span id="date-label">All Time</span>
-                                        <svg class="w-2.5 h-2.5 ms-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-                                        </svg>
-                                    </button>
-                                </div>
-
-                                <!-- Enroll Button -->
-                                <div class="w-full xs:w-40 pt-5 xs:pt-0">
-                                    @if ($healthProgram->category === 'maternal_health_tcl')
-                                        <button type="button" id="openEnrollMaternityModalBtn" class="w-full h-[2.375rem] text-white bg-mainblue hover:bg-blue-700 font-medium rounded-lg text-sm px-3">Enroll Resident</button>
-                                    @elseif ($healthProgram->category === 'child_healthcare_tcl')
-                                        <button type="button" id="openEnrollChildHealthcareModalBtn" class="w-full h-[2.375rem] text-white bg-mainblue hover:bg-blue-700 font-medium rounded-lg text-sm px-3">Enroll Resident</button>
-                                    @elseif ($healthProgram->category === 'family_planning_tcl')
-                                        <button type="button" id="openEnrollFpModalBtn" class="w-full h-[2.375rem] text-white bg-mainblue hover:bg-blue-700 font-medium rounded-lg text-sm px-3">Enroll Resident</button>
-                                    @elseif($healthProgram->category === 'philpen_tcl')
-                                        <button type="button" id="createNewPhilpen" class="w-full h-[2.375rem] text-white bg-mainblue hover:bg-blue-700 font-medium rounded-lg text-sm px-3">New PhilPEN</button>
-                                    @else
-                                        <button type="button" id="openEnrollModalBtn" class="w-full h-[2.375rem] text-white bg-mainblue hover:bg-blue-700 font-medium rounded-lg text-sm px-3">Enroll Resident</button>
-                                    @endif
-                                </div>
-                                <x-hide-button />
+                            <div class="col-span-1 slg2:col-span-2">
+                                <label for="sort-dropdown" class="mb-2 text-sm font-medium text-main_font">Sort by</label>
+                                <button id="sort-dropdown" 
+                                    data-dropdown-toggle="sortDropdownMenu" 
+                                    x-bind:disabled="!showPrivacy" 
+                                    x-bind:title="!showPrivacy ? 'Enable privacy view to use dropdown' : ''" 
+                                    class="disabled:bg-gray-200 w-full text-main_font bg-[#F7F7F7] focus:outline-none font-medium border border-navboard rounded-lg text-sm px-4 py-2 text-center inline-flex items-center justify-between h-[2.375rem]" 
+                                    type="button">
+                                    <span id="sort-label">Name (A-Z)</span>
+                                    <svg class="w-2.5 h-2.5 ms-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                                    </svg>
+                                </button>
                             </div>
+
+                            <div class="col-span-1 slg2:col-span-2">
+                                <label for="date-dropdown" class="mb-2 text-sm font-medium text-main_font">Date Added</label>
+                                <button id="date-dropdown" 
+                                    data-dropdown-toggle="dateFilterDropdownMenu" 
+                                    x-bind:disabled="!showPrivacy" 
+                                    x-bind:title="!showPrivacy ? 'Enable privacy view to use dropdown' : ''" 
+                                    class="disabled:bg-gray-200 w-full text-main_font bg-[#F7F7F7] focus:outline-none font-medium border border-navboard rounded-lg text-sm px-4 py-2 text-center inline-flex items-center justify-between h-[2.375rem]" 
+                                    type="button">
+                                    <span id="date-label">All Time</span>
+                                    <svg class="w-2.5 h-2.5 ms-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                                    </svg>
+                                </button>
+                            </div>
+
+                            <div class="col-span-1 slg2:col-span-3 xl:col-span-2 grid grid-cols-4 gap-2">
+                                @if ($healthProgram->category === 'maternal_health_tcl')
+                                    <button type="button" id="openEnrollMaternityModalBtn" class="col-span-3 h-[2.375rem] text-white bg-mainblue hover:bg-blue-700 font-medium rounded-lg text-sm px-3 flex items-center justify-center gap-2">
+                                        <x-plus-icon/> Enroll Resident
+                                    </button>
+                                @elseif ($healthProgram->category === 'child_healthcare_tcl')
+                                    <button type="button" id="openEnrollChildHealthcareModalBtn" class="col-span-3 h-[2.375rem] text-white bg-mainblue hover:bg-blue-700 font-medium rounded-lg text-sm px-3 flex items-center justify-center gap-2">
+                                        <x-plus-icon/> Enroll Resident
+                                    </button>
+                                @elseif ($healthProgram->category === 'family_planning_tcl')
+                                    <button type="button" id="openEnrollFpModalBtn" class="col-span-3 h-[2.375rem] text-white bg-mainblue hover:bg-blue-700 font-medium rounded-lg text-sm px-3 flex items-center justify-center gap-2">
+                                        <x-plus-icon/> Enroll Resident
+                                    </button>
+                                @elseif($healthProgram->category === 'philpen_tcl')
+                                    <button type="button" id="createNewPhilpen" class="col-span-3 h-[2.375rem] text-white bg-mainblue hover:bg-blue-700 font-medium rounded-lg text-sm px-3 flex items-center justify-center gap-2">
+                                        <x-plus-icon/> New PhilPEN
+                                    </button>
+                                @else
+                                    <button type="button" id="openEnrollModalBtn" class="col-span-3 h-[2.375rem] text-white bg-mainblue hover:bg-blue-700 font-medium rounded-lg text-sm px-3 flex items-center justify-center gap-2">
+                                        <x-plus-icon/> Enroll Resident
+                                    </button>
+                                @endif
+
+                                <div class="col-span-1">
+                                    <x-hide-button />
+                                </div>
+                            </div>
+
                         </div>
                     </div>
 
