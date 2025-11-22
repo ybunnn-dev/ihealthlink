@@ -117,11 +117,7 @@
 
     </x-chart-layouts.donut-table-combo>
 
-    
-    <x-chart-layouts.donut-table-combo 
-        chartTitle="PWDs"
-        canvasId="pwdChart"
-        tableTitle="PWDs Per Barangay"><x-chart-layouts.donut-table-combo 
+     <x-chart-layouts.donut-table-combo 
         chartTitle="Sex Distribution"
         canvasId="genderChart"
         tableTitle="Sex Distribution Per Barangay">
@@ -175,6 +171,12 @@
         </x-slot:tbody>
 
     </x-chart-layouts.donut-table-combo>
+
+
+    <x-chart-layouts.donut-table-combo 
+        chartTitle="PWDs"
+        canvasId="pwdChart"
+        tableTitle="PWDs Per Barangay">
 
         @php
             // Extract purok names
