@@ -170,7 +170,7 @@ function updateShowMoreButton() {
 
     const showMoreBtn = document.createElement('button');
     showMoreBtn.id = 'show-more-btn';
-    showMoreBtn.className = 'mt-4 px-6 py-2 bg-sub_blue text-white rounded-lg hover:bg-blue-700 transition-colors duration-200';
+    showMoreBtn.className = 'mt-4 px-6 py-2 bg-mainblue text-white rounded-lg hover:bg-blue-700 font-semibold transition-colors duration-200';
     showMoreBtn.textContent = isShowingAll ? 'Show Less' : 'Show More';
     
     showMoreBtn.addEventListener('click', () => {
