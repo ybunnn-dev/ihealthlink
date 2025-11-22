@@ -9,9 +9,10 @@
             <div class="bg-f7 rounded-xl overflow-hidden">
                 <div class="p-6">
                     <div class="grid grid-rows-1 gap-1">
-                        <div class="pb-6">
-                            <div class="flex flex-col slg2:flex-row slg2:flex-nowrap items-end gap-4">
-                                <div class="w-full slg2:flex-grow slg2:max-w-md">
+                        <div class="pb-6 w-full">
+                            <div class="grid grid-cols-1 slg2:grid-cols-8 xl:grid-cols-12 gap-4 w-full items-end">
+                                
+                                <div class="w-full col-span-1 slg2:col-span-8 xl:col-span-5">
                                     <label for="search-logs" class="mb-2 text-sm font-medium text-main_font">Search by name or activity?</label>
                                     <div class="relative">
                                         <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
@@ -19,41 +20,64 @@
                                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                                             </svg>
                                         </div>
-                                        <input type="search" id="search-logs" x-bind:disabled="!showPrivacy" x-bind:title="!showPrivacy ? 'Enable privacy view to use search' : ''" class="disabled:bg-gray-200 block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500" placeholder="Search..."/>
+                                        <input type="search" 
+                                            id="search-logs" 
+                                            x-bind:disabled="!showPrivacy" 
+                                            x-bind:title="!showPrivacy ? 'Enable privacy view to use search' : ''" 
+                                            class="disabled:bg-gray-200 block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500" 
+                                            placeholder="Search..."/>
                                     </div>
                                 </div>
 
-                                <div class="flex flex-col sm:flex-row flex-wrap gap-4 items-end slg2:flex-shrink-0">
-                                    <div class="w-full sm:w-48">
-                                        <label for="moduleDropdown" class="mb-2 text-sm font-medium text-main_font">Filter by Module</label>
-                                        <button id="moduleDropdown" data-dropdown-toggle="moduleDropdownMenu" x-bind:disabled="!showPrivacy" x-bind:title="!showPrivacy ? 'Enable privacy view to use dropdown' : ''" class="disabled:bg-gray-200 w-full text-main_font bg-f7 focus:outline-none font-medium border border-navboard rounded-lg text-sm px-4 py-2 text-center inline-flex items-center justify-between h-[2.375rem]" type="button">
-                                            <span id="module-label">All Modules</span>
-                                            <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-                                            </svg>
-                                        </button>
-                                    </div>
+                                <div class="col-span-1 slg2:col-span-2 xl:col-span-2">
+                                    <label for="moduleDropdown" class="mb-2 text-sm font-medium text-main_font">Filter by Module</label>
+                                    <button 
+                                        id="moduleDropdown" 
+                                        data-dropdown-toggle="moduleDropdownMenu" 
+                                        x-bind:disabled="!showPrivacy" 
+                                        x-bind:title="!showPrivacy ? 'Enable privacy view to use dropdown' : ''" 
+                                        class="disabled:bg-gray-200 w-full text-main_font bg-f7 focus:outline-none font-medium border border-navboard rounded-lg text-sm px-4 py-2 text-center inline-flex items-center justify-between h-[2.375rem]" 
+                                        type="button">
+                                        <span class="truncate" id="module-label">All Modules</span>
+                                        <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                                        </svg>
+                                    </button>
+                                </div>
 
-                                    <div class="w-full sm:w-48">
-                                        <label for="dateDropdown" class="mb-2 text-sm font-medium text-main_font">Sort By Date</label>
-                                        <button id="dateDropdown" data-dropdown-toggle="dateDropdownMenu" x-bind:disabled="!showPrivacy" x-bind:title="!showPrivacy ? 'Enable privacy view to use dropdown' : ''" class="disabled:bg-gray-200 w-full text-main_font bg-f7 focus:outline-none font-medium border border-navboard rounded-lg text-sm px-4 py-2 text-center inline-flex items-center justify-between h-[2.375rem]" type="button">
-                                            <span id="date-label">Latest</span>
-                                            <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-                                            </svg>
-                                        </button>
-                                    </div>
+                                <div class="col-span-1 slg2:col-span-2 xl:col-span-2">
+                                    <label for="dateDropdown" class="mb-2 text-sm font-medium text-main_font">Sort By Date</label>
+                                    <button 
+                                        id="dateDropdown" 
+                                        data-dropdown-toggle="dateDropdownMenu" 
+                                        x-bind:disabled="!showPrivacy" 
+                                        x-bind:title="!showPrivacy ? 'Enable privacy view to use dropdown' : ''" 
+                                        class="disabled:bg-gray-200 w-full text-main_font bg-f7 focus:outline-none font-medium border border-navboard rounded-lg text-sm px-4 py-2 text-center inline-flex items-center justify-between h-[2.375rem]" 
+                                        type="button">
+                                        <span class="truncate" id="date-label">Latest</span>
+                                        <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                                        </svg>
+                                    </button>
+                                </div>
 
-                                    <div class="w-full sm:w-48">
-                                        <label for="dateFilterDropdown" class="mb-2 text-sm font-medium text-main_font">Filter by Date</label>
-                                        <button id="dateFilterDropdown" data-dropdown-toggle="dateFilterDropdownMenu" x-bind:disabled="!showPrivacy" x-bind:title="!showPrivacy ? 'Enable privacy view to use dropdown' : ''" class="disabled:bg-gray-200 w-full text-main_font bg-f7 focus:outline-none font-medium border border-navboard rounded-lg text-sm px-4 py-2 text-center inline-flex items-center justify-between h-[2.375rem]" type="button">
-                                            <span id="date-filter-label">All Time</span>
-                                            <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-                                            </svg>
-                                        </button>
-                                    </div>
+                                <div class="col-span-1 slg2:col-span-2 xl:col-span-2">
+                                    <label for="dateFilterDropdown" class="mb-2 text-sm font-medium text-main_font">Filter by Date</label>
+                                    <button 
+                                        id="dateFilterDropdown" 
+                                        data-dropdown-toggle="dateFilterDropdownMenu" 
+                                        x-bind:disabled="!showPrivacy" 
+                                        x-bind:title="!showPrivacy ? 'Enable privacy view to use dropdown' : ''" 
+                                        class="disabled:bg-gray-200 w-full text-main_font bg-f7 focus:outline-none font-medium border border-navboard rounded-lg text-sm px-4 py-2 text-center inline-flex items-center justify-between h-[2.375rem]" 
+                                        type="button">
+                                        <span class="truncate" id="date-filter-label">All Time</span>
+                                        <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                                        </svg>
+                                    </button>
+                                </div>
 
+                                <div class="col-span-1 slg2:col-span-2 xl:col-span-1">
                                     <x-hide-button />
                                 </div>
                             </div>
