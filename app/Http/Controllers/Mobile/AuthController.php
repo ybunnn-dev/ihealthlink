@@ -14,9 +14,7 @@ class AuthController extends Controller
         $email = $request->input('email');
         $password = $request->input('password');
 
-        $user = User::all()->first(function ($u) use ($email) {
-            return $u->email === $email; 
-        });
+        $user = User::where('email', $email)->first();
 
         if (!$user || !Hash::check($password, $user->password)) {
             return response()->json(['message' => 'Invalid login credentials'], 401);
