@@ -15,10 +15,10 @@
             <div class="bg-f7 rounded-xl overflow-hidden">
                 <div class="p-6">
                     <div class="grid grid-rows-1 gap-1">
-                        <div class="pb-6">
-                            <div class="grid grid-cols-1 md:grid-cols-2 slg:grid-cols-5 xl:grid-cols-6 xl3:grid-cols-7 gap-4 items-end">
+                        <div class="pb-6 w-full">
+                            <div class="grid grid-cols-1 slg2:grid-cols-7 xl:grid-cols-9 gap-4 w-full items-end">
                                 
-                                <div class="w-full md:col-span-1 slg:col-span-2 xl:col-span-3 xl3:col-span-4">
+                                <div class="w-full col-span-1 slg2:col-span-3 xl:col-span-5">
                                     <label for="default-search" class="mb-2 text-sm font-medium text-main_font">Search</label> 
                                     <div class="relative">
                                         <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
@@ -35,7 +35,7 @@
                                     </div>
                                 </div>
                                 
-                                <div class="w-full">
+                                <div class="col-span-1 slg2:col-span-2">
                                     <label for="purokDropdown" class="mb-2 text-sm font-medium text-main_font">Filter by Purok</label> 
                                     <button id="purokDropdown"
                                         x-bind:disabled="!showPrivacy" 
@@ -50,12 +50,21 @@
                                     </button>
                                 </div>
                                 
-                                <div class="w-full">
-                                    <button type="button" id="open-add-household" class="w-full h-[2.375rem] text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3">Add Households</button>       
-                                </div>
-
-                                <div class="w-full flex justify-start">
-                                    <x-hide-button />
+                                <div class="col-span-1 slg2:col-span-2 grid grid-cols-4 gap-2">
+                                    <button type="button" id="open-add-household" class="col-span-3 h-[2.375rem] text-white bg-mainblue hover:bg-blue-700 font-medium rounded-lg text-sm px-3 flex items-center justify-center gap-2">
+                                        <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                            <g id="SVGRepo_iconCarrier">
+                                                <path id="secondary" d="M19,20a1,1,0,0,1-1-1V18H17a1,1,0,0,1,0-2h1V15a1,1,0,0,1,2,0v1h1a1,1,0,0,1,0,2H20v1A1,1,0,0,1,19,20Z" style="fill: currentColor;"></path>
+                                                <path id="primary" d="M15,17a4,4,0,0,1,2.63-3.74,6,6,0,0,0-2.31-1.11,6,6,0,1,0-8.64,0A6,6,0,0,0,2,18v1a1,1,0,0,0,.29.71C2.53,19.94,4.77,22,11,22a17.17,17.17,0,0,0,6.88-1.18A4,4,0,0,1,15,17Z" style="fill: currentColor;"></path>
+                                            </g>
+                                        </svg>
+                                        Add Households
+                                    </button>       
+                                    <div class="col-span-1">
+                                        <x-hide-button />
+                                    </div>
                                 </div>
 
                                 @include('components.modals.household.add-household-modal')
