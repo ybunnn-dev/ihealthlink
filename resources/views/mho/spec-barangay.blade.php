@@ -31,8 +31,18 @@
                         
                         <div class="grid grid-cols-1 slg:grid-cols-2 gap-3 w-full">
                             <button id="edit-brgy-button" type="button" class="flex-1 px-5 py-3 text-sm font-medium text-white bg-mainblue rounded-lg hover:bg-blue-700 col-span-1">Edit</button>
-                            <button id="remove-brgy-button" type="button" class="flex-1 px-5 py-3 text-sm font-medium text-mainblue bg-white border border-mainblue rounded-lg hover:bg-blue-50 col-span-1">Remove</button>
-                        </div>
+                            <button 
+                                id="remove-brgy-button" 
+                                type="button" 
+                                class="flex-1 px-5 py-3 text-sm font-medium rounded-lg col-span-1
+                                    {{ ($barangay->households_count > 0 || $barangay->residents_count > 0 || $barangay->families_count > 0) 
+                                        ? 'text-gray-400 bg-gray-100 border border-gray-300 cursor-not-allowed' 
+                                        : 'text-mainblue bg-white border border-mainblue hover:bg-blue-50' }}"
+                                {{ ($barangay->households_count > 0 || $barangay->residents_count > 0 || $barangay->families_count > 0) ? 'disabled' : '' }}
+                            >
+                                Remove
+                            </button>                       
+                         </div>
                     </div>
 
                     
