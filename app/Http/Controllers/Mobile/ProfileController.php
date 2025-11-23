@@ -39,7 +39,6 @@ class ProfileController extends Controller
             ], 401);
         }
 
-        \Log::info('vakla');
 
         $user = $request->user();
         $plainCode = mt_rand(100000, 999999); // e.g., 123456

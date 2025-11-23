@@ -14,11 +14,9 @@
                     </div>
                 </a>
                 <div class="grid grid-cols-1 slg:grid-cols-3 gap-4">
-                    <div class="cols-span-1 grid grid-rows-6 gap-3">
-                        <div class="row-span-5 h-80 bg-f7 rounded-lg flex flex-col items-center justify-center p-4"> 
-                            <svg class="flex-shrink-0
-                                        w-32 h-32 lg:w-40 lg:h-40 xl2:w-44 xl2:h-44 text-main_font"
-
+                    <div class="cols-span-1 flex flex-col gap-3">
+                        <div class="h-80 bg-f7 rounded-lg flex flex-col items-center justify-center p-4"> 
+                            <svg class="flex-shrink-0 w-32 h-32 lg:w-40 lg:h-40 xl2:w-44 xl2:h-44 text-main_font"
                                 viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                                 <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
@@ -28,7 +26,8 @@
                             </svg>
                             <p class="text-main_font font-bold mt-2">Household #{{ $household->id }}</p> 
                         </div>
-                        <div class="grid grid-cols-1 lg:grid-cols-2 w-full px-0 pb-0 row-span-1 gap-3"> 
+
+                        <div class="grid grid-cols-1 lg:grid-cols-2 w-full px-0 pb-0 gap-3"> 
                             <button id="edit-household-btn" 
                                     type="button" 
                                     class="edit-household col-span-1 px-5 py-3 text-sm font-medium text-white bg-mainblue rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300"
@@ -98,96 +97,87 @@
                 </div>
                 <div class="grid grid-cols-1 gap-4">
                     <div class="bg-f7 rounded-xl overflow-hidden col-span-2">
-                        <div class="p-8 pt-10">
-                            <div class="grid grid-cols-2 gap-1 mb-6 items-center">
+                        <div class="p-4 md:p-8 md:pt-10">
+                            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
                                 <h1 class="text-2xl font-semibold text-sub_blue">Families</h1>
-                                <!-- Flex container -->
-                                <div class="flex flex-col slg2:flex-row slg2:items-end gap-4 justify-end">  
-                                    <!-- Add Household Button -->
-                                    <div class="w-full xs:w-40 pt-5 xs:pt-0">
-                                        <button id="add-existing-family-trigger" type="button" class="w-full h-[2.375rem] text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3">Add Existing Family</button>
-                                    </div>
-                                    <div class="w-full xs:w-40 pt-5 xs:pt-0">
-                                        <button id="add-family-trigger" type="button" class="w-full h-[2.375rem] text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3">Add Family</button>
-                                    </div>
+        
+                                <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto">  
+                                    <button id="add-existing-family-trigger" type="button" 
+                                        class="w-full sm:w-auto h-[2.375rem] text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-5 flex items-center justify-center transition-colors">
+                                        Add Existing Family
+                                    </button>
+                                    
+                                    <button id="add-family-trigger" type="button" 
+                                        class="w-full sm:w-auto h-[2.375rem] text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-5 flex items-center justify-center transition-colors">
+                                        Add Family
+                                    </button>
                                 </div>
                             </div>
-                            <div class="relative overflow-x-auto">
-                            <table class="w-full text-sm text-left text-main_font bg-col_tab_h">
+
+                            <div class="relative overflow-x-auto rounded-lg">
+                                <table class="w-full text-sm text-left text-main_font bg-col_tab_h">
                                     <thead class="text-xs text-main_font uppercase">
                                         <tr>
-                                            <th scope="col" class="px-6 py-3">
-                                                FAMILY #
-                                            </th>
-                                            <th scope="col" class="px-6 py-3">
-                                                MEMBERS
-                                            </th>
-                                            <th scope="col" class="px-6 py-3">
-                                                4PS MEMBER
-                                            </th>
-                                            <th scope="col" class="px-6 py-3">
-                                                INDIGENT
-                                            </th>
-                                            <th scope="col" class="px-6 py-3">
-                                                ACTION
-                                            </th>
+                                            <th scope="col" class="px-6 py-3">FAMILY #</th>
+                                            <th scope="col" class="px-6 py-3">MEMBERS</th>
+                                            <th scope="col" class="px-6 py-3">4PS MEMBER</th>
+                                            <th scope="col" class="px-6 py-3">INDIGENT</th>
+                                            <th scope="col" class="px-6 py-3">ACTION</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @forelse($families as $family)
-                                        <tr class="bg-white border-b bg-f7 text-normal_font">
-                                                <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
-                                                    {{ $family->id }}
-                                                </th>
-                                                <td class="px-6 py-4">
-                                                    {{ $family->residents_count }}
-                                                </td>
-                                               <td class="px-6 py-4">
-                                                    @if($family->is_4ps)
-                                                        <span class="inline-block px-4 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-700">
-                                                            Yes
-                                                        </span>
-                                                    @else
-                                                        <span class="inline-block px-4 py-1 text-xs font-semibold rounded-full bg-orange-100 text-orange-700">
-                                                            No
-                                                        </span>
-                                                    @endif
-                                                </td>
-
-                                                <td class="px-6 py-4">
-                                                    @if($family->is_indigent)
-                                                        <span class="inline-block px-4 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-700">
-                                                            Yes
-                                                        </span>
-                                                    @else
-                                                        <span class="inline-block px-4 py-1 text-xs font-semibold rounded-full bg-orange-100 text-orange-700">
-                                                            No
-                                                        </span>
-                                                    @endif
-                                                </td>
-
-                                                <td class="px-6 py-4">
-                                                      <button
+                                        <tr class="bg-white border-b bg-f7 text-normal_font hover:bg-gray-50 transition-colors">
+                                            <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
+                                                {{ $family->id }}
+                                            </th>
+                                            <td class="px-6 py-4">
+                                                {{ $family->residents_count }}
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                @if($family->is_4ps)
+                                                    <span class="inline-block px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-700 border border-green-200">
+                                                        Yes
+                                                    </span>
+                                                @else
+                                                    <span class="inline-block px-3 py-1 text-xs font-semibold rounded-full bg-orange-100 text-orange-700 border border-orange-200">
+                                                        No
+                                                    </span>
+                                                @endif
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                @if($family->is_indigent)
+                                                    <span class="inline-block px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-700 border border-green-200">
+                                                        Yes
+                                                    </span>
+                                                @else
+                                                    <span class="inline-block px-3 py-1 text-xs font-semibold rounded-full bg-orange-100 text-orange-700 border border-orange-200">
+                                                        No
+                                                    </span>
+                                                @endif
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                <button
                                                     onclick="window.location='{{ route('midwife.cur-fam', ['family' => $family->id, 'return' => url()->current()]) }}'"
-                                                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded text-xs">
+                                                    class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded text-xs px-4 py-1.5 transition-colors focus:outline-none">
                                                     View
                                                 </button>
-                                                </td>
-                                            </tr>
+                                            </td>
+                                        </tr>
                                         @empty
-                                            <tr class="bg-white border-b">
-                                                <td colspan="6" class="px-6 py-4 text-center text-gray-500">
-                                                    <div class="text-center py-10">
-                                                        <img src="{{ asset('images/illustrations/empty.png') }}" alt="No barangays found" class="mx-auto w-64">
-                                                        <p class="mt-5 text-lg font-medium text-gray-700">
-                                                            {{ $message ?? "Oops! You haven't added any family yet." }}
-                                                        </p>
-                                                        <p class="mt-2 text-sm text-gray-500">
-                                                            Click the "Add Family" button to get started.
-                                                        </p>
-                                                    </div>
-                                                </td>
-                                            </tr>
+                                        <tr class="bg-white border-b">
+                                            <td colspan="6" class="px-6 py-10 text-center text-gray-500">
+                                                <div class="flex flex-col items-center justify-center">
+                                                    <img src="{{ asset('images/illustrations/empty.png') }}" alt="No families found" class="w-48 md:w-64 opacity-75 mb-4">
+                                                    <p class="text-lg font-medium text-gray-700">
+                                                        {{ $message ?? "Oops! You haven't added any family yet." }}
+                                                    </p>
+                                                    <p class="mt-1 text-sm text-gray-500">
+                                                        Click the "Add Family" button to get started.
+                                                    </p>
+                                                </div>
+                                            </td>
+                                        </tr>
                                         @endforelse
                                     </tbody>
                                 </table>

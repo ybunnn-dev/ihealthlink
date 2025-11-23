@@ -408,8 +408,6 @@ distributeMedicineBtn.addEventListener('click', function() {
         if(prevDistributed){
             medicineInventory = structuredClone(prevInventory);
             distributedMedicines = structuredClone(prevDistributed);
-
-            console.log('vakla');
         }
         createConsultationModal.hide();
         distributeMedicineModal.show();
@@ -448,8 +446,6 @@ consultationCancelBtn.addEventListener('click', function(){
 
 saveConsultationBtn.addEventListener('click', function(event) {
     event.preventDefault(); // prevent form submission
-    console.log('vakla');
-
     // Prepare the payload
     payload = {
         consultation_id: currentConsultationId,

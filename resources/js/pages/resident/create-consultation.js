@@ -381,8 +381,6 @@ distributeMedicineBtn.addEventListener('click', function () {
         if (prevDistributed) {
             medicineInventory = structuredClone(prevInventory);
             distributedMedicines = structuredClone(prevDistributed);
-
-            console.log('vakla');
         }
         createConsultationModal.hide();
         distributeMedicineModal.show();

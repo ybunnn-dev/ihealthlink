@@ -56,7 +56,6 @@ function renderDoughnutChart({ elementId, labels, data, colors }) {
 }
 
 function getMhoIndigentData() {
-    console.log('vakla');
     const totalFamilies = window.families; // total number of families
     const indigentData = window.familiesIndigentPerBarangay;
 

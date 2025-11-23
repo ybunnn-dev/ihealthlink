@@ -680,13 +680,11 @@ class FamilyController extends Controller
                 'message' => 'Unauthorized access. No associated personnel found.'
             ], 403);
         }
-        \Log::info('vakla');
         // Validate the request
         $request->validate([
             'family_id' => 'required|exists:families,id',
             'status' => 'required|in:active,inactive'
         ]);
-        \Log::info('vaklas');
         try {
             DB::beginTransaction();
 
@@ -696,14 +694,12 @@ class FamilyController extends Controller
             // Update family status
             $family->status = $request->status;
             $family->save();
-            \Log::info('vaklas2');
             // If setting family to inactive, cascade the changes
             if ($request->status === 'inactive') {
                 // Get all residents belonging to this family
                 $residents = Resident::where('family_id', $family->id)
                     ->where('status', '!=', 'deceased') // Exclude deceased residents
                     ->get();
-                \Log::info('vaklas21');
                 foreach ($residents as $resident) {
                     // Update resident status to 'moved'
                     $resident->status = 'moved';
@@ -718,7 +714,6 @@ class FamilyController extends Controller
                         ]);
                 }
             }
-            \Log::info('vaklas215');
             // Log the update
             ActivityLog::create([
                 'user_id'   => $user->id,

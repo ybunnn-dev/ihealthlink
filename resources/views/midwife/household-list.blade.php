@@ -68,9 +68,6 @@
                                 </div>
 
                                 @include('components.modals.household.add-household-modal')
-                                @include('components.modals.existing-member-modal')
-                                @include('components.modals.existing-family-head-modal')
-                                @include('components.modals.household.existing-household-head-modal')
                                 @include('components.modals.new-resident-modal')
                             </div>
                         </div>
