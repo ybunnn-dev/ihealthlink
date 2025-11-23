@@ -11,7 +11,7 @@ class UserManualController extends Controller
     public function index()
     {
         // Get all manuals, maybe with related modules if you set relationships
-        $manuals = UserManual::with('module')->get();
+        $manuals = UserManual::with('module')->where('action_type', 'active')->get();
 
         return view('midwife.faqs', [
             'manuals' => $manuals
