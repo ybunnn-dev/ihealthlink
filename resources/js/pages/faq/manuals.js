@@ -83,13 +83,11 @@ function handleQuestionClick(clickedQuestionCard, item) {
     const currentQuestionId = item.id;
     const arrowSvg = clickedQuestionCard.querySelector('svg');
 
-
     if (activeAnswerCard && activeAnswerCard.getAttribute('data-answer-for-question-id') == currentQuestionId) {
         closeAnswerCard(activeAnswerCard, arrowSvg);
         activeAnswerCard = null;
         return;
     }
-
 
     if (activeAnswerCard) {
         const previousQuestionCard = faqContainer.querySelector(`[data-question-id="${activeAnswerCard.getAttribute('data-answer-for-question-id')}"]`);
@@ -97,14 +95,16 @@ function handleQuestionClick(clickedQuestionCard, item) {
         closeAnswerCard(activeAnswerCard, previousArrow);
     }
 
-
     const newAnswerCard = createAnswerCard(item);
     clickedQuestionCard.after(newAnswerCard);
     activeAnswerCard = newAnswerCard;
 
-
     setTimeout(() => {
-        newAnswerCard.style.maxHeight = newAnswerCard.scrollHeight + 'px';
+        // FIX: Add a buffer for the padding (1.5rem + 1.5rem ≈ 48px). 
+        // We use 60px to be safe for all screen sizes/font settings.
+        const paddingBuffer = 60; 
+        
+        newAnswerCard.style.maxHeight = (newAnswerCard.scrollHeight + paddingBuffer) + 'px';
         newAnswerCard.style.opacity = '1';
         newAnswerCard.style.paddingTop = '1.5rem';
         newAnswerCard.style.paddingBottom = '1.5rem';
