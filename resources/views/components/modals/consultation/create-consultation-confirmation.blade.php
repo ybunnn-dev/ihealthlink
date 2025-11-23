@@ -1,28 +1,29 @@
-<div id="confirm-add-consultation-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(1100%-1rem)] max-h-full transition-opacity duration-400 ease-out opacity-0">
+<div id="confirm-add-consultation-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full transition-opacity duration-400 ease-out opacity-0">
     <div class="relative p-4 w-full max-w-xl max-h-full">
-        <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700 py-10 px-6 transition-transform duration-300 ease-out scale-95">
-            <!-- Modal header -->
+        <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700 py-6 md:py-10 px-6 transition-transform duration-300 ease-out scale-95">
             <div class="flex flex-col items-center justify-center rounded-t mb-6 text-center">
-                <h3 class="text-xl font-semibold text-main_font dark:text-white">
+                <h3 class="text-xl md:text-2xl font-semibold text-main_font dark:text-white">
                     Confirm Consultation
                 </h3>
-                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">
                     You are about to save this consultation for <strong id="patient-name-to-confirm" class="text-main_font dark:text-white"></strong> on <strong id="consultation-date-to-confirm" class="text-main_font dark:text-white"></strong>.
                 </p>
             </div>
-            
-            <!-- Modal body -->
             <div class="p-4 md:p-5">
                 <div class="flex items-center justify-center">
-                    <input id="confirm-consultation-checkbox" type="checkbox" value="" class="w-4 h-4 text-mainblue bg-gray-100 border-gray-300 rounded focus:ring-mainblue dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                    <label for="confirm-consultation-checkbox" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">I have reviewed the input data.</label>
+                    <input id="confirm-consultation-checkbox" type="checkbox" value="" class="w-5 h-5 text-mainblue bg-gray-100 border-gray-300 rounded focus:ring-mainblue dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 cursor-pointer">
+                    <label for="confirm-consultation-checkbox" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300 cursor-pointer select-none">I have reviewed the input data.</label>
                 </div>
             </div>
-
-            <!-- Modal footer -->
-            <div class="flex items-center justify-end border-t border-gray-200 rounded-b dark:border-gray-600 gap-3 pt-6 px-6">
-                <button id="confirm-add-consultation-cancel" type="button" class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Cancel</button>
-                <button id="confirm-consultation-proceed-button" type="button" class="text-white bg-mainblue hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center disabled:opacity-50 disabled:cursor-not-allowed" disabled>Confirm & Proceed</button>
+            <div class="flex flex-col-reverse sm:flex-row items-center justify-end border-t border-gray-200 rounded-b dark:border-gray-600 gap-3 pt-6 px-6">
+                <button id="confirm-add-consultation-cancel" type="button" 
+                    class="w-full sm:w-auto py-3 px-5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 transition-colors">
+                    Cancel
+                </button>
+                <button id="confirm-consultation-proceed-button" type="button" 
+                    class="w-full sm:w-auto text-white bg-mainblue hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-3 text-center disabled:opacity-50 disabled:cursor-not-allowed transition-colors" disabled>
+                    Confirm & Proceed
+                </button>
             </div>
         </div>
     </div>
