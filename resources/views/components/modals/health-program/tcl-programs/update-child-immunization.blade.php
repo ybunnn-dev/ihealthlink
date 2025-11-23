@@ -1,16 +1,15 @@
-<div id="update-child-care-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full transition-opacity duration-400 ease-out opacity-0">
+<div id="update-child-care-modal" tabindex="-1" aria-hidden="true" class="hidden fixed inset-0 z-50 flex justify-center items-center w-full h-full transition-opacity duration-400 ease-out opacity-0">
     <div class="relative p-4 w-full max-w-6xl max-h-full">
-        <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700 py-10 px-8 transition-transform duration-300 ease-out scale-95">
-            <div class="flex flex-col items-center justify-center rounded-t mb-6">
-                <h3 class="text-xl font-semibold text-main_font">
+        <div class="relative bg-white rounded-lg shadow-xl dark:bg-gray-700 w-full flex flex-col max-h-[90vh] transition-transform duration-300 ease-out scale-95">
+            <div class="flex flex-col items-center justify-center rounded-t p-6 border-b border-gray-200 shrink-0 dark:border-gray-600">
+                <h3 class="text-xl md:text-2xl font-semibold text-main_font dark:text-white">
                     Child Immunization & Nutrition Details
                 </h3>
-                <p class="text-sm text-normal_font -mt-1">Review and update child care information below</p>
+                <p class="text-sm text-normal_font mt-1 dark:text-gray-400">Review and update child care information below</p>
             </div>
 
-            <div class="space-y-4 h-[70vh] overflow-y-auto w-full pr-4 mb-3">
-                <form action="#" class="grid grid-cols-1 slg2:grid-cols-4 gap-x-6 gap-y-4">
-                    
+            <div class="p-6 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+                <form action="#" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-4">
                     <div class="slg2:col-span-4 font-semibold text-lg border-b pb-2 mb-2 text-normal_font">Basic Information</div>
                     
                     <div class="slg2:col-span-2">
@@ -372,12 +371,26 @@
                 </form>
             </div>
             
-            <div class="flex items-center justify-between border-t border-gray-200 rounded-b dark:border-gray-600 gap-3 pt-6 px-4 mb-3">
-                <button id="cancel-update-child-care" type="button" class="py-2.5 px-5 text-sm font-medium text-main_font focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100">Cancel</button>
-                <div class="flex items-center gap-3">
-                    <button id="print-child-care-btn" type="button" class="text-white bg-maingreen hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center w-full sm:w-auto">Print Details</button>
-                    <button id="update-child-care-btn" type="button" class="text-white bg-mainblue hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center w-full sm:w-auto">Update Details</button>
+            <div class="flex flex-col-reverse sm:flex-row items-center justify-between border-t border-gray-200 rounded-b dark:border-gray-600 gap-3 pt-6 px-4 mb-3">
+    
+                <button id="cancel-update-child-care" type="button" 
+                    class="w-full sm:w-auto py-2.5 px-5 text-sm font-medium text-main_font focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 transition-colors">
+                    Cancel
+                </button>
+
+                <div class="flex flex-col-reverse sm:flex-row items-center gap-3 w-full sm:w-auto">
+                    
+                    <button id="print-child-care-btn" type="button" 
+                        class="w-full sm:w-auto text-white bg-maingreen hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center transition-colors">
+                        Print Details
+                    </button>
+                    
+                    <button id="update-child-care-btn" type="button" 
+                        class="w-full sm:w-auto text-white bg-mainblue hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center transition-colors">
+                        Update Details
+                    </button>
                 </div>
+
             </div>
 
         </div>
