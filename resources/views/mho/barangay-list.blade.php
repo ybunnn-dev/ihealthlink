@@ -7,9 +7,14 @@
             <div class="bg-f7 rounded-xl overflow-hidden">
                 <div class="p-6">
                     <div class="grid grid-rows-1 gap-1">
-                        <div class="pb-6">
-                            <div class="flex flex-col slg2:flex-row slg2:flex-nowrap items-end gap-4">
-                                <div class="w-full slg2:flex-grow slg2:max-w-md">
+                        <div class="pb-6 w-full">
+                            {{-- Grid Container mimicking the Resident Page layout --}}
+                            <div class="grid grid-cols-1 slg2:grid-cols-8 xl:grid-cols-10 gap-4 w-full items-end">
+                                
+                                {{-- 1. Search Input --}}
+                                {{-- slg2:col-span-7 forces it to full width on medium-large screens (Row 1) --}}
+                                {{-- xl:col-span-3 makes it share the row on extra-large screens --}}
+                                <div class="w-full col-span-1 slg2:col-span-7 xl:col-span-3">
                                     <label for="default-search" class="mb-2 text-sm font-medium text-main_font">Search for barangay?</label>
                                     <div class="relative">
                                         <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
@@ -21,44 +26,31 @@
                                     </div>
                                 </div>
 
-                                <div class="flex flex-col sm:flex-row flex-wrap gap-4 items-end slg2:flex-shrink-0">
-                                    {{-- Sort By Dropdown --}}
-                                    <div class="w-full sm:w-48">
-                                        <label for="sortByDropdownBrgy" class="mb-2 text-sm font-medium text-main_font">Sort By</label>
-                                        <button id="sortByDropdownBrgy" data-dropdown-toggle="sortByDropdownBrgyMenu" class="w-full text-main_font bg-f7 focus:outline-none font-medium border border-navboard rounded-lg text-sm px-4 py-2 text-center inline-flex items-center justify-between h-[2.375rem]" type="button">
-                                            Name (A-Z)
-                                            <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-                                            </svg>
-                                        </button>
-                                    </div>
+                                <div class="col-span-1 slg2:col-span-2 relative">
+                                    <label for="sortByDropdownBrgy" class="mb-2 text-sm font-medium text-main_font">Sort By</label>
+                                    <button id="sortByDropdownBrgy" data-dropdown-toggle="sortByDropdownBrgyMenu" class="w-full text-main_font bg-f7 focus:outline-none font-medium border border-navboard rounded-lg text-sm px-4 py-2 text-center inline-flex items-center justify-between h-[2.375rem]" type="button">
+                                        Name (A-Z)
+                                        <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                                        </svg>
+                                    </button>
                                     <div id="sortByDropdownBrgyMenu" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
                                         <ul class="py-2 text-sm text-normal_font" aria-labelledby="sortByDropdownBrgy">
-                                            <li>
-                                                <a href="#" data-value="alpha_asc" class="block px-4 py-2 hover:bg-gray-100">Name (A-Z)</a>
-                                            </li>
-                                            <li>
-                                                <a href="#" data-value="alpha_desc" class="block px-4 py-2 hover:bg-gray-100">Name (Z-A)</a>
-                                            </li>
-                                            <li>
-                                                <a href="#" data-value="puroks_count" class="block px-4 py-2 hover:bg-gray-100">Puroks</a>
-                                            </li>
-                                            <li>
-                                                <a href="#" data-value="residents_count" class="block px-4 py-2 hover:bg-gray-100">Residents</a>
-                                            </li>
+                                            <li><a href="#" data-value="alpha_asc" class="block px-4 py-2 hover:bg-gray-100">Name (A-Z)</a></li>
+                                            <li><a href="#" data-value="alpha_desc" class="block px-4 py-2 hover:bg-gray-100">Name (Z-A)</a></li>
+                                            <li><a href="#" data-value="puroks_count" class="block px-4 py-2 hover:bg-gray-100">Puroks</a></li>
+                                            <li><a href="#" data-value="residents_count" class="block px-4 py-2 hover:bg-gray-100">Residents</a></li>
                                         </ul>
                                     </div>
-
-                                    {{-- Date Added Dropdown --}}
-                                    <div class="w-full sm:w-48">
-                                        <label for="dateDropdown" class="mb-2 text-sm font-medium text-main_font">Date Added</label>
-                                        <button id="dateDropdown" data-dropdown-toggle="dateDropdownMenu" class="w-full text-main_font bg-f7 focus:outline-none font-medium border border-navboard rounded-lg text-sm px-4 py-2 text-center inline-flex items-center justify-between h-[2.375rem]" type="button">
-                                            All Date
-                                            <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-                                            </svg>
-                                        </button>
-                                    </div>
+                                </div>
+                                <div class="col-span-1 slg2:col-span-2 relative">
+                                    <label for="dateDropdown" class="mb-2 text-sm font-medium text-main_font">Date Added</label>
+                                    <button id="dateDropdown" data-dropdown-toggle="dateDropdownMenu" class="w-full text-main_font bg-f7 focus:outline-none font-medium border border-navboard rounded-lg text-sm px-4 py-2 text-center inline-flex items-center justify-between h-[2.375rem]" type="button">
+                                        All Date
+                                        <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                                        </svg>
+                                    </button>
                                     <div id="dateDropdownMenu" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
                                         <ul class="py-2 text-sm text-gray-700" aria-labelledby="dateDropdown">
                                             <li><a href="#" data-value="" class="block px-4 py-2 hover:bg-gray-100">All Date</a></li>
@@ -69,11 +61,12 @@
                                     </div>
                                 </div>
 
-
-                                    <div class="w-full sm:w-40 pt-5 sm:pt-0">
-                                        <button type="button" id="page-add-barangay-button" class="w-full h-[2.375rem] text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3">Add Barangay</button>
-                                    </div>
+                                <div class="col-span-1 slg2:col-span-3 xl:col-span-2">
+                                    <button type="button" id="page-add-barangay-button" class="w-full h-[2.375rem] text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3 flex items-center justify-center">
+                                        Add Barangay
+                                    </button>
                                 </div>
+
                             </div>
                         </div>
                         <div class="relative overflow-x-auto">
