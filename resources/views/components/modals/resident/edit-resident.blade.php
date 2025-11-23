@@ -79,10 +79,6 @@
                             <option value="moved">Moved</option>
                         </select>
                     </div>
-                    <div class="col-span-1 lg:col-span-3">
-                        <label for="completeAddress" class="block mb-1 text-sm font-medium text-main_font">COMPLETE ADDRESS</label>
-                        <input type="text" id="completeAddress" disabled class="w-full border bg-gray-100 border-gray-300 text-gray-500 rounded-lg p-2.5">
-                    </div>
                 </div>
 
                 <!-- ROW 4: Social Status -->
