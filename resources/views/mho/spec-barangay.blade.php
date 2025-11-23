@@ -20,9 +20,26 @@
                     <div class="flex flex-col col-span-1">
                         
                         <div class="bg-white rounded-lg flex flex-col items-center justify-center p-4 flex-grow mb-4">
-                            <svg class="flex-shrink-0 w-32 h-32 lg:w-40 lg:h-40 xl2:w-44 xl2:h-44"
-                                viewBox="0 0 24 24" fill="#A0A0A0" xmlns="http://www.w3.org/2000/svg">
-                                <circle cx="12" cy="12" r="10"></circle>
+                            <svg viewBox="0 0 32 32" class="flex-shrink-0 w-32 h-32 lg:w-40 lg:h-40 xl2:w-44 xl2:h-44 text-main_font" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                    <g id="SVGRepo_iconCarrier"> <title></title> <g id="Hospital"> 
+                                        <rect height="1.664" style="fill:currentColor" width="27.3" x="2.35" y="28.0565"></rect> 
+                                        <rect height="1.716" style="fill:currentColor" width="5.915" x="4.95" y="2.4205"></rect> 
+                                        <rect height="1.716" style="fill:currentColor" width="5.915" x="21.135" y="2.4205"></rect> 
+                                        <polygon points="10.8 21.049 9.942 21.049 9.942 19.749 22.058 19.749 22.058 21.049 21.2 21.049 21.2 26.756 27.44 26.756 27.44 17.994 4.56 17.994 4.56 26.756 10.8 26.756 10.8 21.049" style="fill:currentColor"></polygon> 
+                                        <path d="M10.865,5.4365H6.627v11.258H25.373V5.4365H21.135v1.898H10.865Zm1.43,10.517H9.227v-3.068h3.068Zm7.41-7.306h3.068v3.068H19.705Zm0,4.238h3.068v3.068H19.705Zm-5.239-4.238h3.068v3.068H14.466Zm0,4.238h3.068v3.068H14.466Zm-2.171-4.238v3.068H9.227V8.6475Z" style="fill:currentColor"></path>
+                                        <path d="M19.835,1.81h-7.67v4.225h7.67ZM17.521,4.54H16.65v.871h-1.3V4.54h-.871V3.24h.871v-.871h1.3V3.24h.871Z" style="fill:currentColor"></path> 
+                                        <rect height="2.925" style="fill:currentColor" width="1.508" x="15.246" y="23.8315"></rect> 
+                                        <polygon points="19.9 26.756 19.9 21.049 12.1 21.049 12.1 26.756 13.946 26.756 13.946 22.531 18.054 22.531 18.054 26.756 19.9 26.756" style="fill:currentColor"></polygon> 
+                                        <rect height="0.468" style="fill:currentColor" width="0.468" x="10.527" y="9.9475"></rect> 
+                                        <rect height="0.468" style="fill:currentColor" width="0.468" x="10.527" y="14.1855"></rect> 
+                                        <rect height="0.468" style="fill:currentColor" width="0.468" x="15.766" y="9.9475"></rect> 
+                                        <rect height="0.468" style="fill:currentColor" width="0.468" x="15.766" y="14.1855"></rect> 
+                                        <rect height="0.468" style="fill:currentColor" width="0.468" x="21.005" y="9.9475"></rect> 
+                                        <rect height="0.468" style="fill:currentColor" width="0.468" x="21.005" y="14.1855"></rect> 
+                                    </g> 
+                                </g>
                             </svg>
                              <h1 class="text-main_font font-bold mt-3 text-xl">Brgy. {{ $barangay->name }}</h1>
                             <p class="text-normal_font font-bold">Brgy #{{ $barangay->id }}</p> 

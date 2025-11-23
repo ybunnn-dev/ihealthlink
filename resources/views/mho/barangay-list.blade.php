@@ -8,12 +8,9 @@
                 <div class="p-6">
                     <div class="grid grid-rows-1 gap-1">
                         <div class="pb-6 w-full">
-                            {{-- Grid Container mimicking the Resident Page layout --}}
+        
                             <div class="grid grid-cols-1 slg2:grid-cols-8 xl:grid-cols-10 gap-4 w-full items-end">
                                 
-                                {{-- 1. Search Input --}}
-                                {{-- slg2:col-span-7 forces it to full width on medium-large screens (Row 1) --}}
-                                {{-- xl:col-span-3 makes it share the row on extra-large screens --}}
                                 <div class="w-full col-span-1 slg2:col-span-7 xl:col-span-3">
                                     <label for="default-search" class="mb-2 text-sm font-medium text-main_font">Search for barangay?</label>
                                     <div class="relative">

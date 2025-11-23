@@ -10,10 +10,13 @@
                 x-init="init()">
                 <div class="p-6">
                     <div class="grid grid-rows-1 gap-1">
-                        <div class="pb-6">
-                            <div class="flex flex-col slg2:flex-row slg2:flex-nowrap items-end gap-4">
-                                <!-- Search bar -->
-                                <div class="w-full slg2:flex-grow slg2:max-w-md">
+                        <div class="pb-6 w-full">
+                            {{-- Grid Container --}}
+                            <div class="grid grid-cols-1 slg2:grid-cols-7 xl:grid-cols-9 gap-4 w-full items-end">
+                                
+                                {{-- 1. Search Bar --}}
+                                {{-- Full width on SLG2 (Row 1), shares row on XL --}}
+                                <div class="w-full col-span-1 slg2:col-span-7 xl:col-span-5">
                                     <label for="default-search" class="mb-2 text-sm font-medium text-main_font">Search FAQs</label>
                                     <div class="relative">
                                         <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
@@ -30,47 +33,46 @@
                                     </div>
                                 </div>
 
-                                <div class="flex flex-col sm:flex-row flex-wrap gap-4 items-end slg2:flex-shrink-0">
-                                    <!-- Module Filter -->
-                                    <div class="w-full sm:w-48">
-                                        <label for="moduleDropdown" class="mb-2 text-sm font-medium text-main_font">Filter by Module</label>
-                                        <button 
-                                            id="moduleDropdown" 
-                                            data-dropdown-toggle="moduleDropdownMenu" 
-                                            class="w-full text-main_font bg-f7 focus:outline-none font-medium border border-navboard rounded-lg text-sm px-4 py-2 text-center inline-flex items-center justify-between h-[2.375rem]" 
-                                            type="button">
-                                            <span x-text="moduleLabel"></span>
-                                            <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-                                            </svg>
-                                        </button>
-                                        <!-- Dropdown menu -->
-                                        <div id="moduleDropdownMenu" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-48 dark:bg-gray-700">
-                                            <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="moduleDropdown">
+                                {{-- 2. Module Filter Dropdown --}}
+                                {{-- Takes 4/7 cols on SLG2 (Row 2), 2/9 cols on XL (Row 1) --}}
+                                <div class="col-span-1 slg2:col-span-4 xl:col-span-2 relative">
+                                    <label for="moduleDropdown" class="mb-2 text-sm font-medium text-main_font">Filter by Module</label>
+                                    <button 
+                                        id="moduleDropdown" 
+                                        data-dropdown-toggle="moduleDropdownMenu" 
+                                        class="w-full text-main_font bg-f7 focus:outline-none font-medium border border-navboard rounded-lg text-sm px-4 py-2 text-center inline-flex items-center justify-between h-[2.375rem]" 
+                                        type="button">
+                                        <span x-text="moduleLabel"></span>
+                                        <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                                        </svg>
+                                    </button>
+                                    <div id="moduleDropdownMenu" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-48 dark:bg-gray-700">
+                                        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="moduleDropdown">
+                                            <li>
+                                                <a href="#" @click.prevent="selectModule('', 'All Modules')" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">All Modules</a>
+                                            </li>
+                                            @foreach($modules as $module)
                                                 <li>
-                                                    <a href="#" @click.prevent="selectModule('', 'All Modules')" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">All Modules</a>
+                                                    <a href="#" @click.prevent="selectModule('{{ $module->id }}', '{{ $module->module_name }}')" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">{{ $module->module_name }}</a>
                                                 </li>
-                                                @foreach($modules as $module)
-                                                    <li>
-                                                        <a href="#" @click.prevent="selectModule('{{ $module->id }}', '{{ $module->module_name }}')" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">{{ $module->module_name }}</a>
-                                                    </li>
-                                                @endforeach
-                                            </ul>
-                                        </div>
-                                    </div>
-
-                                    <!-- Add FAQ Button -->
-                                    <div class="w-full sm:w-40 pt-5 sm:pt-0">
-                                        <button type="button" 
-                                                id="add-faq-btn" 
-                                                class="w-full h-[2.375rem] text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3 transition-colors">
-                                            Add FAQ
-                                        </button>
+                                            @endforeach
+                                        </ul>
                                     </div>
                                 </div>
+
+                                {{-- 3. Add FAQ Button --}}
+                                {{-- Takes 3/7 cols on SLG2 (Row 2), 2/9 cols on XL (Row 1) --}}
+                                <div class="col-span-1 slg2:col-span-1 xl:col-span-1">
+                                    <button type="button" 
+                                            id="add-faq-btn" 
+                                            class="w-full h-[2.375rem] text-f7 bg-mainblue hover:text-mainblue hover:bg-nav_active font-medium rounded-lg text-sm px-3 transition-colors">
+                                        Add FAQ
+                                    </button>
+                                </div>
+
                             </div>
                         </div>
-
                         <!-- Loading indicator -->
                         <div x-show="loading" class="text-center py-10">
                             <svg class="animate-spin h-8 w-8 mx-auto text-mainblue" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
