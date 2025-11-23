@@ -68,7 +68,7 @@
                                 </div>
                                 
                                 <div class="col-span-1 slg2:col-span-3 xl:col-span-2 grid grid-cols-4 gap-2">
-                                    <button id="add-family-trigger" type="button" class="col-span-3 h-[2.375rem] text-white bg-mainblue hover:bg-blue-700 font-medium rounded-lg text-sm px-3 flex items-center justify-center gap-2">
+                                    <button id="add-family-trigger" type="button" class="col-span-3 slg2:max-w-40 h-[2.375rem] text-white bg-mainblue hover:bg-blue-700 font-medium rounded-lg text-sm px-3 flex items-center justify-center gap-2">
                                         <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                             <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                                             <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>

@@ -102,7 +102,7 @@
                                 </div>
                                 
                                 <div class="col-span-1 slg2:col-span-2 xl:col-span-2 grid grid-cols-1 gap-2">
-                                    <button id="add-med-btn" type="button" class="col-span-1 h-[2.375rem] text-white bg-mainblue hover:bg-blue-700 font-medium rounded-lg text-sm px-3 flex items-center justify-center gap-2">
+                                    <button id="add-med-btn" type="button" class="col-span-1 h-[2.375rem] slg2:max-w-40 text-white bg-mainblue hover:bg-blue-700 font-medium rounded-lg text-sm px-3 flex items-center justify-center gap-2">
                                         Add Medicines
                                     </button>
                                 </div>
