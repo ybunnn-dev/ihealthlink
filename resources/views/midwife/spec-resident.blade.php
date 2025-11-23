@@ -82,6 +82,24 @@
                                 <p class="text-normal_font">{{ $resident->suffix != null ? $resident->suffix : 'N/A' }}</p>
                             </div>
 
+                            <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+                                <p class="font-semibold text-main_font">ADDRESS:</p>
+                                <p class="text-normal_font">
+                                    <span 
+                                        class="hover:underline cursor-pointer text-main_font" 
+                                        onclick="window.location='{{ route('midwife.cur-fam', ['family' => $resident->family->id, 'return' => url()->current()]) }}'">
+                                        <u>FAM-{{ str_pad($resident->family->id, 3, '0', STR_PAD_LEFT) }}</u>
+                                    </span>, 
+                                    <span 
+                                        class="hover:underline cursor-pointer text-main_font" 
+                                        onclick="window.location='{{ route('midwife.spec-household', ['household' => $resident->family->household->id, 'return' => url()->current()]) }}'">
+                                        <u>HH-{{ str_pad($resident->family->household->id, 3, '0', STR_PAD_LEFT) }}</u>
+                                    </span>, 
+                                    {{ $resident->family->household->purok->name }}, 
+                                    {{ $resident->family->household->purok->barangay->name }}, Daraga, Albay
+                                </p>
+                            </div>
+
                             @php
                                 $birthdate = \Carbon\Carbon::parse($resident->birthdate);
                                 $ageYears = $birthdate->age;

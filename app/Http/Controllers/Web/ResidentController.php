@@ -309,16 +309,6 @@ class ResidentController extends Controller
         // Order by most recent and paginate
         $consultations = $query->orderBy('updated_at', 'desc')->paginate(7)->withQueryString();
 
-        // Log the pagination data
-        \Log::info('Consultations pagination', [
-            'resident_id' => $resident->id,
-            'date_filter' => $dateFilter,
-            'from_date' => $fromDate,
-            'to_date' => $toDate,
-            'total' => $consultations->total(),
-            'current_page' => $consultations->currentPage(),
-        ]);
-
         // If AJAX request, return only the table content
         if ($request->ajax() || $request->wantsJson()) {
             $html = view('components.resident.consultation-history-table', [

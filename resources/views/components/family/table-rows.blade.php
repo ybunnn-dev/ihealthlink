@@ -10,7 +10,8 @@
     @endphp
     
     <tr class="bg-white border-b bg-f7 text-normal_font cursor-pointer hover:bg-gray-100"
-        onclick="window.location='{{ route('midwife.cur-fam', ['family' => $family->id]) }}'">
+        onclick="window.location='{{ route('midwife.cur-fam', ['family' => $family->id, 'return' => url()->current()]) }}'">
+        
         
         <th scope="row" class="pl-6 py-4 font-medium text-normal_font whitespace-nowrap">
             <span x-show="showPrivacy">{{ $familyIdString }}</span>
