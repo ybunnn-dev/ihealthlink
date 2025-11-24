@@ -35,8 +35,6 @@ class ResidentController extends Controller
         // Check if advanced mode is enabled
         $isAdvanced = $request->boolean('is_advanced');
 
-        \Log::info('hey');
-        \Log::info($isAdvanced);
         
         if (!$isAdvanced) {
             // Standard mode: limit to user's barangay
@@ -545,6 +543,7 @@ class ResidentController extends Controller
                         $oldFamily = $existingResident->family;
                         $oldHousehold = $oldFamily->household;
                         $oldPurokId = $oldHousehold->purok_id;
+                        $birthdate = $this->convertToMySQLDate($residentData['birthdate']);
 
                         if ($oldPurokId != $newPurokId) {
                             // Purok changed - mark previous history as "moved"
@@ -590,7 +589,7 @@ class ResidentController extends Controller
                             'lastName' => $residentData['lastName'],
                             'middleName' => $residentData['middleName'],
                             'suffix' => $residentData['suffix'],
-                            'birthdate' => $residentData['birthdate'],
+                            'birthdate' => $birthdate,
                             'sex' => $residentData['sex'],
                             'contact_no' => $residentData['contact_no'],
                             'philhealth_no' => $residentData['philhealth_no'],
@@ -625,7 +624,7 @@ class ResidentController extends Controller
                             'lastName' => $residentData['lastName'],
                             'middleName' => $residentData['middleName'],
                             'suffix' => $residentData['suffix'],
-                            'birthdate' => $residentData['birthdate'],
+                            'birthdate' => $birthdate,
                             'sex' => $residentData['sex'],
                             'contact_no' => $residentData['contact_no'],
                             'philhealth_no' => $residentData['philhealth_no'],
@@ -690,6 +689,33 @@ class ResidentController extends Controller
                 'status' => 'error',
                 'message' => 'Server error: ' . $e->getMessage()
             ], 500);
+        }
+    }
+
+    private function convertToMySQLDate($dateString)
+    {
+        try {
+            // Try parsing as ISO8601 first (from Flutter)
+            if (strpos($dateString, 'T') !== false) {
+                $date = Carbon::parse($dateString);
+                return $date->format('Y-m-d');
+            }
+            
+            // Check for MM/DD/YYYY format
+            if (preg_match('/^\d{1,2}\/\d{1,2}\/\d{4}$/', $dateString)) {
+                $date = Carbon::createFromFormat('m/d/Y', $dateString);
+                if ($date && $date->format('m/d/Y') === $dateString) {
+                    return $date->format('Y-m-d');
+                }
+            }
+            
+            // Already in YYYY-MM-DD or parseable format
+            $date = Carbon::parse($dateString);
+            return $date->format('Y-m-d');
+            
+        } catch (\Exception $e) {
+            \Log::warning("Date conversion failed for: {$dateString}");
+            return null;
         }
     }
 
