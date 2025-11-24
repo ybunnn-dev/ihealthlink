@@ -1,32 +1,33 @@
-<div id="enroll-maternity-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full transition-opacity duration-400 ease-out opacity-0">
+<div id="enroll-maternity-modal" tabindex="-1" aria-hidden="true" class="hidden fixed inset-0 z-50 flex justify-center items-center w-full h-full transition-opacity duration-400 ease-out opacity-0">
     <div class="relative p-4 w-full max-w-3xl max-h-full">
-        <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700 py-10 px-6 transition-transform duration-300 ease-out scale-95">
-            <div class="flex flex-col items-center justify-center rounded-t mb-6">
-                <h3 id="maternity-modal-title" class="text-xl font-semibold text-main_font">
+        <div class="relative bg-white rounded-lg shadow-xl w-full flex flex-col max-h-[90vh] transition-transform duration-300 ease-out scale-95">
+            
+            <div class="flex flex-col items-center justify-center rounded-t p-6 border-b border-gray-200 shrink-0">
+                <h3 id="maternity-modal-title" class="text-xl md:text-2xl font-semibold text-main_font">
                     Enroll in Maternity Program
                 </h3>
-                <p id="maternity-modal-subtitle" class="text-sm text-normal_font">Step 1: Select a Resident</p>
+                <p id="maternity-modal-subtitle" class="text-sm text-gray-600 mt-1">Step 1: Select a Resident</p>
             </div>
             
-            <div class="p-4 md:p-5 flex flex-nowrap w-full h-[50vh] overflow-x-hidden">
+            <div class="flex flex-nowrap w-full flex-grow min-h-0 overflow-x-hidden relative">
                 
-                <div id="maternity-step-1" class="transition-transform duration-500 ease-in-out w-full flex-shrink-0">
+                <div id="maternity-step-1" class="transition-transform duration-500 ease-in-out w-full flex-shrink-0 h-full overflow-y-auto p-6">
                     @include('components.multi-modal-components.enroll-maternity-1')
                 </div>
 
-                <div id="maternity-step-2" class="transition-transform duration-500 ease-in-out w-full flex-shrink-0 hidden">
+                <div id="maternity-step-2" class="transition-transform duration-500 ease-in-out w-full flex-shrink-0 h-full overflow-y-auto p-6 hidden">
                     @include('components.multi-modal-components.enroll-maternity-2')
                 </div>
 
             </div>
-             <div class="flex items-center justify-between border-t border-gray-200 rounded-b dark:border-gray-600 gap-3 pt-6 px-6">
-                <!-- Left side: Cancel + Previous -->
-                <div class="flex gap-3">
-                    <button id="maternityCancelBtn" data-modal-hide="enroll-maternity-modal" type="button" class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100">Cancel</button>
-                    <button id="maternityBackBtn" type="button" class="hidden py-2.5 px-5 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100">Previous</button>
+
+             <div class="flex flex-col-reverse sm:flex-row items-center justify-between border-t border-gray-200 rounded-b gap-3 p-6 shrink-0">
+                <div class="flex flex-col-reverse sm:flex-row gap-3 w-full sm:w-auto">
+                    <button id="maternityCancelBtn" data-modal-hide="enroll-maternity-modal" type="button" class="w-full sm:w-auto py-2.5 px-5 text-sm font-medium text-main_font focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 transition-colors">Cancel</button>
+                    <button id="maternityBackBtn" type="button" class="hidden w-full sm:w-auto py-2.5 px-5 text-sm font-medium text-main_font bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 transition-colors">Previous</button>
                 </div>
-                <div class="flex gap-3">
-                    <button id="maternityNextBtn" disabled type="button" class="text-white bg-mainblue hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center disabled:opacity-50">Next</button>
+                <div class="flex w-full sm:w-auto">
+                    <button id="maternityNextBtn" disabled type="button" class="w-full sm:w-auto text-white bg-mainblue hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center disabled:opacity-50 transition-colors">Next</button>
                 </div>
             </div>
         </div>

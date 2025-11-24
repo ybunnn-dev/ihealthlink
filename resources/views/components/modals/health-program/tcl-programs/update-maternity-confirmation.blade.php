@@ -1,8 +1,8 @@
-<div id="confirm-update-maternity-modal" data-modal-backdrop="static" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full transition-opacity duration-400 ease-out opacity-0">
+<div id="confirm-update-maternity-modal" data-modal-backdrop="static" tabindex="-1" aria-hidden="true" class="hidden fixed inset-0 z-50 flex justify-center items-center w-full h-full transition-opacity duration-400 ease-out opacity-0">
     <div class="relative p-4 w-full max-w-xl max-h-full">
-        <div class="relative bg-white rounded-lg shadow-sm dark:bg-main_font py-10 px-6 transition-transform duration-300 ease-out scale-95">
-            <!-- Modal header -->
-            <div class="flex flex-col items-center justify-center rounded-t mb-6">
+        <div class="relative bg-white rounded-lg shadow-sm dark:bg-main_font w-full flex flex-col max-h-[90vh] transition-transform duration-300 ease-out scale-95">
+            
+            <div class="flex flex-col items-center justify-center rounded-t p-6 border-b border-gray-200 shrink-0 text-center">
                 <h3 class="text-xl font-semibold text-gray-800 dark:text-white">
                     Confirm Maternity Record Update
                 </h3>
@@ -11,18 +11,16 @@
                 </p>
             </div>
             
-            <!-- Modal body -->
-            <div class="p-4 md:p-5">
-                <div class="flex items-center justify-center">
-                    <input id="confirm-update-maternity-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
-                    <label for="confirm-update-maternity-checkbox" class="ms-2 text-sm font-medium text-main_font dark:text-gray-300">I have reviewed the maternity record details.</label>
+            <div class="flex-grow overflow-y-auto p-6 min-h-0">
+                <div class="flex items-center justify-center bg-gray-50 dark:bg-gray-800 p-4 rounded-lg border border-gray-100 dark:border-gray-600">
+                    <input id="confirm-update-maternity-checkbox" type="checkbox" value="" class="w-5 h-5 text-blue-600 bg-white border-gray-300 rounded focus:ring-blue-500 cursor-pointer">
+                    <label for="confirm-update-maternity-checkbox" class="ms-3 text-sm font-medium text-main_font dark:text-gray-300 cursor-pointer select-none">I have reviewed the maternity record details.</label>
                 </div>
             </div>
 
-            <!-- Modal footer -->
-            <div class="flex items-center justify-end border-t border-gray-200 rounded-b dark:border-gray-600 gap-3 pt-6 px-6">
-                <button id="confirm-update-maternity-cancel" type="button" class="py-2.5 px-5 ms-3 text-sm font-medium text-main_font focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-mainblue">Cancel</button>
-                <button id="confirm-update-maternity-submit" type="button" class="text-white bg-mainblue hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center disabled:opacity-50 disabled:cursor-not-allowed" disabled>Confirm & Save</button>
+            <div class="flex flex-col-reverse sm:flex-row items-center justify-end border-t border-gray-200 rounded-b dark:border-gray-600 gap-3 p-6 shrink-0">
+                <button id="confirm-update-maternity-cancel" type="button" class="w-full sm:w-auto py-3 px-5 text-sm font-medium text-main_font focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-mainblue transition-colors">Cancel</button>
+                <button id="confirm-update-maternity-submit" type="button" class="w-full sm:w-auto text-white bg-mainblue hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-3 text-center disabled:opacity-50 disabled:cursor-not-allowed transition-colors" disabled>Confirm & Save</button>
             </div>
         </div>
     </div>

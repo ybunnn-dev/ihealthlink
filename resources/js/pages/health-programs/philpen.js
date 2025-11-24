@@ -1,8 +1,38 @@
 // --- Main Modal Container ---
+const createModalOptions = (modalEl) => ({
+    placement: 'center-center',
+    backdrop: 'static',
+    closable: false,
+    onShow: () => {
+        setTimeout(() => {
+            modalEl.classList.remove('opacity-0');
+            modalEl.classList.add('opacity-100');
+
+            const modalContent = modalEl.querySelector('.relative.bg-white');
+            if (modalContent) {
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }
+        }, 10);
+    },
+    onHide: () => {
+        modalEl.classList.add('opacity-0');
+        modalEl.classList.remove('opacity-100');
+
+        const modalContent = modalEl.querySelector('.relative.bg-white');
+        if (modalContent) {
+            modalContent.classList.add('scale-95');
+            modalContent.classList.remove('scale-100');
+        }
+    }
+});
+
+const successModalEl = document.getElementById('success-modal');
+const successMessageHeader = document.getElementById('success-msg-head');
+const successMessage = document.getElementById('success-message');
+const closeSuccessModalButton = document.getElementById('close-success-modal-button');
 const createPhilpenRecordModalEl = document.getElementById('create-philpen-record-modal');
 
-const residentData = window.enrolledResident.resident;
-console.log(residentData);
 // --- Progress Bar Step Indicators ---
 const stepProgress1 = document.getElementById('step-progress-1');
 const stepProgress2 = document.getElementById('step-progress-2');
@@ -162,17 +192,13 @@ let currentConsultationId = null;
 let currentStep = 0;
 
 
-const modalOptions = {
-    placement: 'center-center',
-    backdrop: 'static',
-    closable: false,
-};
 
-const createPhilpenRecordModal = new Modal(createPhilpenRecordModalEl, modalOptions);
-const confirmUpdatePhilpenModal = new Modal(confirmUpdatePhilpenModalEl,modalOptions);
+const createPhilpenRecordModal = new Modal(createPhilpenRecordModalEl, createModalOptions(createPhilpenRecordModalEl));
+const confirmUpdatePhilpenModal = new Modal(confirmUpdatePhilpenModalEl, createModalOptions(confirmUpdatePhilpenModalEl));
+const successModal = new Modal(successModalEl, createModalOptions(successModalEl));
 const updateButtons = document.querySelectorAll('.js-update-consultation-btn');
 
-
+const residentData = window.enrolledResident.resident;
 const today = new Date().toISOString().split('T')[0];
 
 // Set it as the input's value
@@ -412,7 +438,6 @@ function updateUI(direction) {
     if (nextStep >= 0 && nextStep < formSteps.length) {
         goToStep(nextStep); // Animate the step change
         applyStyling();     // Update the progress bar and buttons
-        console.log(currentStep);
         if(currentStep === 4){
             validateNCDForm();
         }else{
@@ -610,9 +635,13 @@ confirmUpdateCheckbox.addEventListener('change',function(){
 });
 
 confirmUpdatePhilpenBtn.addEventListener('click', function() {
+    // 1. Prepare Payload
     const payload = createPhilpenPayload();
-
-    console.log('Payload before sending:', payload);
+    
+    // Optional: Disable button to prevent double-submit
+    const originalBtnText = this.innerText;
+    this.disabled = true;
+    this.innerText = 'Processing...';
 
     fetch('/barangay/health-programs/philpen/create', {
         method: 'POST',
@@ -624,13 +653,43 @@ confirmUpdatePhilpenBtn.addEventListener('click', function() {
     })
     .then(response => response.json())
     .then(data => {
-        console.log('Server Response:', data);
         if(data.result === 'success'){
-            alert('PhilPEN record has been successfully updated');
-            window.location.reload();
+            // 2. Hide the Confirmation Modal
+            confirmUpdatePhilpenModal.hide();
+
+            // 3. Customize Success Modal Content
+            if(successMessageHeader) successMessageHeader.innerText = 'Success';
+            if(successMessage) successMessage.innerText = 'PhilPEN record has been successfully saved.';
+
+            // 4. Show the Success Modal
+            successModal.show();
+
+            // 5. Set up the Close/Okay button to reload the page
+            if(closeSuccessModalButton) {
+                // We use .onclick to ensure we don't stack event listeners if called multiple times
+                closeSuccessModalButton.onclick = function() {
+                    successModal.hide();
+                    window.location.reload();
+                };
+            }
+        } else {
+            // Handle server-side failure (e.g., validation error)
+            alert('Error: ' + (data.message || 'Failed to save record.'));
+            
+            // Re-enable button
+            confirmUpdatePhilpenBtn.disabled = false;
+            confirmUpdatePhilpenBtn.innerText = originalBtnText;
         }
     })
-    .catch(error => console.error('Error:', error));
+    .catch(error => {
+        console.error('Error:', error);
+        // 6. Keep network/unexpected errors as Alert (As requested)
+        alert('An unexpected error occurred. Please try again.');
+        
+        // Re-enable button
+        confirmUpdatePhilpenBtn.disabled = false;
+        confirmUpdatePhilpenBtn.innerText = originalBtnText;
+    });
 });
 
 cancelConfirmUpdateBtn.addEventListener('click',function(){

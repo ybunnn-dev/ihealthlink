@@ -1,16 +1,16 @@
-<div id="update-maternity-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full transition-opacity duration-400 ease-out opacity-0">
+<div id="update-maternity-modal" tabindex="-1" aria-hidden="true" class="hidden fixed inset-0 z-50 flex justify-center items-center w-full h-full transition-opacity duration-400 ease-out opacity-0">
     <div class="relative p-4 w-full max-w-6xl max-h-full">
-        <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700 py-10 px-8 transition-transform duration-300 ease-out scale-95">
-            <!-- Modal header -->
-            <div class="flex flex-col items-center justify-center rounded-t mb-6">
+        <div class="relative bg-white rounded-lg shadow-xl w-full flex flex-col max-h-[90vh] transition-transform duration-300 ease-out scale-95">
+            
+            <div class="flex flex-col items-center justify-center rounded-t p-6 border-b border-gray-200 shrink-0">
                 <h3 class="text-xl font-semibold text-main_font">
                     Update Maternity Details
                 </h3>
-                <p class="text-sm text-normal_font -mt-1">Review and update maternity information below</p>
+                <p class="text-sm text-normal_font mt-1">Review and update maternity information below</p>
             </div>
 
-            <!-- Modal body -->
-            <div class="space-y-4 h-[70vh] overflow-y-auto w-full pr-4 mb-3">
+            <div class="flex-grow overflow-y-auto p-6 min-h-0 w-full scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+                
                 <form action="#" class="grid grid-cols-1 slg2:grid-cols-3 gap-x-6 gap-y-4">
                     
                     <!-- Basic Information Section -->
@@ -83,10 +83,10 @@
                     <!-- Health Status Section -->
                     <div class="slg2:col-span-3 font-semibold text-lg border-b pb-2 mb-2 text-normal_font mt-4">Health Status & Supplementation</div>
 
-                    <fieldset class="slg2:col-span-3 border p-4 rounded-lg">
+                    <fieldset class="slg2:col-span-3 border border-gray-200 p-4 rounded-lg">
                         <legend class="text-md font-semibold text-main_font px-2">Immunization Status</legend>
-                        <div class="grid grid-cols-2 sm:grid-cols-3 slg2:grid-cols-5 gap-4 mt-2">
-                            <!-- Repeat for TD1 to TD5 -->
+                        
+                        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mt-2">
                             <div>
                                 <label for="td1" class="block mb-2 text-sm font-medium text-main_font">TD1/TT1</label>
                                 <input type="date" id="td1" class="bg-gray-100 border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5 cursor-not-allowed" disabled>
@@ -95,80 +95,98 @@
                                 <label for="td2" class="block mb-2 text-sm font-medium text-main_font">TD2/TT2</label>
                                 <input type="date" id="td2" class="bg-gray-100 border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5 cursor-not-allowed" disabled>
                             </div>
-                             <div>
+                            <div>
                                 <label for="td3" class="block mb-2 text-sm font-medium text-main_font">TD3/TT3</label>
                                 <input type="date" id="td3" class="bg-gray-100 border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5 cursor-not-allowed" disabled>
                             </div>
-                             <div>
+                            <div>
                                 <label for="td4" class="block mb-2 text-sm font-medium text-main_font">TD4/TT4</label>
                                 <input type="date" id="td4" class="bg-gray-100 border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5 cursor-not-allowed" disabled>
                             </div>
-                             <div>
+                            <div>
                                 <label for="td5" class="block mb-2 text-sm font-medium text-main_font">TD5/TT5</label>
                                 <input type="date" id="td5" class="bg-gray-100 border border-gray-300 text-main_font text-sm rounded-lg block w-full p-2.5 cursor-not-allowed" disabled>
                             </div>
                         </div>
+                        
                         <p id="no-tetanus" class="text-red-500 hidden text-xs text-center mt-3">Resident has no anti-tetanus data</p>
                     </fieldset>
 
-                    <fieldset class="slg2:col-span-3 border p-4 rounded-lg">
+                    <fieldset class="slg2:col-span-3 border border-gray-200 p-4 rounded-lg">
                         <legend class="text-md font-semibold text-main_font px-2">Micronutrient Supplementation</legend>
+                        
                         <div class="grid grid-cols-1 slg2:grid-cols-2 gap-6 mt-2">
-                            <!-- Iron Sulfate -->
-                            <div class="space-y-4 border-r pr-6">
+                            
+                            <div class="space-y-4 slg2:border-r border-gray-200 slg2:pr-6">
                                 <h4 class="font-medium text-main_font">Iron Sulfate</h4>
-                                <!-- 4 visits -->
-                                <div class="grid grid-cols-2 gap-2">
-                                    <label class="text-sm text-main_font">1st Visit Amount/Date</label>
-                                    <div class="flex gap-2">
-                                        <input type="text" id="iron-sulfate-amount-1" class="bg-gray-100 text-sm w-1/2 p-2 rounded-lg cursor-not-allowed border-gray-300" disabled><input type="date" id="iron-sulfate-date-1" class="bg-gray-100 border-gray-300 text-sm w-1/2 p-2 rounded-lg cursor-not-allowed text-main_font" disabled>
+                                
+                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 items-center">
+                                    <label class="text-sm text-main_font sm:col-span-1">1st Visit Amount/Date</label>
+                                    <div class="grid grid-cols-2 gap-2 sm:col-span-2">
+                                        <input type="text" id="iron-sulfate-amount-1" class="bg-gray-100 text-sm w-full p-2.5 rounded-lg border border-gray-300 cursor-not-allowed" disabled>
+                                        <input type="date" id="iron-sulfate-date-1" class="bg-gray-100 text-sm w-full p-2.5 rounded-lg border border-gray-300 text-main_font cursor-not-allowed" disabled>
                                     </div>
                                 </div>
-                                <div class="grid grid-cols-2 gap-2">
-                                    <label class="text-sm text-main_font">2nd Visit Amount/Date</label>
-                                    <div class="flex gap-2">
-                                        <input type="text" id="iron-sulfate-amount-2" class="bg-gray-100 text-sm w-1/2 p-2 rounded-lg cursor-not-allowed border-gray-300" disabled><input type="date" id="iron-sulfate-date-2" class="bg-gray-100 border-gray-300 text-sm w-1/2 p-2 rounded-lg cursor-not-allowed text-main_font" disabled>
+
+                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 items-center">
+                                    <label class="text-sm text-main_font sm:col-span-1">2nd Visit Amount/Date</label>
+                                    <div class="grid grid-cols-2 gap-2 sm:col-span-2">
+                                        <input type="text" id="iron-sulfate-amount-2" class="bg-gray-100 text-sm w-full p-2.5 rounded-lg border border-gray-300 cursor-not-allowed" disabled>
+                                        <input type="date" id="iron-sulfate-date-2" class="bg-gray-100 text-sm w-full p-2.5 rounded-lg border border-gray-300 text-main_font cursor-not-allowed" disabled>
                                     </div>
                                 </div>
-                                <div class="grid grid-cols-2 gap-2">
-                                    <label class="text-sm text-main_font">3rd Visit Amount/Date</label>
-                                    <div class="flex gap-2">
-                                        <input type="text" id="iron-sulfate-amount-3" class="bg-gray-100 text-sm w-1/2 p-2 rounded-lg cursor-not-allowed border-gray-300" disabled><input type="date" id="iron-sulfate-date-3" class="bg-gray-100 border-gray-300 text-sm w-1/2 p-2 rounded-lg cursor-not-allowed text-main_font" disabled>
+
+                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 items-center">
+                                    <label class="text-sm text-main_font sm:col-span-1">3rd Visit Amount/Date</label>
+                                    <div class="grid grid-cols-2 gap-2 sm:col-span-2">
+                                        <input type="text" id="iron-sulfate-amount-3" class="bg-gray-100 text-sm w-full p-2.5 rounded-lg border border-gray-300 cursor-not-allowed" disabled>
+                                        <input type="date" id="iron-sulfate-date-3" class="bg-gray-100 text-sm w-full p-2.5 rounded-lg border border-gray-300 text-main_font cursor-not-allowed" disabled>
                                     </div>
                                 </div>
-                                <div class="grid grid-cols-2 gap-2">
-                                    <label class="text-sm text-main_font">4th Visit Amount/Date</label>
-                                    <div class="flex gap-2">
-                                        <input type="text" id="iron-sulfate-amount-4" class="bg-gray-100 text-sm w-1/2 p-2 rounded-lg cursor-not-allowed border-gray-300" disabled><input type="date" id="iron-sulfate-date-4" class="bg-gray-100 border-gray-300 text-sm w-1/2 p-2 rounded-lg cursor-not-allowed text-main_font" disabled>
+
+                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 items-center">
+                                    <label class="text-sm text-main_font sm:col-span-1">4th Visit Amount/Date</label>
+                                    <div class="grid grid-cols-2 gap-2 sm:col-span-2">
+                                        <input type="text" id="iron-sulfate-amount-4" class="bg-gray-100 text-sm w-full p-2.5 rounded-lg border border-gray-300 cursor-not-allowed" disabled>
+                                        <input type="date" id="iron-sulfate-date-4" class="bg-gray-100 text-sm w-full p-2.5 rounded-lg border border-gray-300 text-main_font cursor-not-allowed" disabled>
                                     </div>
                                 </div>
                             </div>
-                            <!-- Calcium / Iodine -->
-                             <div class="space-y-4">
+
+                            <div class="space-y-4">
                                 <h4 class="font-medium text-main_font">Calcium Carbonate</h4>
-                                <div class="grid grid-cols-2 gap-2 text-main_font">
-                                    <label class="text-sm">2nd Visit Amount/Date</label>
-                                    <div class="flex gap-2">
-                                        <input type="text" id="calcium-carbonate-amount-2" class="border bg-gray-100 border-gray-300 text-sm w-1/2 p-2 rounded-lg" disabled><input type="date" id="calcium-carbonate-date-2" class="bg-gray-100 border border-gray-300 text-sm w-1/2 p-2 rounded-lg text-main_font" disabled>
+                                
+                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 items-center">
+                                    <label class="text-sm text-main_font sm:col-span-1">2nd Visit Amount/Date</label>
+                                    <div class="grid grid-cols-2 gap-2 sm:col-span-2">
+                                        <input type="text" id="calcium-carbonate-amount-2" class="bg-gray-100 text-sm w-full p-2.5 rounded-lg border border-gray-300" disabled>
+                                        <input type="date" id="calcium-carbonate-date-2" class="bg-gray-100 text-sm w-full p-2.5 rounded-lg border border-gray-300 text-main_font" disabled>
                                     </div>
                                 </div>
-                                <div class="grid grid-cols-2 gap-2 text-main_font">
-                                    <label class="text-sm">3rd Visit Amount/Date</label>
-                                    <div class="flex gap-2">
-                                        <input type="text" id="calcium-carbonate-amount-3" class="bg-gray-100 border border-gray-300 text-sm w-1/2 p-2 rounded-lg" disabled><input type="date" id="calcium-carbonate-date-3" class="bg-gray-100 border border-gray-300 text-sm w-1/2 p-2 text-main_font rounded-lg" disabled>
+
+                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 items-center">
+                                    <label class="text-sm text-main_font sm:col-span-1">3rd Visit Amount/Date</label>
+                                    <div class="grid grid-cols-2 gap-2 sm:col-span-2">
+                                        <input type="text" id="calcium-carbonate-amount-3" class="bg-gray-100 text-sm w-full p-2.5 rounded-lg border border-gray-300" disabled>
+                                        <input type="date" id="calcium-carbonate-date-3" class="bg-gray-100 text-sm w-full p-2.5 rounded-lg border border-gray-300 text-main_font" disabled>
                                     </div>
                                 </div>
-                                <div class="grid grid-cols-2 gap-2 text-main_font">
-                                    <label class="text-sm">4th Visit Amount/Date</label>
-                                    <div class="flex gap-2">
-                                        <input type="text" id="calcium-carbonate-amount-4" class="bg-gray-100 border border-gray-300 text-sm w-1/2 p-2 rounded-lg" disabled><input type="date" id="calcium-carbonate-date-4" class="bg-gray-100 border border-gray-300 text-sm w-1/2 p-2 text-main_font rounded-lg" disabled>
+
+                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 items-center">
+                                    <label class="text-sm text-main_font sm:col-span-1">4th Visit Amount/Date</label>
+                                    <div class="grid grid-cols-2 gap-2 sm:col-span-2">
+                                        <input type="text" id="calcium-carbonate-amount-4" class="bg-gray-100 text-sm w-full p-2.5 rounded-lg border border-gray-300" disabled>
+                                        <input type="date" id="calcium-carbonate-date-4" class="bg-gray-100 text-sm w-full p-2.5 rounded-lg border border-gray-300 text-main_font" disabled>
                                     </div>
                                 </div>
-                                <h4 class="font-medium pt-4 text-main_font">Iodine Capsule</h4>
-                                <div class="grid grid-cols-2 gap-2 text-main_font">
-                                    <label class="text-sm">1st Visit Amount/Date</label>
-                                    <div class="flex gap-2">
-                                        <input type="text" id="iodine-capsule-amount-1" class="bg-gray-100 border border-gray-300 text-sm w-1/2 p-2 rounded-lg" disabled><input type="date" id="iodine-capsule-date-1" class="bg-gray-100 border border-gray-300 text-main_font text-sm w-1/2 p-2 rounded-lg" disabled>
+
+                                <h4 class="font-medium pt-2 text-main_font">Iodine Capsule</h4>
+                                
+                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 items-center">
+                                    <label class="text-sm text-main_font sm:col-span-1">1st Visit Amount/Date</label>
+                                    <div class="grid grid-cols-2 gap-2 sm:col-span-2">
+                                        <input type="text" id="iodine-capsule-amount-1" class="bg-gray-100 text-sm w-full p-2.5 rounded-lg border border-gray-300" disabled>
+                                        <input type="date" id="iodine-capsule-date-1" class="bg-gray-100 text-sm w-full p-2.5 rounded-lg border border-gray-300 text-main_font" disabled>
                                     </div>
                                 </div>
                             </div>
@@ -197,80 +215,86 @@
                     <!-- Screening Section -->
                     <div class="slg2:col-span-3 font-semibold text-lg border-b pb-2 mb-2 text-normal_font mt-4">Screening</div>
 
-                    <fieldset class="slg2:col-span-3 border p-4 rounded-lg">
+                    <fieldset class="slg2:col-span-3 border border-gray-200 p-4 rounded-lg">
                         <legend class="text-md font-semibold text-main_font px-2">Infectious Disease Surveillance</legend>
-                        <div class="grid grid-cols-1 slg2:grid-cols-3 gap-4 mt-2">
-                           <!-- Syphilis -->
-                           <div>
+                        
+                        <div class="grid grid-cols-1 slg2:grid-cols-3 gap-6 mt-2">
+                        
+                        <div>
                                 <label class="block mb-2 text-sm font-medium text-main_font">Syphilis Screening</label>
-                                <div class="flex gap-2">
-                                    <input type="date" id="syphilis-date" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg w-full p-2.5">
-                                    <select id="syphilis-result" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg w-full p-2.5">
-                                        <option>Result</option>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                    <input type="date" id="syphilis-date" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg w-full p-2.5 focus:ring-blue-500 focus:border-blue-500">
+                                    <select id="syphilis-result" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg w-full p-2.5 focus:ring-blue-500 focus:border-blue-500">
+                                        <option selected>Result</option>
                                         <option value="postive">Positive</option>
                                         <option value="negative">Negative</option>
                                     </select>
                                 </div>
-                           </div>
-                           <!-- Hepatitis B -->
-                           <div>
+                        </div>
+
+                        <div>
                                 <label class="block mb-2 text-sm font-medium text-main_font">Hepatitis B Screening</label>
-                                <div class="flex gap-2">
-                                    <input type="date" id="hepatitis-b-date" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg w-full p-2.5">
-                                    <select id="hepatitis-b-result" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg w-full p-2.5">
-                                        <option>Result</option>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                    <input type="date" id="hepatitis-b-date" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg w-full p-2.5 focus:ring-blue-500 focus:border-blue-500">
+                                    <select id="hepatitis-b-result" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg w-full p-2.5 focus:ring-blue-500 focus:border-blue-500">
+                                        <option selected>Result</option>
                                         <option value="postive">Positive</option>
                                         <option value="negative">Negative</option>
                                     </select>
                                 </div>
-                           </div>
-                           <!-- HIV -->
-                           <div>
+                        </div>
+
+                        <div>
                                 <label class="block mb-2 text-sm font-medium text-main_font">HIV Screening</label>
-                                <div class="flex gap-2">
-                                    <input type="date" id="hiv-date" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg w-full p-2.5">
-                                    <select id="hiv-result" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg w-full p-2.5">
-                                        <option>Result</option>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                    <input type="date" id="hiv-date" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg w-full p-2.5 focus:ring-blue-500 focus:border-blue-500">
+                                    <select id="hiv-result" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg w-full p-2.5 focus:ring-blue-500 focus:border-blue-500">
+                                        <option selected>Result</option>
                                         <option value="postive">Positive</option>
                                         <option value="negative">Negative</option>
                                     </select>
                                 </div>
-                           </div>
+                        </div>
+
                         </div>
                     </fieldset>
                     
-                    <fieldset class="slg2:col-span-3 border p-4 rounded-lg">
+                    <fieldset class="slg2:col-span-3 border border-gray-200 p-4 rounded-lg">
                         <legend class="text-md font-semibold text-main_font px-2">Laboratory Screening</legend>
+                        
                         <div class="grid grid-cols-1 slg2:grid-cols-2 gap-6 mt-2">
-                           <!-- Gestational Diabetes -->
-                           <div>
+                        
+                        <div>
                                 <label class="block mb-2 text-sm font-medium text-main_font">Gestational Diabetes</label>
-                                <div class="flex gap-2">
-                                    <input type="date" id="gestational-diabetes-date" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg w-full p-2.5">
-                                    <select id="gestational-diabetes-result" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg w-full p-2.5">
-                                        <option>Result</option>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                    <input type="date" id="gestational-diabetes-date" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg w-full p-2.5 focus:ring-blue-500 focus:border-blue-500">
+                                    <select id="gestational-diabetes-result" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg w-full p-2.5 focus:ring-blue-500 focus:border-blue-500">
+                                        <option selected>Result</option>
                                         <option value="postive">Positive</option>
                                         <option value="negative">Negative</option>
                                     </select>
                                 </div>
-                           </div>
-                           <!-- CBC/Hgb&Hct -->
-                           <div>
+                        </div>
+
+                        <div>
                                 <label class="block mb-2 text-sm font-medium text-main_font">CBC/Hgb&Hct Count</label>
-                                <div class="flex gap-2">
-                                    <input type="date" id="cbc-date" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg w-full p-2.5">
-                                    <select id="cbc-result" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg w-full p-2.5">
-                                        <option>Result</option>
+                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                    <input type="date" id="cbc-date" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg w-full p-2.5 focus:ring-blue-500 focus:border-blue-500">
+                                    
+                                    <select id="cbc-result" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg w-full p-2.5 focus:ring-blue-500 focus:border-blue-500">
+                                        <option selected>Result</option>
                                         <option value="with anemia">With Anemia</option>
                                         <option value="without anemia">Without Anemia</option>
                                     </select>
-                                    <select id="cbc-given-iron" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg w-full p-2.5">
-                                        <option>Given Iron?</option>
+                                    
+                                    <select id="cbc-given-iron" class="bg-white border border-gray-300 text-main_font text-sm rounded-lg w-full p-2.5 focus:ring-blue-500 focus:border-blue-500">
+                                        <option selected>Given Iron?</option>
                                         <option value="yes">Yes</option>
                                         <option value="no">No</option>
                                     </select>
                                 </div>
-                           </div>
+                        </div>
+
                         </div>
                     </fieldset>
 
@@ -392,42 +416,53 @@
                         </div>
                     </fieldset>
                     
-                    <fieldset class="slg2:col-span-3 border p-4 rounded-lg">
+                    <fieldset class="slg2:col-span-3 border border-gray-200 p-4 rounded-lg">
                         <legend class="text-md font-semibold text-main_font px-2">Postpartum Micronutrient Supplementation</legend>
+                        
                         <div class="grid grid-cols-1 slg2:grid-cols-2 gap-6 mt-2 text-main_font">
+                            
                             <div class="space-y-4">
                                 <h4 class="font-medium">Iron with Folic Acid</h4>
-                                <div class="grid grid-cols-2 gap-2">
-                                    <label class="text-sm">1st Month Amount/Date</label>
-                                    <div class="flex gap-2">
-                                        <input type="text" id="postpartum-iron-amount-1" disabled class="bg-gray-100 border border-gray-300 text-sm w-1/2 p-2 rounded-lg"><input type="date" disabled id="postpartum-iron-date-1" class="bg-gray-100 border border-gray-300 text-sm w-1/2 p-2 rounded-lg">
+                                
+                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 items-center">
+                                    <label class="text-sm sm:col-span-1">1st Month Amount/Date</label>
+                                    <div class="grid grid-cols-2 gap-2 sm:col-span-2">
+                                        <input type="text" id="postpartum-iron-amount-1" disabled class="bg-gray-100 border border-gray-300 text-sm w-full p-2.5 rounded-lg">
+                                        <input type="date" disabled id="postpartum-iron-date-1" class="bg-gray-100 border border-gray-300 text-sm w-full p-2.5 rounded-lg">
                                     </div>
                                 </div>
-                                <div class="grid grid-cols-2 gap-2">
-                                    <label class="text-sm">2nd Month Amount/Date</label>
-                                    <div class="flex gap-2">
-                                        <input type="text" id="postpartum-iron-amount-2" disabled class="bg-white border border-gray-300 text-sm w-1/2 p-2 rounded-lg"><input type="date" id="postpartum-iron-date-2" disabled class="bg-gray-100 border border-gray-300 text-sm w-1/2 p-2 rounded-lg">
+
+                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 items-center">
+                                    <label class="text-sm sm:col-span-1">2nd Month Amount/Date</label>
+                                    <div class="grid grid-cols-2 gap-2 sm:col-span-2">
+                                        <input type="text" id="postpartum-iron-amount-2" disabled class="bg-white border border-gray-300 text-sm w-full p-2.5 rounded-lg">
+                                        <input type="date" id="postpartum-iron-date-2" disabled class="bg-gray-100 border border-gray-300 text-sm w-full p-2.5 rounded-lg">
                                     </div>
                                 </div>
-                                <div class="grid grid-cols-2 gap-2">
-                                    <label class="text-sm">3rd Month Amount/Date</label>
-                                    <div class="flex gap-2">
-                                        <input type="text" id="postpartum-iron-amount-3" disabled class="bg-white border border-gray-300 text-sm w-1/2 p-2 rounded-lg"><input type="date" id="postpartum-iron-date-3" disabled class="bg-gray-100 border border-gray-300 text-sm w-1/2 p-2 rounded-lg">
+
+                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 items-center">
+                                    <label class="text-sm sm:col-span-1">3rd Month Amount/Date</label>
+                                    <div class="grid grid-cols-2 gap-2 sm:col-span-2">
+                                        <input type="text" id="postpartum-iron-amount-3" disabled class="bg-white border border-gray-300 text-sm w-full p-2.5 rounded-lg">
+                                        <input type="date" id="postpartum-iron-date-3" disabled class="bg-gray-100 border border-gray-300 text-sm w-full p-2.5 rounded-lg">
                                     </div>
                                 </div>
                             </div>
-                             <div class="space-y-4">
+                            
+                            <div class="space-y-4">
                                 <h4 class="font-medium">Vitamin A</h4>
-                                 <div class="grid grid-cols-2 gap-2">
-                                    <label class="text-sm">Amount / Date Given</label>
-                                    <div class="flex gap-2">
-                                        <input type="text" id="postpartum-vitamin-a-amount" disabled class="bg-gray-100 border border-gray-300 text-sm w-1/2 p-2 rounded-lg"><input type="date" disabled id="postpartum-vitamin-a-date" class="bg-gray-100 border border-gray-300 text-sm w-1/2 p-2 rounded-lg">
+                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 items-center">
+                                    <label class="text-sm sm:col-span-1">Amount / Date Given</label>
+                                    <div class="grid grid-cols-2 gap-2 sm:col-span-2">
+                                        <input type="text" id="postpartum-vitamin-a-amount" disabled class="bg-gray-100 border border-gray-300 text-sm w-full p-2.5 rounded-lg">
+                                        <input type="date" disabled id="postpartum-vitamin-a-date" class="bg-gray-100 border border-gray-300 text-sm w-full p-2.5 rounded-lg">
                                     </div>
                                 </div>
                             </div>
+
                         </div>
                     </fieldset>
-                    
+                                        
                     <div class="slg2:col-span-3">
                        <label for="general-remarks" class="block mb-2 text-sm font-medium text-main_font">General Remarks</label>
                        <textarea id="general-remarks" rows="3" class="resize-none block p-2.5 w-full text-sm text-main_font bg-white rounded-lg border border-gray-300"></textarea>
@@ -435,15 +470,21 @@
                 </form>
             </div>
             
-            <!-- Modal footer -->
-          <div class="flex items-center justify-between border-t border-gray-200 rounded-b dark:border-gray-600 gap-3 pt-6 px-4 mb-3">
-            <button id="cancel-update-maternity" type="button" class="py-2.5 px-5 text-sm font-medium text-main_font focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100">Cancel</button>
+           <div class="flex flex-col-reverse sm:flex-row items-center justify-between border-t border-gray-200 rounded-b gap-4 p-6 shrink-0">
+                
+                <button id="cancel-update-maternity" type="button" class="w-full sm:w-auto py-2.5 px-5 text-sm font-medium text-main_font focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 transition-colors">
+                    Cancel
+                </button>
 
-            <div class="flex items-center gap-3">
-                <button id="print-maternity-btn" type="button" class="text-white bg-maingreen hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center w-full sm:w-auto">Print Details</button>
-                <button id="update-maternity-btn" type="button" class="text-white bg-mainblue hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center w-full sm:w-auto">Update Details</button>
+                <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+                    <button id="print-maternity-btn" type="button" class="w-full sm:w-auto text-white bg-maingreen hover:bg-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center transition-colors">
+                        Print Details
+                    </button>
+                    <button id="update-maternity-btn" type="button" class="w-full sm:w-auto text-white bg-mainblue hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center transition-colors">
+                        Update Details
+                    </button>
+                </div>
             </div>
-        </div>
 
         </div>
     </div>

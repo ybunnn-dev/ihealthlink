@@ -67,27 +67,26 @@ function toTitleCase(str) {
     });
 }
 
-// --- Function to Render Program Cards (Updated to use the correct element) ---
 function renderPrograms(programs) {
-    // 1. Check if the fetched data is empty
     if (!programs || programs.length === 0) {
         programsSection.innerHTML = `
-            <div class="flex flex-col items-center justify-center h-full p-4 text-center">
-                <img src="${emptyImageUrl}" alt="No fields found" class="mx-auto w-32">
+            <div class="flex flex-col items-center justify-center h-full min-h-[200px] p-4 text-center">
+                <img src="${emptyImageUrl}" alt="No fields found" class="mx-auto w-24 md:w-32 mb-3 opacity-75">
                 <p class="text-gray-600 font-medium">No Programs Found</p>
                 <p class="text-sm text-gray-500">Try adjusting your search or filter.</p>
             </div>
         `;
         return;
     }
+
     console.log(defProgramID);
     const filteredPrograms = programs.filter(program => program.id !== defProgramID);
 
     // 2b. If nothing remains after filtering
     if (filteredPrograms.length === 0) {
         programsSection.innerHTML = `
-            <div class="flex flex-col items-center justify-center h-full p-4 text-center">
-                <img src="${emptyImageUrl}" alt="No fields found" class="mx-auto w-32">
+            <div class="flex flex-col items-center justify-center h-full min-h-[200px] p-4 text-center">
+                <img src="${emptyImageUrl}" alt="No fields found" class="mx-auto w-24 md:w-32 mb-3 opacity-75">
                 <p class="text-gray-600 font-medium">No Other Programs Found</p>
                 <p class="text-sm text-gray-500">You are already on the only available program.</p>
             </div>
@@ -100,29 +99,30 @@ function renderPrograms(programs) {
         const category = program.category ?? 'Not Specified';
         const enrolledCount = program.enrolled_residents_count;
 
+        // ADDED: h-full so cards in the same row stretch to equal height
         return `
-            <div class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md hover:border-blue-400 transition-all duration-200 cursor-pointer" data-program-id="${program.id}">
+            <div class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md hover:border-blue-400 transition-all duration-200 cursor-pointer flex flex-col h-full" data-program-id="${program.id}">
                 <div class="flex justify-between items-start mb-3">
-                    <h3 class="font-bold text-main_font">${program.name}</h3>
-                    <span class="bg-gray-100 text-gray-700 text-xs font-mono px-2 py-0.5 rounded-full">ID: ${program.id}</span>
+                    <h3 class="font-bold text-main_font text-md line-clamp-1" title="${program.name}">${program.name}</h3>
+                    <span class="bg-gray-100 text-gray-600 border border-gray-200 text-xs font-mono px-2 py-0.5 rounded-full shrink-0 ml-2">ID: ${program.id}</span>
                 </div>
-                <div class="grid grid-cols-2 gap-4 text-sm">
+                
+                <div class="grid grid-cols-2 gap-4 text-sm mt-auto">
                     <div>
-                        <p class="text-xs text-gray-500">Enrolled</p>
-                        <p class="font-semibold text-gray-800">${enrolledCount}</p>
+                        <p class="text-xs text-gray-500 uppercase tracking-wide">Enrolled</p>
+                        <p class="font-semibold text-gray-800 text-lg">${enrolledCount}</p>
                     </div>
                     <div>
-                        <p class="text-xs text-gray-500">Program Type</p>
-                        <p class="font-semibold text-gray-800">${toTitleCase(category)}</p>
+                        <p class="text-xs text-gray-500 uppercase tracking-wide">Type</p>
+                        <p class="font-semibold text-gray-800 truncate" title="${toTitleCase(category)}">${toTitleCase(category)}</p>
                     </div>
                 </div>
             </div>
         `;
     }).join('');
 
-    // 3. Insert the generated HTML into the specific 'programs-section' div
     programsSection.innerHTML = `
-        <div class="grid grid-cols-1 gap-4 p-2">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-1">
             ${programCardsHTML}
         </div>
     `;

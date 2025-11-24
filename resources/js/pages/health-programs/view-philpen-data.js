@@ -1,11 +1,32 @@
-/*
- * PhilPEN Modal Controller
- * Handles view and confirmation modals with proper state management
- */
 
-// ========================
-// MODAL ELEMENTS & SETUP
-// ========================
+// --- Main Modal Container Options (Animation Logic) ---
+const createModalOptions = (modalEl) => ({
+    placement: 'center-center',
+    backdrop: 'static',
+    closable: false, // You can change this to true for the View modal if you want backdrop click to close
+    onShow: () => {
+        setTimeout(() => {
+            modalEl.classList.remove('opacity-0');
+            modalEl.classList.add('opacity-100');
+
+            const modalContent = modalEl.querySelector('.relative.bg-white');
+            if (modalContent) {
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }
+        }, 10);
+    },
+    onHide: () => {
+        modalEl.classList.add('opacity-0');
+        modalEl.classList.remove('opacity-100');
+
+        const modalContent = modalEl.querySelector('.relative.bg-white');
+        if (modalContent) {
+            modalContent.classList.add('scale-95');
+            modalContent.classList.remove('scale-100');
+        }
+    }
+});
 
 const $viewModalElement = document.getElementById('view-philpen-modal');
 const $confirmModalElement = document.getElementById('confirm-philpen-action-modal');
@@ -21,18 +42,17 @@ if (!$confirmModalElement) {
     console.error('Confirm PhilPEN Action Modal element (#confirm-philpen-action-modal) not found!');
 }
 
-// Create Flowbite Modal Instances
-const viewPhilpenModal = $viewModalElement ? new Modal($viewModalElement, {
-    placement: 'center-center',
-    backdrop: 'static',
-    closable: true
-}) : null;
+// --- Create Flowbite Modal Instances ---
 
-const confirmPhilpenActionModal = $confirmModalElement ? new Modal($confirmModalElement, {
-    placement: 'center-center',
-    backdrop: 'static',
-    closable: true
-}) : null;
+// 1. View Modal (Applied createModalOptions)
+const viewPhilpenModal = $viewModalElement 
+    ? new Modal($viewModalElement, createModalOptions($viewModalElement)) 
+    : null;
+
+// 2. Confirm Modal (Fixed syntax error and applied options)
+const confirmPhilpenActionModal = $confirmModalElement 
+    ? new Modal($confirmModalElement, createModalOptions($confirmModalElement)) 
+    : null;
 
 // ========================
 // STATE MANAGEMENT
