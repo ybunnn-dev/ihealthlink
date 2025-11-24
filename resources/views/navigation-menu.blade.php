@@ -134,8 +134,14 @@
                         </x-slot>
 
                         <x-slot name="content">
-                            <div class="block px-4 py-2 text-xs text-gray-400 border-b">
-                                {{ __('Settings') }}
+                            <!-- User Info Section - NEW -->
+                            <div class="px-4 py-3 border-b border-gray-200">
+                                <p class="text-sm font-semibold text-gray-900">
+                                    {{ Auth::user()->firstName }} {{ Auth::user()->lastName }}
+                                </p>
+                                <p class="text-xs text-gray-500 mt-0.5">
+                                    {{ $barangayName }}
+                                </p>
                             </div>
 
                             <x-dropdown-link href="{{ route('profile.show') }}" class="flex flex-cols-2 items-center gap-2">

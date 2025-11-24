@@ -183,4 +183,17 @@ class User extends Authenticatable
     public function personnel(){
         return $this->hasOne(Personnel::class, 'user_id');
     }
+
+    public function getEmailForPasswordReset()
+    {
+        return $this->email;
+    }
+
+    /**
+     * Get the email address where password reset links are sent
+     */
+    public function routeNotificationForMail()
+    {
+        return $this->email;
+    }
 }
