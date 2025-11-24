@@ -239,7 +239,7 @@ cancelConfirmEditMedicineBtn.addEventListener('click', function() {
 
 // --- Success Modal Close Handler ---
 closeSuccessModalButton.addEventListener('click', function() {
-    window.location.href = `/barangay/medicines/${medicineData.id}`;
+    window.location.reload();
 });
 
 
