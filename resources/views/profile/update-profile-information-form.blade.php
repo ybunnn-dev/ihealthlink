@@ -84,7 +84,4 @@
             </x-button>
         </x-slot>
     </x-form-section>
-
-    <!-- Include the profile confirmation modal -->
-    <x-modals.account.profile-update />
 </div>

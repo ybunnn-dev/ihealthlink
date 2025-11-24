@@ -15,6 +15,9 @@ use Illuminate\Support\Str;
 use Laravel\Fortify\Actions\RedirectIfTwoFactorAuthenticatable;
 use Laravel\Fortify\Contracts\LoginResponse;
 use Laravel\Fortify\Fortify;
+use Illuminate\Support\Facades\Hash;
+use App\Models\User;
+use App\Helpers\ProjectCrypt;
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -25,9 +28,6 @@ class FortifyServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        // REMOVED: Custom authentication logic
-        // Now using default Jetstream/Fortify authentication
-        // which queries: User::where('email', $email)->first()
 
         // Fortify default setup
         Fortify::createUsersUsing(CreateNewUser::class);
@@ -35,6 +35,22 @@ class FortifyServiceProvider extends ServiceProvider
         Fortify::updateUserPasswordsUsing(UpdateUserPassword::class);
         Fortify::resetUserPasswordsUsing(ResetUserPassword::class);
         Fortify::redirectUserForTwoFactorAuthenticationUsing(RedirectIfTwoFactorAuthenticatable::class);
+
+        Fortify::authenticateUsing(function (Request $request) {
+            // Get all users (or limit by other criteria if possible)
+            $users = User::all();
+            
+            foreach ($users as $user) {
+                // Decrypt email_view and compare with input
+                $decryptedEmail = ProjectCrypt::decrypt($user->getRawOriginal('email_view'));
+                
+                if ($decryptedEmail === $request->email && Hash::check($request->password, $user->password)) {
+                    return $user;
+                }
+            }
+            
+            return null;
+        });
 
         // Rate limiters
         RateLimiter::for('login', function (Request $request) {

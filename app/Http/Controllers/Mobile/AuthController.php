@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Helpers\ProjectCrypt;
+
 
 class AuthController extends Controller
 {
@@ -14,15 +16,28 @@ class AuthController extends Controller
         $email = $request->input('email');
         $password = $request->input('password');
 
-        $user = User::where('email', $email)->first();
+        // Get all users and decrypt email to find match
+        $users = User::all();
+        $user = null;
 
+        foreach ($users as $potentialUser) {
+            // Decrypt the encrypted email and compare with input
+            $decryptedEmail = ProjectCrypt::decrypt($potentialUser->getRawOriginal('email'));
+            
+            if ($decryptedEmail === $email) {
+                $user = $potentialUser;
+                break;
+            }
+        }
+
+        // Verify user exists and password is correct
         if (!$user || !Hash::check($password, $user->password)) {
             return response()->json(['message' => 'Invalid login credentials'], 401);
         }
 
         Auth::login($user);
 
-        // Allow only roles 3 and 4
+        // Allow only roles 2, 3 and 4
         if (!in_array($user->role_id, [2, 3, 4])) {
             Auth::logout();
             return response()->json(['message' => 'Unauthorized role for mobile login'], 403);
@@ -34,6 +49,7 @@ class AuthController extends Controller
             'role'    => $user->role_id,
         ]);
     }
+
     public function logout(Request $request)
     {
         // Revoke the current token used in the request
