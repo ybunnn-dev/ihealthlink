@@ -52,6 +52,19 @@ class FortifyServiceProvider extends ServiceProvider
             return null;
         });
 
+        Fortify::requestPasswordResetLinkUsing(function ($request) {
+            $user = User::where('email', $request->email)->first();
+            
+            if ($user) {
+                $user->sendPasswordResetNotification(
+                    Password::broker()->createToken($user)
+                );
+            }
+            
+            // Always return the same message for security
+            return Password::RESET_LINK_SENT;
+        });
+
         // Rate limiters
         RateLimiter::for('login', function (Request $request) {
             $throttleKey = Str::transliterate(Str::lower($request->input(Fortify::username())) . '|' . $request->ip());
