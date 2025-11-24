@@ -450,12 +450,34 @@ class SyncController extends Controller
 
                     // 6. Update or Create Management
                     if (isset($assessmentData['management'])) {
+                        $managementData = $assessmentData['management'];
+                        
+                        // Convert follow_up_date if it's in MM/DD/YYYY format
+                        if (isset($managementData['follow_up_date']) && !empty($managementData['follow_up_date'])) {
+                            $followUpDate = $managementData['follow_up_date'];
+                            
+                            // Check if date contains slashes (MM/DD/YYYY format)
+                            if (strpos($followUpDate, '/') !== false) {
+                                try {
+                                    $date = \Carbon\Carbon::createFromFormat('m/d/Y', $followUpDate);
+                                    // Verify the date was parsed correctly
+                                    if ($date && $date->format('m/d/Y') === $followUpDate) {
+                                        $managementData['follow_up_date'] = $date->format('Y-m-d');
+                                    }
+                                } catch (\Exception $e) {
+                                    // If conversion fails, set to null
+                                    $managementData['follow_up_date'] = null;
+                                }
+                            }
+                        }
+                        
                         $management = PhilpenManagement::updateOrCreate(
                             ['consultation_id' => $consultationId],
-                            array_merge($assessmentData['management'], ['updated_at' => now()])
+                            array_merge($managementData, ['updated_at' => now()])
                         );
                         $serverIds['management_server_id'] = $management->id;
                     }
+
 
                     // Log activity
                     $consultation = Consultation::find($consultationId);
