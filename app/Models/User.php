@@ -34,7 +34,6 @@ class User extends Authenticatable
         'birthdate',
         'contact_no',
         'email',
-        'email_view',
         'is_pass_updated',
         'password',
         'role_id',
