@@ -18,6 +18,9 @@ use Laravel\Fortify\Fortify;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Helpers\ProjectCrypt;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Config;
+
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -53,6 +56,7 @@ class FortifyServiceProvider extends ServiceProvider
         });
 
         
+        Config::set('auth.passwords.users.provider', 'users_encrypted');
 
         // Rate limiters
         RateLimiter::for('login', function (Request $request) {

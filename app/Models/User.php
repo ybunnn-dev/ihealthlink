@@ -186,14 +186,11 @@ class User extends Authenticatable
 
     public function getEmailForPasswordReset()
     {
-        return $this->email;
+        return ProjectCrypt::decrypt($this->getRawOriginal('email'));
     }
 
-    /**
-     * Get the email address where password reset links are sent
-     */
     public function routeNotificationForMail()
     {
-        return $this->email;
+        return ProjectCrypt::decrypt($this->getRawOriginal('email'));
     }
 }
