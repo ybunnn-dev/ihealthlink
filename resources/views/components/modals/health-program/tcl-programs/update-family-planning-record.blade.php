@@ -1,27 +1,26 @@
-<div id="update-family-planning-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full transition-opacity duration-400 ease-out opacity-0">
+<div id="update-family-planning-modal" tabindex="-1" aria-hidden="true" class="hidden fixed inset-0 z-50 flex justify-center items-center w-full h-full transition-opacity duration-400 ease-out opacity-0">
     <div class="relative p-4 w-full max-w-3xl max-h-full">
-        <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700 py-10 px-6 transition-transform duration-300 ease-out scale-95">
-            <!-- Modal header -->
-            <div class="flex flex-col items-center justify-center rounded-t mb-6">
+        <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700 w-full flex flex-col max-h-[90vh] transition-transform duration-300 ease-out scale-95">
+            
+            <div class="flex flex-col items-center justify-center rounded-t p-6 border-b border-gray-200 shrink-0">
                 <h3 class="text-xl font-semibold text-main_font">
                     Update Family Planning Record
                 </h3>
             </div>
             
-            <!-- Modal body -->
-            <div class="p-4 md:p-5">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="flex-grow overflow-y-auto p-6 min-h-0">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                     
                     <div class="md:col-span-2">
                         <label for="fp_update_resident_name" class="block mb-2 text-sm font-medium text-main_font">Selected Resident</label>
                         <input type="text" name="fp_update_resident_name" id="fp_update_resident_name" 
-                            class="border border-gray-300 text-main_font text-sm rounded-lg bg-gray-50 block w-full p-2.5 cursor-not-allowed" 
+                            class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg block w-full p-3 cursor-not-allowed" 
                             placeholder="Resident's full name" disabled readonly>
                     </div>
 
                     <div>
                         <label for="fp_update_client_type" class="block mb-2 text-sm font-medium text-main_font">Type of Client <span class="text-red-500">*</span></label>
-                        <select id="fp_update_client_type" name="fp_update_client_type" class="border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                        <select id="fp_update_client_type" name="fp_update_client_type" class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3">
                             <option value="">Choose a type</option>
                             <option value="new_acceptor">New Acceptor</option>
                             <option value="current_user">Current User</option>
@@ -34,7 +33,7 @@
 
                     <div>
                         <label for="fp_update_source" class="block mb-2 text-sm font-medium text-main_font">Source<span class="text-red-500">*</span></label>
-                        <select id="fp_update_source" name="fp_update_source" class="border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                        <select id="fp_update_source" name="fp_update_source" class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3">
                             <option value="">Choose a source</option>
                             <option value="public" selected>Public</option>
                             <option value="private">Private</option>
@@ -43,7 +42,7 @@
 
                     <div class="md:col-span-2">
                         <label for="fp_update_current_method" class="block mb-2 text-sm font-medium text-main_font">Current Method Used<span class="text-red-500">*</span></label>
-                        <select id="fp_update_current_method" name="fp_update_current_method" class="border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                        <select id="fp_update_current_method" name="fp_update_current_method" class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3">
                             <option value="">Choose a method</option>
                             <option value="btl">Female Sterilization (BTL)</option>
                             <option value="nsv">Male Sterilization (NSV)</option>
@@ -57,19 +56,16 @@
                         </select>
                     </div>
 
-                    <!-- Dropout Section -->
-                    <div class="md:col-span-2 border-t pt-6 mt-2">
-                        <!-- I've made this visible by default for easier testing -->
-                        <div id="dropout_details" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="md:col-span-2 border-t border-gray-200 pt-6 mt-2">
+                        <div id="dropout_details" class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                             <div>
                                 <label for="fp_dropout_date" class="block mb-2 text-sm font-medium text-main_font">Date of Dropout</label>
-                                <input type="date" name="fp_dropout_date" id="fp_dropout_date" class="border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                <input type="date" name="fp_dropout_date" id="fp_dropout_date" class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3">
                             </div>
 
                             <div class="md:col-span-2">
                                 <label for="fp_dropout_reason" class="block mb-2 text-sm font-medium text-main_font">Reason for Dropping Out</label>
-                                <!-- FIX: Removed size="5" to make this a standard, scrollable dropdown -->
-                                <select id="fp_dropout_reason" name="fp_dropout_reason" class="border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                <select id="fp_dropout_reason" name="fp_dropout_reason" class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3">
                                     <option value="">Choose a reason</option>
                                     <option value="pregnant">Pregnant</option>
                                     <option value="desire_pregnant">Desire to become pregnant</option>
@@ -96,14 +92,12 @@
 
                 </div>
             </div>
-             <!-- Modal footer with action buttons -->
-             <div class="flex items-center justify-end border-t border-gray-200 rounded-b dark:border-gray-600 gap-3 pt-6 px-6">
-                <button id="cancel-update-fp" type="button" class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100">Cancel</button>
-                <button id="proceed-update-fp" type="button" class="text-white bg-mainblue hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Save Changes</button>
+             <div class="flex flex-col-reverse sm:flex-row items-center justify-end border-t border-gray-200 rounded-b dark:border-gray-600 gap-3 p-6 shrink-0">
+                <button id="cancel-update-fp" type="button" class="w-full sm:w-auto py-3 px-5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 transition-colors">Cancel</button>
+                <button id="proceed-update-fp" type="button" class="w-full sm:w-auto text-white bg-mainblue hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-3 text-center transition-colors">Save Changes</button>
             </div>
         </div>
     </div>
 </div>
-
 
 @include('components.modals.health-program.tcl-programs.update-family-planning-confirmation')
