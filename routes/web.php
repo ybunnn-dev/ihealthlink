@@ -348,3 +348,32 @@ Route::middleware([
 
 
 });
+
+use App\Models\User;
+use App\Helpers\ProjectCrypt;
+use Illuminate\Support\Facades\DB;
+
+Route::get('/encrypt-emails', function () {
+    $users = User::all();
+    $count = 0;
+
+    foreach ($users as $user) {
+        $rawEmail = $user->getRawOriginal('email');
+        
+        // Skip if already encrypted
+        if (!filter_var($rawEmail, FILTER_VALIDATE_EMAIL)) {
+            continue;
+        }
+        
+        DB::table('users')
+            ->where('id', $user->id)
+            ->update([
+                'email' => ProjectCrypt::encrypt($rawEmail),
+                'updated_at' => now(),
+            ]);
+        
+        $count++;
+    }
+
+    return "Encrypted {$count} emails successfully!";
+});
