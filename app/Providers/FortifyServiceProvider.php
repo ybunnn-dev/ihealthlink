@@ -42,7 +42,7 @@ class FortifyServiceProvider extends ServiceProvider
             
             foreach ($users as $user) {
                 // Decrypt email_view and compare with input
-                $decryptedEmail = ProjectCrypt::decrypt($user->getRawOriginal('email_view'));
+                $decryptedEmail = ProjectCrypt::decrypt($user->getRawOriginal('email'));
                 
                 if ($decryptedEmail === $request->email && Hash::check($request->password, $user->password)) {
                     return $user;
