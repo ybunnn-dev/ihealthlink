@@ -136,8 +136,6 @@ class ProfileController extends Controller
             'old_password' => 'required|string',
             'new_password' => 'required|string|min:8', // expects new_password_confirmation field
         ]);
-
-        \Log::info($request->old_password);
         
         $user = $request->user();
 
@@ -148,6 +146,7 @@ class ProfileController extends Controller
 
         // Update to new password
         $user->password = Hash::make($request->new_password);
+        $user->is_pass_updated = 1;
         $user->save();
 
         return response()->json(['message' => 'Password successfully updated']);
