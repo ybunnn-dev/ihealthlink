@@ -317,6 +317,11 @@ confirmEditBhwCheckbox.addEventListener('change', function(){
 });
 
 
+confirmEditBhwCancelButton.addEventListener('click', function(){
+    confirmEditBhwCheckbox.disabled = true;
+    confirmEditBhw.hide();
+    editBhwModal.show();
+})
 
 confirmEditProceedButton.addEventListener('click', function(event){
     event.preventDefault();
