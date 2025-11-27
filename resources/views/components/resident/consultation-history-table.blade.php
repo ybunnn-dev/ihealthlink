@@ -14,7 +14,11 @@
                 <tr class="bg-white border-b bg-f7 text-normal_font">
                     <td class="px-6 py-4">{{ $consultation->consultation_title ?? 'General Consultation' }}</td>
                     <td class="px-6 py-4">{{ \Carbon\Carbon::parse($consultation->consultation_date)->format('M d, Y') }}</td>
-                    <td class="px-6 py-4">{{ \Carbon\Carbon::parse($consultation->updated_at)->format('M d, Y g:i A') }}</td>
+                    <td class="px-6 py-4">
+                        {{ \Carbon\Carbon::parse($consultation->updated_at)
+                            ->timezone('Asia/Manila')
+                            ->format('M d, Y g:i A') }}
+                    </td>
                     <td class="px-6 py-4">
                         <span class="px-2 py-1 rounded text-xs font-semibold
                             @if($consultation->status === 'completed') bg-green-100 text-green-800
