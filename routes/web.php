@@ -89,7 +89,7 @@ Route::middleware([
     Route::put('/barangays/{barangay}/deactivate', [BarangayController::class, 'deactivate'])->name('barangays.deactivate');
 
     //edit purok
-    Route::put('mho/puroks/{id}', [PurokController::class, 'update'])->name('puroks.update');
+    Route::put('/mho/puroks/{id}', [PurokController::class, 'update'])->name('puroks.update');
 
     //removing a purok
     Route::put('/mho/puroks/remove/{id}', [PurokController::class, 'remove'])->name('mho.puroks.remove');
@@ -108,7 +108,7 @@ Route::middleware([
         ->name('mho.midwife.show');
 
     // edit midwife info
-    Route::put('mho/midwife/{id}/update', [MidwifeController::class, 'update'])->name('midwives.update');
+    Route::put('/mho/midwife/{id}/update', [MidwifeController::class, 'update'])->name('midwives.update');
 
     //remove midwife
     Route::put('/mho/midwife/{user}/remove', [MidwifeController::class, 'remove']);
