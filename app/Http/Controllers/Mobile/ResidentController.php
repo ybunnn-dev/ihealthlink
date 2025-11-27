@@ -523,6 +523,8 @@ class ResidentController extends Controller
                     $newHousehold = $newFamily->household;
                     $newPurokId = $newHousehold->purok_id;
 
+                    $birthdate = $this->convertToMySQLDate($residentData['birthdate']);
+                    
                     if ($existingResident) {
                         // Check for conflict resolution (Last Write Wins)
                         $serverUpdatedAt = Carbon::parse($existingResident->updated_at);
@@ -543,7 +545,7 @@ class ResidentController extends Controller
                         $oldFamily = $existingResident->family;
                         $oldHousehold = $oldFamily->household;
                         $oldPurokId = $oldHousehold->purok_id;
-                        $birthdate = $this->convertToMySQLDate($residentData['birthdate']);
+                        
 
                         if ($oldPurokId != $newPurokId) {
                             // Purok changed - mark previous history as "moved"
