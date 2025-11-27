@@ -405,45 +405,94 @@ class SyncController extends Controller
 
                     // 1. Update or Create Health Signs
                     if (isset($assessmentData['health_signs'])) {
+                        $healthSignsData = array_filter(
+                            $assessmentData['health_signs'], 
+                            fn($value) => $value !== null
+                        );
+                        
                         $healthSigns = HealthSigns::updateOrCreate(
                             ['consultation_id' => $consultationId],
-                            array_merge($assessmentData['health_signs'], ['updated_at' => now()])
+                            array_merge($healthSignsData, ['updated_at' => now()])
                         );
                         $serverIds['health_signs_server_id'] = $healthSigns->id;
                     }
 
                     // 2. Update or Create Medical History
                     if (isset($assessmentData['medical_history'])) {
+                        $medicalHistoryData = array_filter(
+                            $assessmentData['medical_history'], 
+                            fn($value) => $value !== null
+                        );
+                        
                         $medicalHistory = ResidentMedicalHistory::updateOrCreate(
                             ['consultation_id' => $consultationId],
-                            array_merge($assessmentData['medical_history'], ['updated_at' => now()])
+                            array_merge($medicalHistoryData, ['updated_at' => now()])
                         );
                         $serverIds['medical_history_server_id'] = $medicalHistory->id;
                     }
 
                     // 3. Update or Create Family History
                     if (isset($assessmentData['family_history'])) {
+                        $familyHistoryData = array_filter(
+                            $assessmentData['family_history'], 
+                            fn($value) => $value !== null
+                        );
+                        
                         $familyHistory = ResidentFamilyHistory::updateOrCreate(
                             ['consultation_id' => $consultationId],
-                            array_merge($assessmentData['family_history'], ['updated_at' => now()])
+                            array_merge($familyHistoryData, ['updated_at' => now()])
                         );
                         $serverIds['family_history_server_id'] = $familyHistory->id;
                     }
 
                     // 4. Update or Create NCD Risk Factors
                     if (isset($assessmentData['ncd_risk_factors'])) {
+                        $ncdData = array_filter(
+                            $assessmentData['ncd_risk_factors'], 
+                            fn($value) => $value !== null
+                        );
+                        
                         $ncdRiskFactors = NcdRiskFactor::updateOrCreate(
                             ['consultation_id' => $consultationId],
-                            array_merge($assessmentData['ncd_risk_factors'], ['updated_at' => now()])
+                            array_merge($ncdData, ['updated_at' => now()])
                         );
                         $serverIds['ncd_risk_factors_server_id'] = $ncdRiskFactors->id;
+                        
+                        //  Update BasicHealthRecord with latest vitals from PhilPEN
+                        $consultation = Consultation::find($consultationId);
+                        if ($consultation && $consultation->resident) {
+                            $healthRecord = BasicHealthRecord::firstOrNew([
+                                'resident_id' => $consultation->resident_id
+                            ]);
+                            
+                            // Only update if values are provided (not null)
+                            if (isset($ncdData['weight'])) {
+                                $healthRecord->weight = $ncdData['weight'];
+                            }
+                            if (isset($ncdData['height'])) {
+                                $healthRecord->height = $ncdData['height'];
+                            }
+                            if (isset($ncdData['systolic_pressure'])) {
+                                $healthRecord->systolic_pressure = $ncdData['systolic_pressure'];
+                            }
+                            if (isset($ncdData['diastolic_pressure'])) {
+                                $healthRecord->diastolic_pressure = $ncdData['diastolic_pressure'];
+                            }
+                            
+                            $healthRecord->save();
+                        }
                     }
 
                     // 5. Update or Create Risk Assessment
                     if (isset($assessmentData['risk_assessment'])) {
+                        $riskAssessmentData = array_filter(
+                            $assessmentData['risk_assessment'], 
+                            fn($value) => $value !== null
+                        );
+                        
                         $riskAssessment = RiskAssessment::updateOrCreate(
                             ['consultation_id' => $consultationId],
-                            array_merge($assessmentData['risk_assessment'], ['updated_at' => now()])
+                            array_merge($riskAssessmentData, ['updated_at' => now()])
                         );
                         $serverIds['risk_assessment_server_id'] = $riskAssessment->id;
                     }
