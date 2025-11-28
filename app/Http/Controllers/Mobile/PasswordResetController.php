@@ -20,10 +20,6 @@ class PasswordResetController extends Controller
             'email' => 'required|email',
         ]);
 
-        // Don't encrypt here - query with plaintext
-        // Laravel will need to decrypt all emails to compare (inefficient but necessary)
-        
-        // Better approach: Get all users and find match
         $user = User::all()->first(function ($u) use ($request) {
             return $u->email === $request->email;  // Accessor decrypts automatically
         });
@@ -100,29 +96,36 @@ class PasswordResetController extends Controller
             'new_password' => 'required|string|min:8',
         ]);
 
-        // Find the record that matches the provided code
-        $resetRecord = PasswordResetToken::all()->first(function ($record) use ($request) {
-            return Hash::check($request->code, $record->token);
-        });
+        // Find the record that matches the provided code (only recent tokens)
+        $resetRecord = PasswordResetToken::where('created_at', '>=', now()->subHour())
+            ->get()
+            ->first(function ($record) use ($request) {
+                return Hash::check($request->code, $record->token);
+            });
 
         if (! $resetRecord) {
             return response()->json(['message' => 'Invalid or expired token.'], 400);
         }
 
-        // Optional: Check if the token is expired (e.g., 30 minutes)
+        // Check if the token is expired (30 minutes)
         if (now()->diffInMinutes($resetRecord->created_at) > 30) {
             return response()->json(['message' => 'Token has expired.'], 400);
         }
 
-        // Get the associated user
-        $user = User::where('email', $resetRecord->email)->first();
+        // Decrypt the email from the reset record to find the user
+        $decryptedEmail = ProjectCrypt::decrypt($resetRecord->email);
+        
+        // Find user by decrypting all emails and comparing
+        $user = User::all()->first(function ($u) use ($decryptedEmail) {
+            return $u->email === $decryptedEmail;  // Uses accessor to decrypt
+        });
 
         if (! $user) {
             return response()->json(['message' => 'No user found for this token.'], 404);
         }
 
-        // Update the user’s password
-        $user->password = Hash::make($request->new_password);
+        // Update the user's password
+        $user->password = $request->new_password;  // No need for Hash::make - casted automatically
         $user->save();
 
         // Delete the token after successful reset
@@ -133,4 +136,5 @@ class PasswordResetController extends Controller
             'result' => 'success'
         ]);
     }
+
 }
