@@ -8,20 +8,22 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
-
+use App\Helpers\ProjectCrypt;
 use App\Models\PasswordResetToken;
 use App\Models\User;
 
 class PasswordResetController extends Controller
 {
-        public function requestPassChangeChange(Request $request)
+    public function requestPassChangeChange(Request $request)
     {
         $request->validate([
             'email' => 'required|email',
         ]);
 
         // Check if the email exists in the users table
-        $user = User::where('email', $request->email)->first();
+        $encryptedEmail = ProjectCrypt::encrypt($request->email);
+
+        $user = User::where('email', $encryptedEmail)->first();
 
         if (! $user) {
             return response()->json([
@@ -34,16 +36,15 @@ class PasswordResetController extends Controller
 
         // Store or update the token for this email (hashed for security)
         PasswordResetToken::updateOrCreate(
-            ['email' => $request->email],
+            ['email' => $encryptedEmail],
             [
                 'token' => Hash::make($plainToken),
                 'created_at' => now(),
             ]
         );
 
-        // Send the plain token to the user’s email
-        Mail::raw("Your password reset code is: {$plainToken}", function ($message) use ($request) {
-            $message->to($request->email)
+        Mail::raw("Your password reset code is: {$plainToken}", function ($message) use ($user, $request) {
+            $message->to(ProjectCrypt::decrypt($user->getRawOriginal('email')))
                     ->subject('Password Reset Verification Code');
         });
 
@@ -59,8 +60,9 @@ class PasswordResetController extends Controller
             'code' => 'required|string',
         ]);
 
-        // Get the reset token record for this email
-        $reset = PasswordResetToken::where('email', $request->email)->first();
+        $encryptedEmail = ProjectCrypt::encrypt($request->email);
+        $reset = PasswordResetToken::where('email', $encryptedEmail)->first();
+
 
         if (! $reset) {
             return response()->json(['message' => 'No reset request found for this email.'], 404);
