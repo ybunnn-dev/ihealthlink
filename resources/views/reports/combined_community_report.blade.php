@@ -177,7 +177,7 @@
 <body>
     <div class="p1-body">
         <div class="header">
-            <h1>Barangay Tagas - Community Profile Report 2025</h1>
+            <h1>Barangay {{ $data['barangay_name'] ?? 'Tagas' }} - Community Profile Report 2025</h1>
             <h2>Coverage: Purok 1-10</h2>
         </div>
         <hr>
@@ -217,6 +217,22 @@
                         <li><span><strong>Lactating:</strong></span> <span>{{ $data['page1']['lactating'] ?? '___' }}</span></li>
                     </ul>
                 </td>
+                <div class="section-title">Child Health Program</div>
+                <ul class="data-list">
+                    <li><span><strong>Total Children Enrolled:</strong></span> <span>{{ $data['page1']['child_health']['total_enrolled'] }}</span></li>
+                    <li><span><strong>Fully Immunized (FIC):</strong></span> <span>{{ $data['page1']['child_health']['fic'] }}</span></li>
+                    <li><span><strong>Completely Immunized (CIC):</strong></span> <span>{{ $data['page1']['child_health']['cic'] }}</span></li>
+                    <li><span><strong>With Weight & Height Records:</strong></span> <span>{{ $data['page1']['child_health']['with_weight_height'] }}</span></li>
+                </ul>
+
+                <div class="section-title">Child Nutritional Status</div>
+                <ul class="data-list">
+                    <li><span><strong>Normal Weight:</strong></span> <span>{{ $data['page1']['child_health']['nutrition']['normal'] }}</span></li>
+                    <li><span><strong>Underweight:</strong></span> <span>{{ $data['page1']['child_health']['nutrition']['underweight'] }}</span></li>
+                    <li><span><strong>Severely Underweight:</strong></span> <span>{{ $data['page1']['child_health']['nutrition']['severely_underweight'] }}</span></li>
+                    <li><span><strong>Overweight:</strong></span> <span>{{ $data['page1']['child_health']['nutrition']['overweight'] }}</span></li>
+                    <li><span><strong>Obese:</strong></span> <span>{{ $data['page1']['child_health']['nutrition']['obese'] }}</span></li>
+                </ul>
                 <td class="column-right">
                     <div class="section-title">Age & Sex Distribution</div>
                     <table class="p1-table">

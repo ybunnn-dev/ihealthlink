@@ -38,6 +38,8 @@ class BarangayExportData extends Controller
    
     private function generateCommunityReport($startDate = null, $endDate = null)
     {
+        $barangay = Auth::user()->barangay;
+
         $reportController = app(BarangayReportsController::class);
         $data = $reportController->returnDemographic($startDate, $endDate);
 
@@ -182,6 +184,7 @@ class BarangayExportData extends Controller
         ];
 
         return [
+            'barangay_name' => $barangay->name,
             'page1' => [
                 'population' => [
                     'total' => $data['residents'],
