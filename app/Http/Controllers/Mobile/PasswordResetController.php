@@ -64,9 +64,13 @@ class PasswordResetController extends Controller
             'code' => 'required|string',
         ]);
 
-        $encryptedEmail = ProjectCrypt::encrypt($request->email);
-        $reset = PasswordResetToken::where('email', $encryptedEmail)->first();
-
+        // Only fetch recent tokens (last hour) to limit decryption operations
+        $reset = PasswordResetToken::where('created_at', '>=', now()->subHour())
+            ->get()
+            ->first(function ($record) use ($request) {
+                $decryptedEmail = ProjectCrypt::decrypt($record->email);
+                return $decryptedEmail === $request->email;
+            });
 
         if (! $reset) {
             return response()->json(['message' => 'No reset request found for this email.'], 404);
@@ -77,7 +81,7 @@ class PasswordResetController extends Controller
             return response()->json(['message' => 'Invalid verification code.'], 400);
         }
 
-        // Optional: Check expiration (e.g., 30 minutes)
+        // Check expiration (30 minutes)
         if (now()->diffInMinutes($reset->created_at) > 30) {
             return response()->json(['message' => 'Verification code expired.'], 400);
         }
@@ -87,6 +91,7 @@ class PasswordResetController extends Controller
             'result' => 'success'
         ]);
     }
+
     
     public function resetPassword(Request $request)
     {
