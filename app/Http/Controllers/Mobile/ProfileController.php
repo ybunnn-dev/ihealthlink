@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use App\Models\PasswordResetToken;
 use App\Models\User;
+use App\Helpers\ProjectCrypt;
 
 
 use App\Models\EmailChange;
@@ -30,7 +31,7 @@ class ProfileController extends Controller
     {
         $request->validate([
             'password' => 'required',
-            'new_email' => 'required|email|unique:users,email',
+            'new_email' => 'required|email', 
         ]);
 
         if (! Hash::check($request->password, $request->user()->password)) {
@@ -39,24 +40,36 @@ class ProfileController extends Controller
             ], 401);
         }
 
+        // Check if email already exists by decrypting all users
+        $emailExists = User::all()->first(function ($u) use ($request) {
+            return $u->email === $request->new_email;
+        });
+
+        if ($emailExists) {
+            return response()->json([
+                'message' => 'This email is already in use.'
+            ], 422);
+        }
 
         $user = $request->user();
-        $plainCode = mt_rand(100000, 999999); // e.g., 123456
+        $plainCode = mt_rand(100000, 999999);
         $hashedCode = Hash::make($plainCode);
 
         EmailChange::where('user_id', $user->id)->delete();
 
-        // Save pending change using Eloquent
+        // Encrypt the new email before storing
+        $encryptedNewEmail = ProjectCrypt::encrypt($request->new_email);
+
         $emailChange = EmailChange::updateOrCreate(
             ['user_id' => $user->id],
             [
-                'new_email' => $request->new_email,
+                'new_email' => $encryptedNewEmail,  
                 'verification_code' => $hashedCode,
                 'expires_at' => now()->addMinutes(30)
             ]
         );
 
-        // Send plain code to new email
+        // Send plain code to new email (use plaintext for sending)
         Mail::raw("Your verification code is: $plainCode", function ($message) use ($request) {
             $message->to($request->new_email)
                     ->subject('Email Change Verification Code');
@@ -64,6 +77,7 @@ class ProfileController extends Controller
 
         return response()->json(['message' => 'Verification code sent to new email']);
     }
+
 
     public function verifyEmailChange(Request $request)
     {
@@ -83,8 +97,10 @@ class ProfileController extends Controller
             return response()->json(['message' => 'Invalid or expired code'], 400);
         }
 
-        // Update user's email
-        $user->email = $pending->new_email;
+        // Decrypt the new email before setting it (User model will re-encrypt via setAttribute)
+        $decryptedNewEmail = ProjectCrypt::decrypt($pending->new_email);
+        
+        $user->email = $decryptedNewEmail;
         $user->save();
 
         // Delete the pending email change
@@ -92,6 +108,7 @@ class ProfileController extends Controller
 
         return response()->json(['message' => 'Email successfully updated']);
     }
+
 
     public function resendEmailChange(Request $request)
     {
@@ -107,6 +124,9 @@ class ProfileController extends Controller
             ], 404);
         }
 
+        // Decrypt the new email to send mail
+        $decryptedNewEmail = ProjectCrypt::decrypt($latestRequest->new_email);
+
         $latestRequest->delete();
 
         $plainCode = mt_rand(100000, 999999);
@@ -114,15 +134,16 @@ class ProfileController extends Controller
 
         EmailChange::create([
             'user_id' => $user->id,
-            'new_email' => $latestRequest->new_email,
+            'new_email' => $latestRequest->new_email,  // Already encrypted from previous request
             'verification_code' => $hashedCode,
             'expires_at' => now()->addMinutes(30)
         ]);
 
-        // Use Mailable instead of Mail::raw
-        Mail::to($latestRequest->new_email)->send(
-            new EmailChangeVerification($plainCode, $latestRequest->new_email)
-        );
+        // Send to decrypted email
+        Mail::raw("Your verification code is: $plainCode", function ($message) use ($decryptedNewEmail) {
+            $message->to($decryptedNewEmail)
+                    ->subject('Email Change Verification Code');
+        });
 
         return response()->json([
             'message' => 'A new verification code has been sent to your email.'
