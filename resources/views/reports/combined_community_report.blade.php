@@ -177,7 +177,7 @@
 <body>
     <div class="p1-body">
         <div class="header">
-            <h1>Barangay {{ $data['barangay_name'] ?? 'Tagas' }} - Community Profile Report 2025</h1>
+            <h1>Barangay {{ $data['barangay_name'] ?? 'Tagas' }} - Community Profile Report {{ now()->year }}</h1>
             <h2>Coverage: Purok 1-10</h2>
         </div>
         <hr>
@@ -195,9 +195,7 @@
 
                     <div class="section-title">Vulnerable Sectors</div>
                     <ul class="data-list">
-                        <li><span><strong>Senior Citizens:</strong></span> <span>{{ $data['page1']['seniors']['total'] }}</span></li>
-                        <li class="sub-item"><span>Male:</span> <span>{{ $data['page1']['seniors']['male'] }}</span></li>
-                        <li class="sub-item"><span>Female:</span> <span>{{ $data['page1']['seniors']['female'] }}</span></li>
+                        <li><span><strong>Senior Citizens:</strong></span> <span>{{ $data['page1']['seniors'] }}</span></li>
                         <li><span><strong>Persons w/ Disabilities (PWD):</strong></span> <span>{{ $data['page1']['pwd']['total'] }}</span></li>
                         <li class="sub-item"><span>Male:</span> <span>{{ $data['page1']['pwd']['male'] }}</span></li>
                         <li class="sub-item"><span>Female:</span> <span>{{ $data['page1']['pwd']['female'] }}</span></li>
@@ -213,11 +211,24 @@
                     <div class="section-title">Maternal Health</div>
                     <ul class="data-list">
                         <li><span><strong>Women of Repro. Age (15-49):</strong></span> <span>{{ $data['page1']['wra'] }}</span></li>
-                        <li><span><strong>Pregnant:</strong></span> <span>{{ $data['page1']['pregnant']['total'] ?? '___' }}</span></li>
-                        <li><span><strong>Lactating:</strong></span> <span>{{ $data['page1']['lactating'] ?? '___' }}</span></li>
+                        <li><span><strong>Pregnant Women:</strong></span> <span>{{ $data['page1']['pregnant']['total'] ?? '___' }}</span></li>
+                        <li class="sub-item"><span>Teen Pregnancies:</span> <span>{{ $data['page1']['pregnant']['teen'] ?? '___' }}</span></li>
+                        <li class="sub-item"><span>Primigravida:</span> <span>{{ $data['page1']['pregnant']['primis'] ?? '___' }}</span></li>
+                        <li class="sub-item"><span>Multipara:</span> <span>{{ $data['page1']['pregnant']['multiPara'] ?? '___' }}</span></li>
+                        <li class="sub-item"><span>Others:</span> <span>{{ $data['page1']['pregnant']['others'] ?? '___' }}</span></li>
+                        <li><span><strong>Lactating Mothers:</strong></span> <span>{{ $data['page1']['lactating'] ?? '___' }}</span></li>
                     </ul>
 
-                 
+                    <div class="section-title">Family Planning</div>
+                    <ul class="data-list">
+                        <li><span><strong>Total Enrollees:</strong></span> <span>{{ $data['page1']['family_planning']['total'] ?? '___' }}</span></li>
+                        @if(isset($data['page1']['family_planning']['methods']))
+                            @foreach($data['page1']['family_planning']['methods'] as $method => $count)
+                                <li class="sub-item"><span>{{ $method }}:</span> <span>{{ $count }}</span></li>
+                            @endforeach
+                        @endif
+                    </ul>
+
                     <div class="section-title">Child Health Program</div>
                     <ul class="data-list">
                         <li><span><strong>Total Children Enrolled:</strong></span> <span>{{ $data['page1']['child_health']['total_enrolled'] }}</span></li>
@@ -253,6 +264,30 @@
                                 <td>{{ $data['page1']['population']['female'] }}</td>
                             </tr>
                         </tfoot>
+                    </table>
+
+                    <div class="section-title">Child Nutritional Status</div>
+                    <table class="p1-table">
+                        <tr>
+                            <td>Normal Weight</td>
+                            <td style="width: 25%;">{{ $data['page1']['child_health']['nutrition']['normal'] }}</td>
+                        </tr>
+                        <tr>
+                            <td>Underweight</td>
+                            <td>{{ $data['page1']['child_health']['nutrition']['underweight'] }}</td>
+                        </tr>
+                        <tr>
+                            <td>Severely Underweight</td>
+                            <td>{{ $data['page1']['child_health']['nutrition']['severely_underweight'] }}</td>
+                        </tr>
+                        <tr>
+                            <td>Overweight</td>
+                            <td>{{ $data['page1']['child_health']['nutrition']['overweight'] }}</td>
+                        </tr>
+                        <tr>
+                            <td>Obese</td>
+                            <td>{{ $data['page1']['child_health']['nutrition']['obese'] }}</td>
+                        </tr>
                     </table>
 
                     <div class="section-title">Household Sanitation</div>
@@ -291,35 +326,6 @@
                         </tr>
                     </table>
                 </td>
-               
-                
-                <div class="section-title">Child Nutritional Status</div>
-                <table class="p1-table">
-                    <tr>
-                        <td>Normal Weight</td>
-                        <td style="width: 25%;">{{ $data['page1']['child_health']['nutrition']['normal'] }}</td>
-                    </tr>
-                    <tr>
-                        <td>Underweight</td>
-                        <td>{{ $data['page1']['child_health']['nutrition']['underweight'] }}</td>
-                    </tr>
-                    <tr>
-                        <td>Severely Underweight</td>
-                        <td>{{ $data['page1']['child_health']['nutrition']['underweight'] }}</td>
-                    </tr>
-                     <tr>
-                        <td>Severely Underweight</td>
-                        <td>{{ $data['page1']['child_health']['nutrition']['underweight'] }}</td>
-                    </tr>
-                     <tr>
-                        <td>Overweight</td>
-                        <td>{{ $data['page1']['child_health']['nutrition']['overweight'] }}</td>
-                    </tr>
-                    <tr>
-                        <td>Obese</td>
-                        <td>{{ $data['page1']['child_health']['nutrition']['obese'] }}</td>
-                    </tr>
-                </table>
             </tr>
         </table>
     </div>
