@@ -269,30 +269,6 @@
                         </tfoot>
                     </table>
 
-                    <div class="section-title">Child Nutritional Status</div>
-                    <table class="p1-table">
-                        <tr>
-                            <td>Normal Weight</td>
-                            <td style="width: 25%;">{{ $data['page1']['child_health']['nutrition']['normal'] }}</td>
-                        </tr>
-                        <tr>
-                            <td>Underweight</td>
-                            <td>{{ $data['page1']['child_health']['nutrition']['underweight'] }}</td>
-                        </tr>
-                        <tr>
-                            <td>Severely Underweight</td>
-                            <td>{{ $data['page1']['child_health']['nutrition']['severely_underweight'] }}</td>
-                        </tr>
-                        <tr>
-                            <td>Overweight</td>
-                            <td>{{ $data['page1']['child_health']['nutrition']['overweight'] }}</td>
-                        </tr>
-                        <tr>
-                            <td>Obese</td>
-                            <td>{{ $data['page1']['child_health']['nutrition']['obese'] }}</td>
-                        </tr>
-                    </table>
-
                     <div class="section-title">Household Sanitation</div>
                     <table class="p1-table">
                         <tr>
@@ -326,6 +302,30 @@
                         <tr>
                             <td>Tap Water</td>
                             <td>{{ $data['page1']['water']['tap'] }}</td>
+                        </tr>
+                    </table>
+
+                    <div class="section-title">Child Nutritional Status</div>
+                    <table class="p1-table">
+                        <tr>
+                            <td>Normal Weight</td>
+                            <td style="width: 25%;">{{ $data['page1']['child_health']['nutrition']['normal'] }}</td>
+                        </tr>
+                        <tr>
+                            <td>Underweight</td>
+                            <td>{{ $data['page1']['child_health']['nutrition']['underweight'] }}</td>
+                        </tr>
+                        <tr>
+                            <td>Severely Underweight</td>
+                            <td>{{ $data['page1']['child_health']['nutrition']['severely_underweight'] }}</td>
+                        </tr>
+                        <tr>
+                            <td>Overweight</td>
+                            <td>{{ $data['page1']['child_health']['nutrition']['overweight'] }}</td>
+                        </tr>
+                        <tr>
+                            <td>Obese</td>
+                            <td>{{ $data['page1']['child_health']['nutrition']['obese'] }}</td>
                         </tr>
                     </table>
                 </td>
