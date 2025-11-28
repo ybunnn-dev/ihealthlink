@@ -20,9 +20,13 @@ class PasswordResetController extends Controller
             'email' => 'required|email',
         ]);
 
+        \Log::info($request->email);
+
         // Check if the email exists in the users table
         $encryptedEmail = ProjectCrypt::encrypt($request->email);
 
+        \Log::info($encryptedEmail);
+        
         $user = User::where('email', $encryptedEmail)->first();
 
         if (! $user) {
