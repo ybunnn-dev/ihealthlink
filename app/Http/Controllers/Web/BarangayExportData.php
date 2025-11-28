@@ -560,6 +560,7 @@ class BarangayExportData extends Controller
         $barangaySlug = str_replace(' ', '-', strtolower($barangayName));
         $filename = "{$barangaySlug}-community-report-{$reportYear}.pdf";
 
+        return $pdf->download($filename);
     }
 
     public function exportReferralPdf(Request $request)

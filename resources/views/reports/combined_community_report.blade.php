@@ -216,23 +216,17 @@
                         <li><span><strong>Pregnant:</strong></span> <span>{{ $data['page1']['pregnant']['total'] ?? '___' }}</span></li>
                         <li><span><strong>Lactating:</strong></span> <span>{{ $data['page1']['lactating'] ?? '___' }}</span></li>
                     </ul>
-                </td>
-                <div class="section-title">Child Health Program</div>
-                <ul class="data-list">
-                    <li><span><strong>Total Children Enrolled:</strong></span> <span>{{ $data['page1']['child_health']['total_enrolled'] }}</span></li>
-                    <li><span><strong>Fully Immunized (FIC):</strong></span> <span>{{ $data['page1']['child_health']['fic'] }}</span></li>
-                    <li><span><strong>Completely Immunized (CIC):</strong></span> <span>{{ $data['page1']['child_health']['cic'] }}</span></li>
-                    <li><span><strong>With Weight & Height Records:</strong></span> <span>{{ $data['page1']['child_health']['with_weight_height'] }}</span></li>
-                </ul>
 
-                <div class="section-title">Child Nutritional Status</div>
-                <ul class="data-list">
-                    <li><span><strong>Normal Weight:</strong></span> <span>{{ $data['page1']['child_health']['nutrition']['normal'] }}</span></li>
-                    <li><span><strong>Underweight:</strong></span> <span>{{ $data['page1']['child_health']['nutrition']['underweight'] }}</span></li>
-                    <li><span><strong>Severely Underweight:</strong></span> <span>{{ $data['page1']['child_health']['nutrition']['severely_underweight'] }}</span></li>
-                    <li><span><strong>Overweight:</strong></span> <span>{{ $data['page1']['child_health']['nutrition']['overweight'] }}</span></li>
-                    <li><span><strong>Obese:</strong></span> <span>{{ $data['page1']['child_health']['nutrition']['obese'] }}</span></li>
-                </ul>
+                 
+                    <div class="section-title">Child Health Program</div>
+                    <ul class="data-list">
+                        <li><span><strong>Total Children Enrolled:</strong></span> <span>{{ $data['page1']['child_health']['total_enrolled'] }}</span></li>
+                        <li><span><strong>Fully Immunized (FIC):</strong></span> <span>{{ $data['page1']['child_health']['fic'] }}</span></li>
+                        <li><span><strong>Completely Immunized (CIC):</strong></span> <span>{{ $data['page1']['child_health']['cic'] }}</span></li>
+                        <li><span><strong>With Weight & Height Records:</strong></span> <span>{{ $data['page1']['child_health']['with_weight_height'] }}</span></li>
+                    </ul>
+                </td>
+                
                 <td class="column-right">
                     <div class="section-title">Age & Sex Distribution</div>
                     <table class="p1-table">
@@ -297,6 +291,35 @@
                         </tr>
                     </table>
                 </td>
+               
+                
+                <div class="section-title">Child Nutritional Status</div>
+                <table class="p1-table">
+                    <tr>
+                        <td>Normal Weight</td>
+                        <td style="width: 25%;">{{ $data['page1']['child_health']['nutrition']['normal'] }}</td>
+                    </tr>
+                    <tr>
+                        <td>Underweight</td>
+                        <td>{{ $data['page1']['child_health']['nutrition']['underweight'] }}</td>
+                    </tr>
+                    <tr>
+                        <td>Severely Underweight</td>
+                        <td>{{ $data['page1']['child_health']['nutrition']['underweight'] }}</td>
+                    </tr>
+                     <tr>
+                        <td>Severely Underweight</td>
+                        <td>{{ $data['page1']['child_health']['nutrition']['underweight'] }}</td>
+                    </tr>
+                     <tr>
+                        <td>Overweight</td>
+                        <td>{{ $data['page1']['child_health']['nutrition']['overweight'] }}</td>
+                    </tr>
+                    <tr>
+                        <td>Obese</td>
+                        <td>{{ $data['page1']['child_health']['nutrition']['obese'] }}</td>
+                    </tr>
+                </table>
             </tr>
         </table>
     </div>
