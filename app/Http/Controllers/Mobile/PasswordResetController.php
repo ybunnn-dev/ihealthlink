@@ -20,14 +20,13 @@ class PasswordResetController extends Controller
             'email' => 'required|email',
         ]);
 
-        \Log::info($request->email);
-
-        // Check if the email exists in the users table
-        $encryptedEmail = ProjectCrypt::encrypt($request->email);
-
-        \Log::info($encryptedEmail);
+        // Don't encrypt here - query with plaintext
+        // Laravel will need to decrypt all emails to compare (inefficient but necessary)
         
-        $user = User::where('email', $encryptedEmail)->first();
+        // Better approach: Get all users and find match
+        $user = User::all()->first(function ($u) use ($request) {
+            return $u->email === $request->email;  // Accessor decrypts automatically
+        });
 
         if (! $user) {
             return response()->json([
@@ -35,10 +34,11 @@ class PasswordResetController extends Controller
             ], 404);
         }
 
-        // Generate a 6-digit numeric token
         $plainToken = mt_rand(100000, 999999);
 
-        // Store or update the token for this email (hashed for security)
+        // Store the encrypted email in reset tokens
+        $encryptedEmail = ProjectCrypt::encrypt($request->email);
+        
         PasswordResetToken::updateOrCreate(
             ['email' => $encryptedEmail],
             [
@@ -47,8 +47,8 @@ class PasswordResetController extends Controller
             ]
         );
 
-        Mail::raw("Your password reset code is: {$plainToken}", function ($message) use ($user, $request) {
-            $message->to(ProjectCrypt::decrypt($user->getRawOriginal('email')))
+        Mail::raw("Your password reset code is: {$plainToken}", function ($message) use ($request) {
+            $message->to($request->email)
                     ->subject('Password Reset Verification Code');
         });
 
