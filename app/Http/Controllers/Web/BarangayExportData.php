@@ -337,10 +337,77 @@ class BarangayExportData extends Controller
         $sheet->setCellValue('C' . $row, $data['four_ps']); $row++;
         $sheet->setCellValue('B' . $row, 'Women of Reproductive Age (WRA)');
         $sheet->setCellValue('C' . $row, $data['wra']); $row++;
-        $sheet->setCellValue('B' . $row, 'Pregnant');
-        $sheet->setCellValue('C' . $row, $data['pregnant']['total'] ?? 'N/A'); $row++;
+        $sheet->setCellValue('B' . $row, 'Pregnant Women (Total)');
+        $sheet->setCellValue('C' . $row, $data['pregnant']['total'] ?? 'N/A'); 
+        $row++;
+        $sheet->setCellValue('B' . $row, '  - Teen Pregnancies');
+        $sheet->setCellValue('C' . $row, $data['pregnant']['teen'] ?? 'N/A'); 
+        $row++;
+        $sheet->setCellValue('B' . $row, '  - Primigravida');
+        $sheet->setCellValue('C' . $row, $data['pregnant']['primis'] ?? 'N/A'); 
+        $row++;
+        $sheet->setCellValue('B' . $row, '  - Multipara');
+        $sheet->setCellValue('C' . $row, $data['pregnant']['multiPara'] ?? 'N/A'); 
+        $row++;
+        $sheet->setCellValue('B' . $row, '  - Others');
+        $sheet->setCellValue('C' . $row, $data['pregnant']['others'] ?? 'N/A'); 
+        $row++;
         $sheet->setCellValue('B' . $row, 'Lactating');
         $sheet->setCellValue('C' . $row, $data['lactating'] ?? 'N/A'); $row++;
+        $row++;
+
+        // Family Planning Section
+        $sheet->setCellValue('A' . $row, 'Family Planning')->getStyle('A' . $row)->getFont()->setBold(true);
+        $row++;
+        $sheet->setCellValue('B' . $row, 'Total Enrollees');
+        $sheet->setCellValue('C' . $row, $data['family_planning']['total'] ?? 'N/A'); 
+        $row++;
+
+        // Family Planning Methods (if available)
+        if (isset($data['family_planning']['methods']) && is_array($data['family_planning']['methods'])) {
+            foreach ($data['family_planning']['methods'] as $method => $count) {
+                $sheet->setCellValue('B' . $row, "  - {$method}"); // Indent with spaces
+                $sheet->setCellValue('C' . $row, $count);
+                $row++;
+            }
+        }
+        $row++;
+
+        // Child Health Section
+        $sheet->setCellValue('A' . $row, 'Child Health Program')->getStyle('A' . $row)->getFont()->setBold(true);
+        $row++;
+        $sheet->setCellValue('B' . $row, 'Total Children Enrolled');
+        $sheet->setCellValue('C' . $row, $data['child_health']['total_enrolled'] ?? 'N/A'); 
+        $row++;
+        $sheet->setCellValue('B' . $row, 'Fully Immunized (FIC)');
+        $sheet->setCellValue('C' . $row, $data['child_health']['fic'] ?? 'N/A'); 
+        $row++;
+        $sheet->setCellValue('B' . $row, 'Completely Immunized (CIC)');
+        $sheet->setCellValue('C' . $row, $data['child_health']['cic'] ?? 'N/A'); 
+        $row++;
+        $sheet->setCellValue('B' . $row, 'With Weight & Height Records');
+        $sheet->setCellValue('C' . $row, $data['child_health']['with_weight_height'] ?? 'N/A'); 
+        $row++;
+        $row++;
+
+        // Child Nutritional Status Section
+        $sheet->setCellValue('A' . $row, 'Child Nutritional Status')->getStyle('A' . $row)->getFont()->setBold(true);
+        $row++;
+        $sheet->setCellValue('B' . $row, 'Normal Weight');
+        $sheet->setCellValue('C' . $row, $data['child_health']['nutrition']['normal'] ?? 'N/A'); 
+        $row++;
+        $sheet->setCellValue('B' . $row, 'Underweight');
+        $sheet->setCellValue('C' . $row, $data['child_health']['nutrition']['underweight'] ?? 'N/A'); 
+        $row++;
+        $sheet->setCellValue('B' . $row, 'Severely Underweight');
+        $sheet->setCellValue('C' . $row, $data['child_health']['nutrition']['severely_underweight'] ?? 'N/A'); 
+        $row++;
+        $sheet->setCellValue('B' . $row, 'Overweight');
+        $sheet->setCellValue('C' . $row, $data['child_health']['nutrition']['overweight'] ?? 'N/A'); 
+        $row++;
+        $sheet->setCellValue('B' . $row, 'Obese');
+        $sheet->setCellValue('C' . $row, $data['child_health']['nutrition']['obese'] ?? 'N/A'); 
+        $row++;
         $row++;
 
         $writeSection('Household Sanitation', $data['sanitation']);
