@@ -195,11 +195,14 @@
 
                     <div class="section-title">Vulnerable Sectors</div>
                     <ul class="data-list">
-                        <li><span><strong>Senior Citizens:</strong></span> <span>{{ $data['page1']['seniors'] }}</span></li>
+                        <li><span><strong>Senior Citizens:</strong></span> <span>{{ $data['page1']['seniors']['total'] ?? ($data['page1']['seniors'] ?? '___') }}</span></li>
+                        <li class="sub-item"><span>Male:</span> <span>{{ $data['page1']['seniors']['male'] ?? '___' }}</span></li>
+                        <li class="sub-item"><span>Female:</span> <span>{{ $data['page1']['seniors']['female'] ?? '___' }}</span></li>
                         <li><span><strong>Persons w/ Disabilities (PWD):</strong></span> <span>{{ $data['page1']['pwd']['total'] }}</span></li>
                         <li class="sub-item"><span>Male:</span> <span>{{ $data['page1']['pwd']['male'] }}</span></li>
                         <li class="sub-item"><span>Female:</span> <span>{{ $data['page1']['pwd']['female'] }}</span></li>
                     </ul>
+
 
                     <div class="section-title">Economic Profile</div>
                     <ul class="data-list">
