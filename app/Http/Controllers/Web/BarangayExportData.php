@@ -553,7 +553,13 @@ class BarangayExportData extends Controller
         $pdf = Pdf::loadView('reports.combined_community_report', ['data' => $data])
                 ->setPaper('Legal', 'portrait');
 
-        return $pdf->download('Barangay-Tagas-Report-2025.pdf');
+        $barangayName = $data['barangay_name'] ?? 'Barangay';
+        $reportYear = now()->format('Y'); // Or fetch from your own data as needed
+
+        // Remove spaces or special characters for filename safety
+        $barangaySlug = str_replace(' ', '-', strtolower($barangayName));
+        $filename = "{$barangaySlug}-community-report-{$reportYear}.pdf";
+
     }
 
     public function exportReferralPdf(Request $request)
