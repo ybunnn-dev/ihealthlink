@@ -66,7 +66,7 @@
 
                             <div class="grid grid-rows-2 md:grid-cols-3 md:grid-rows-1">
                                 <p class="font-semibold text-main_font">RANGE OF AGE:</p>
-                                <p class="text-normal_font">{{ $healthProgram->age_min ? $healthProgram->age_min : 'Undefined'}} - {{ $healthProgram->age_max ? $healthProgram->age_max : 'Undefined' }} years old</p>
+                                <p class="text-normal_font">{{ $healthProgram->age_min ? $healthProgram->age_min : '0'}} - {{ $healthProgram->age_max ? $healthProgram->age_max : 'Undefined' }} years old</p>
                             </div>
 
                             <div class="grid grid-rows-2 md:grid-cols-3 md:grid-rows-1">
