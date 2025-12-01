@@ -21,7 +21,7 @@
                         {{ $healthProgram->name }}
                     </td>
                     <td class="px-6 py-4">
-                        {{ $healthProgram->age_min ? $healthProgram->age_min : 'Undefined'}} - {{ $healthProgram->age_max ? $healthProgram->age_max : 'Undefined' }}
+                        {{ $healthProgram->age_min ? $healthProgram->age_min : '0'}} - {{ $healthProgram->age_max ? $healthProgram->age_max : 'Undefined' }}
                     </td>
                     <td class="px-6 py-4">
                         {{ number_format($healthProgram->enrolled_residents_count ?? 0) }}
