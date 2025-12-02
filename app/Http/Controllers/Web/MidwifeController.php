@@ -128,9 +128,7 @@ class MidwifeController extends Controller
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+   
     public function store(Request $request)
     {
         // Validate the request
@@ -156,9 +154,6 @@ class MidwifeController extends Controller
                 'errors' => $validator->errors()
             ], 422);
         }
-
-        // Log the received payload
-        Log::info('Midwife creation payload received:', $request->all());
 
         $validated = $validator->validated();
         

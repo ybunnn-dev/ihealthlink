@@ -248,17 +248,18 @@ async function submitMidwifeData(payload) {
         const data = await response.json();
 
         if (response.ok) {
-            console.log('Success:', data);
-            
+            // Create Modal instances properly
             const successModal = new Modal(successModalEl, createModalOptions(successModalEl));
-            const confAddMidwifeModal = new Modal(createModalOptions(confirmModalEl));
+            const confAddMidwifeModal = new Modal(confirmModalEl, createModalOptions(confirmModalEl));
 
-            if(successModal && confAddMidwifeModal){
-                successMesageHeader.textContent = 'Midwife Added';
-                successMessage.textContent = `${payload.firstName ?? ''} ${payload.middleName ?? ''} ${payload.lastName ?? ''}${payload.suffix ? ' ' + payload.suffix : ''} has been added`;
-                confAddMidwifeModal.hide();
-                successModal.show();
-            }
+            // Update success message
+            successMesageHeader.textContent = 'Midwife Added';
+            successMessage.textContent = `${payload.firstName ?? ''} ${payload.middleName ?? ''} ${payload.lastName ?? ''}${payload.suffix ? ' ' + payload.suffix : ''} has been added`;
+            
+            // Hide confirmation modal and show success modal
+            confAddMidwifeModal.hide();
+            successModal.show();
+            
         } else {
             console.error('Error:', data);
             alert('Error adding midwife: ' + (data.message || 'Please check the form and try again.'));
