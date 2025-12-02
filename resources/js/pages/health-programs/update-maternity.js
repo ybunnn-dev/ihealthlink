@@ -304,7 +304,7 @@ openUpdateMaternityModalBtn.addEventListener('click', function(){
 
     updateMaternityMeds(
         'Trimester 1',
-        'Iodine',
+        'iodine',
         iodineCapsuleAmount1,
         iodineCapsuleDate1
     );
@@ -318,14 +318,14 @@ openUpdateMaternityModalBtn.addEventListener('click', function(){
 
      updateMaternityMeds(
         'Trimester 2',
-        'iron-w-fa',
+        'cc',
         calciumCarbonateAmount2,
         calciumCarbonateDate2
     );
 
      updateMaternityMeds(
         'Trimester 3 (1)',
-        'iron-w-fa',
+        'cc',
         calciumCarbonateAmount3,
         calciumCarbonateDate3
     );
