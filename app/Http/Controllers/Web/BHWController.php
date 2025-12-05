@@ -335,6 +335,7 @@ class BHWController extends Controller
 
     public function update(Request $request, $id)
     {
+        
         $validated = $request->validate([
             'firstName'    => 'required|string|max:50',
             'lastName'     => 'required|string|max:50',
@@ -350,9 +351,14 @@ class BHWController extends Controller
         ]);
         
         $user = User::findOrFail($id);
-        $user->update($validated);
 
         $bhw = Personnel::where('user_id', $user->id)->first();
+
+        if (!$bhw || $bhw->brgy_id !== auth()->user()->personnel->brgy_id) {
+            abort(403, 'Unauthorized to update this personnel');
+        }
+
+        $user->update($validated);
 
         if ($bhw) {
             $bhw->update([
@@ -360,7 +366,6 @@ class BHWController extends Controller
             ]);
         }
 
-        // Build the bhwName for activity logging
         $bhwName = $user->firstName;
         if ($user->middleName) {
             $bhwName .= ' ' . $user->middleName;
@@ -370,8 +375,8 @@ class BHWController extends Controller
             $bhwName .= ' ' . $user->suffix;
         }
 
-        // Log the activity
         $mid = Auth::user();
+
         ActivityLog::create([
             'user_id' => $mid->id,
             'module_id' => 9,
@@ -386,11 +391,16 @@ class BHWController extends Controller
     public function remove(Request $request, $id)
     {
         $user = User::findOrFail($id);
+
+        $bhw = Personnel::where('user_id', $user->id)->first();
+        
+        if (!$bhw || $bhw->brgy_id !== auth()->user()->personnel->brgy_id) {
+            abort(403, 'Unauthorized to remove this personnel');
+        }
+
         $user->update([
             'status' => 'inactive'
         ]);
-
-        $bhw = BHW::where('user_id', $user->id)->first();
 
         if ($bhw) {
             $bhw->update([
