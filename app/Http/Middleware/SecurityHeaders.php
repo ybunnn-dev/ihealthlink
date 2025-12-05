@@ -32,27 +32,26 @@ class SecurityHeaders
                     "default-src 'self'",
                     "img-src 'self' data: blob:",
                     "script-src 'self' 'unsafe-eval' 'unsafe-inline' {$viteUrl} https://cdn.jsdelivr.net https://unpkg.com",
-                    "style-src 'self' 'unsafe-inline' {$viteUrl} https://cdn.jsdelivr.net https://unpkg.com",
-                    "font-src 'self' data:",
+                    "style-src 'self' 'unsafe-inline' {$viteUrl} https://cdn.jsdelivr.net https://unpkg.com https://fonts.googleapis.com",
+                    "font-src 'self' data: https://fonts.gstatic.com",
                     "connect-src 'self' wss: ws: {$viteUrl}",
                     "frame-ancestors 'none'",
                     "base-uri 'self'",
                     "form-action 'self'",
                 ];
             } else {
-                // Production CSP - stricter
-               $csp = [
+               // Production CSP - stricter
+                $csp = [
                     "default-src 'self'",
                     "img-src 'self' data: blob: https://cdn.jsdelivr.net https://unpkg.com",
                     "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://cdn.jsdelivr.net https://unpkg.com",
-                    "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://unpkg.com",
-                    "font-src 'self' data:",
+                    "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://unpkg.com https://fonts.googleapis.com",
+                    "font-src 'self' data: https://fonts.gstatic.com",
                     "connect-src 'self' wss: ws:",
                     "frame-ancestors 'none'",
                     "base-uri 'self'",
                     "form-action 'self'",
                 ];
-
             }
             
             $headers->set('Content-Security-Policy', implode('; ', $csp));
