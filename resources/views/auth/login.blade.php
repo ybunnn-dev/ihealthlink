@@ -3,7 +3,7 @@
     <!-- Fluid Background Egg Shape (45% of screen height) -->
     <div class="hidden lg2:block fixed top-0 left-1/2 transform -translate-x-1/2 w-full h-[38vh] xl3:h-[48vh] bg-mainblue rounded-b-[100%] scale-x-125 -z-10"></div>
 
-    <a href="#" 
+    <a href="/download-app" 
     class="hidden lg2:inline-block absolute top-16 right-4 slg:right-6 lg2:right-24 xl3:right-40 bg-mainblue hover:bg-blue-700 text-white font-semibold text-sm px-4 py-4 rounded-lg border border-xs border-white transition">
     Download Mobile App
     </a>
@@ -84,7 +84,7 @@
                     </button>
                 </form>
             </div>
-             <a href="#"
+             <a href="/download-app"
             class="block mx-auto mt-8 lg2:hidden bg-none text-mainblue font-semibold text-sm px-4 py-4 rounded-lg border border-xs border-white transition">
             <u>Download Mobile App</u>
             </a>

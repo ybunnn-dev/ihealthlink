@@ -40,7 +40,16 @@ Route::middleware('guest')->group(function () {
     Route::get('/login', function () {
         return view('auth.login');
     })->name('login');
-    
+
+    Route::get('/download-app', function () {
+        $path = '/home/ivan/apk_files/iHealthLink.apk';
+
+        return response()->download($path, 'iHealthLink.apk', [
+            'Content-Type' => 'application/vnd.android.package-archive',
+            'Content-Disposition' => 'attachment; filename="iHealthLink.apk"',
+        ]);
+    });
+
 });
 
 Route::middleware([
