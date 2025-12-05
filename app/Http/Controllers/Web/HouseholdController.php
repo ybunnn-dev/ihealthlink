@@ -291,6 +291,10 @@ class HouseholdController extends Controller
             ], 404);
         }
 
+        // Authorization: Ensure medicine belongs to the same barangay
+        if ($household->purok->brgy_id !== $user->personnel->brgy_id) {
+            abort(403, 'Unauthorized to view this household');
+        }
         // Load related data: purok, head, families (with residents + active residents count)
         $household = $household->load([
             'purok',
