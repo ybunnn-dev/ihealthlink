@@ -173,6 +173,11 @@ class BarangayHealthProgramController extends Controller
             abort(403, 'Unauthorized access.');
         }
         
+        // Authorization: Check if enrolled resident's barangay matches user's barangay
+        if ($enrolledResident->resident->family->household->purok->brgy_id !== $personnel->brgy_id) {
+            abort(403, 'Unauthorized to view this enrolled resident');
+        }
+        
         $enrolledResident->load([
             'consultations' => function ($q) use ($enrolledResident) {
                 $q->where('enrolled_resident_id', $enrolledResident->id)
@@ -300,8 +305,26 @@ class BarangayHealthProgramController extends Controller
         ]);
 
         // Find the existing family planning data for this enrolled resident
-        $familyPlanning = FamilyPlanningData::where('enrolled_resident_id', $enrolledResident)->first();
+         $user = auth()->user();
+    
+        // Determine personnel: BHW with role 4 or Midwife
+        if ($user->bhwWeb && $user->bhwWeb->role_id == 4) {
+            $personnel = $user->bhwWeb;
+        } else {
+            $personnel = $user->midwife;
+        }
 
+        if (!$personnel) {
+            abort(403, 'Unauthorized access.');
+        }
+        
+        $familyPlanning = FamilyPlanningData::where('enrolled_resident_id', $enrolledResident)->first();
+        
+        // Authorization: Check if enrolled resident's barangay matches user's barangay
+        if ($familyPlanning->enrolledResident->resident->family->household->purok->brgy_id !== $personnel->brgy_id) {
+            abort(403, 'Unauthorized to view this enrolled resident');
+        }
+        
         if (!$familyPlanning) {
             return response()->json([
                 'message' => 'Family planning record not found for the given enrolled resident.',
