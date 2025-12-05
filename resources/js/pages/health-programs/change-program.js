@@ -70,7 +70,7 @@ function toTitleCase(str) {
 function renderPrograms(programs) {
     if (!programs || programs.length === 0) {
         programsSection.innerHTML = `
-            <div class="flex flex-col items-center justify-center h-full min-h-[200px] p-4 text-center">
+            <div class="flex flex-col items-center justify-center h-full min-h-[150px] p-4 text-center">
                 <img src="${emptyImageUrl}" alt="No fields found" class="mx-auto w-24 md:w-32 mb-3 opacity-75">
                 <p class="text-gray-600 font-medium">No Programs Found</p>
                 <p class="text-sm text-gray-500">Try adjusting your search or filter.</p>
@@ -79,13 +79,12 @@ function renderPrograms(programs) {
         return;
     }
 
-    console.log(defProgramID);
     const filteredPrograms = programs.filter(program => program.id !== defProgramID);
 
     // 2b. If nothing remains after filtering
     if (filteredPrograms.length === 0) {
         programsSection.innerHTML = `
-            <div class="flex flex-col items-center justify-center h-full min-h-[200px] p-4 text-center">
+            <div class="flex flex-col items-center justify-center h-full min-h-[150px] p-4 text-center">
                 <img src="${emptyImageUrl}" alt="No fields found" class="mx-auto w-24 md:w-32 mb-3 opacity-75">
                 <p class="text-gray-600 font-medium">No Other Programs Found</p>
                 <p class="text-sm text-gray-500">You are already on the only available program.</p>

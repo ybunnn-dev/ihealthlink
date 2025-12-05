@@ -7,11 +7,6 @@ use Illuminate\Http\Request;
 
 class CheckRole
 {
-    /**
-     * Handle an incoming request.
-     * 
-     * Usage: Route::middleware('role:admin,bhw')
-     */
     public function handle(Request $request, Closure $next, ...$roles)
     {
         $user = $request->user();
