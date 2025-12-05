@@ -20,7 +20,6 @@ class MedicineController extends Controller
     {
         $user = auth()->user();
 
-        // Determine personnel: BHW with role 4 or Midwife
         if ($user->bhwWeb && $user->bhwWeb->role_id == 4) {
             $personnel = $user->bhwWeb;
         } else {
@@ -93,22 +92,16 @@ class MedicineController extends Controller
         ]);
     }
 
-    public function show($id) // Show specific medicine details
+    public function show($id) 
     {
         $user = auth()->user();
-
-        // Determine personnel: BHW with role 4 or Midwife
-        if ($user->bhwWeb && $user->bhwWeb->role_id == 4) {
-            $personnel = $user->bhwWeb;
-        } else {
-            $personnel = $user->midwife;
-        }
-
-        if (!$personnel) {
-            abort(403, 'Unauthorized access.');
-        }
         
         $medicine = Medicine::with(['inventories.addedBy'])->findOrFail($id);
+        
+        // Authorization: Ensure medicine belongs to the same barangay
+        if ($medicine->brgy_id !== $user->personnel->brgy_id) {
+            abort(403, 'Unauthorized to view this medicine');
+        }
         
         // Denormalize category
         $medicine->category_display = $this->denormalizeCategory($medicine->category);
@@ -198,6 +191,7 @@ class MedicineController extends Controller
             'medicine' => $medicine
         ], 201); // 201 Created
     }
+
     public function updateMedicine(Request $request, $id)
     {
         $user = auth()->user();
@@ -223,6 +217,11 @@ class MedicineController extends Controller
 
         // Find the medicine by ID
         $medicine = Medicine::findOrFail($id);
+
+        // Authorization: Ensure medicine belongs to the same barangay
+        if ($medicine->brgy_id !== $user->personnel->brgy_id) {
+            abort(403, 'Unauthorized to view this medicine');
+        }
 
         // Update with validated data
         $medicine->update($validated);
@@ -250,12 +249,17 @@ class MedicineController extends Controller
             $personnel = $user->midwife;
         }
 
+        
         if (!$personnel) {
             abort(403, 'Unauthorized access.');
         }
         
         $medicine = Medicine::find($id);
 
+        if ($medicine->brgy_id !== $user->personnel->brgy_id) {
+            abort(403, 'Unauthorized to view this medicine');
+        }
+        
         if (!$medicine) {
             return response()->json([
                 'result' => 'error',

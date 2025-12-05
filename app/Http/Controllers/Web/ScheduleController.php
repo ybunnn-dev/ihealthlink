@@ -52,9 +52,7 @@ class ScheduleController extends Controller
         return view('midwife.schedules', compact('schedules', 'dailyActivities', 'activityIcons'));
     }
 
-    /**
-     * Create default daily activities for a barangay
-     */
+    
     private function createDefaultDailyActivities($brgyId)
     {
         $days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
@@ -101,6 +99,9 @@ class ScheduleController extends Controller
         // Find the activity
         $dailyActivity = DailyActivities::findOrFail($validated['id']);
 
+        if ($dailyActivity->brgy_id !== $user->personnel->brgy_id) {
+            abort(403, 'Unauthorized to update daily activity');
+        }
         // Update using mass assignment
         $dailyActivity->update([
             'activities' => $validated['newName'],
@@ -248,7 +249,8 @@ class ScheduleController extends Controller
         if (!$personnel) {
             abort(403, 'Unauthorized access.');
         }
-
+        
+        
         // Validate payload
         $validated = $request->validate([
             'activity' => 'required|string|max:255',
@@ -258,6 +260,11 @@ class ScheduleController extends Controller
         ]);
 
         $schedule = Schedules::findOrFail($id);
+
+        if ($schedule->brgy_id !== $user->personnel->brgy_id) {
+            abort(403, 'Unauthorized to view this medicine');
+        }
+
         $normalizedDate = Carbon::createFromFormat('m/d/Y', $validated['date'])->format('Y-m-d');
         $normalizedTime = Carbon::parse($validated['time'])->format('H:i:s');
         // Normalize date/time
@@ -286,10 +293,13 @@ class ScheduleController extends Controller
     public function softDelete($id)
     {
         $schedule = Schedules::findOrFail($id);
-        $schedule->status = 'inactive'; // soft delete
-        $schedule->save();
 
-        \Log::info('Schedule soft deleted', ['id' => $id]);
+        if ($schedule->brgy_id !== $user->personnel->brgy_id) {
+            abort(403, 'Unauthorized to view this medicine');
+        }
+
+        $schedule->status = 'inactive'; 
+        $schedule->save();
 
         return response()->json([
             'success' => true,

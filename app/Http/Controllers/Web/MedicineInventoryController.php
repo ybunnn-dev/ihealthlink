@@ -32,6 +32,10 @@ class MedicineInventoryController extends Controller
         try {
             $medicine = Medicine::findOrFail($id);
 
+            if ($medicine->brgy_id !== $user->personnel->brgy_id) {
+                abort(403, 'Unauthorized to view this medicine');
+            }
+
             // Validate input
             $validated = $request->validate([
                 'expiry_date'       => 'required|date|after:today',
