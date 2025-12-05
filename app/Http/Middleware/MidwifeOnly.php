@@ -12,17 +12,11 @@ class MidwifeOnly
         $user = $request->user();
         
         if (!$user || $user->status !== 'active') {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Account is not active.'
-            ], 403);
+            abort(403, 'Account is not active');
         }
         
         if ($user->role_id !== 2) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Access denied. Midwife access required.'
-            ], 403);
+            abort(403, 'Access denied. Midwife access required.');
         }
         
         return $next($request);

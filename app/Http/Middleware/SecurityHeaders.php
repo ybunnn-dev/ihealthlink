@@ -31,8 +31,8 @@ class SecurityHeaders
                 $csp = [
                     "default-src 'self'",
                     "img-src 'self' data: blob:",
-                    "script-src 'self' 'unsafe-eval' 'unsafe-inline' {$viteUrl}",
-                    "style-src 'self' 'unsafe-inline' {$viteUrl}",
+                    "script-src 'self' 'unsafe-eval' 'unsafe-inline' {$viteUrl} https://cdn.jsdelivr.net https://unpkg.com",
+                    "style-src 'self' 'unsafe-inline' {$viteUrl} https://cdn.jsdelivr.net https://unpkg.com",
                     "font-src 'self' data:",
                     "connect-src 'self' wss: ws: {$viteUrl}",
                     "frame-ancestors 'none'",
@@ -41,17 +41,18 @@ class SecurityHeaders
                 ];
             } else {
                 // Production CSP - stricter
-                $csp = [
+               $csp = [
                     "default-src 'self'",
-                    "img-src 'self' data:",
-                    "script-src 'self' 'unsafe-eval' 'unsafe-inline'",
-                    "style-src 'self' 'unsafe-inline'",
+                    "img-src 'self' data: blob: https://cdn.jsdelivr.net https://unpkg.com",
+                    "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://cdn.jsdelivr.net https://unpkg.com",
+                    "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://unpkg.com",
                     "font-src 'self' data:",
                     "connect-src 'self' wss: ws:",
                     "frame-ancestors 'none'",
                     "base-uri 'self'",
                     "form-action 'self'",
                 ];
+
             }
             
             $headers->set('Content-Security-Policy', implode('; ', $csp));

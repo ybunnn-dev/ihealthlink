@@ -17,6 +17,7 @@ class CheckBarangayAccess
                 'status' => 'error',
                 'message' => 'Account is not active.'
             ], 403);
+            abort(403, 'Account is not active');
         }
         
         // Skip for admins (they can access all barangays)
@@ -26,10 +27,7 @@ class CheckBarangayAccess
         
         // Check if user has barangay assigned
         if (!$user->brgy_id) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'No barangay assigned to this user.'
-            ], 403);
+            abort(403, 'This account has no barangay.');
         }
         
         // Attach barangay ID to request for easy access in controllers
