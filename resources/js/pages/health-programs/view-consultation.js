@@ -113,8 +113,9 @@ const populateModal = (data) => {
     const { statusText, statusColorClass } = getStatusInfo(data);
     statusEl.innerHTML = `<span class="px-2 py-1 font-semibold text-xs rounded-full ${statusColorClass}">${statusText}</span>`;
 
+    let fullName = `${updated_by.firstName} ${updated_by.middleName} ${updated_by.lastName}`;
     completedEl.textContent = formatDate(data.updated_at);
-    updatedByEl.textContent = updated_by ? updated_by.full_name : 'N/A';
+    updatedByEl.textContent = updated_by ? fullName : 'N/A';
 
     // Populate vitals if data exists
     if (consultation_data) {
