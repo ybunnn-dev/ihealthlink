@@ -181,6 +181,12 @@ class MedicineController extends Controller
         // Find the medicine by ID
         $medicine = Medicine::findOrFail($id);
 
+        
+        // Authorization: Ensure medicine belongs to the same barangay
+        if ($medicine->brgy_id !== $user->personnel->brgy_id) {
+            abort(403, 'Unauthorized to view this medicine');
+        }
+
         $validated['category'] = $this->normalizeCategory(strtolower($validated['category']));
         $validated['form'] = $this->normalizeForm(strtolower($validated['form']));
 
@@ -260,9 +266,7 @@ class MedicineController extends Controller
             ->sum('stock');
         
         $medicine->remaining_stock = $remainingStock;
-        // ---END OF FIX 庁 ---
 
-        // ✅ Convert shortcodes to display names
         $medicine->category = $this->denormalizeCategory($medicine->category);
         $medicine->form = $this->denormalizeForm($medicine->form);
 

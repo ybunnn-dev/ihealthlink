@@ -228,7 +228,7 @@ class MedicineController extends Controller
 
         ActivityLog::create([
             'user_id' => $user->id,
-            'module_id' => 1, // change this based on your module mapping (e.g., 8 for medicines)
+            'module_id' => 1, 
             'activity' => 'Updated medicine "' . $medicine->medicine_name . '".',
         ]);
 
@@ -259,7 +259,7 @@ class MedicineController extends Controller
         if ($medicine->brgy_id !== $user->personnel->brgy_id) {
             abort(403, 'Unauthorized to view this medicine');
         }
-        
+
         if (!$medicine) {
             return response()->json([
                 'result' => 'error',
@@ -273,7 +273,7 @@ class MedicineController extends Controller
 
          ActivityLog::create([
             'user_id' => $user->id,
-            'module_id' => 1, // change this based on your module mapping (e.g., 8 for medicines)
+            'module_id' => 1, 
             'activity' => 'Removed medicine "' . $medicine->medicine_name . '".',
         ]);
         return response()->json([
