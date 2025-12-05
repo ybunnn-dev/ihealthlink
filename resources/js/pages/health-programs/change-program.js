@@ -100,7 +100,7 @@ function renderPrograms(programs) {
 
         // ADDED: h-full so cards in the same row stretch to equal height
         return `
-            <div class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md hover:border-blue-400 transition-all duration-200 cursor-pointer flex flex-col h-full" data-program-id="${program.id}">
+            <div class="bg-white col-span-1 border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md hover:border-blue-400 transition-all duration-200 cursor-pointer flex flex-col h-full w-full" data-program-id="${program.id}">
                 <div class="flex justify-between items-start mb-3">
                     <h3 class="font-bold text-main_font text-md line-clamp-1" title="${program.name}">${program.name}</h3>
                     <span class="bg-gray-100 text-gray-600 border border-gray-200 text-xs font-mono px-2 py-0.5 rounded-full shrink-0 ml-2">ID: ${program.id}</span>
@@ -121,7 +121,7 @@ function renderPrograms(programs) {
     }).join('');
 
     programsSection.innerHTML = `
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-1">
+        <div class="grid grid-cols-1 gap-4 p-1">
             ${programCardsHTML}
         </div>
     `;

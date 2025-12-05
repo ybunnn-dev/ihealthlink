@@ -160,9 +160,9 @@ function populateFamilyCards(families) {
 
     const cardsHTML = families.map(family => {
         const familyIdFormatted = `FAM-${String(family.id).padStart(3, '0')}`;
-        const familyHeadName = family.head 
-            ? `${family.head.firstName} ${family.head.lastName}` 
-            : 'Not Assigned';
+        const purok = family.household.purok.name;
+        const brgy = family.household.purok.barangay.name;
+            
         const memberCount = family.residents?.length || 0;
 
         
@@ -170,11 +170,11 @@ function populateFamilyCards(families) {
             <div class="family-card flex items-center p-3 w-full text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-100" data-family-id="${family.id}">
                 <div class="flex justify-between w-full pointer-events-none">
                     <div>
-                        <p class="font-semibold text-main_font">${familyHeadName}</p>
+                        <p class="font-semibold text-main_font">${familyIdFormatted}</p>
                         <p class="text-xs text-gray-500">
-                            <span>ID: ${familyIdFormatted}</span>
+                            <span>${purok}</span>
                             <span class="mx-1.5">&middot;</span>
-                            
+                            <span>Brgy. ${brgy}</span>
                         </p>
                     </div>
                     <div class="flex items-center text-xs text-gray-600">

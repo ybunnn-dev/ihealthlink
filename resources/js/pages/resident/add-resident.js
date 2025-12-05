@@ -177,7 +177,7 @@ function populateFamilyCards(families) {
         return `
             <div class="family-card flex items-center p-3 w-full text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-100" data-family-id="${family.id}">
                 <div class="flex justify-between w-full pointer-events-none">
-                    <div><p class="font-semibold text-main_font">${familyHeadName}</p><p class="text-xs text-gray-500"><span>ID: ${familyIdFormatted}</span><span class="mx-1.5">&middot;</span><span>${purokName}</span></p></div>
+                    <div><p class="font-semibold text-main_font">${familyIdFormatted}</p><p class="text-xs text-gray-500"><span>${purokName}</span></p></div>
                     <div class="flex items-center text-xs text-gray-600"><span class="bg-gray-200 px-2 py-1 rounded-full">${memberCount} Members</span></div>
                 </div>
             </div>`;

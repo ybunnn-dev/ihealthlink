@@ -59,10 +59,6 @@
                             <p class="font-semibold text-main_font">NUMBER OF RESIDENTS:</p>
                             <p class="text-normal_font">{{ $residentCount }}</p>
 
-                            <p class="font-semibold text-main_font">FAMILY HEAD:</p>
-                            <p class="text-normal_font">{{ $family->head ? $family->head->full_name : '—' }}</p>
-
-                            
                             <p class="font-semibold text-main_font">HOUSEHOLD NUMBER:</p>
                             <a href="{{ route('midwife.spec-household', $family->household_id) }}"><u><p class="text-normal_font">Household #{{ $family->household_id }}</p></u></a>
 

@@ -220,13 +220,13 @@ Route::middleware([
     })->name('midwife.spechouse');*/
     Route::get('/barangay/households/get', [HouseholdController::class, 'getHouseholdsJson'])
                                                                                                 ->name('households.json'); 
-    Route::get('philpen/get/{consultation}', [PhilpenController::class, 'getPhilpen'])->name('philpen.get');
+    Route::get('/philpen/get/{consultation}', [PhilpenController::class, 'getPhilpen'])->name('philpen.get');
 
     Route::get('/barangay/residents/load', [ResidentController::class, 'index'])->name('midwife.residents');
     
-    Route::get('barangay/resident/families/find', [FamilyController::class, 'getAllFamilies']);
+    Route::get('/barangay/resident/families/find', [FamilyController::class, 'getAllFamilies']);
 
-    Route::get('barangay/resident/families/get', [FamilyController::class, 'getFamilies']);
+    Route::get('/barangay/resident/families/get', [FamilyController::class, 'getFamilies']);
     
     Route::get('/barangay/family/{family}', [FamilyController::class, 'show'])
         ->name('midwife.cur-fam');
