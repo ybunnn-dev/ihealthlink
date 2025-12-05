@@ -141,6 +141,10 @@ class BHWController extends Controller
 
     public function show(Request $request, Personnel $personnel)
     {
+        if ($personnel->brgy_id !== auth()->user()->personnel->brgy_id) {
+            abort(403, 'Unauthorized access to this personnel record');
+        }
+
         $personnel->load('user', 'barangay');
 
         $query = ActivityLog::where('user_id', $personnel->user_id);
@@ -213,8 +217,6 @@ class BHWController extends Controller
             'logs' => $logs
         ]);
     }
-
-
 
 
     public function getBHWs()
