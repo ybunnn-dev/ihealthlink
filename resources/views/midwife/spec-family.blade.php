@@ -72,7 +72,7 @@
                             <p class="font-semibold text-main_font">INDIGENT:</p>
                             <p class="text-normal_font">{{ $family->is_indigent ? 'Yes' : 'No' }}</p>
 
-                            <p class="font-semibold text-main_font">IWAS GUTOM PROGRAM:</p>
+                            <p class="font-semibold text-main_font">WALANG GUTOM PROGRAM:</p>
                             <p class="text-normal_font">{{ $family->is_iwas_gutom ? 'Enrolled' : 'Not Enrolled' }}</p>
 
                             <p class="font-semibold text-main_font">DATE ADDED:</p>

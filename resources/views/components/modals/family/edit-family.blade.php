@@ -51,7 +51,7 @@
 
                     <!-- Iwas Gutom -->
                     <div class="col-span-1 relative">
-                        <label for="isIwasGutomEdit" class="block mb-1 text-sm font-semibold text-main_font uppercase">Iwas Gutom Program</label>
+                        <label for="isIwasGutomEdit" class="block mb-1 text-sm font-semibold text-main_font uppercase">WALANG GUTOM PROGRAM</label>
                         <button id="isIwasGutomEdit" data-dropdown-toggle="isIwasGutomMenuEdit" class="w-full text-gray-700 bg-white border border-gray-300 rounded-lg text-base px-3 py-3 text-left inline-flex items-center justify-between hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-colors" type="button">
                             <span id="isIwasGutomButtonTextEdit">Select</span>
                             <svg class="w-2.5 h-2.5 ms-3 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">

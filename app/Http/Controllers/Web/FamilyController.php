@@ -207,6 +207,9 @@ class FamilyController extends Controller
         // Get the parent household
         $household = Household::findOrFail($validated['household_id']);
 
+        if ($household->purok->brgy_id !== $user->personnel->brgy_id) {
+            abort(403, 'Unauthorized to view this family');
+        }
         // Create the family record with UUID
         $family = Family::create([
             'client_uuid'   => Str::uuid()->toString(),  // Generate UUID for sync
@@ -246,6 +249,12 @@ class FamilyController extends Controller
 
    public function show(Family $family)
     {
+        $user = Auth::user();
+
+        // Authorization: Ensure medicine belongs to the same barangay
+        if ($family->household->purok->brgy_id !== $user->personnel->brgy_id) {
+            abort(403, 'Unauthorized to view this family');
+        }
         // Eager load household + purok + residents
         $family->load(['household.purok.barangay', 'residents']);
 
@@ -337,8 +346,6 @@ class FamilyController extends Controller
     }
 
    public function transfer(Request $request) {
-    \Log::info('=== TRANSFER START ===');
-    \Log::info('Transfer request received:', $request->all());
     
     $user = Auth::user();
 
@@ -363,7 +370,7 @@ class FamilyController extends Controller
     try {
         DB::beginTransaction();
         
-        // ✅ DEBUG: Check BEFORE update
+        
         $family = Family::with('household')->findOrFail($familyId);
         \Log::info('BEFORE UPDATE - Family state:', [
             'family_id' => $family->id,
@@ -420,7 +427,7 @@ class FamilyController extends Controller
             }
         }
         
-        // ✅ THE FIX: Use raw update to verify
+        // THE FIX: Use raw update to verify
         $updateResult = DB::table('families')
             ->where('id', $familyId)
             ->update(['household_id' => $newHouseholdId]);
@@ -431,7 +438,6 @@ class FamilyController extends Controller
             'new_household_id' => $newHouseholdId,
         ]);
         
-        // ✅ DEBUG: Check AFTER update
         $familyAfter = Family::findOrFail($familyId);
         \Log::info('AFTER UPDATE - Family state:', [
             'family_id' => $familyAfter->id,
@@ -570,6 +576,11 @@ class FamilyController extends Controller
         // Find the family
         $family = Family::findOrFail($id);
 
+        // Authorization: Ensure medicine belongs to the same barangay
+        if ($family->household->purok->brgy_id !== $user->personnel->brgy_id) {
+            abort(403, 'Unauthorized to view this family');
+        }
+
         // Check if household changed (family moved)
         $householdChanged = isset($validated['household_id']) && $validated['household_id'] != $family->household_id;
 
@@ -690,7 +701,10 @@ class FamilyController extends Controller
 
             // Find the family
             $family = Family::findOrFail($request->family_id);
-            
+            // Authorization: Ensure family belongs to the same barangay
+            if ($family->household->purok->brgy_id !== $user->personnel->brgy_id) {
+                abort(403, 'Unauthorized to view this family');
+            }
             // Update family status
             $family->status = $request->status;
             $family->save();
