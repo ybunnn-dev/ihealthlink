@@ -277,6 +277,11 @@ class ResidentController extends Controller
 
     public function show(Request $request, Resident $resident)
     {
+        $user = Auth::user();
+
+        if ($resident->family->household->purok->brgy_id !== $user->personnel->brgy_id) {
+            abort(403, 'Unauthorized to view this resident');
+        }
         $resident->load([
             'family.household.purok.barangay',
             'basicHealthRecord',
@@ -627,6 +632,7 @@ class ResidentController extends Controller
 
     public function updateResident(Request $request)
     {
+        $user = Auth::user();
         // Validate the incoming request
         $validated = $request->validate([
             'id' => 'required|integer|exists:residents,id',
@@ -657,7 +663,9 @@ class ResidentController extends Controller
         try {
             // Find the resident
             $resident = Resident::findOrFail($validated['id']);
-            
+            if ($resident->family->household->purok->brgy_id !== $user->personnel->brgy_id) {
+                abort(403, 'Unauthorized to view this resident');
+            }
             // Store old status for comparison
             $oldStatus = $resident->status;
             $statusChanged = $oldStatus !== $validated['status'];
@@ -696,8 +704,7 @@ class ResidentController extends Controller
                 'emergencyContactNo' => $validated['emergency_contact_no'],
             ]);
 
-            Log::info('✅ Resident updated successfully');
-
+ 
             // Handle residence history if status changed to deceased or moved
             if ($statusChanged && in_array($validated['status'], ['deceased', 'moved'])) {
                 Log::info("Status changed from '{$oldStatus}' to '{$validated['status']}' - Updating residence history");
@@ -714,9 +721,9 @@ class ResidentController extends Controller
                         'status' => $validated['status']
                     ]);
 
-                    Log::info("✅ Updated residence history ID {$latestHistory->id} status to '{$validated['status']}'");
+                    Log::info(" Updated residence history ID {$latestHistory->id} status to '{$validated['status']}'");
                 } else {
-                    Log::warning("⚠️ No active residence history found for resident ID {$resident->id}");
+                    Log::warning(" No active residence history found for resident ID {$resident->id}");
                 }
             }
 
@@ -739,7 +746,7 @@ class ResidentController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             
-            Log::error('--- ❌ Error updating resident ---');
+            Log::error('---  Error updating resident ---');
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
             
