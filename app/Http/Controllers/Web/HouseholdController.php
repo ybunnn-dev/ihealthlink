@@ -145,6 +145,11 @@ class HouseholdController extends Controller
         // Find the household to update
         $household = Household::find($validated['household_id']);
 
+        // Authorization: Ensure medicine belongs to the same barangay
+        if ($household->purok->brgy_id !== $user->personnel->brgy_id) {
+            abort(403, 'Unauthorized to view this household');
+        }
+        
         if (!$household) {
             return response()->json([
                 'status' => 'error',
@@ -313,7 +318,7 @@ class HouseholdController extends Controller
             },
         ])->loadCount('families');
 
-        \Log::info($household);
+        
 
         return view('midwife.spec-household', [
             'household' => $household,
@@ -415,6 +420,10 @@ class HouseholdController extends Controller
         \Log::info($request['head_id']);
 
         $household = Household::find($request['household_id']);
+        
+        if ($household->purok->brgy_id !== $user->personnel->brgy_id) {
+            abort(403, 'Unauthorized to view this household');
+        }
 
         if (!$household) {
             return response()->json([
