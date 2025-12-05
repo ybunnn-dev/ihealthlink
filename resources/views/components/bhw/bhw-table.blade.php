@@ -21,7 +21,7 @@
     @endphp
 
     <tr class="bg-white border-b bg-f7 text-normal_font hover:bg-gray-100 cursor-pointer" 
-        onclick="window.location='{{ route('midwife.bhws.show', urlencode(\App\Helpers\ProjectCrypt::encrypt($bhw->id))) }}'">
+        onclick="window.location='{{ route('midwife.bhws.show', $bhw->id)}}'">
         
         <th scope="row" class="px-6 py-4 font-medium text-normal_font whitespace-nowrap">
             <span x-show="showPrivacy">{{ $bhwIdString }}</span>
