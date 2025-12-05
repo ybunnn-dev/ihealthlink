@@ -4,7 +4,7 @@
     <div class="hidden lg2:block fixed top-0 left-1/2 transform -translate-x-1/2 w-full h-[38vh] xl3:h-[48vh] bg-mainblue rounded-b-[100%] scale-x-125 -z-10"></div>
 
     <a href="/download-app" 
-    class="hidden lg2:inline-block absolute top-16 right-4 slg:right-6 lg2:right-24 xl3:right-40 bg-mainblue hover:bg-blue-700 text-white font-semibold text-sm px-4 py-4 rounded-lg border border-xs border-white transition">
+    class="hidden lg2:inline-block absolute top-16 right-4 slg:right-6 lg2:right-24 xl3:right-40 bg-mainblue hover:bg-blue-700 text-white font-semibold text-sm px-4 py-4 rounded-lg border border-xs border-white transition z-50">
     Download Mobile App
     </a>
     
