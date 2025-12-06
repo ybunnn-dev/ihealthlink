@@ -4,9 +4,9 @@
             
             <div class="flex flex-col items-center justify-center rounded-t mb-6 border-b border-gray-200 dark:border-gray-600 pb-6">
                 <h3 class="text-xl font-semibold text-main_font dark:text-white">
-                    Add Schedule
+                    Add Field
                 </h3>
-                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Set up a new schedule</p>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Set up a new schedule field.</p>
             </div>
 
             <form id="add-schedule-form" class="p-4 md:p-5">

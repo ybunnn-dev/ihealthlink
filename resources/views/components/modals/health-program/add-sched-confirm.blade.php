@@ -3,7 +3,7 @@
         <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700 py-10 px-6 transition-transform duration-300 ease-out scale-95">
             <div class="flex flex-col items-center justify-center rounded-t mb-6">
                 <h3 class="text-xl font-semibold text-main_font">
-                    Confirm New Schedule
+                    Confirm New Field
                 </h3>
                 <p class="text-sm text-normal_font">
                     Are you sure you want to add "<strong id="schedule-title-to-confirm" class="text-main_font"></strong>"?

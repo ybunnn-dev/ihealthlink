@@ -4,9 +4,9 @@
             
             <div class="flex flex-col items-center justify-center rounded-t mb-6 border-b border-gray-200 dark:border-gray-600 pb-6">
                 <h3 class="text-xl font-semibold text-main_font dark:text-white">
-                    Edit Schedule
+                    Edit Field
                 </h3>
-                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Update the schedule details</p>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Update the field details</p>
             </div>
 
             <form id="edit-schedule-form" class="p-4 md:p-5">
