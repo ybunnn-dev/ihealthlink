@@ -4,6 +4,35 @@ const modalOptions = {
     closable: false,
 };
 
+const createModalOptions = (modalEl) => ({
+    placement: 'center-center',
+    backdrop: 'static',
+    closable: false,
+    onShow: () => {
+        setTimeout(() => {
+            modalEl.classList.remove('opacity-0');
+            modalEl.classList.add('opacity-100');
+
+            const modalContent = modalEl.querySelector('.relative.bg-white');
+            if (modalContent) {
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }
+        }, 10);
+    },
+    onHide: () => {
+        modalEl.classList.add('opacity-0');
+        modalEl.classList.remove('opacity-100');
+
+        const modalContent = modalEl.querySelector('.relative.bg-white');
+        if (modalContent) {
+            modalContent.classList.add('scale-95');
+            modalContent.classList.remove('scale-100');
+        }
+    }
+});
+
+
 // --- Create FAQ Modal ---
 const createFaqModalEl = document.getElementById('create-faq-modal');
 const createFaqForm = document.getElementById('create-faq-form');
@@ -20,6 +49,13 @@ const createFaqModal = new Modal(createFaqModalEl, modalOptions);
 const confirmAddFaqModal = new Modal(confirmAddFaqModalEl, modalOptions);
 
 const createFaqTrigger = document.getElementById('add-faq-btn');
+
+const successModalEl = document.getElementById('success-modal');
+const successMesageHeader = document.getElementById('success-msg-head');
+const successMessage = document.getElementById('success-message');
+const closeSuccessModalButton = document.getElementById('close-success-modal-button');
+
+const successModal = new Modal(successModalEl, createModalOptions(successModalEl));
 
 // Disable save button by default
 saveFaqBtn.disabled = true;
@@ -70,7 +106,10 @@ confirmFaqCancelBtn.addEventListener('click', () => {
 });
 
 confirmFaqProceedBtn.addEventListener('click', () => {
-    console.log('Submitting Create FAQ form...');
+    // Disable button and show loading state
+    confirmFaqProceedBtn.disabled = true;
+    const originalButtonText = confirmFaqProceedBtn.textContent;
+    confirmFaqProceedBtn.textContent = 'Saving...';
 
     // Create FormData object from the form
     const formData = new FormData(createFaqForm);
@@ -93,32 +132,51 @@ confirmFaqProceedBtn.addEventListener('click', () => {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
+            // Hide confirmation modal
             confirmAddFaqModal.hide();
-            createFaqForm.reset();
             
-            // Re-disable the save button after reset
+            // Reset form and button state
+            createFaqForm.reset();
             saveFaqBtn.disabled = true;
-
-            alert('FAQ created successfully:', data.faq);
-            // TODO: Show a success toast/alert
-            location.reload(); // Or dynamically add the new FAQ to the list
+            
+            // Set success modal message
+            successMesageHeader.textContent = 'Success!';
+            successMessage.textContent = 'FAQ created successfully.';
+            
+            // Show success modal
+            successModal.show();
+            
         } else {
-            alert('Failed to create FAQ:', data.message);
+            // Show error alert
+            alert('Failed to create FAQ: ' + (data.message || 'Unknown error'));
+            
+            // Reset button state
+            confirmFaqProceedBtn.disabled = false;
+            confirmFaqProceedBtn.textContent = originalButtonText;
+            
             confirmAddFaqModal.hide();
-            location.reload(); // Or update the DOM dynamically
         }
     })
     .catch(error => {
-        alert('Error creating FAQ:', error);
+        // Show error alert
+        alert('Error creating FAQ: ' + error.message);
+        
+        // Reset button state
+        confirmFaqProceedBtn.disabled = false;
+        confirmFaqProceedBtn.textContent = originalButtonText;
+        
         confirmAddFaqModal.hide();
-        // TODO: Show error toast
-        location.reload(); // Or update the DOM dynamically
     });
 });
 
-cancelCreate.addEventListener('click', function(){
-    createFaqForm.reset();
-    createFaqModal.hide();
-    // Re-disable the save button after reset
-    saveFaqBtn.disabled = true;
+// Success modal close handler
+closeSuccessModalButton.addEventListener('click', () => {
+    successModal.hide();
+    
+    // Reset confirm button state
+    confirmFaqProceedBtn.disabled = true;
+    confirmFaqProceedBtn.textContent = 'Proceed';
+    
+    // Reload page or update DOM
+    location.reload();
 });

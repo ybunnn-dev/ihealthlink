@@ -70,6 +70,15 @@
             justify-content: space-between;
         }
         .data-list .sub-item { padding-left: 20px; }
+        .page-break {
+            page-break-after: always;
+        }
+        /* Optional: Center headers for better look */
+        .section-header td {
+            text-align: center;
+            background-color: #e0f2fe; /* light blue match */
+            font-weight: bold;
+        }
         .p1-table {
             width: 100%;
             border-collapse: collapse;
@@ -176,7 +185,7 @@
 <body>
     <div class="p1-body">
         <div class="header">
-            <h1>Municipal Health Office - Community Profile Report 2025</h1>
+            <h1>Municipal Health Office - Community Profile Report</h1>
             <h2>Municipality-Wide Coverage</h2>
             @if($data['startDate'] || $data['endDate'])
             <h2>Period: {{ $data['startDate'] ?? 'N/A' }} - {{ $data['endDate'] ?? 'N/A' }}</h2>
@@ -312,95 +321,127 @@
             </tr>
         </table>
     </div>
-
     <div class="page-break"></div>
+    @php
+        // 1. SETTINGS
+        $maxPerPage = 8; // Number of barangays per page
+        
+        // 2. CHUNK DATA
+        // We use 'true' to preserve the array index keys so we can match data correctly
+        $barangayChunks = array_chunk($data['barangays'], $maxPerPage, true);
+        $totalPages = count($barangayChunks);
+    @endphp
 
-    <div class="p2-body">
-        <div class="header">
-            <h1>DEMOGRAPHIC DATA BY AGE GROUP</h1>
-            <h2>YEAR 2025 - Municipal Health Office</h2>
-            @if($data['startDate'] || $data['endDate'])
-            <h2>Period: {{ $data['startDate'] ?? 'N/A' }} - {{ $data['endDate'] ?? 'N/A' }}</h2>
+    @foreach($barangayChunks as $chunkIndex => $currentBarangays)
+
+        <div class="p2-body {{ !$loop->last ? 'page-break' : '' }}">
+            
+            <div class="header">
+                <h1>DEMOGRAPHIC DATA BY AGE GROUP</h1>
+                <h2>YEAR 2025 - Municipal Health Office</h2>
+                <small>Page {{ $loop->iteration }} of {{ $loop->count }}</small>
+                @if($data['startDate'] || $data['endDate'])
+                <h2>Period: {{ $data['startDate'] ?? 'N/A' }} - {{ $data['endDate'] ?? 'N/A' }}</h2>
+                @endif
+            </div>
+
+            <table class="p2-table">
+                <thead>
+                    <tr>
+                        <th>Municipality</th>
+                        
+                        @foreach($currentBarangays as $key => $barangayName)
+                            <th>{{ $barangayName }}</th>
+                        @endforeach
+
+                        @if($loop->last)
+                            <th>TOTAL</th>
+                        @endif
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                    @foreach($data['page2']['summary'] as $item)
+                    <tr class="category-row">
+                        <td>{{ $item['label'] }}</td>
+                        
+                        @foreach($currentBarangays as $key => $val)
+                            <td>{{ $item['barangay_data'][$key] ?? 0 }}</td>
+                        @endforeach
+
+                        @if($loop->parent->last)
+                            <td class="total-column">{{ $item['total'] }}</td>
+                        @endif
+                    </tr>
+                    @endforeach
+
+                    <tr class="section-header">
+                        <td colspan="{{ count($currentBarangays) + ($loop->last ? 2 : 1) }}">
+                            AGE GROUPING
+                        </td>
+                    </tr>
+
+                    @foreach($data['page2']['age_grouping'] as $group)
+                        
+                        @if(isset($group['is_header']) && $group['is_header'])
+                            <tr class="category-row">
+                                <td colspan="{{ count($currentBarangays) + ($loop->parent->last ? 2 : 1) }}" style="text-align:left !important;">
+                                    {{ $group['label'] }}
+                                </td>
+                            </tr>
+                        @else
+                            <tr class="sub-item">
+                                <td>{{ $group['label'] }}</td>
+                                
+                                @foreach($currentBarangays as $key => $val)
+                                    <td>{{ $group['barangay_data'][$key] ?? 0 }}</td>
+                                @endforeach
+
+                                @if($loop->parent->last)
+                                    <td class="total-column">{{ $group['total'] }}</td>
+                                @endif
+                            </tr>
+                        @endif
+                    @endforeach
+                </tbody>
+            </table>
+
+            @if($loop->last)
+                <div class="projection">
+                    Projected Population 2025: {{ $data['page2']['projected_population'] }}
+                </div>
+                <table class="signatures">
+                    <tr>
+                        <td>Consolidated By:</td>
+                        <td></td>
+                        <td>Date Consolidated:</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="name">_________________________</span>
+                            <span class="title">Municipal Health Officer</span>
+                        </td>
+                        <td></td>
+                        <td>
+                            <span class="name">_________________________</span>
+                            <span class="title">Date</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Noted By:</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                   
+                </table>
             @endif
         </div>
-        <table class="p2-table">
-           <thead>
-                <tr>
-                    <th>Municipality</th>
-                    @foreach($data['barangays'] as $barangayName)
-                        <th>{{ $barangayName }}</th>
-                    @endforeach
-                    <th>TOTAL</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($data['page2']['summary'] as $item)
-                <tr class="category-row">
-                    <td>{{ $item['label'] }}</td>
-                    @foreach($item['barangay_data'] as $value)
-                    <td>{{ $value }}</td>
-                    @endforeach
-                    <td class="total-column">{{ $item['total'] }}</td>
-                </tr>
-                @endforeach
-                <tr class="section-header">
-                    <td colspan="{{ count($data['barangays']) + 2 }}">AGE GROUPING</td>
-                </tr>
-                @foreach($data['page2']['age_grouping'] as $group)
-                    @if(isset($group['is_header']) && $group['is_header'])
-                        <tr class="category-row">
-                            <td colspan="{{ count($data['barangays']) + 2 }}" style="text-align:left !important;">{{ $group['label'] }}</td>
-                        </tr>
-                    @else
-                        <tr class="sub-item">
-                            <td>{{ $group['label'] }}</td>
-                            @foreach($group['barangay_data'] as $value)
-                            <td>{{ $value }}</td>
-                            @endforeach
-                            <td class="total-column">{{ $group['total'] }}</td>
-                        </tr>
-                    @endif
-                @endforeach
-            </tbody>
-        </table>
-        <div class="projection">
-            Projected Population 2025: {{ $data['page2']['projected_population'] }}
-        </div>
-        <table class="signatures">
-             <tr>
-                <td>Consolidated By:</td>
-                <td></td>
-                <td>Date Consolidated:</td>
-            </tr>
-            <tr>
-                <td>
-                    <span class="name">_________________________</span>
-                    <span class="title">Municipal Health Officer</span>
-                </td>
-                <td></td>
-                <td>
-                    <span class="name">_________________________</span>
-                    <span class="title">Date</span>
-                </td>
-            </tr>
-            <tr>
-                <td>Noted By:</td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
-                    <span class="name">_________________________</span>
-                    <span class="title">Provincial Health Officer</span>
-                </td>
-                <td></td>
-                <td></td>
-            </tr>
-        </table>
-    </div>
+    @endforeach
+
 
     <div class="page-break"></div>
-
+    
+    {{--
     <div class="p3-body">
         <div class="header">
             <h1>DEMOGRAPHIC DATA BY AGE & BARANGAY</h1>
@@ -505,6 +546,6 @@
             </tr>
         </table>
     </div>
-
+        --}}
 </body>
 </html>

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Barangay Tagas - Complete Report 2025</title>
+    <title>Barangay Tagas - Complete Report</title>
     <style>
         /* --- General Styles --- */
         body {
@@ -177,8 +177,8 @@
 <body>
     <div class="p1-body">
         <div class="header">
-            <h1>Barangay {{ $data['barangay_name'] ?? 'Tagas' }} - Community Profile Report {{ now()->year }}</h1>
-            <h2>Coverage: Purok 1-10</h2>
+            <h1>Barangay {{ $data['barangay_name'] ?? 'Tagas' }} - Community Profile Report </h1>
+            <h2>Period: {{ $data['startDate'] ?? 'N/A' }} - {{ $data['endDate'] ?? 'N/A' }}</h2>
         </div>
         <hr>
         <table class="main-layout">

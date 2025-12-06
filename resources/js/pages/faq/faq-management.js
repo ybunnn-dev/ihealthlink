@@ -4,6 +4,34 @@ const modalOptions = {
     closable: false,
 };
 
+const createModalOptions = (modalEl) => ({
+    placement: 'center-center',
+    backdrop: 'static',
+    closable: false,
+    onShow: () => {
+        setTimeout(() => {
+            modalEl.classList.remove('opacity-0');
+            modalEl.classList.add('opacity-100');
+
+            const modalContent = modalEl.querySelector('.relative.bg-white');
+            if (modalContent) {
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }
+        }, 10);
+    },
+    onHide: () => {
+        modalEl.classList.add('opacity-0');
+        modalEl.classList.remove('opacity-100');
+
+        const modalContent = modalEl.querySelector('.relative.bg-white');
+        if (modalContent) {
+            modalContent.classList.add('scale-95');
+            modalContent.classList.remove('scale-100');
+        }
+    }
+});
+
 // --- Elements ---
 const editFaqModalEl = document.getElementById('edit-faq-modal');
 const editFaqForm = document.getElementById('edit-faq-form');
@@ -23,9 +51,16 @@ const confirmDeleteFaqCheckbox = document.getElementById('confirm-delete-faq-che
 const confirmDeleteFaqCancel = document.getElementById('confirm-delete-faq-cancel');
 const confirmDeleteFaqProceedButton = document.getElementById('confirm-delete-faq-proceed-button');
 
+// Success Modal Elements
+const successModalEl = document.getElementById('success-modal');
+const successMesageHeader = document.getElementById('success-msg-head');
+const successMessage = document.getElementById('success-message');
+const closeSuccessModalButton = document.getElementById('close-success-modal-button');
+
 const deleteFaqModal = new Modal(confirmDeleteFaqModal, modalOptions);
 const confirmEditFaqModal = new Modal(confirmEditFaqModalEl, modalOptions);
 const editFaqModal = new Modal(editFaqModalEl, modalOptions);
+const successModal = new Modal(successModalEl, createModalOptions(successModalEl));
 
 // Store original form values
 let originalFormData = {};
@@ -114,13 +149,11 @@ function handleEditFaq(faqId) {
             // Show modal
             editFaqModal.show();
         } else {
-            console.error('Failed to fetch FAQ:', data.message);
-            // TODO: Show error toast
+            alert('Failed to fetch FAQ: ' + (data.message || 'Unknown error'));
         }
     })
     .catch(error => {
-        console.error('Error fetching FAQ:', error);
-        // TODO: Show error toast
+        alert('Error fetching FAQ: ' + error.message);
     });
 }
 
@@ -176,7 +209,11 @@ confirmEditFaqCancel.addEventListener('click', () => {
 confirmEditFaqProceedButton.addEventListener('click', () => {
     console.log('Updating FAQ...');
 
-    const formData = new FormData(editFaqForm);
+    // Disable button and show loading state
+    confirmEditFaqProceedButton.disabled = true;
+    const originalEditButtonText = confirmEditFaqProceedButton.textContent;
+    confirmEditFaqProceedButton.textContent = 'Saving...';
+
     const faqId = editFaqId.value;
 
     // Submit update via AJAX
@@ -196,20 +233,39 @@ confirmEditFaqProceedButton.addEventListener('click', () => {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
+            // Hide confirmation modal
             confirmEditFaqModal.hide();
+            
+            // Reset form
             editFaqForm.reset();
-            alert('FAQ updated successfully');
-            // TODO: Show success toast and refresh FAQ list
-            location.reload(); // Or update the DOM dynamically
+            
+            // Set success modal message
+            successMesageHeader.textContent = 'Success!';
+            successMessage.textContent = 'FAQ updated successfully.';
+            
+            // Show success modal
+            successModal.show();
+            
         } else {
-            alert('Failed to update FAQ:', data.message);
-            // TODO: Show error toast
-            location.reload(); // Or update the DOM dynamically
+            // Show error alert
+            alert('Failed to update FAQ: ' + (data.message || 'Unknown error'));
+            
+            // Reset button state
+            confirmEditFaqProceedButton.disabled = false;
+            confirmEditFaqProceedButton.textContent = originalEditButtonText;
+            
+            confirmEditFaqModal.hide();
         }
     })
     .catch(error => {
-        alert('Error updating FAQ:', error);
-        location.reload(); // Or update the DOM dynamically
+        // Show error alert
+        alert('Error updating FAQ: ' + error.message);
+        
+        // Reset button state
+        confirmEditFaqProceedButton.disabled = false;
+        confirmEditFaqProceedButton.textContent = originalEditButtonText;
+        
+        confirmEditFaqModal.hide();
     });
 });
 
@@ -224,8 +280,14 @@ confirmDeleteFaqCancel.addEventListener('click', () => {
     currentDeleteFaqId = null;
 });
 
+// Confirm Delete FAQ Proceed
 confirmDeleteFaqProceedButton.addEventListener('click', () => {
     console.log('Deactivating FAQ ID:', currentDeleteFaqId);
+
+    // Disable button and show loading state
+    confirmDeleteFaqProceedButton.disabled = true;
+    const originalDeleteButtonText = confirmDeleteFaqProceedButton.textContent;
+    confirmDeleteFaqProceedButton.textContent = 'Deleting...';
 
     fetch(`/faqs/${currentDeleteFaqId}/deactivate`, {
         method: 'PUT',
@@ -237,19 +299,56 @@ confirmDeleteFaqProceedButton.addEventListener('click', () => {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
+            // Hide delete modal
             deleteFaqModal.hide();
-            alert('FAQ deactivated successfully');
-            // TODO: Show success toast and refresh FAQ list
-            location.reload(); // Or update the DOM dynamically
+            
+            // Reset delete ID
+            currentDeleteFaqId = null;
+            
+            // Set success modal message
+            successMesageHeader.textContent = 'Success!';
+            successMessage.textContent = 'FAQ deactivated successfully.';
+            
+            // Show success modal
+            successModal.show();
+            
         } else {
-            alert('Failed to deactivate FAQ:', data.message);
-            location.reload(); // Or update the DOM dynamically
+            // Show error alert
+            alert('Failed to deactivate FAQ: ' + (data.message || 'Unknown error'));
+            
+            // Reset button state
+            confirmDeleteFaqProceedButton.disabled = false;
+            confirmDeleteFaqProceedButton.textContent = originalDeleteButtonText;
+            
+            deleteFaqModal.hide();
+            currentDeleteFaqId = null;
         }
     })
     .catch(error => {
-        alert('Error deactivating FAQ:', error);
-        location.reload(); // Or update the DOM dynamically
+        // Show error alert
+        alert('Error deactivating FAQ: ' + error.message);
+        
+        // Reset button state
+        confirmDeleteFaqProceedButton.disabled = false;
+        confirmDeleteFaqProceedButton.textContent = originalDeleteButtonText;
+        
+        deleteFaqModal.hide();
+        currentDeleteFaqId = null;
     });
+});
+
+// Success modal close handler (shared for all success scenarios)
+closeSuccessModalButton.addEventListener('click', () => {
+    successModal.hide();
+    
+    // Reset both confirm buttons to their default states
+    confirmEditFaqProceedButton.disabled = true;
+    confirmEditFaqProceedButton.textContent = 'Proceed';
+    confirmDeleteFaqProceedButton.disabled = true;
+    confirmDeleteFaqProceedButton.textContent = 'Proceed';
+    
+    // Reload page to reflect changes
+    location.reload();
 });
 
 // Initialize

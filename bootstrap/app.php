@@ -16,7 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         // Register your middleware here
-       $middleware->append(\App\Http\Middleware\SecurityHeaders::class); //why am i having an issue with the charts and other ui whenever i renmove the commebnt?
+       //$middleware->append(\App\Http\Middleware\SecurityHeaders::class); //why am i having an issue with the charts and other ui whenever i renmove the commebnt?
        $middleware->alias([
             'admin.only' => \App\Http\Middleware\AdminOnly::class,
             'midwife.only' => \App\Http\Middleware\MidwifeOnly::class,
