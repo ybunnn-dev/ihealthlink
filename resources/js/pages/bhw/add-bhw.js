@@ -354,29 +354,22 @@ confirmProceedButton.addEventListener('click', async function() {
         if (!response.ok) {
             // Handle server-side errors (e.g., validation)
             console.error('Server Error:', data);
-            // Example: Show an error toast with the message from the server
-            // toast.error(data.message || 'Failed to add BHW.');
+          
             throw new Error(data.message || 'An error occurred.');
         }
 
-        // 3. Handle success
-        console.log('Success:', data);
-        // Example: Show a success toast, close the modal, and refresh the data table
-        // toast.success('BHW added successfully!');
         addBhwConfirmModal.hide(); 
         successMesageHeader.textContent = "BHW Created";
         successMessage.textContent = bhwFullName + "has been added as Barangay Health Worker";
         successModal.show();
-        // location.reload(); // Or update the table via JS
+        
 
     } catch (error) {
-        // 4. Handle network errors or errors thrown from the response check
+        
         console.error('Fetch Error:', error);
-        // Example: Show a generic error toast
-        // toast.error('An unexpected error occurred. Please try again.');
-
+        
     } finally {
-        // 5. Always restore the button to its original state
+        
         confirmProceedButton.innerHTML = originalButtonText;
         confirmProceedButton.disabled = false;
         cancelConfirmAddBhwButton.disabled = false;

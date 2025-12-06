@@ -105,7 +105,7 @@ removeMidwifeBtn.addEventListener('click', async function() {
         }
 
     } catch (err) {
-        console.error('Error sending remove request:', err);
+        alert('Error sending remove request:', err);
     }
 });
 

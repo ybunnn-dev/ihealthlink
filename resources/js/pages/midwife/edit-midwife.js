@@ -347,7 +347,7 @@ confirmEditMidwifeBtn.addEventListener('click', async function () {
         }
 
     } catch (err) {
-        console.error('Error sending payload:', err);
+        alert('Error sending payload:', err);
     }
 });
 

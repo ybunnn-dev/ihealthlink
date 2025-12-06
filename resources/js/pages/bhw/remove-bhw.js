@@ -86,7 +86,7 @@ removeBhwButton.addEventListener('click', function(event){
     })
     .catch(error => {
         console.error('Error:', error);
-        alert.error("Failed to remove BHW. Please try again.");
+        alert("Failed to remove BHW. Please try again.");
        
     })
     .finally(() => {
