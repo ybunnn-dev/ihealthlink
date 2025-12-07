@@ -26,6 +26,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => \App\Http\Middleware\CheckRole::class, // Most flexible
             'active' => \App\Http\Middleware\CheckStatus::class,
             'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
+            'log.request' => \App\Http\Middleware\LogRequestIp::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

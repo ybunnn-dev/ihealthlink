@@ -22,18 +22,27 @@ use App\Http\Controllers\FirebaseController;
 use App\Http\Controllers\Mobile\PasswordResetController;
 
 
-Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:login'); 
+Route::post('/login', [AuthController::class, 'login'])
+    ->middleware(['throttle:login', 'log.request']);
 
-Route::post('/password/request', [PasswordResetController::class, 'requestPassChangeChange'])->middleware('throttle:reset'); 
-Route::post('/password/verify', [PasswordResetController::class, 'verifyCode'])->middleware('throttle:reset'); 
-Route::post('/password/reset', [PasswordResetController::class, 'resetPassword'])->middleware('throttle:reset'); 
+Route::post('/password/request', [PasswordResetController::class, 'requestPassChangeChange'])
+    ->middleware(['throttle:reset', 'log.request']);
+
+Route::post('/password/verify', [PasswordResetController::class, 'verifyCode'])
+    ->middleware(['throttle:reset', 'log.request']);
+
+Route::post('/password/reset', [PasswordResetController::class, 'resetPassword'])
+    ->middleware(['throttle:reset', 'log.request']);
+
 
 // Protected routes (require Sanctum token)
-Route::middleware(['auth:sanctum',
-'verified',
-'throttle:auth-web',
-'active',
-'personnel.only'
+Route::middleware([
+    'auth:sanctum',
+    'verified',
+    'throttle:auth-web',
+    'active',
+    'personnel.only',
+    'log.request' // <--- added here
 ]
 )->group(function () {
     Route::get('/user', function (Request $request) {
@@ -136,6 +145,7 @@ Route::middleware([
     'verified',
     'throttle:auth-web',
     'active',
+    'log.request'
 ])->group(function () {
 
     Route::get('/firebase-messaging-sw.js', function () {

@@ -32,7 +32,7 @@ use App\Http\Controllers\Web\ExportController;
 use App\Http\Controllers\Web\FaqController;
 use App\Http\Controllers\Web\MhoDashboardController;
 
-Route::middleware('guest')->group(function () {
+Route::middleware('guest', 'log.request')->group(function () {
     Route::get('/', function () {
         return view('auth.login');
     })->name('home');
@@ -58,7 +58,8 @@ Route::middleware([
     'verified',
     'throttle:auth-web',
     'admin.only',
-    'active'
+    'active',
+    'log.request'
 ])->group(function(){
      // MHO-specific dashboard
     Route::delete('/mho/health-program/schedule/remove/{id}', [HealthProgramController::class, 'removeSchedule'])
@@ -149,7 +150,8 @@ Route::middleware([
     'verified',
     'throttle:auth-web',
     'midwife.only',
-    'active'
+    'active',
+    'log.request'
 ])->group(function () {
      Route::get('/barangay/schedules', [ScheduleController::class, 'index'])->name('midwife.sched');
     
@@ -182,6 +184,7 @@ Route::middleware([
     'verified',
     'throttle:auth-web',
     'active',
+    'log.request'
 ])->group(function () {
 
     Route::get('/firebase-messaging-sw.js', function () {
@@ -204,6 +207,7 @@ Route::middleware([
     'throttle:auth-web',
     'midwife.role4',
     'active',
+    'log.request'
 ])->group(function () {
     
     Route::put('/barangay/family/transfer', [FamilyController::class, 'transfer'])->name('family.transfer');
