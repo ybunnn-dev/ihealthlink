@@ -384,7 +384,7 @@ class HouseholdController extends Controller
     }
 
 
-    public function setHead(Request $request)
+   public function setHead(Request $request)
     {
         $user = Auth::user();
 
@@ -410,6 +410,21 @@ class HouseholdController extends Controller
             ], 404);
         }
 
+        // Check if this resident is already head of another household
+        $existingHeadHousehold = Household::where('head_id', $request['head_id'])
+            ->where('id', '!=', $request['household_id'])
+            ->first();
+
+        if ($existingHeadHousehold) {
+            // Remove them as head from the previous household
+            $existingHeadHousehold->update([
+                'head_id' => null
+            ]);
+
+            \Log::info("Removed resident {$request['head_id']} as head from household {$existingHeadHousehold->id}");
+        }
+
+        // Update the new household with the head
         $household->update([
             'head_id' => $request['head_id']
         ]);
@@ -417,17 +432,164 @@ class HouseholdController extends Controller
         // Log the activity
         ActivityLog::create([
             'user_id'   => $user->id,
-            'module_id' => 5, // replace with correct module ID for households
-            'activity'  => 'Updated Household #' . $household->id . '.',
+            'module_id' => 5,
+            'activity'  => 'Updated Household #' . $household->id . ' head to Resident #' . $request['head_id'] . '.',
         ]);
 
         return response()->json([
             'success' => true,
             'message' => 'Household head updated successfully.',
-            'household' => $household
+            'household' => $household->fresh(),
+            'previous_household_updated' => $existingHeadHousehold ? $existingHeadHousehold->id : null
+        ], 200);
+    }
+    public function storeOrUpdateHouseholdSync(Request $request)
+    {
+        $user = Auth::user();
+        $personnel = $user->bhw ?? $user->bhwWeb ?? $user->midwife;
+
+        if (!$personnel) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'No associated personnel found for this user.'
+            ], 404);
+        }
+
+        $barangay = Barangay::with('puroks')->find($personnel->brgy_id);
+
+        if (!$barangay) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Barangay not found for this personnel.'
+            ], 404);
+        }
+
+        $validated = $request->validate([
+            'households' => 'required|array',
+            'households.*.local_id' => 'required|integer',
+            'households.*.client_uuid' => 'required|string',
+            'households.*.purok_server_id' => 'required|exists:puroks,id',
+            'households.*.water_source' => 'nullable|string|max:255',
+            'households.*.sanitary_toilet' => 'required|string|max:255',
+            'households.*.waste_disposal' => 'required|string|max:255',
+            'households.*.is_iwas_gutom_enrolled' => 'nullable|integer',
+            'households.*.is_indigent' => 'nullable|integer',
+            'households.*.status' => 'required|string',
+            'households.*.updated_at' => 'required|string',
+            'households.*.head_id' => 'nullable|integer'
+        ]);
+
+        $syncedHouseholds = [];
+
+        DB::transaction(function () use ($validated, $user, $barangay, &$syncedHouseholds) {
+            $householdsToUpsert = [];
+
+            foreach ($validated['households'] as $householdData) {
+                // Check if household exists by client_uuid
+                $existingHousehold = Household::where('client_uuid', $householdData['client_uuid'])->first();
+
+                // Last Write Wins conflict resolution
+                if ($existingHousehold) {
+                    $serverUpdatedAt = Carbon::parse($existingHousehold->updated_at);
+                    $clientUpdatedAt = Carbon::parse($householdData['updated_at']);
+
+                    // Skip if server has newer data
+                    if ($serverUpdatedAt->greaterThan($clientUpdatedAt)) {
+                        $syncedHouseholds[] = [
+                            'local_id' => $householdData['local_id'],
+                            'server_id' => $existingHousehold->id,
+                            'updated_at' => $existingHousehold->updated_at->toIso8601String(),
+                        ];
+                        continue;
+                    }
+                }
+
+                // Handle head_id logic before upsert
+                $headIdToSet = $householdData['head_id'] ?? null;
+                
+                if ($headIdToSet !== null) {
+                    // Check if head_id is changing (different from existing household's head)
+                    $isHeadChanging = !$existingHousehold || $existingHousehold->head_id != $headIdToSet;
+                    
+                    if ($isHeadChanging) {
+                        // Remove this resident as head from any other household
+                        $currentHouseholdId = $existingHousehold ? $existingHousehold->id : null;
+                        
+                        Household::where('head_id', $headIdToSet)
+                            ->when($currentHouseholdId, function($query) use ($currentHouseholdId) {
+                                return $query->where('id', '!=', $currentHouseholdId);
+                            })
+                            ->update(['head_id' => null]);
+                        
+                        \Log::info("Removed resident {$headIdToSet} as head from other households before syncing household {$householdData['client_uuid']}");
+                    }
+                }
+
+                $householdsToUpsert[] = [
+                    'client_uuid' => $householdData['client_uuid'],
+                    'purok_id' => $householdData['purok_server_id'],
+                    'water_source' => $householdData['water_source'],
+                    'waste_disposal' => $householdData['waste_disposal'],
+                    'sanitary_toilet' => $householdData['sanitary_toilet'],
+                    'is_iwas_gutom_enrolled' => $householdData['is_iwas_gutom_enrolled'] ?? 0,
+                    'is_indigent' => $householdData['is_indigent'] ?? 0,
+                    'status' => $householdData['status'],
+                    'updated_at' => $householdData['updated_at'],
+                    'created_at' => now(),
+                    'head_id' => $headIdToSet
+                ];
+            }
+
+            // Perform bulk upsert
+            if (!empty($householdsToUpsert)) {
+                Household::upsert(
+                    $householdsToUpsert,
+                    ['client_uuid'], // Unique constraint
+                    ['purok_id', 'water_source', 'waste_disposal', 'sanitary_toilet', 
+                    'is_iwas_gutom_enrolled', 'is_indigent', 'status', 'updated_at', 'head_id'] // Columns to update
+                );
+            }
+
+            // Retrieve server IDs and map to local IDs
+            foreach ($validated['households'] as $householdData) {
+                $household = Household::where('client_uuid', $householdData['client_uuid'])->first();
+
+                if ($household) {
+                    $syncedHouseholds[] = [
+                        'local_id' => $householdData['local_id'],
+                        'server_id' => $household->id,
+                        'updated_at' => $household->updated_at->toIso8601String(),
+                    ];
+
+                    // Create history record
+                    HouseholdResidenceHistory::create([
+                        'household_id' => $household->id,
+                        'head_id' => $household->head_id,
+                        'purok_id' => $household->purok_id,
+                        'water_source' => $household->water_source,
+                        'waste_disposal' => $household->waste_disposal,
+                        'sanitary_toilet' => $household->sanitary_toilet,
+                        'status' => 'active',
+                    ]);
+
+                    // Log activity
+                    $purok = Purok::find($household->purok_id);
+                    ActivityLog::create([
+                        'user_id' => $user->id,
+                        'module_id' => 5,
+                        'activity' => 'Synced household in Purok ' . ucfirst($purok->name) . '.',
+                    ]);
+                }
+            }
+        });
+
+        return response()->json([
+            'message' => 'Households synced successfully!',
+            'households' => $syncedHouseholds,
         ], 200);
     }
 
+    /*
     public function storeOrUpdateHouseholdSync(Request $request)
     {
         $user = Auth::user();
@@ -551,6 +713,6 @@ class HouseholdController extends Controller
             'message' => 'Households synced successfully!',
             'households' => $syncedHouseholds,
         ], 200);
-    }
+    }*/
 
 }
