@@ -52,8 +52,7 @@ const prEl = document.getElementById('view-pr');
 const rrEl = document.getElementById('view-rr');
 const birthweightEl = document.getElementById('view-birthweight');
 const philhealthEl = document.getElementById('view-philhealth');
-const fatherNameEl = document.getElementById('view-father-name');
-const motherNameEl = document.getElementById('view-mother-name');
+
 
 // Lower section elements in Vitals Tab
 const complaintEl = document.getElementById('view-chief-complaint');
@@ -126,8 +125,6 @@ const populateModal = (data) => {
         rrEl.textContent = consultation_data.rr ? `${consultation_data.rr} cpm` : '—';
         birthweightEl.textContent = consultation_data.birthweight ? `${consultation_data.birthweight} g` : '—';
         philhealthEl.textContent = consultation_data.is_philhealth ? 'Yes' : 'No';
-        fatherNameEl.textContent = consultation_data.father_name || '—';
-        motherNameEl.textContent = consultation_data.mother_name || '—';
         complaintEl.textContent = consultation_data.chief_complaint || 'No complaint recorded.';
         treatmentEl.textContent = consultation_data.treatment || 'No treatment plan recorded.';
     }

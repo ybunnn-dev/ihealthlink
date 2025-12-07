@@ -48,13 +48,6 @@
                             <div><strong class="font-medium text-main_font dark:text-white block mb-1">Birthweight:</strong> <span id="view-birthweight" class="text-normal_font dark:text-gray-300"></span></div>
                             <div><strong class="font-medium text-main_font dark:text-white block mb-1">PhilHealth:</strong> <span id="view-philhealth" class="text-normal_font dark:text-gray-300"></span></div>
                             
-                            <!-- Parents span wider on larger screens -->
-                            <div class="col-span-1 sm:col-span-2 md:col-span-3 pt-2 border-t border-gray-200 dark:border-gray-600 mt-2"></div>
-                            
-                            <div class="col-span-1 sm:col-span-2 md:col-span-1"><strong class="font-medium text-main_font dark:text-white block mb-1">Father's Name:</strong> <span id="view-father-name" class="text-normal_font dark:text-gray-300"></span></div>
-                            <div class="col-span-1 sm:col-span-2 md:col-span-1"><strong class="font-medium text-main_font dark:text-white block mb-1">Mother's Name:</strong> <span id="view-mother-name" class="text-normal_font dark:text-gray-300"></span></div>
-                       </div>
-                       
                        <hr class="border-gray-200 dark:border-gray-600"/>
                        
                        <!-- Notes Section -->
