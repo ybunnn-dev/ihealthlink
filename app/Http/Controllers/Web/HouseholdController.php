@@ -421,17 +421,32 @@ class HouseholdController extends Controller
 
         $household = Household::find($request['household_id']);
         
-        if ($household->purok->brgy_id !== $user->personnel->brgy_id) {
-            abort(403, 'Unauthorized to view this household');
-        }
-
         if (!$household) {
             return response()->json([
                 'success' => false,
                 'message' => 'Household not found.'
             ], 404);
         }
+        
+        if ($household->purok->brgy_id !== $user->personnel->brgy_id) {
+            abort(403, 'Unauthorized to view this household');
+        }
 
+        // Check if this resident is already head of another household
+        $existingHeadHousehold = Household::where('head_id', $request['head_id'])
+            ->where('id', '!=', $request['household_id'])
+            ->first();
+
+        if ($existingHeadHousehold) {
+            // Remove them as head from the previous household
+            $existingHeadHousehold->update([
+                'head_id' => null
+            ]);
+
+            \Log::info("Removed resident {$request['head_id']} as head from household {$existingHeadHousehold->id}");
+        }
+
+        // Update the new household with the head
         $household->update([
             'head_id' => $request['head_id']
         ]);
@@ -439,14 +454,16 @@ class HouseholdController extends Controller
         // Log the activity
         ActivityLog::create([
             'user_id'   => $user->id,
-            'module_id' => 5, // replace with correct module ID for households
-            'activity'  => 'Updated Household #' . $household->id . '.',
+            'module_id' => 5,
+            'activity'  => 'Updated Household #' . $household->id . ' head to Resident #' . $request['head_id'] . '.',
         ]);
 
         return response()->json([
             'success' => true,
             'message' => 'Household head updated successfully.',
-            'household' => $household
+            'household' => $household->fresh(),
+            'previous_household_updated' => $existingHeadHousehold ? $existingHeadHousehold->id : null
         ], 200);
     }
+
 }
