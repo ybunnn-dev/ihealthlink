@@ -43,7 +43,7 @@ class PasswordResetController extends Controller
             ]
         );
 
-        Mail::raw("Your password reset code is: {$plainToken}", function ($message) use ($request) {
+        Mail::send('emails.reset-email', ['plainCode' => $plainToken], function ($message) use ($request) {
             $message->to($request->email)
                     ->subject('Password Reset Verification Code');
         });
