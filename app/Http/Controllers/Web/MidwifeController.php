@@ -150,7 +150,7 @@ class MidwifeController extends Controller
             'birthdate' => 'required|date',
             'age' => 'required|integer|min:18|max:100',
             'sex' => 'required|string|in:Male,Female,Other',
-            'civilStatus' => 'required|string|in:Single,Married,Divorced,Widowed',
+            'civilStatus' => 'required|string',
             'religion' => 'required|string|max:50',
             'contactNo' => 'required|string|max:20',
             'barangayId' => 'required|integer|exists:barangays,id',

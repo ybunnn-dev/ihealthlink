@@ -270,6 +270,7 @@ cancelEditMidwifeBtn.addEventListener('click', function() {
 
 // When the "Save Changes" button is clicked
 updateMidwifeSubmitBtn.addEventListener('click', function() {
+    
     if (editMidwifePayload) {
         // Prepare the confirmation modal
         midwifeNameToEditConfirm.textContent = editMidwifePayload.firstName + ' ' +editMidwifePayload.lastName;

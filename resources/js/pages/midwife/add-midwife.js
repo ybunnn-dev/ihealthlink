@@ -1,5 +1,5 @@
 // --- Global State ---
-let midwifePayload = {}; // NEW: Holds the form data for the confirmation step
+let midwifePayload = {}; // Holds the form data for the confirmation step
 
 const createModalOptions = (modalEl) => ({
     placement: 'center-center',
@@ -35,7 +35,7 @@ const submitButton = document.getElementById('addMidwifeSubmitBtn');
 const birthdateInput = document.getElementById('midwifeBdate');
 const ageInput = document.getElementById('midwifeAge');
 
-//success modal elements
+// Success modal elements
 const successModalEl = document.getElementById('success-modal');
 const successMesageHeader = document.getElementById('success-msg-head');
 const successMessage = document.getElementById('success-message');
@@ -58,28 +58,14 @@ const requiredDropdowns = [
 
 const allDropdowns = [...requiredDropdowns, document.getElementById('prefixDropdown')];
 
-// --- NEW: Element Selection (Modal Management) ---
+// --- Modal Management with Flowbite ---
 const addMidwifeModalEl = document.getElementById('add-midwife-modal');
 const confirmModalEl = document.getElementById('confirm-add-midwife-modal');
 
-// Manual modal functions - more reliable than Flowbite Modal class
-const showModal = (modalEl) => {
-    if (modalEl) {
-        modalEl.classList.remove('hidden');
-        modalEl.setAttribute('aria-hidden', 'false');
-        modalEl.style.display = 'flex';
-        document.body.classList.add('overflow-hidden');
-    }
-};
-
-const hideModal = (modalEl) => {
-    if (modalEl) {
-        modalEl.classList.add('hidden');
-        modalEl.setAttribute('aria-hidden', 'true');
-        modalEl.style.display = 'none';
-        document.body.classList.remove('overflow-hidden');
-    }
-};
+// Create Flowbite Modal instances
+const addMidwifeModal = new Modal(addMidwifeModalEl, createModalOptions(addMidwifeModalEl));
+const confirmModal = new Modal(confirmModalEl, createModalOptions(confirmModalEl));
+const successModal = new Modal(successModalEl, createModalOptions(successModalEl));
 
 const confirmCheckbox = document.getElementById('confirm-midwife-checkbox');
 const proceedButton = document.getElementById('confirm-add-midwife-btn');
@@ -91,12 +77,7 @@ const midwifeNameSpan = document.getElementById('midwife-name-to-confirm');
 ageInput.disabled = true;
 ageInput.classList.add('bg-gray-100');
 
-const options = {
-    // This prevents the modal from closing when the backdrop is clicked
-    backdrop: 'static', 
-};
-
-// Populate Barangay Dropdown (This function is unchanged)
+// Populate Barangay Dropdown
 const populateBarangayDropdown = () => {
     const menu = document.getElementById('barangayDropdownMenu');
     if (!menu) return;
@@ -122,17 +103,20 @@ const populateBarangayDropdown = () => {
     }
 };
 
-// Validation (This function is unchanged)
+// Validation
 const validateForm = () => {
     const allInputsFilled = [...textInputs, birthdateInput, ageInput].every(input => input.value.trim() !== '');
-    const allDropdownsSelected = requiredDropdowns.every(button => !button.textContent.trim().startsWith('Select'));
+    const allDropdownsSelected = requiredDropdowns.every(button => {
+        const span = button.querySelector('span');
+        const text = span ? span.textContent.trim() : button.textContent.trim();
+        return !text.startsWith('Select');
+    });
     submitButton.disabled = !(allInputsFilled && allDropdownsSelected);
 };
 
-// Age Calculation (This function is unchanged as you requested)
+// Age Calculation
 const calculateAndSetAge = () => {
     const birthDateString = birthdateInput.value;
-    console.log('boto mo');
     if (!birthDateString) {
         ageInput.value = '';
         validateForm();
@@ -154,15 +138,23 @@ const calculateAndSetAge = () => {
     validateForm();
 };
 
-// Dropdown Setup (This function is unchanged)
+// Dropdown Setup
 const setupDropdown = (button) => {
     const menuId = button.getAttribute('data-dropdown-toggle');
     const menu = document.getElementById(menuId);
     if (!menu) return;
-    const options = menu.querySelectorAll('ul li button');
+    
+    const options = menu.querySelectorAll('ul li a, ul li button');
+    
     options.forEach(option => {
-        option.addEventListener('click', () => {
-            button.textContent = option.textContent.trim();
+        option.addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            const span = button.querySelector('span');
+            if (span) {
+                span.textContent = option.textContent.trim();
+            }
+            
             if (option.dataset.id) {
                 button.dataset.selectedId = option.dataset.id;
             }
@@ -170,7 +162,6 @@ const setupDropdown = (button) => {
         });
     });
 };
-
 
 // --- Event Listeners & Initializations ---
 
@@ -183,22 +174,22 @@ populateBarangayDropdown();
 birthdateInput.addEventListener('changeDate', calculateAndSetAge);
 
 allDropdowns.forEach(setupDropdown);
-validateForm(); // Initial validation check
-
+validateForm();
 
 // --- Form Submission Logic ---
 
 const getDropdownValue = (elementId) => {
     const element = document.getElementById(elementId);
-    const text = element.textContent.trim();
+    const span = element.querySelector('span');
+    const text = span ? span.textContent.trim() : element.textContent.trim();
     return text.startsWith('Select') ? null : text;
 };
 
-// MODIFIED: This button now temporarily closes the main modal and opens the confirmation modal
+// Submit button: hide main modal and show confirmation modal
 submitButton.addEventListener('click', function(event) {
     event.preventDefault();
     
-    // 1. Build the payload and store it globally
+    // Build the payload
     midwifePayload = {
         firstName: document.getElementById('midwifeFirstName').value.trim(),
         lastName: document.getElementById('midwifeLastName').value.trim(),
@@ -214,27 +205,39 @@ submitButton.addEventListener('click', function(event) {
         email: document.getElementById('midwifeEmail').value.trim(),
     };
     
-    // 2. Prepare the confirmation modal
+    // Prepare confirmation modal
     const fullName = `${midwifePayload.firstName} ${midwifePayload.lastName}`;
     midwifeNameSpan.textContent = fullName;
     
-    // Reset confirmation modal state for next use
+    // Reset confirmation state
     confirmCheckbox.checked = false;
     proceedButton.disabled = true;
     
-    // 3. Hide the main modal and show the confirmation modal
-    hideModal(addMidwifeModalEl);
-    showModal(confirmModalEl);
+    // Switch modals using Flowbite
+    addMidwifeModal.hide();
+    setTimeout(() => {
+        confirmModal.show();
+    }, 300);
 });
 
-// NEW: Event listeners for the confirmation modal
+document.getElementById('close-add-mw').addEventListener('click', function(){
+    resetForm(); // Reset form first
+    addMidwifeModal.hide();
+});
+
+// Confirmation checkbox
 confirmCheckbox.addEventListener('change', function() {
-    // Enable/disable the proceed button based on checkbox state
     proceedButton.disabled = !this.checked;
 });
 
-// Function to submit midwife data to the API
+// Function to submit midwife data
+// Function to submit midwife data
 async function submitMidwifeData(payload) {
+    // Disable button and show loading state
+    proceedButton.disabled = true;
+    const originalText = proceedButton.textContent;
+    proceedButton.textContent = 'Saving...';
+    
     try {
         const response = await fetch('/mho/add-midwife', {
             method: 'POST',
@@ -248,65 +251,76 @@ async function submitMidwifeData(payload) {
         const data = await response.json();
 
         if (response.ok) {
-            // Create Modal instances properly
-            const successModal = new Modal(successModalEl, createModalOptions(successModalEl));
-            const confAddMidwifeModal = new Modal(confirmModalEl, createModalOptions(confirmModalEl));
-
             // Update success message
             successMesageHeader.textContent = 'Midwife Added';
             successMessage.textContent = `${payload.firstName ?? ''} ${payload.middleName ?? ''} ${payload.lastName ?? ''}${payload.suffix ? ' ' + payload.suffix : ''} has been added`;
             
+            // Keep button disabled - success flow will redirect anyway
             // Hide confirmation modal and show success modal
-            confAddMidwifeModal.hide();
-            successModal.show();
+            confirmModal.hide();
+            setTimeout(() => {
+                successModal.show();
+            }, 300);
             
         } else {
+            // Revert button on error
+            proceedButton.disabled = false;
+            proceedButton.textContent = originalText;
+            
             console.error('Error:', data);
             alert('Error adding midwife: ' + (data.message || 'Please check the form and try again.'));
         }
     } catch (error) {
+        // Revert button on network error
+        proceedButton.disabled = false;
+        proceedButton.textContent = originalText;
+        
         console.error('Network error:', error);
         alert('Network error. Please try again.');
     }
 }
 
-// Modified event listener for the proceed button
+// Proceed button: submit data
 proceedButton.addEventListener('click', function() {
-    // Submit the data to the API
     submitMidwifeData(midwifePayload);
-    
-    // Hide the confirmation modal
-    hideModal(confirmModalEl);
 });
 
-// NEW: Handle cancel action in confirmation modal
+// Cancel confirmation: go back to main modal
 const cancelConfirmButton = document.getElementById('close-confirm-add-midwife');
-if (cancelConfirmButton) {
-    cancelConfirmButton.addEventListener('click', function() {
-        // When user cancels confirmation, hide confirmation modal and show main modal again
-        hideModal(confirmModalEl);
-        showModal(addMidwifeModalEl);
-    });
-}
 
-// Optional: Function to reset the form (you can use this if needed)
+cancelConfirmButton.addEventListener('click', function() {
+    confirmModal.hide();
+        
+    addMidwifeModal.show();
+});
+
+
+document.getElementById('add-midwife-button').addEventListener('click', function(){
+    addMidwifeModal.show();
+});
+// Reset form function
 const resetForm = () => {
     [...textInputs, birthdateInput, ageInput].forEach(input => {
         input.value = '';
     });
     
     allDropdowns.forEach(button => {
-        const defaultText = button.id === 'prefixDropdown' ? 'Select Prefix' : 
+        const span = button.querySelector('span');
+        const defaultText = button.id === 'prefixDropdown' ? 'Select' : 
                            button.id === 'sexDropdown' ? 'Select Sex' :
+                           button.id === 'civilStatusDropdown' ? 'Select Status' :
+                           button.id === 'religionDropdown' ? 'Select Religion' :
                            button.id === 'barangayDropdown' ? 'Select Barangay' : 'Select';
-        button.textContent = defaultText;
+        if (span) {
+            span.textContent = defaultText;
+        }
         delete button.dataset.selectedId;
     });
     
     validateForm();
 };
 
-
+// Success modal close: redirect
 closeSuccessModalButton.addEventListener('click', function(){
     window.location.href = '/mho/midwives';
 });
