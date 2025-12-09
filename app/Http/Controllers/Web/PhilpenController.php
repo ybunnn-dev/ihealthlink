@@ -60,6 +60,10 @@ class PhilpenController extends Controller
             // Step 1: Mark all pending consultations as completed
             $updatedCount = Consultation::whereHas('enrolledResident', function($query) use ($brgyId) {
                                 $query->where('status', 'active')
+                                    ->whereHas('program', function($query) {
+                                        $query->where('category', 'philpen_tcl')
+                                            ->where('status', 'active');
+                                    })
                                     ->whereHas('resident', function($query) use ($brgyId) {
                                         $query->where('status', 'active')
                                             ->whereHas('family', function($query) use ($brgyId) {
@@ -74,15 +78,12 @@ class PhilpenController extends Controller
                                             });
                                     });
                             })
-                            ->whereHas('program', function($query) {
-                                $query->where('category', 'philpen_tcl')
-                                    ->where('status', 'active');
-                            })
                             ->where('status', 'pending')
                             ->update([
                                 'status' => 'completed',
                                 'updated_at' => now()
                             ]);
+
 
             // Step 2: Get all enrolled residents in the current barangay for philpen_tcl
             $enrolledResidents = EnrolledResident::where('status', 'active')
