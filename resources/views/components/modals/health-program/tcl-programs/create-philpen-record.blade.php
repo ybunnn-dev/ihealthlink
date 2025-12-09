@@ -1,6 +1,6 @@
-<div id="create-philpen-record-modal" tabindex="-1" aria-hidden="true" class="hidden fixed inset-0 z-50 flex justify-center items-center w-full h-full transition-opacity duration-400 ease-out opacity-0">
+<div id="create-philpen-record-modal" tabindex="-1" aria-hidden="true" class="hidden fixed inset-0 z-50 flex justify-center items-center w-full h-full">
     <div class="relative p-4 w-full max-w-6xl max-h-full">
-        <div class="relative bg-white rounded-lg shadow-xl dark:bg-gray-700 w-full flex flex-col max-h-[90vh] transition-transform duration-300 ease-out scale-95">
+        <div class="relative bg-white rounded-lg shadow-xl dark:bg-gray-700 w-full flex flex-col max-h-[90vh]">
             
             <div class="flex flex-col items-center justify-center rounded-t p-6 pb-2 border-b border-gray-100 shrink-0">
                 <h3 class="text-xl font-semibold text-main_font">

@@ -102,47 +102,65 @@ const getStatusInfo = (consultation) => {
 };
 
 const populateModal = (data) => {
+    if (!data) {
+        console.error('No data provided to populateModal');
+        return;
+    }
+
     const { consultation_data, medicine_distributions, updated_by } = data;
-    console.log(data);
+    console.log('Populating modal with data:', data);
     
-    // Populate header
-    consultationTitleEl.textContent = data.consultation_title || 'Consultation Details';
-    consultationScheduleEl.textContent = `Scheduled for: ${formatDate(data.consultation_date)}`;
+    // Add null checks for each element
+    if (consultationTitleEl) {
+        consultationTitleEl.textContent = data.consultation_title || 'Consultation Details';
+    }
+    
+    if (consultationScheduleEl) {
+        consultationScheduleEl.textContent = `Scheduled for: ${formatDate(data.consultation_date)}`;
+    }
 
     // Populate top info
     const { statusText, statusColorClass } = getStatusInfo(data);
-    statusEl.innerHTML = `<span class="px-2 py-1 font-semibold text-xs rounded-full ${statusColorClass}">${statusText}</span>`;
+    if (statusEl) {
+        statusEl.innerHTML = `<span class="px-2 py-1 font-semibold text-xs rounded-full ${statusColorClass}">${statusText}</span>`;
+    }
 
-    let fullName = `${updated_by.firstName} ${updated_by.middleName} ${updated_by.lastName}`;
-    completedEl.textContent = formatDate(data.updated_at);
-    updatedByEl.textContent = updated_by ? fullName : 'N/A';
+    let fullName = updated_by ? `${updated_by.firstName || ''} ${updated_by.middleName || ''} ${updated_by.lastName || ''}`.trim() : 'N/A';
+    
+    if (completedEl) {
+        completedEl.textContent = formatDate(data.updated_at);
+    }
+    
+    if (updatedByEl) {
+        updatedByEl.textContent = fullName;
+    }
 
     // Populate vitals if data exists
     if (consultation_data) {
-        weightEl.textContent = consultation_data.weight ? `${consultation_data.weight} kg` : '—';
-        heightEl.textContent = consultation_data.height ? `${consultation_data.height} cm` : '—';
-        tempEl.textContent = consultation_data.temperature ? `${consultation_data.temperature} °C` : '—';
-        bpEl.textContent = (consultation_data.bp_systolic && consultation_data.bp_diastolic) ? `${consultation_data.bp_systolic}/${consultation_data.bp_diastolic} mmHg` : '—';
-        prEl.textContent = consultation_data.pr ? `${consultation_data.pr} bpm` : '—';
-        rrEl.textContent = consultation_data.rr ? `${consultation_data.rr} cpm` : '—';
-        birthweightEl.textContent = consultation_data.birthweight ? `${consultation_data.birthweight} g` : '—';
-        philhealthEl.textContent = consultation_data.is_philhealth ? 'Yes' : 'No';
-        fatherNameEl.textContent = consultation_data.father_name || '—';
-        motherNameEl.textContent = consultation_data.mother_name || '—';
-        complaintEl.textContent = consultation_data.chief_complaint || 'No complaint recorded.';
-        treatmentEl.textContent = consultation_data.treatment || 'No treatment plan recorded.';
+        if (weightEl) weightEl.textContent = consultation_data.weight ? `${consultation_data.weight} kg` : '—';
+        if (heightEl) heightEl.textContent = consultation_data.height ? `${consultation_data.height} cm` : '—';
+        if (tempEl) tempEl.textContent = consultation_data.temperature ? `${consultation_data.temperature} °C` : '—';
+        if (bpEl) bpEl.textContent = (consultation_data.bp_systolic && consultation_data.bp_diastolic) ? `${consultation_data.bp_systolic}/${consultation_data.bp_diastolic} mmHg` : '—';
+        if (prEl) prEl.textContent = consultation_data.pr ? `${consultation_data.pr} bpm` : '—';
+        if (rrEl) rrEl.textContent = consultation_data.rr ? `${consultation_data.rr} cpm` : '—';
+        if (birthweightEl) birthweightEl.textContent = consultation_data.birthweight ? `${consultation_data.birthweight} g` : '—';
+        if (philhealthEl) philhealthEl.textContent = consultation_data.is_philhealth ? 'Yes' : 'No';
+        if (fatherNameEl) fatherNameEl.textContent = consultation_data.father_name || '—';
+        if (motherNameEl) motherNameEl.textContent = consultation_data.mother_name || '—';
+        if (complaintEl) complaintEl.textContent = consultation_data.chief_complaint || 'No complaint recorded.';
+        if (treatmentEl) treatmentEl.textContent = consultation_data.treatment || 'No treatment plan recorded.';
     }
 
     // Populate medicines
-    medicineListEl.innerHTML = ''; // Clear previous list
-    if (medicine_distributions && medicine_distributions.length > 0) {
-        medicine_distributions.forEach(med => {
-            // Safely access nested medicine information
-            if (med.medicine) {
-                const medicineInfo = med.medicine;
-                const medCard = document.createElement('div');
-                medCard.className = 'p-3 bg-white rounded-lg border border-gray-200';
-                medCard.innerHTML = `
+    if (medicineListEl) {
+        medicineListEl.innerHTML = ''; // Clear previous list
+        if (medicine_distributions && medicine_distributions.length > 0) {
+            medicine_distributions.forEach(med => {
+                if (med.medicine) {
+                    const medicineInfo = med.medicine;
+                    const medCard = document.createElement('div');
+                    medCard.className = 'p-3 bg-white rounded-lg border border-gray-200';
+                    medCard.innerHTML = `
                         <p class="font-semibold text-main_font truncate" title="${medicineInfo.medicine_name}">
                             ${medicineInfo.medicine_name}
                         </p>
@@ -151,20 +169,20 @@ const populateModal = (data) => {
                             <span class="font-bold text-main_font text-xs">x${med.quantity}</span>
                         </div>
                     `;
-                medicineListEl.appendChild(medCard);
-            }
-        });
-    } else {
-        // If no medicines, show a placeholder message
-        const placeholder = document.createElement('p');
-        placeholder.className = 'text-sm text-gray-500 col-span-1 md:col-span-3';
-        placeholder.textContent = 'No medicines were distributed for this consultation.';
-        medicineListEl.appendChild(placeholder);
+                    medicineListEl.appendChild(medCard);
+                }
+            });
+        } else {
+            const placeholder = document.createElement('p');
+            placeholder.className = 'text-sm text-gray-500 col-span-1 md:col-span-3';
+            placeholder.textContent = 'No medicines were distributed for this consultation.';
+            medicineListEl.appendChild(placeholder);
+        }
     }
 };
 
 
-// --- Event Listener ---
+/// --- Event Listener ---
 document.body.addEventListener('click', async (event) => {
     const viewButton = event.target.closest('.js-view-consultation-btn');
     if (viewButton) {
@@ -180,7 +198,9 @@ document.body.addEventListener('click', async (event) => {
             if (!response.ok) throw new Error('Network response was not ok');
 
             const data = await response.json();
-            populateModal(data.consultation_data);
+            
+            // Pass the full data object, not just consultation_data
+            populateModal(data.consultation_data || data); // Changed this line
 
         } catch (error) {
             console.error('Failed to fetch consultation details:', error);
@@ -189,6 +209,7 @@ document.body.addEventListener('click', async (event) => {
         }
     }
 });
+
 
 closeView.addEventListener('click', function(){
     viewModal.hide();
