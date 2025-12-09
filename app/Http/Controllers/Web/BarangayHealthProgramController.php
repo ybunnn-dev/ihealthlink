@@ -210,10 +210,51 @@ class BarangayHealthProgramController extends Controller
             // Attach to current enrolled resident instance
             $enrolledResident->setRelation('antiTetanusEnrollment', $antiTetanusEnrollment);
 
-        }else if($enrolledResident->program && $enrolledResident->program->category === 'family_planning_tcl'){
-            $enrolledResident->load('famPlanRecord');
+        } else if($enrolledResident->program && $enrolledResident->program->category === 'family_planning_tcl'){
+        $enrolledResident->load('famPlanRecord');
 
-        }else if ($enrolledResident->program && $enrolledResident->program->category === 'philpen_tcl') {
+        // Check if all consultations are completed
+        $allCompleted = $enrolledResident->consultations->every(function ($consultation) {
+            return $consultation->status === 'completed';
+        });
+
+        // If all consultations are completed, create "Next Consultation"
+        if ($allCompleted && $enrolledResident->consultations->isNotEmpty()) {
+            // Get the last consultation
+            $lastConsultation = $enrolledResident->consultations
+                ->sortByDesc('consultation_date')
+                ->first();
+
+            // Check if "Next Consultation" doesn't already exist
+            $nextConsultationExists = $enrolledResident->consultations
+                ->where('consultation_title', 'Next Consultation')
+                ->where('status', 'pending')
+                ->isNotEmpty();
+
+            if (!$nextConsultationExists) {
+                // Create new consultation 30 days after the last consultation
+                $nextConsultation = Consultation::create([
+                    'resident_id' => $enrolledResident->resident_id,
+                    'enrolled_resident_id' => $enrolledResident->id,
+                    'consultation_date' => $lastConsultation->consultation_date->addDays(30),
+                    'status' => 'pending',
+                    'consultation_title' => 'Next Consultation',
+                    'uuid' => \Illuminate\Support\Str::uuid(),
+                    'updated_by' => auth()->id(),
+                ]);
+
+                // Reload consultations to include the newly created one
+                $enrolledResident->load([
+                    'consultations' => function ($q) use ($enrolledResident) {
+                        $q->where('enrolled_resident_id', $enrolledResident->id)
+                        ->with('consultationData')
+                        ->with('medicineDistributions.medicine');
+                    }
+                ]);
+            }
+        }
+
+    }else if ($enrolledResident->program && $enrolledResident->program->category === 'philpen_tcl') {
             $enrolledResident->load([
                 'consultations.ncdRiskFactor',
                 'consultations.philpenManagement',

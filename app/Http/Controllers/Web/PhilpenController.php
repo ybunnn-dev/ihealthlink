@@ -72,11 +72,11 @@ class PhilpenController extends Controller
                                                             });
                                                     });
                                             });
-                                    })
-                                    ->whereHas('program', function($query) {
-                                        $query->where('category', 'philpen_tcl')
-                                            ->where('status', 'active');
                                     });
+                            })
+                            ->whereHas('program', function($query) {
+                                $query->where('category', 'philpen_tcl')
+                                    ->where('status', 'active');
                             })
                             ->where('status', 'pending')
                             ->update([
@@ -86,6 +86,7 @@ class PhilpenController extends Controller
 
             // Step 2: Get all enrolled residents in the current barangay for philpen_tcl
             $enrolledResidents = EnrolledResident::where('status', 'active')
+                ->with('resident') // Eager load resident to check age
                 ->whereHas('resident', function($query) use ($brgyId) {
                     $query->where('status', 'active')
                         ->whereHas('family', function($query) use ($brgyId) {
@@ -111,11 +112,51 @@ class PhilpenController extends Controller
                 'resident_ids' => $enrolledResidents->pluck('resident_id')->toArray()
             ]);
             
-            // Step 3: Create new consultations for all enrolled residents
+            // Step 3: Filter residents by age and separate them
+            $eligibleResidents = collect();
+            $completedResidents = collect();
+            
+            foreach ($enrolledResidents as $enrolledResident) {
+                $resident = $enrolledResident->resident;
+                
+                // Calculate age
+                $age = null;
+                try {
+                    if ($resident->birthdate) {
+                        $birthdate = \Carbon\Carbon::parse($resident->birthdate);
+                        $age = $birthdate->age;
+                    }
+                } catch (\Exception $e) {
+                    \Log::warning("Could not parse birthdate for resident {$resident->id}");
+                }
+                
+                // Check if resident is 60 or older
+                if ($age !== null && $age >= 60) {
+                    $completedResidents->push($enrolledResident);
+                } else {
+                    $eligibleResidents->push($enrolledResident);
+                }
+            }
+            
+            // Mark enrolled residents who are 60+ as completed
+            $completedCount = 0;
+            if ($completedResidents->isNotEmpty()) {
+                EnrolledResident::whereIn('id', $completedResidents->pluck('id'))
+                    ->update([
+                        'status' => 'completed',
+                        'updated_by' => $user->id,
+                        'updated_at' => now()
+                    ]);
+                $completedCount = $completedResidents->count();
+                
+                \Log::info("Marked {$completedCount} enrolled residents as completed (age >= 60)");
+            }
+            
+            // Step 4: Create new consultations for eligible residents only (age < 60)
             $newConsultations = [];
             $consultationTimestamp = now();
             
-            foreach ($enrolledResidents as $enrolledResident) {
+            foreach ($eligibleResidents as $enrolledResident) {
                 $newConsultations[] = [
                     'uuid' => Str::uuid()->toString(),
                     'consultation_title' => 'Scheduled Return',
@@ -134,9 +175,9 @@ class PhilpenController extends Controller
                 Consultation::insert($newConsultations);
                 $createdConsultationsCount = count($newConsultations);
                 
-                // Step 4: Get the newly created consultations to create related PhilPEN records
+                // Step 5: Get the newly created consultations to create related PhilPEN records
                 $newlyCreatedConsultations = Consultation::where('consultation_date', $validated['consultation_date'])
-                    ->whereIn('enrolled_resident_id', $enrolledResidents->pluck('id'))
+                    ->whereIn('enrolled_resident_id', $eligibleResidents->pluck('id'))
                     ->where('status', 'pending')
                     ->where('consultation_title', 'Scheduled Return')
                     ->whereBetween('created_at', [
@@ -145,15 +186,14 @@ class PhilpenController extends Controller
                     ])
                     ->get();
 
-
-                // Step 5: Create empty PhilPEN records for EACH consultation
+                // Step 6: Create empty PhilPEN records for EACH consultation
                 foreach ($newlyCreatedConsultations as $consultation) {
                     $residentId = $consultation->resident_id;
                     $consultationId = $consultation->id;
 
-                    // Create Health Signs (per consultation to track over time)
+                    // Create Health Signs
                     HealthSigns::create([
-                        'consultation_id' => $consultationId,  // ← Add consultation_id
+                        'consultation_id' => $consultationId,
                         'chest_pain' => null,
                         'difficulty_in_breathing' => null,
                         'loss_of_consciousness' => null,
@@ -169,9 +209,9 @@ class PhilpenController extends Controller
                         'eye_injury' => null,
                     ]);
 
-                    // Create Family History (per consultation to track over time)
+                    // Create Family History
                     ResidentFamilyHistory::create([
-                        'consultation_id' => $consultationId,  // ← Add consultation_id
+                        'consultation_id' => $consultationId,
                         'hypertension' => null,
                         'heart_diseases' => null,
                         'copd' => null,
@@ -185,9 +225,9 @@ class PhilpenController extends Controller
                         'mental_neurological_substance_abuse_disorders' => null,
                     ]);
 
-                    // Create Medical History (per consultation to track over time)
+                    // Create Medical History
                     ResidentMedicalHistory::create([
-                        'consultation_id' => $consultationId,  // ← Add consultation_id
+                        'consultation_id' => $consultationId,
                         'hypertension' => null,
                         'heart_diseases' => null,
                         'copd' => null,
@@ -202,9 +242,9 @@ class PhilpenController extends Controller
                         'mental_neuro_substance_disorders' => null,
                     ]);
 
-                    // Create Risk Assessment (per consultation to track over time)
+                    // Create Risk Assessment
                     RiskAssessment::create([
-                        'consultation_id' => $consultationId,  // ← Add consultation_id
+                        'consultation_id' => $consultationId,
                         'polyphagia' => null,
                         'polydipsia' => null,
                         'polyuria' => null,
@@ -226,7 +266,7 @@ class PhilpenController extends Controller
                         'urinalysis_date_taken' => null,
                     ]);
 
-                    // Create NCD Risk Factor (per consultation)
+                    // Create NCD Risk Factor
                     NcdRiskFactor::create([
                         'consultation_id' => $consultationId,
                         'tobacco_use' => null,
@@ -244,7 +284,7 @@ class PhilpenController extends Controller
                         'diastolic_pressure' => null,
                     ]);
 
-                    // Create PhilPEN Management (per consultation)
+                    // Create PhilPEN Management
                     PhilpenManagement::create([
                         'consultation_id' => $consultationId,
                         'is_lifestyle_modification' => null,
@@ -266,7 +306,7 @@ class PhilpenController extends Controller
             ActivityLog::create([
                 'user_id'   => $user->id,
                 'module_id' => 5,
-                'activity'  => 'Created new PhilPEN scheduled consultations with empty assessment records.',
+                'activity'  => "Created new PhilPEN scheduled consultations. {$completedCount} residents aged 60+ were marked as completed.",
             ]);
 
             return response()->json([
@@ -276,7 +316,8 @@ class PhilpenController extends Controller
                     'consultation_date' => $validated['consultation_date'],
                     'previous_consultations_completed' => $updatedCount,
                     'new_consultations_created' => $createdConsultationsCount,
-                    'philpen_records_created' => $createdConsultationsCount * 5  // 5 types of records per consultation
+                    'enrolled_residents_completed_due_to_age' => $completedCount,
+                    'philpen_records_created' => $createdConsultationsCount * 6  // 6 types of records per consultation
                 ]
             ]);
 
@@ -295,6 +336,7 @@ class PhilpenController extends Controller
             ], 500);
         }
     }
+
 
     public function getPhilpen(Consultation $consultation)
     {
