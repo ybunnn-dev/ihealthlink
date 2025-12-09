@@ -92,26 +92,36 @@ class MidwifeController extends Controller
 
 
         // --- PAGINATE AFTER SEARCH ---
-        $page = $request->input('page', 1);
         $perPage = 8;
 
+        // Use paginate directly on the collection
+        $currentPage = \Illuminate\Pagination\Paginator::resolveCurrentPage();
+        $currentPageItems = $allMidwives->slice(($currentPage - 1) * $perPage, $perPage)->values();
+
         $midwives = new \Illuminate\Pagination\LengthAwarePaginator(
-            $allMidwives->forPage($page, $perPage),
+            $currentPageItems,
             $allMidwives->count(),
             $perPage,
-            $page,
+            $currentPage,
             [
-                'path' => $request->url(),
+                'path' => \Illuminate\Pagination\Paginator::resolveCurrentPath(),
                 'query' => $request->query(),
             ]
         );
 
 
-        // AJAX response
+
         if ($request->wantsJson() || $request->ajax()) {
             return response()->json([
-                'data' => $midwives->items(),
-                'links' => $midwives->links()->render()
+                'success' => true,
+                'midwives' => $midwives->items(),
+                'pagination' => [
+                    'current_page' => $midwives->currentPage(),
+                    'last_page' => $midwives->lastPage(),
+                    'per_page' => $midwives->perPage(),
+                    'total' => $midwives->total(),
+                    'links' => $midwives->links()->render()
+                ]
             ]);
         }
 

@@ -32,7 +32,6 @@ class FamilyController extends Controller
             $personnel = $user->midwife;
         }
 
-
         // Find the barangay and the puroks that the user manages
         $barangay = Barangay::with('puroks')->find($personnel->brgy_id);
         $puroks = $barangay->puroks;
@@ -40,8 +39,8 @@ class FamilyController extends Controller
         // Get the purok IDs
         $purokIds = $puroks->pluck('id');
 
-        // Build the query
-        $query = Family::with(['household.purok'])
+        // Build the query - ALWAYS load residents if search might be used
+        $query = Family::with(['household.purok', 'residents']) // Load residents
             ->withCount([
                 'residents as active_residents_count' => function ($query) {
                     $query->where('status', 'active');
@@ -72,7 +71,6 @@ class FamilyController extends Controller
                 case 'Last Year':
                     $query->where('created_at', '>=', now()->subYear());
                     break;
-                // 'Custom' would need additional date range parameters
             }
             
             $query->orderBy('created_at', 'desc');
@@ -81,14 +79,14 @@ class FamilyController extends Controller
             $query->orderBy('created_at', 'desc');
         }
 
-        // Check if we need to filter in memory (search only, since names might be encrypted)
+        // Check if we need to filter in memory (search only)
         $needsMemoryFiltering = $request->filled('search');
 
         if ($needsMemoryFiltering) {
             // Get all families for in-memory filtering
             $allFamilies = $query->get();
 
-            // Apply search filter (search through family members)
+            // Apply search filter
             if ($request->filled('search')) {
                 $searchTerm = strtolower($request->search);
                 $allFamilies = $allFamilies->filter(function($family) use ($searchTerm) {
@@ -103,25 +101,30 @@ class FamilyController extends Controller
                         return true;
                     }
                     
-                    // Search through family members (if residents are loaded)
-                    if ($family->relationLoaded('residents')) {
-                        foreach ($family->residents as $resident) {
-                            $fullName = strtolower(trim($resident->firstName . ' ' . ($resident->middleName ?? '') . ' ' . $resident->lastName));
-                            if (str_contains($fullName, $searchTerm)) {
-                                return true;
-                            }
+                    // Search through family members
+                    foreach ($family->residents as $resident) {
+                        $fullName = strtolower(trim(implode(' ', array_filter([
+                            $resident->firstName,
+                            $resident->middleName,
+                            $resident->lastName
+                        ]))));
+                        
+                        if (str_contains($fullName, $searchTerm)) {
+                            return true;
                         }
                     }
                     
                     return false;
-                });
+                })->values(); // Add ->values() to reset keys
             }
 
             // Manually paginate
             $page = $request->get('page', 1);
             $perPage = 7;
             $total = $allFamilies->count();
-            $results = $allFamilies->forPage($page, $perPage);
+            
+            // Use slice instead of forPage for better reliability
+            $results = $allFamilies->slice(($page - 1) * $perPage, $perPage)->values();
             
             $families = new \Illuminate\Pagination\LengthAwarePaginator(
                 $results, 
@@ -150,6 +153,7 @@ class FamilyController extends Controller
             'puroks' => $puroks,
         ]);
     }
+
 
 
 
