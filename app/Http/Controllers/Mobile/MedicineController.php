@@ -134,7 +134,8 @@ class MedicineController extends Controller
                 'string',
                 'max:255',
                 Rule::unique('medicines')->where(function ($query) use ($brgyId) {
-                    return $query->where('brgy_id', $brgyId);
+                    return $query->where('brgy_id', $brgyId)
+                                ->where('status', 'active');
                 }),
             ],
             'generic_name' => 'nullable|string|max:255',
