@@ -799,6 +799,9 @@ class BarangayReportsController extends Controller
             'severelyUnderweight' => $severelyUnderweight,
             'overweight' => $overweight,
             'obese' => $obese,
+
+            'startDate' => $startDate,
+            'endDate' => $endDate
         ];
 
         return $data;

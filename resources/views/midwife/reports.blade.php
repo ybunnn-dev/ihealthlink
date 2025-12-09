@@ -82,7 +82,15 @@
 
         <div class="max-w-[90rem] mx-auto sm:px-6 lg:px-8">
             <!-- Title -->
-            <h1 class="text-3xl font-semibold text-sub_blue mb-3">Reports</h1>
+            <h1 class="text-3xl font-semibold text-sub_blue mb-3">
+                Reports
+                @if($startDate && $endDate)
+                    <span class="text-3xl font-semibold text-sub_blue mb-">
+                        ({{ \Carbon\Carbon::parse($startDate)->format('M d, Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('M d, Y') }})
+                    </span>
+                @endif
+            </h1>
+
             <!-- Upper Card -->
             <div class="bg-white rounded-xl overflow-hidden p-6 mb-3">
                 <div class="grid grid-cols-1 lg2:grid-cols-7 xl:items-end gap-4">
