@@ -14,7 +14,7 @@
                 </a>
 
                
-                <div class="grid grid-cols-1 slg:grid-cols-3 gap-3 h-96">
+                <div class="grid grid-cols-1 slg:grid-cols-3 gap-3">
                    
                     <div class="flex flex-col col-span-1">
                         
@@ -35,8 +35,24 @@
 
                         
                         <div class="grid grid-cols-1 slg:grid-cols-2 gap-3 w-full">
-                            <button id="edit-program-button" type="button" class="flex-1 px-5 py-3 text-sm font-medium text-white bg-mainblue rounded-lg hover:bg-blue-700 col-span-1">Edit</button>
-                            <button id="remove-program-button" type="button" class="flex-1 px-5 py-3 text-sm font-medium text-mainblue bg-white border border-mainblue rounded-lg hover:bg-blue-50 col-span-1">Remove</button>
+                            <button id="edit-program-button" 
+                                    type="button" 
+                                    class="flex-1 px-5 py-3 text-sm font-medium rounded-lg col-span-1
+                                        {{ str_contains(strtolower($healthProgram->category), 'tcl') 
+                                            ? 'text-gray-400 bg-gray-200 cursor-not-allowed' 
+                                            : 'text-white bg-mainblue hover:bg-blue-700' }}"
+                                    @if(str_contains(strtolower($healthProgram->category), 'tcl')) disabled @endif>
+                                Edit
+                            </button>
+                            <button id="remove-program-button" 
+                                    type="button" 
+                                    class="flex-1 px-5 py-3 text-sm font-medium rounded-lg col-span-1
+                                        {{ str_contains(strtolower($healthProgram->category), 'tcl') 
+                                            ? 'text-gray-400 bg-gray-200 border border-gray-300 cursor-not-allowed' 
+                                            : 'text-mainblue bg-white border border-mainblue hover:bg-blue-50' }}"
+                                    @if(str_contains(strtolower($healthProgram->category), 'tcl')) disabled @endif>
+                                Remove
+                            </button>
                         </div>
                     </div>
 
@@ -97,7 +113,10 @@
                         </div>
                     </div>
                 </div>
-                 <x-health-program.fields :programfields="$healthProgram->programFields" :name="$healthProgram->name" />
+                <x-health-program.fields 
+                    :programfields="$healthProgram->programFields" 
+                    :name="$healthProgram->name"
+                    :isTcl="str_contains(strtolower($healthProgram->category), 'tcl')" />
             </div>
         </div>
     </div>
