@@ -38,8 +38,9 @@
                 </tr>
             @empty
                 <tr class="bg-white border-b">
-                    <td colspan="6" class="px-6 py-4  text-gray-500">
-                        <div class=" py-10">
+                    <td colspan="6" class="px-6 py-4 text-gray-500">
+                        {{-- Added text-center here --}}
+                        <div class="py-10 text-center">
                             <img src="{{ asset('images/illustrations/empty.png') }}" alt="No activity logs found" class="mx-auto w-64">
                             <p class="mt-5 text-lg font-medium text-gray-700">
                                 @if(request('search') || request('date_filter'))
