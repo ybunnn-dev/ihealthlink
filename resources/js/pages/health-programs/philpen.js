@@ -242,7 +242,7 @@ function populateResidentInfo(residentData) {
     residentContactNo.value = residentData.contact_no || '';
     residentBirthdate.value = residentData.birthdate || '';
     pwdIdInput.value = residentData.pwd_id || '';
-
+    philHealthNo.value = residentData.philhealth_no || '';
     if (residentData.birthdate) {
         const birthDate = new Date(residentData.birthdate);
         const today = new Date();

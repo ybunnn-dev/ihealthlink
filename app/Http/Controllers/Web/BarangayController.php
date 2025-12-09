@@ -119,10 +119,15 @@ class BarangayController extends Controller
     {
         $validated = $request->validate([
             'name' => [
-                'required', 'string', 'max:255',
-                Rule::unique('barangays', 'name'),
+                'required', 
+                'string', 
+                'max:255',
+                Rule::unique('barangays', 'name')->where(function ($query) {
+                    return $query->where('status', 'active');
+                }),
             ],
         ]);
+
 
         // Create the new barangay
         $barangay = Barangay::create([
@@ -366,35 +371,35 @@ class BarangayController extends Controller
             ->where('role_id', 2)
             ->first();
 
-        // ✅ Count active households for this barangay
+        //  Count active households for this barangay
         $barangay->households_count = Household::whereHas('purok', function ($query) use ($barangay) {
             $query->where('brgy_id', $barangay->id);
         })
         ->where('status', 'active')
         ->count();
 
-        // ✅ Count active families for this barangay (through households)
+        //  Count active families for this barangay (through households)
         $barangay->families_count = Family::whereHas('household.purok', function ($query) use ($barangay) {
             $query->where('brgy_id', $barangay->id);
         })
         ->where('status', 'active')
         ->count();
 
-        // ✅ Count active residents for this barangay (through families -> households -> puroks)
+        // Count active residents for this barangay (through families -> households -> puroks)
         $barangay->residents_count = Resident::whereHas('family.household.purok', function ($query) use ($barangay) {
             $query->where('brgy_id', $barangay->id);
         })
         ->where('status', 'active')
         ->count();
 
-        // ✅ Fix midwife name - use the relationship method
+        //  Fix midwife name - use the relationship method
         $barangay->assigned_midwife = $midwife && $midwife->user 
             ? trim("{$midwife->user->firstName} {$midwife->user->lastName} " . ($midwife->user->suffix ?? ''))
             : null;
 
         \Log::info('Assigned midwife: ' . ($barangay->assigned_midwife ?? 'None'));
 
-        // ✅ COUNT HOUSEHOLDS, FAMILIES, AND RESIDENTS FOR EACH PUROK
+        //  COUNT HOUSEHOLDS, FAMILIES, AND RESIDENTS FOR EACH PUROK
         $barangay->puroks->each(function ($purok) {
             $purok->households_count = Household::where('purok_id', $purok->id)
                 ->where('status', 'active')
