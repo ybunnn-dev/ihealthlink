@@ -38,7 +38,6 @@
         <div class="col-span-1 sm:col-span-1 lg:col-span-2 relative">
             <label for="residentSexDropdown" class="block mb-1 text-sm font-medium text-main_font">SEX</label>
             <button id="residentSexDropdown" data-dropdown-toggle="residentSexDropdownMenu" class="w-full text-gray-400 bg-gray-100 font-medium border border-gray-300 rounded-lg text-sm p-2.5 text-center inline-flex items-center justify-between cursor-not-allowed" type="button" disabled>
-                <span class="truncate">Select Sex</span>
                 <svg class="w-2.5 h-2.5 ms-3 flex-shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4" />
                 </svg>
@@ -76,7 +75,6 @@
         <div class="relative">
             <label for="civilStatusDropdown" class="block mb-1 text-sm font-medium text-main_font">CIVIL STATUS</label>
             <button id="civilStatusDropdown" data-dropdown-toggle="civilStatusDropdownMenu" class="w-full text-gray-400 bg-gray-100 font-medium border border-gray-300 rounded-lg text-sm p-2.5 text-center inline-flex items-center justify-between cursor-not-allowed" type="button" disabled>
-                <span class="truncate">Select Status</span>
                 <svg class="w-2.5 h-2.5 ms-3 flex-shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4" />
                 </svg>
