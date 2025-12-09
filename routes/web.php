@@ -210,6 +210,12 @@ Route::middleware([
     'log.request'
 ])->group(function () {
     
+    Route::patch('/inventory/{inventory}/deactivate', [MedicineInventoryController::class, 'deactivate'])
+    ->name('inventory.deactivate');
+
+
+    Route::patch('/inventory/{inventory}/update-expiry', [MedicineInventoryController::class, 'updateExpiry'])->name('inventory.updateExpiry');
+    
     Route::put('/barangay/family/transfer', [FamilyController::class, 'transfer'])->name('family.transfer');
 
     Route::put('/barangay/household/update', [HouseholdController::class, 'update']);

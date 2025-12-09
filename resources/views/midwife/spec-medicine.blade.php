@@ -3,6 +3,7 @@
 <x-app-layout>
     <script>
          window.medicineData = @json($medicine);
+         window.batches = @json($inventories);
     </script>
     <div class="py-12 px-5">
         
@@ -174,9 +175,11 @@
                                                 <div class="flex justify-center items-center space-x-4">
                                                     {{-- EDIT BUTTON --}}
                                                     <button type="button"
-                                                            class="js-edit-inventory-btn text-mainblue hover:text-blue-900"
-                                                            data-inventory-id="{{ $inventory->id }}"
-                                                            title="Edit Batch">
+                                                        class="js-edit-inventory-expiry-btn text-mainblue hover:text-blue-900"
+                                                        data-inventory-id="{{ $inventory->id }}"
+                                                        data-current-expiry="{{ $inventory->expiry_date->format('Y-m-d') }}"
+                                                        data-medicine-name="{{ $inventory->medicine->name ?? 'Medicine' }}"
+                                                        title="Edit expiry date">
                                                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 pointer-events-none" viewBox="0 0 20 20" fill="currentColor">
                                                             <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
                                                             <path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" />
@@ -187,10 +190,13 @@
                                                         $canDelete = $inventory->stock == $inventory->quantity_received;
                                                     @endphp
 
-                                                    <button type="button"
+                                                   <button type="button"
                                                             class="js-delete-inventory-btn
                                                                 {{ $canDelete ? 'text-red1 hover:text-red-900' : 'text-gray-400 cursor-not-allowed opacity-50' }}"
                                                             data-inventory-id="{{ $inventory->id }}"
+                                                            data-medicine-name="{{ $inventory->medicine->name ?? 'Medicine' }}"
+                                                            data-expiry-date="{{ $inventory->expiry_date->format('Y-m-d') }}"
+                                                            data-quantity="{{ $inventory->quantity }}"
                                                             title="{{ $canDelete ? 'Delete Batch' : 'Cannot delete: stock already used' }}"
                                                             @disabled(!$canDelete)>
                                                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 pointer-events-none" viewBox="0 0 20 20" fill="currentColor">
@@ -224,5 +230,6 @@
         </div>
         @include('components.modals.medicine.confirm-batch')
         @include('components.modals.medicine.add-medicine-batch')
-    
+        @include('components.modals.medicine.edit-batch')
+        @include('components.modals.medicine.confirm-remove-batch')
 </x-app-layout>

@@ -67,6 +67,8 @@ document.addEventListener('DOMContentLoaded', () => {
     import('./pages/medicines/add-batch.js');
     import('./pages/medicines/edit-medicine.js');
     import('./pages/medicines/remove-medicine.js');
+    import('./pages/medicines/edit-batch.js');
+    import('./pages/medicines/delete-batch.js');
   }else if(bodyClass.contains('sched')){
     import('./pages/schedules/tab-switch.js');
     import('./pages/schedules/add-schedule.js');

@@ -120,11 +120,12 @@ class ConsultationController extends Controller
                 'updated_at' => Carbon::now()
             ]);
 
-            // Reduce inventory using Eloquent
             $batches = MedicineInventory::where('medicine_id', $medicine['id'])
+                ->where('status', 'active')  // ← Add this
                 ->whereDate('expiry_date', '>', now()->addMonth())
                 ->orderBy('expiry_date', 'asc')
                 ->get();
+
 
             foreach ($batches as $batch) {
                 if ($remainingQty <= 0) break;
@@ -439,6 +440,7 @@ class ConsultationController extends Controller
                     
                     
                     $batches = MedicineInventory::where('medicine_id', $medicine['medicine_id'])
+                        ->where('status', 'active') 
                         ->whereDate('expiry_date', '>', now()->addMonth())
                         ->where('stock', '>', 0)
                         ->orderBy('expiry_date', 'asc')

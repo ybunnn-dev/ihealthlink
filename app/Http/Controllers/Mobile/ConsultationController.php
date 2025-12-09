@@ -100,6 +100,7 @@ class ConsultationController extends Controller
                 ]);
 
                 $batches = MedicineInventory::where('medicine_id', $medicineId)
+                    ->where('status', 'active') 
                     ->whereDate('expiry_date', '>', now()->addMonths(2))
                     ->orderBy('expiry_date', 'asc')
                     ->get();
@@ -271,6 +272,7 @@ class ConsultationController extends Controller
                     Log::info(($index + 1) . '. Medicine distributed: ID ' . $medicine['medicine_id'] . ', Qty: ' . $medicine['quantity']);
                     
                     $batches = MedicineInventory::where('medicine_id', $medicine['medicine_id'])
+                        ->where('status', 'active') 
                         ->whereDate('expiry_date', '>', now()->addMonth())
                         ->where('stock', '>', 0)
                         ->orderBy('expiry_date', 'asc')

@@ -96,7 +96,9 @@ class MedicineController extends Controller
     {
         $user = auth()->user();
         
-        $medicine = Medicine::with(['inventories.addedBy'])->findOrFail($id);
+        $medicine = Medicine::with(['inventories' => function($query) {
+            $query->where('status', 'active');
+        }, 'inventories.addedBy'])->findOrFail($id);
         
         // Authorization: Ensure medicine belongs to the same barangay
         if ($medicine->brgy_id !== $user->personnel->brgy_id) {
@@ -111,6 +113,7 @@ class MedicineController extends Controller
             'inventories' => $medicine->inventories
         ]);
     }
+
 
     private function denormalizeCategory($category)
     {

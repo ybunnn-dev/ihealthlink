@@ -20,6 +20,7 @@ class MedicineInventory extends Model
         'date_received',
         'quantity_received',
         'expiry_date',
+        'status'
     ];
 
     protected $casts = [
