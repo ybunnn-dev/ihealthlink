@@ -353,8 +353,8 @@ confirmProceedButton.addEventListener('click', async function() {
 
         if (!response.ok) {
             // Handle server-side errors (e.g., validation)
-            console.error('Server Error:', data);
-          
+            alert('Server Error:', data);
+            window.location.reload();
             throw new Error(data.message || 'An error occurred.');
         }
 

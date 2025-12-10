@@ -370,6 +370,8 @@ confirmEditProceedButton.addEventListener('click', function(event){
         // On error, hide confirm modal and show error in success modal
         confirmEditBhw.hide();
         alert("Failed to update BHW. Please try again.");
+        
+        window.location.reload();
     })
     .finally(() => {
         // Re-enable buttons and restore text
