@@ -230,8 +230,6 @@ confirmCheckbox.addEventListener('change', function() {
     proceedButton.disabled = !this.checked;
 });
 
-// Function to submit midwife data
-// Function to submit midwife data
 async function submitMidwifeData(payload) {
     // Disable button and show loading state
     proceedButton.disabled = true;
@@ -255,30 +253,44 @@ async function submitMidwifeData(payload) {
             successMesageHeader.textContent = 'Midwife Added';
             successMessage.textContent = `${payload.firstName ?? ''} ${payload.middleName ?? ''} ${payload.lastName ?? ''}${payload.suffix ? ' ' + payload.suffix : ''} has been added`;
             
-            // Keep button disabled - success flow will redirect anyway
             // Hide confirmation modal and show success modal
             confirmModal.hide();
             setTimeout(() => {
                 successModal.show();
             }, 300);
+        } 
+        // Handle validation errors (422)
+        else if (response.status === 422) {
+            let errorMessages = [];
             
-        } else {
-            // Revert button on error
+            if (data.errors) {
+                for (const [field, messages] of Object.entries(data.errors)) {
+                    errorMessages.push(...messages);
+                }
+            }
+            
+            const errorText = errorMessages.length > 0 
+                ? errorMessages.join('\n') 
+                : (data.message || 'Validation failed');
+            
+            alert('Validation Error:\n\n' + errorText);
+            
+            // Re-enable button so user can fix and retry
             proceedButton.disabled = false;
             proceedButton.textContent = originalText;
-            
-            console.error('Error:', data);
-            alert('Error adding midwife: ' + (data.message || 'Please check the form and try again.'));
+        }
+        // Handle other server errors
+        else {
+            alert('Error: ' + (data.message || 'Failed to add midwife. The page will reload.'));
+            window.location.reload();
         }
     } catch (error) {
-        // Revert button on network error
-        proceedButton.disabled = false;
-        proceedButton.textContent = originalText;
-        
         console.error('Network error:', error);
-        alert('Network error. Please try again.');
+        alert('Network error occurred. The page will reload.');
+        window.location.reload();
     }
 }
+
 
 // Proceed button: submit data
 proceedButton.addEventListener('click', function() {

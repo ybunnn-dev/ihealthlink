@@ -49,9 +49,7 @@ class User extends Authenticatable
         'middleName',
         'suffix',
         'birthdate',
-        'contact_no',
-        'email_view',
-        'email',
+        'contact_no'
     ];
 
     public function getAttribute($key)

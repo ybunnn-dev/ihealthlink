@@ -58,7 +58,7 @@ class ProfileController extends Controller
         EmailChange::where('user_id', $user->id)->delete();
 
         // Encrypt the new email before storing
-        $encryptedNewEmail = ProjectCrypt::encrypt($request->new_email);
+        $encryptedNewEmail = $request->new_email;
 
         $emailChange = EmailChange::updateOrCreate(
             ['user_id' => $user->id],
@@ -97,8 +97,7 @@ class ProfileController extends Controller
             return response()->json(['message' => 'Invalid or expired code'], 400);
         }
 
-        // Decrypt the new email before setting it (User model will re-encrypt via setAttribute)
-        $decryptedNewEmail = ProjectCrypt::decrypt($pending->new_email);
+        $decryptedNewEmail = $pending->new_email;
         
         $user->email = $decryptedNewEmail;
         $user->save();
@@ -125,7 +124,7 @@ class ProfileController extends Controller
         }
 
         // Decrypt the new email to send mail
-        $decryptedNewEmail = ProjectCrypt::decrypt($latestRequest->new_email);
+        $decryptedNewEmail = $latestRequest->new_email;
 
         $latestRequest->delete();
 

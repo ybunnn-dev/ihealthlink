@@ -319,10 +319,17 @@ confirmEditMidwifeBtn.addEventListener('click', async function () {
     editMidwifePayload.user_id = currentMidwifeData.user_id;
     editMidwifePayload.midwife_id = currentMidwifeData.midwife_id;
     editMidwifePayload.birthdate = formatBirthdate(editMidwifePayload.birthdate);
-
     editMidwifePayload.brgy_id = getBrgyId(editMidwifePayload.barangay_name);
+
+    // Store original button state
+    const originalButtonText = confirmEditMidwifeBtn.textContent;
+    
     try {
-        const userId = editMidwifePayload.user_id; // make sure this exists
+        // Disable button and show loading state
+        confirmEditMidwifeBtn.disabled = true;
+        confirmEditMidwifeBtn.textContent = 'Saving...';
+
+        const userId = editMidwifePayload.user_id;
         const response = await fetch(`/mho/midwife/${userId}/update`, {
             method: 'PUT',
             headers: {
@@ -334,21 +341,46 @@ confirmEditMidwifeBtn.addEventListener('click', async function () {
 
         const result = await response.json();
         
-        // Optional: reload or close modal on success
-        if (result.status === 'success') {
+        // Handle success
+        if (response.ok && result.status === 'success') {
             const successModal = new Modal(successModalEl, createModalOptions(successModalEl));
             const confirmEditMidwifeModal = new Modal(confirmEditMidwifeModalEl, createModalOptions(confirmEditMidwifeModalEl));
 
-            if(successModal && editMidwifeModal){
+            if (successModal && editMidwifeModal) {
                 successMesageHeader.textContent = 'Midwife Updated';
                 successMessage.textContent = 'Midwife details has been updated';
                 confirmEditMidwifeModal.hide();
                 successModal.show();
             }
+        } 
+        else if (response.status === 422) {
+            let errorMessage = '';
+            
+            if (result.errors) {
+                // Format validation errors more clearly
+                for (const [field, messages] of Object.entries(result.errors)) {
+                    errorMessage += `• ${messages.join(', ')}\n`;
+                }
+            } else {
+                errorMessage = result.message || 'Validation failed';
+            }
+            
+            alert('Validation Error:\n\n' + errorMessage);
+            
+            // Re-enable button
+            confirmEditMidwifeBtn.disabled = false;
+            confirmEditMidwifeBtn.textContent = originalButtonText;
+        }
+        // Handle other errors
+        else {
+            alert(`Error: ${result.message || 'Failed to update midwife'}`);
+            window.location.reload();
         }
 
     } catch (err) {
-        alert('Error sending payload:', err);
+        console.error('Error sending payload:', err);
+        alert('An unexpected error occurred. The page will reload.');
+        window.location.reload();
     }
 });
 
