@@ -379,6 +379,7 @@ confirmEditProceedButton.addEventListener('click', function(event){
         confirmEditBhwCancelButton.disabled = false;
         confirmEditProceedButton.textContent = originalButtonText;
         confirmEditBhwCheckbox.checked = false;
+        window.location.reload();
     });
 });
 

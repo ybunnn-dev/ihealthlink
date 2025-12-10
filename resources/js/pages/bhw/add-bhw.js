@@ -373,6 +373,7 @@ confirmProceedButton.addEventListener('click', async function() {
         confirmProceedButton.innerHTML = originalButtonText;
         confirmProceedButton.disabled = false;
         cancelConfirmAddBhwButton.disabled = false;
+        window.location.reload();
     }
 });
 
