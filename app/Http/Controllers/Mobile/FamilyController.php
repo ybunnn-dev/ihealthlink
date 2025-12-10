@@ -117,17 +117,22 @@ class FamilyController extends Controller
 
     public function show(Family $family)
     {
-        // Eager load household + purok + residents
-        $family->load(['household.purok.barangay', 'residents']);
+        // Eager load with active residents only
+        $family->load([
+            'household.purok.barangay',
+            'residents' => function ($query) {
+                $query->where('status', 'active');
+            }
+        ]);
 
-        $residentCount = $family->residents->count(); // collection count
-
+        $residentCount = $family->residents->count();
 
         return response()->json([
             'family' => $family,
             'residentCount' => $residentCount,
         ]);
     }
+
 
     public function store(Request $request)
     {
