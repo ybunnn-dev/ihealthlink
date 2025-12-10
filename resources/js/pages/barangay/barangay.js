@@ -199,6 +199,7 @@ confirmProceedBtn.addEventListener('click', async function () {
     } catch (error) {
         console.error('Submission Error:', error);
         alert('An error occurred while saving the barangay. Please check the console.');
+        window.location.reload();
         // Reset button state even on error
         this.disabled = false;
         this.textContent = 'Confirm & Proceed';
