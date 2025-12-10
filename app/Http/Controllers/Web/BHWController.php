@@ -254,7 +254,7 @@ class BHWController extends Controller
             'birthdate'   => 'required|date_format:m/d/Y',
             'age'         => 'required|integer|min:0|max:150',
             'sex'         => 'required|in:Male,Female,Other',
-            'email'       => 'required|email|max:100',
+            'email'       => 'required|email|unique:users,email',
             'contactNo'   => 'required|string|min:7|max:20',
             'privilege'   => 'required|integer|in:3,4',
             'civilStatus' => 'required|in:Single,Married,Divorced,Widowed,Separated',
@@ -335,7 +335,6 @@ class BHWController extends Controller
 
     public function update(Request $request, $id)
     {
-        
         $validated = $request->validate([
             'firstName'    => 'required|string|max:50',
             'lastName'     => 'required|string|max:50',
@@ -355,7 +354,11 @@ class BHWController extends Controller
         $bhw = Personnel::where('user_id', $user->id)->first();
 
         if (!$bhw || $bhw->brgy_id !== auth()->user()->personnel->brgy_id) {
-            abort(403, 'Unauthorized to update this personnel');
+            return response()->json([
+                'success' => false,
+                'status' => 'error',
+                'message' => 'Unauthorized to update this personnel'
+            ], 403);
         }
 
         $user->update($validated);
@@ -384,9 +387,12 @@ class BHWController extends Controller
         ]);
 
         return response()->json([
-            'message' => 'Payload received successfully',
+            'success' => true,
+            'status' => 'success',
+            'message' => 'BHW updated successfully',
         ]);
     }
+
 
     public function remove(Request $request, $id)
     {

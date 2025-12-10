@@ -353,27 +353,29 @@ confirmEditMidwifeBtn.addEventListener('click', async function () {
                 successModal.show();
             }
         } 
+        // Handle validation errors (422)
         else if (response.status === 422) {
-            let errorMessage = '';
+            let errorMessages = [];
             
             if (result.errors) {
-                // Format validation errors more clearly
                 for (const [field, messages] of Object.entries(result.errors)) {
-                    errorMessage += `• ${messages.join(', ')}\n`;
+                    errorMessages.push(...messages);
                 }
-            } else {
-                errorMessage = result.message || 'Validation failed';
             }
             
-            alert('Validation Error:\n\n' + errorMessage);
+            const errorText = errorMessages.length > 0 
+                ? errorMessages.join('\n') 
+                : (result.message || 'Validation failed');
+            
+            alert('Validation Error:\n\n' + errorText);
             
             // Re-enable button
             confirmEditMidwifeBtn.disabled = false;
             confirmEditMidwifeBtn.textContent = originalButtonText;
         }
-        // Handle other errors
+        // Handle other errors - reload
         else {
-            alert(`Error: ${result.message || 'Failed to update midwife'}`);
+            alert(`Error: ${result.message || 'Failed to update midwife. The page will reload.'}`);
             window.location.reload();
         }
 
@@ -383,6 +385,7 @@ confirmEditMidwifeBtn.addEventListener('click', async function () {
         window.location.reload();
     }
 });
+
 
 closeSuccessModalButton.addEventListener('click', function(){
      window.location.reload();
