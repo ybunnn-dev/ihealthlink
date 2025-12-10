@@ -192,11 +192,8 @@
         </tr>
         <tr>
             <td><span class="label">5.4a Caffeine Intake:</span> {!! renderYesNo($ncd->caffeine_intake ?? null) !!}</td>
-            <td><span class="label">5.4b High Fat/High Salt Food Intake:</span> {!! renderYesNo($ncd->high_fat_high_salt_food_intake ?? null) !!}</td>
-        </tr>
-        <tr>
-            <td><span class="label">5.4c Street Foods Intake:</span> {!! renderYesNo($ncd->street_foods_intake ?? null) !!}</td>
-            <td><span class="label">5.4d High Sugar Foods Intake:</span> {!! renderYesNo($ncd->high_sugar_foods_intake ?? null) !!}</td>
+            <td><span class="label">5.4b Street Foods Intake:</span> {!! renderYesNo($ncd->street_foods_intake ?? null) !!}</td>
+            
         </tr>
         <tr>
             <td><span class="label">5.5 Weight (kg):</span> {{ $ncd->weight ?? '---' }}</td>
