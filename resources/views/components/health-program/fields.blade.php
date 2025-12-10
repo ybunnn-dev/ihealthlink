@@ -24,7 +24,7 @@
                         <th scope="col" class="px-6 py-3">Order</th>
                         <th scope="col" class="px-6 py-3">Title</th>
                         <th scope="col" class="px-6 py-3">Interval</th>
-                        <th scope="col" class="px-6 py-3">Extension</th>
+                        
                         <th scope="col" class="px-6 py-3">Status</th>
                         <th scope="col" class="px-6 py-3">Actions</th>
                     </tr>
@@ -36,7 +36,7 @@
                             <td class="px-6 py-4 font-medium">{{ $field->order }}</td>
                             <td class="px-6 py-4">{{ $field->title }}</td>
                             <td class="px-6 py-4">{{ $field->interval_days }} Days</td>
-                            <td class="px-6 py-4">{{ $field->extension_days }} Days</td>
+                            
                             <td class="px-6 py-4">
                                 <span class="px-2 py-1 font-semibold leading-tight rounded-full {{ $field->status === 'active' ? 'text-green-700 bg-green-100' : 'text-gray-700 bg-gray-100' }}">
                                     {{ ucfirst($field->status) }}
