@@ -38,11 +38,6 @@
         </div>
 
         <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-            <p class="font-semibold text-main_font">WAIST CIRCUMFERENCE:</p>
-            <p class="text-normal_font">{{ $basicHR->waist_circumference ?? 'N/A' }} cm</p>
-        </div>
-
-        <div class="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
             <p class="font-semibold text-main_font">HEIGHT:</p>
             <p class="text-normal_font">{{ $basicHR->height ?? 'N/A' }} cm</p>
         </div>
