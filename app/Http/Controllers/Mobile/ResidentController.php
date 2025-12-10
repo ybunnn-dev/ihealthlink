@@ -28,7 +28,7 @@ use Carbon\Carbon;
 
 class ResidentController extends Controller
 {   
-        public function index(Request $request)
+    public function index(Request $request)
     {
         $user = Auth::user();
         
@@ -64,10 +64,12 @@ class ResidentController extends Controller
             
             // Base resident query limited to user's families
             $residentsQuery = Resident::with('family.household.purok')
-                ->whereIn('family_id', $familyIds);
+                ->whereIn('family_id', $familyIds)
+                ->where('status', 'active'); 
         } else {
             // Advanced mode: fetch from entire database
-            $residentsQuery = Resident::with('family.household.purok');
+            $residentsQuery = Resident::with('family.household.purok')
+            ->where('status', 'active'); 
             
             // Fetch all puroks for filter dropdown
             $puroks = Purok::all();
