@@ -29,22 +29,15 @@
                             <label for="editBhwMiddleName" class="block mb-2 text-sm font-medium text-main_font">Middle Name</label>
                             <input type="text" id="editBhwMiddleName" class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                         </div>
-                        <div class="flex flex-col relative md:col-span-1">
-                            <label for="editSuffixDropdownButton" class="block mb-2 text-sm font-medium text-main_font">Suffix</label>
-                            <button id="editSuffixDropdownButton" data-dropdown-toggle="editSuffixDropdownMenu" class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full p-2.5 flex justify-between items-center" type="button">
-                                <span class="truncate">Select</span> 
-                                <svg class="w-2.5 h-2.5 ms-3 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4" />
-                                </svg>
-                            </button>
-                            <div id="editSuffixDropdownMenu" class="z-20 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-full absolute top-full mt-1">
-                                <ul class="py-2 text-sm text-gray-700">
-                                    <li data-value=""><a href="#" class="block px-4 py-2 hover:bg-gray-100">None</a></li>
-                                    <li data-value="Jr."><a href="#" class="block px-4 py-2 hover:bg-gray-100">Jr.</a></li>
-                                    <li data-value="Sr."><a href="#" class="block px-4 py-2 hover:bg-gray-100">Sr.</a></li>
-                                    <li data-value="III"><a href="#" class="block px-4 py-2 hover:bg-gray-100">III</a></li>
-                                </ul>
-                            </div>
+                        <div class="flex flex-col md:col-span-1">
+                            <label for="editBhwSuffix" class="block mb-2 text-sm font-medium text-main_font">Suffix</label>
+                            <select id="editBhwSuffix" class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                <option value="">None</option>
+                                <option value="Jr.">Jr.</option>
+                                <option value="Sr.">Sr.</option>
+                                <option value="III">III</option>
+                                <option value="IV">IV</option>
+                            </select>
                         </div>
                     </div>
 
@@ -64,72 +57,44 @@
                             <label for="editBhwAge" class="block mb-2 text-sm font-medium text-main_font">Age</label>
                             <input type="text" id="editBhwAge" class="bg-gray-200 border border-gray-300 text-gray-600 text-sm rounded-lg block w-full p-2.5 cursor-not-allowed" readonly>
                         </div>
-                        <div class="flex flex-col relative">
-                            <label for="editSexDropdownButton" class="block mb-2 text-sm font-medium text-main_font">Sex</label>
-                            <button id="editSexDropdownButton" data-dropdown-toggle="editSexDropdownMenu" class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full p-2.5 flex justify-between items-center" type="button">
-                                <span class="truncate">Select</span> 
-                                <svg class="w-2.5 h-2.5 ms-3 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4" />
-                                </svg>
-                            </button>
-                            <div id="editSexDropdownMenu" class="z-20 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-full absolute top-full mt-1">
-                                <ul class="py-2 text-sm text-gray-700">
-                                    <li data-value="Male"><a href="#" class="block px-4 py-2 hover:bg-gray-100">Male</a></li>
-                                    <li data-value="Female"><a href="#" class="block px-4 py-2 hover:bg-gray-100">Female</a></li>
-                                </ul>
-                            </div>
+                        <div class="flex flex-col">
+                            <label for="editBhwSex" class="block mb-2 text-sm font-medium text-main_font">Sex</label>
+                            <select id="editBhwSex" class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                <option value="">Select</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
                         </div>
-                        <div class="flex flex-col relative">
-                            <label for="editPrivilegeDropdownButton" class="block mb-2 text-sm font-medium text-main_font">Privilege</label>
-                            <button id="editPrivilegeDropdownButton" data-dropdown-toggle="editPrivilegeDropdownMenu" class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full p-2.5 flex justify-between items-center" type="button">
-                                <span class="truncate">Select</span> 
-                                <svg class="w-2.5 h-2.5 ms-3 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4" />
-                                </svg>
-                            </button>
-                            <div id="editPrivilegeDropdownMenu" class="z-20 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-full absolute top-full mt-1">
-                                <ul class="py-2 text-sm text-gray-700">
-                                    <li data-value="3"><a href="#" class="block px-4 py-2 hover:bg-gray-100">Regular</a></li>
-                                    <li data-value="4"><a href="#" class="block px-4 py-2 hover:bg-gray-100">Web Access</a></li>
-                                </ul>
-                            </div>
+                        <div class="flex flex-col">
+                            <label for="editBhwPrivilege" class="block mb-2 text-sm font-medium text-main_font">Privilege</label>
+                            <select id="editBhwPrivilege" class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                <option value="">Select</option>
+                                <option value="3">Regular</option>
+                                <option value="4">Web Access</option>
+                            </select>
                         </div>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="flex flex-col relative">
-                            <label for="editCivilStatusDropdownButton" class="block mb-2 text-sm font-medium text-main_font">Civil Status</label>
-                            <button id="editCivilStatusDropdownButton" data-dropdown-toggle="editCivilStatusMenu" class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full p-2.5 flex justify-between items-center" type="button">
-                                <span class="truncate">Select Status</span> 
-                                <svg class="w-2.5 h-2.5 ms-3 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4" />
-                                </svg>
-                            </button>
-                            <div id="editCivilStatusMenu" class="z-20 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-full absolute top-full mt-1">
-                                <ul class="py-2 text-sm text-gray-700">
-                                    <li data-value="Single"><a href="#" class="block px-4 py-2 hover:bg-gray-100">Single</a></li>
-                                    <li data-value="Married"><a href="#" class="block px-4 py-2 hover:bg-gray-100">Married</a></li>
-                                    <li data-value="Widowed"><a href="#" class="block px-4 py-2 hover:bg-gray-100">Widowed</a></li>
-                                    <li data-value="Separated"><a href="#" class="block px-4 py-2 hover:bg-gray-100">Separated</a></li>
-                                </ul>
-                            </div>
+                        <div class="flex flex-col">
+                            <label for="editBhwCivilStatus" class="block mb-2 text-sm font-medium text-main_font">Civil Status</label>
+                            <select id="editBhwCivilStatus" class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                <option value="">Select Status</option>
+                                <option value="Single">Single</option>
+                                <option value="Married">Married</option>
+                                <option value="Widowed">Widowed</option>
+                                <option value="Separated">Separated</option>
+                            </select>
                         </div>
-                        <div class="flex flex-col relative">
-                            <label for="editReligionDropdownButton" class="block mb-2 text-sm font-medium text-main_font">Religion</label>
-                            <button id="editReligionDropdownButton" data-dropdown-toggle="editReligionMenu" class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full p-2.5 flex justify-between items-center" type="button">
-                                <span class="truncate">Select Religion</span> 
-                                <svg class="w-2.5 h-2.5 ms-3 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4" />
-                                </svg>
-                            </button>
-                            <div id="editReligionMenu" class="z-20 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-full absolute top-full mt-1">
-                                <ul class="py-2 text-sm text-gray-700">
-                                    <li data-value="Roman Catholic"><a href="#" class="block px-4 py-2 hover:bg-gray-100">Roman Catholic</a></li>
-                                    <li data-value="Iglesia ni Cristo"><a href="#" class="block px-4 py-2 hover:bg-gray-100">Iglesia ni Cristo</a></li>
-                                    <li data-value="Islam"><a href="#" class="block px-4 py-2 hover:bg-gray-100">Islam</a></li>
-                                    <li data-value="Others"><a href="#" class="block px-4 py-2 hover:bg-gray-100">Others</a></li>
-                                </ul>
-                            </div>
+                        <div class="flex flex-col">
+                            <label for="editBhwReligion" class="block mb-2 text-sm font-medium text-main_font">Religion</label>
+                            <select id="editBhwReligion" class="bg-gray-50 border border-gray-300 text-main_font text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                <option value="">Select Religion</option>
+                                <option value="Roman Catholic">Roman Catholic</option>
+                                <option value="Iglesia ni Cristo">Iglesia ni Cristo</option>
+                                <option value="Islam">Islam</option>
+                                <option value="Others">Others</option>
+                            </select>
                         </div>
                     </div>
 
@@ -160,4 +125,5 @@
         </div>
     </div>
 </div>
+
 @include('components.modals.bhw.edit-bhw-confirmation')

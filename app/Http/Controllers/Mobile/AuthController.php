@@ -22,7 +22,7 @@ class AuthController extends Controller
 
         foreach ($users as $potentialUser) {
             // Decrypt the encrypted email and compare with input
-            $decryptedEmail = ProjectCrypt::decrypt($potentialUser->getRawOriginal('email'));
+            $decryptedEmail = $potentialUser->getRawOriginal('email');
             
             if ($decryptedEmail === $email) {
                 $user = $potentialUser;
