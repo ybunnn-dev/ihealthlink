@@ -477,7 +477,7 @@
                 </button>
 
                 <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-                    <button id="print-maternity-btn" type="button" class="w-full sm:w-auto text-white bg-maingreen hover:bg-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center transition-colors">
+                    <button id="print-maternity-btn" type="button" class="w-full hidden sm:w-auto text-white bg-maingreen hover:bg-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center transition-colors">
                         Print Details
                     </button>
                     <button id="update-maternity-btn" type="button" class="w-full sm:w-auto text-white bg-mainblue hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center transition-colors">

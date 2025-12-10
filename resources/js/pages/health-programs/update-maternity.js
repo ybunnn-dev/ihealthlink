@@ -165,7 +165,6 @@ function updateMaternityMeds(consultationTitle, medicineCategory, amountElement,
     if (!consultation) {
         amountElement.value = '';
         dateElement.value = '';
-       
         return;
     }
 
@@ -177,13 +176,18 @@ function updateMaternityMeds(consultationTitle, medicineCategory, amountElement,
             .reduce((sum, dist) => sum + dist.quantity, 0);
     }
 
-    // 3. Get the updated_at date and format it to YYYY-MM-DD
-    const dateOnly = consultation.updated_at ? consultation.updated_at.split('T')[0] : '';
-
-    // 4. Update the input fields in the DOM
+    // 3. Update the amount field
     amountElement.value = totalQuantity;
-    dateElement.value = dateOnly;
+
+    // 4. Only assign date if quantity is greater than zero
+    if (totalQuantity > 0) {
+        const dateOnly = consultation.updated_at ? consultation.updated_at.split('T')[0] : '';
+        dateElement.value = dateOnly;
+    } else {
+        dateElement.value = '';
+    }
 }
+
 
 
 function getConsultationDate(title) {

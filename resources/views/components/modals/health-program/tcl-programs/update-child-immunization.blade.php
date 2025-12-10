@@ -381,7 +381,7 @@
                 <div class="flex flex-col-reverse sm:flex-row items-center gap-3 w-full sm:w-auto">
                     
                     <button id="print-child-care-btn" type="button" 
-                        class="w-full sm:w-auto text-white bg-maingreen hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center transition-colors">
+                        class="w-full sm:w-auto text-white hidden bg-maingreen hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center transition-colors">
                         Print Details
                     </button>
                     
