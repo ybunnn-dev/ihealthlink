@@ -121,14 +121,20 @@ class ConsultationController extends Controller
             }
         }
 
-        // 4. Check enrolled resident status
-        $enrolledResident = $consultation->enrolledResident;
-        $allCompleted = Consultation::where('enrolled_resident_id', $enrolledResident->id)
-            ->where('status', '!=', 'completed')
-            ->count() === 0;
+        // 5. Check enrolled resident status
+        $enrolledResident = EnrolledResident::find($consultation->enrolled_resident_id);
 
-        if ($allCompleted) {
-            $enrolledResident->update(['status' => 'completed']);
+        // Only mark as completed if program mode is NOT continuous
+        $program = $enrolledResident->program; // Assumes relationship exists
+
+        if ($program->program_mode !== 'continuous') {
+            $allCompleted = Consultation::where('enrolled_resident_id', $enrolledResident->id)
+                ->where('status', '!=', 'completed')
+                ->count() === 0;
+
+            if ($allCompleted) {
+                $enrolledResident->update(['status' => 'completed']);
+            }
         }
 
         // 5. Update Basic Health Record (only non-null fields)
@@ -234,7 +240,7 @@ class ConsultationController extends Controller
                 'updated_by' => auth()->id() ?? null,
             ]);
             
-            Log::info('✅ Consultation created with ID: ' . $consultation->id);
+            Log::info('Consultation created with ID: ' . $consultation->id);
 
             // 2. Create consultation data
             ConsultationData::create([
