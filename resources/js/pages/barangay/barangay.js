@@ -174,7 +174,8 @@ confirmProceedBtn.addEventListener('click', async function () {
             // Use 'result' to get error messages
             if (response.status === 422) {
                 const errors = Object.values(result.errors).map(e => e.join('\n')).join('\n');
-                alert('Validation Error:\n' + errors);
+                alert('Error:\n' + errors);
+                window.location.reload();
             } else {
                 throw new Error(result.message || 'An unknown error occurred.');
             }
