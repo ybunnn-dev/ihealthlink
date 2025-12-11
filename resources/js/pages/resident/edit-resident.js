@@ -208,6 +208,7 @@ editTrigger.addEventListener('click', function(){
     religion.value = resident.religion;
     ethnicity.value = resident.ethnicity;
     
+    console.log(resident.employement_status);
     educationAttainment.value = resident.educational_attainment;
     if(resident.employement_status === 'self-employed'){
         employmentStatus.value = 'Self-Employed';
