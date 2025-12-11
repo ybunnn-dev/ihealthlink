@@ -17,7 +17,7 @@ class EncryptedEmailUserProvider extends EloquentUserProvider
 
         foreach ($users as $user) {
             try {
-                $decryptedEmail = ProjectCrypt::decrypt($user->getRawOriginal('email'));
+                $decryptedEmail = $user->getRawOriginal('email');
                 
                 if ($decryptedEmail === $credentials['email']) {
                     return $user;
