@@ -22,9 +22,6 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Register custom encrypted email user provider
-        Auth::provider('encrypted', function ($app, array $config) {
-            return new EncryptedEmailUserProvider($app['hash'], $config['model']);
-        });
+        
     }
 }
