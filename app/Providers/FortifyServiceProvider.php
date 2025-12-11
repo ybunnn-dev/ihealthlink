@@ -40,7 +40,6 @@ class FortifyServiceProvider extends ServiceProvider
         Fortify::redirectUserForTwoFactorAuthenticationUsing(RedirectIfTwoFactorAuthenticatable::class);
 
         
-        
         Config::set('auth.passwords.users.provider', 'users_encrypted');
 
         // Rate limiters
