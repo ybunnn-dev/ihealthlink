@@ -241,8 +241,7 @@ confirmProceedButton.addEventListener('click', async function() {
         Saving...
     `;
     confirmProceedButton.disabled = true;
-    cancelConfirmAddBhwButton.disabled = true;
-    
+   
     const bhwFullName =
       firstNameInput.value.trim() + " " +
       middleNameInput.value.trim() + " " +
