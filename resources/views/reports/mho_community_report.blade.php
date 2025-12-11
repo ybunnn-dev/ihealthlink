@@ -338,7 +338,7 @@
             
             <div class="header">
                 <h1>DEMOGRAPHIC DATA BY AGE GROUP</h1>
-                <h2>YEAR 2025 - Municipal Health Office</h2>
+                <h2>Municipal Health Office</h2>
                 <small>Page {{ $loop->iteration }} of {{ $loop->count }}</small>
                 @if($data['startDate'] || $data['endDate'])
                 <h2>Period: {{ $data['startDate'] ?? 'N/A' }} - {{ $data['endDate'] ?? 'N/A' }}</h2>

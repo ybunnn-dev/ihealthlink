@@ -177,8 +177,18 @@
 <body>
     <div class="p1-body">
         <div class="header">
-            <h1>Barangay {{ $data['barangay_name'] ?? 'Tagas' }} - Community Profile Report </h1>
-            <h2>Period: {{ $data['startDate'] ?? 'N/A' }} - {{ $data['endDate'] ?? 'N/A' }}</h2>
+            <h1>Barangay {{ $data['barangay_name'] ?? 'Tagas' }} - Community Profile Report</h1>
+
+            @if(!empty($data['startDate']) || !empty($data['endDate']))
+                <h2>
+                    Period: 
+                    {{ $data['startDate'] ?? '' }}
+                    @if(!empty($data['startDate']) && !empty($data['endDate']))
+                        - 
+                    @endif
+                    {{ $data['endDate'] ?? '' }}
+                </h2>
+            @endif
         </div>
         <hr>
         <table class="main-layout">
@@ -338,7 +348,16 @@
     <div class="p2-body">
         <div class="header">
             <h1>DEMOGRAPHIC DATA BY AGE GROUP</h1>
-            <h2>YEAR 2025</h2>
+             @if(!empty($data['startDate']) || !empty($data['endDate']))
+                <h2>
+                    Period: 
+                    {{ $data['startDate'] ?? '' }}
+                    @if(!empty($data['startDate']) && !empty($data['endDate']))
+                        - 
+                    @endif
+                    {{ $data['endDate'] ?? '' }}
+                </h2>
+            @endif
         </div>
         <table class="p2-table">
            <thead>
@@ -416,6 +435,7 @@
         </table>
     </div>
     <div class="page-break"></div>
+    <!--
     <div class="p3-body">
         <div class="header">
             <h1>DEMOGRAPHIC DATA BY AGE</h1>
@@ -516,7 +536,7 @@
                 <td></td>
             </tr>
         </table>
-    </div>
+    </div>-->
 
 </body>
 </html>
