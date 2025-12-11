@@ -209,7 +209,12 @@ editTrigger.addEventListener('click', function(){
     ethnicity.value = resident.ethnicity;
     
     educationAttainment.value = resident.educational_attainment;
-    employmentStatus.value = capitalizeFirstLetter(resident.employment_status);
+    if(resident.employement_status === 'self-employed'){
+        employmentStatus.value = 'Self-Employed';
+    }else{
+        employmentStatus.value = capitalizeFirstLetter(resident.employment_status);
+    }
+    
     
     pwdStatus.value = resident.is_pwd ? 'Yes' : 'No';
     indigenousStatus.value = resident.is_indigenous ? 'Yes' : 'No';
