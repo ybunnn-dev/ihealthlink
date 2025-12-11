@@ -69,6 +69,7 @@ const successModal = new Modal(successModalEl, createModalOptions(successModalEl
 
 const confirmCheckbox = document.getElementById('confirm-midwife-checkbox');
 const proceedButton = document.getElementById('confirm-add-midwife-btn');
+const cancelConfirmButton = document.getElementById('close-confirm-add-midwife');
 const midwifeNameSpan = document.getElementById('midwife-name-to-confirm');
 
 // --- Setup & Helper Functions ---
@@ -163,6 +164,36 @@ const setupDropdown = (button) => {
     });
 };
 
+// Reset form function
+const resetForm = () => {
+    [...textInputs, birthdateInput, ageInput].forEach(input => {
+        input.value = '';
+    });
+    
+    allDropdowns.forEach(button => {
+        const span = button.querySelector('span');
+        const defaultText = button.id === 'prefixDropdown' ? 'Select' : 
+                           button.id === 'sexDropdown' ? 'Select Sex' :
+                           button.id === 'civilStatusDropdown' ? 'Select Status' :
+                           button.id === 'religionDropdown' ? 'Select Religion' :
+                           button.id === 'barangayDropdown' ? 'Select Barangay' : 'Select';
+        if (span) {
+            span.textContent = defaultText;
+        }
+        delete button.dataset.selectedId;
+    });
+    
+    validateForm();
+};
+
+// Helper function to get dropdown value
+const getDropdownValue = (elementId) => {
+    const element = document.getElementById(elementId);
+    const span = element.querySelector('span');
+    const text = span ? span.textContent.trim() : element.textContent.trim();
+    return text.startsWith('Select') ? null : text;
+};
+
 // --- Event Listeners & Initializations ---
 
 populateBarangayDropdown();
@@ -177,13 +208,6 @@ allDropdowns.forEach(setupDropdown);
 validateForm();
 
 // --- Form Submission Logic ---
-
-const getDropdownValue = (elementId) => {
-    const element = document.getElementById(elementId);
-    const span = element.querySelector('span');
-    const text = span ? span.textContent.trim() : element.textContent.trim();
-    return text.startsWith('Select') ? null : text;
-};
 
 // Submit button: hide main modal and show confirmation modal
 submitButton.addEventListener('click', function(event) {
@@ -220,6 +244,7 @@ submitButton.addEventListener('click', function(event) {
     }, 300);
 });
 
+// Close main modal button
 document.getElementById('close-add-mw').addEventListener('click', function(){
     resetForm(); // Reset form first
     addMidwifeModal.hide();
@@ -230,57 +255,40 @@ confirmCheckbox.addEventListener('change', function() {
     proceedButton.disabled = !this.checked;
 });
 
-confirmProceedButton.addEventListener('click', async function() {
+// Proceed button: submit data to server
+proceedButton.addEventListener('click', async function() {
     // 1. Provide immediate UI feedback
-    const originalButtonText = confirmProceedButton.innerHTML;
-    confirmProceedButton.innerHTML = `
+    const originalButtonText = proceedButton.innerHTML;
+    proceedButton.innerHTML = `
         <svg aria-hidden="true" role="status" class="inline w-4 h-4 me-3 text-white animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="#E5E7EB"/>
         <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentColor"/>
         </svg>
         Saving...
     `;
-    confirmProceedButton.disabled = true;
+    proceedButton.disabled = true;
+    cancelConfirmButton.disabled = true;
    
-    const bhwFullName =
-      firstNameInput.value.trim() + " " +
-      middleNameInput.value.trim() + " " +
-      lastNameInput.value.trim() +
-      (suffixDropdownButton.dataset.selectedValue ? " " + suffixDropdownButton.dataset.selectedValue : "");
+    const midwifeFullName = `${midwifePayload.firstName} ${midwifePayload.middleName || ''} ${midwifePayload.lastName}${midwifePayload.suffix ? ' ' + midwifePayload.suffix : ''}`.replace(/\s+/g, ' ').trim();
 
     try {
-        const formData = {
-            firstName: firstNameInput.value.trim(),
-            lastName: lastNameInput.value.trim(),
-            middleName: middleNameInput.value.trim(),
-            suffix: suffixDropdownButton.dataset.selectedValue || '',
-            birthdate: birthdateInput.value,
-            age: ageInput.value,
-            sex: sexDropdownButton.dataset.selectedValue,
-            email: emailInput.value.trim(),
-            contactNo: contactNoInput.value.trim(),
-            privilege: parseInt(privilegeDropdownButton.dataset.selectedValue, 10),
-            civilStatus: civilStatusDropdownButton.dataset.selectedValue,
-            religion: religionDropdownButton.dataset.selectedValue
-        };
-
-        const response = await fetch('/barangay/bhw/add', {
+        const response = await fetch('/mho/midwife/add', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
             },
-            body: JSON.stringify(formData)
+            body: JSON.stringify(midwifePayload)
         });
 
         const data = await response.json();
 
         // Handle success
         if (response.ok) {
-            addBhwConfirmModal.hide(); 
-            successMesageHeader.textContent = "BHW Created";
-            successMessage.textContent = bhwFullName + " has been added as Barangay Health Worker";
+            confirmModal.hide(); 
+            successMesageHeader.textContent = "Midwife Created";
+            successMessage.textContent = midwifeFullName + " has been added as a Midwife";
             successModal.show();
         } 
         // Handle validation errors (422)
@@ -314,52 +322,24 @@ confirmProceedButton.addEventListener('click', async function() {
     } finally {
         // Only restore button state if we haven't reloaded
         // (This will only execute on success since errors reload the page)
-        confirmProceedButton.innerHTML = originalButtonText;
-        confirmProceedButton.disabled = false;
-        cancelConfirmAddBhwButton.disabled = false;
+        proceedButton.innerHTML = originalButtonText;
+        proceedButton.disabled = false;
+        cancelConfirmButton.disabled = false;
     }
 });
 
-
-// Proceed button: submit data
-proceedButton.addEventListener('click', function() {
-    submitMidwifeData(midwifePayload);
-});
-
 // Cancel confirmation: go back to main modal
-const cancelConfirmButton = document.getElementById('close-confirm-add-midwife');
-
 cancelConfirmButton.addEventListener('click', function() {
     confirmModal.hide();
-        
-    addMidwifeModal.show();
+    setTimeout(() => {
+        addMidwifeModal.show();
+    }, 300);
 });
 
-
+// Open modal button
 document.getElementById('add-midwife-button').addEventListener('click', function(){
     addMidwifeModal.show();
 });
-// Reset form function
-const resetForm = () => {
-    [...textInputs, birthdateInput, ageInput].forEach(input => {
-        input.value = '';
-    });
-    
-    allDropdowns.forEach(button => {
-        const span = button.querySelector('span');
-        const defaultText = button.id === 'prefixDropdown' ? 'Select' : 
-                           button.id === 'sexDropdown' ? 'Select Sex' :
-                           button.id === 'civilStatusDropdown' ? 'Select Status' :
-                           button.id === 'religionDropdown' ? 'Select Religion' :
-                           button.id === 'barangayDropdown' ? 'Select Barangay' : 'Select';
-        if (span) {
-            span.textContent = defaultText;
-        }
-        delete button.dataset.selectedId;
-    });
-    
-    validateForm();
-};
 
 // Success modal close: redirect
 closeSuccessModalButton.addEventListener('click', function(){
