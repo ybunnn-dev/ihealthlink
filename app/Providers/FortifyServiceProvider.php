@@ -41,6 +41,8 @@ class FortifyServiceProvider extends ServiceProvider
 
         
         
+        Config::set('auth.passwords.users.provider', 'users_encrypted');
+
         // Rate limiters
         RateLimiter::for('login', function (Request $request) {
             $throttleKey = Str::transliterate(Str::lower($request->input(Fortify::username())) . '|' . $request->ip());

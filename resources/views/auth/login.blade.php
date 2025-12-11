@@ -71,11 +71,7 @@
                             <span class="ml-2 text-gray-700 text-fluid-xs xl:text-xs">Remember me for 30 days</span>
                         </label>
 
-                        @if (Route::has('password.request'))
-                            <a href="{{ route('password.request') }}" class="text-mainblue hover:text-blue-700 font-medium text-fluid-xs xl:text-xs">
-                                Forgot Password?
-                            </a>
-                        @endif
+                       
                     </div>
 
                     <button type="submit"
